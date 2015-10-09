@@ -1,0 +1,65 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/joncart/.nvm/versions/node/v4.1.1/bin/node',
+1 verbose cli   '/Users/joncart/.nvm/versions/node/v4.1.1/bin/npm',
+1 verbose cli   'i',
+1 verbose cli   '-g',
+1 verbose cli   'https://github.com/Microsoft/code-push/tree/master/cli' ]
+2 info using npm@2.14.4
+3 info using node@v4.1.1
+4 verbose install initial load of /Users/joncart/.nvm/versions/node/v4.1.1/lib/package.json
+5 verbose readDependencies loading dependencies from /Users/joncart/.nvm/versions/node/v4.1.1/lib/package.json
+6 silly cache add args [ 'https://github.com/Microsoft/code-push/tree/master/cli',
+6 silly cache add   null ]
+7 verbose cache add spec https://github.com/Microsoft/code-push/tree/master/cli
+8 silly cache add parsed spec Result {
+8 silly cache add   raw: 'https://github.com/Microsoft/code-push/tree/master/cli',
+8 silly cache add   scope: null,
+8 silly cache add   name: null,
+8 silly cache add   rawSpec: 'https://github.com/Microsoft/code-push/tree/master/cli',
+8 silly cache add   spec: 'https://github.com/Microsoft/code-push/tree/master/cli',
+8 silly cache add   type: 'remote' }
+9 silly mapToRegistry name https://github.com/Microsoft/code-push/tree/master/cli
+10 silly mapToRegistry using default registry
+11 silly mapToRegistry registry https://registry.npmjs.org/
+12 silly mapToRegistry uri https://github.com/Microsoft/code-push/tree/master/cli
+13 verbose addRemoteTarball https://github.com/Microsoft/code-push/tree/master/cli not in flight; adding
+14 verbose addRemoteTarball [ 'https://github.com/Microsoft/code-push/tree/master/cli',
+14 verbose addRemoteTarball   null ]
+15 info retry fetch attempt 1 at 9:42:35 AM
+16 info attempt registry request try #1 at 9:42:35 AM
+17 http fetch GET https://github.com/Microsoft/code-push/tree/master/cli
+18 verbose request id 692fbae64581e9e4
+19 http fetch 404 https://github.com/Microsoft/code-push/tree/master/cli
+20 error fetch failed https://github.com/Microsoft/code-push/tree/master/cli
+21 warn retry will retry, error on last attempt: Error: fetch failed with status code 404
+22 info retry fetch attempt 2 at 9:42:45 AM
+23 info attempt registry request try #1 at 9:42:45 AM
+24 http fetch GET https://github.com/Microsoft/code-push/tree/master/cli
+25 http fetch 404 https://github.com/Microsoft/code-push/tree/master/cli
+26 error fetch failed https://github.com/Microsoft/code-push/tree/master/cli
+27 warn retry will retry, error on last attempt: Error: fetch failed with status code 404
+28 info retry fetch attempt 3 at 9:43:45 AM
+29 info attempt registry request try #1 at 9:43:45 AM
+30 http fetch GET https://github.com/Microsoft/code-push/tree/master/cli
+31 http fetch 404 https://github.com/Microsoft/code-push/tree/master/cli
+32 error fetch failed https://github.com/Microsoft/code-push/tree/master/cli
+33 verbose stack Error: fetch failed with status code 404
+33 verbose stack     at Request.<anonymous> (/Users/joncart/.nvm/versions/node/v4.1.1/lib/node_modules/npm/node_modules/npm-registry-client/lib/fetch.js:51:14)
+33 verbose stack     at emitOne (events.js:77:13)
+33 verbose stack     at Request.emit (events.js:169:7)
+33 verbose stack     at Request.onRequestResponse (/Users/joncart/.nvm/versions/node/v4.1.1/lib/node_modules/npm/node_modules/request/request.js:1008:10)
+33 verbose stack     at emitOne (events.js:77:13)
+33 verbose stack     at ClientRequest.emit (events.js:169:7)
+33 verbose stack     at HTTPParser.parserOnIncomingClient [as onIncoming] (_http_client.js:415:21)
+33 verbose stack     at HTTPParser.parserOnHeadersComplete (_http_common.js:88:23)
+33 verbose stack     at TLSSocket.socketOnData (_http_client.js:305:20)
+33 verbose stack     at emitOne (events.js:77:13)
+34 verbose cwd /Users/joncart/Desktop/vso-task-google-play
+35 error Darwin 15.0.0
+36 error argv "/Users/joncart/.nvm/versions/node/v4.1.1/bin/node" "/Users/joncart/.nvm/versions/node/v4.1.1/bin/npm" "i" "-g" "https://github.com/Microsoft/code-push/tree/master/cli"
+37 error node v4.1.1
+38 error npm  v2.14.4
+39 error fetch failed with status code 404
+40 error If you need help, you may report this error at:
+40 error     <https://github.com/npm/npm/issues>
+41 verbose exit [ 1, true ]

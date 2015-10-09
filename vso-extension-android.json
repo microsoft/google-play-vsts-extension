@@ -1,0 +1,30 @@
+{
+	"manifestVersion": 1.0,
+	"extensionId": "vsoExtensionAndroid",
+	"name": "Android Extension",
+	"version": "0.0.1",
+	"publisher": "joncart",
+	"public": false,
+	"description": "A set of build tasks to better enable Android development",
+	"categories": ["Build and release"],
+	"galleryFlags": [],
+	"icons": {
+		"default": "android_default.png",
+		"wide": "android_wide.jpg"
+	},
+	"files": [
+		{
+			"path": "vso-task-google-play"
+		}
+	],
+	"contributions": [
+		{
+			"id": "joncart.vsoExtensionAndroid.task",
+			"type": "ms.vss-distributed-task.task",
+			"targets": ["ms.vss-distributed-task.tasks"],
+			"properties": {
+				"name": "vso-task-google-play"
+			}
+		}
+	]
+}

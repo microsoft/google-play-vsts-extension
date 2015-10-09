@@ -1,0 +1,18 @@
+{
+  "name": "vso-task-google-play",
+  "version": "1.0.0",
+  "description": "A VSO build task for deloying an APK to the Google Play store",
+  "main": "GooglePlay.js",
+  "scripts": {
+    "deploy": "tfx build tasks upload ./ --overwrite"
+  },
+  "author": "Jonathan Carter",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^2.10.1",
+    "googleapis": "^2.1.5",
+    "minimatch": "^3.0.0",
+    "node-apk-parser": "^0.2.3",
+    "vso-task-lib": "^0.4.5"
+  }
+}
