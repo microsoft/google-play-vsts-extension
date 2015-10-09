@@ -1,7 +1,7 @@
 {
 	"manifestVersion": 1.0,
-	"extensionId": "vsoExtensionAndroid",
-	"name": "Android Extension",
+	"extensionId": "joncart.vsoExtensionAndroid",
+	"name": "Android",
 	"version": "0.0.1",
 	"publisher": "joncart",
 	"public": false,
