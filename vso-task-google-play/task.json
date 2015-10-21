@@ -1,7 +1,7 @@
 {
   "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
   "name": "GooglePlay2",
-  "friendlyName": "Google Play 2",
+  "friendlyName": "Google Play",
   "description": "Publish an APK to the Google Play store",
   "author": "Jonathan Carter",
   "helpMarkDown": "Replace with markdown to show in help",
