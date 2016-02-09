@@ -1,0 +1,10 @@
+{
+  "name": "vso-android-extension",
+  "version": "0.0.1",
+  "description": "A set of build tasks to better enable Android development.",
+  "author": "Microsoft",
+  "license": "MIT",
+  "dependencies": {
+    "q": "^1.4.1"
+   }
+}
