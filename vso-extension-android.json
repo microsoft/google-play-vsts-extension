@@ -2,7 +2,7 @@
 	"manifestVersion": 1.0,
 	"extensionId": "joncart-vsoExtensionAndroid",
 	"name": "Android",
-	"version": "0.0.2",
+	"version": "0.0.4",
 	"publisher": "joncart",
 	"description": "A set of build tasks to better enable Android development",
 	"categories": [

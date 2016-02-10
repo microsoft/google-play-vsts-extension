@@ -32,7 +32,7 @@ var globalParams = { auth: null, params: {} };
 var packageName = tryGetPackageName(apkFile);
 var jwtClient = setupAuthClient(key);
 var edits = publisher.edits;
-[edits, edits.apks, edits.tracks, edits.apkListings, jwtClient].forEach(Promise.promisifyAll);
+[edits, edits.apks, edits.tracks, jwtClient].forEach(Promise.promisifyAll);
 
 globalParams.auth = jwtClient;
 updateGlobalParams("packageName", packageName);
@@ -66,13 +66,12 @@ try {
 }
 
 currentEdit = currentEdit.then(function (res) {
-    edits.commitAsync().then(function (res) {
+    return edits.commitAsync().then(function (res) {
         console.log("APK successfully published!");
         console.log("Track: " + track);
         tl.exit(0);
     });
-})
-    .catch(function (err) {
+}).catch(function (err) {
     console.error(err);
     tl.exit(1);
 });
