@@ -31,15 +31,15 @@ var globalParams = { auth: null, params: {} };
 
 var packageName = tryGetPackageName(apkFile);
 var jwtClient = setupAuthClient(key);
-globalParams.auth = jwtClient;
-updateGlobalParams("packageName", packageName);
-
 var edits = publisher.edits;
 [edits, edits.apks, edits.tracks, edits.apkListings, jwtClient].forEach(Promise.promisifyAll);
 
+globalParams.auth = jwtClient;
+updateGlobalParams("packageName", packageName);
+
 console.log("Authenticating with Google Play");
 var currentEdit = authorize().then(function (res) {
-    getNewEdit(packageName);
+    return getNewEdit(packageName);
 });
 
 currentEdit = currentEdit.then(function (res) {
@@ -52,20 +52,29 @@ currentEdit = currentEdit.then(function (res) {
     return updateTrack(packageName, track, res[0].versionCode, userFraction);
 });
 
-if (fs.existsSync(changeLogFile)) {
-    currentEdit = currentEdit.then(function (res) {
-        console.log("Adding changelog file..."); 
-        return addChangelog(changeLogFile);
-    });
+try {
+    var stats = fs.statSync(changeLogFile);
+    if (stats && stats.isFile()) {
+        currentEdit = currentEdit.then(function (res) {
+            console.log("Adding changelog file...");
+            return addChangelog(changeLogFile);
+        });
+
+    }
+} catch (e) {
+    tl.debug("No changelog found. log path was " + changeLogFile);
 }
 
-currentEdit = currentEdit.commitAsync().then(function (res) {
-    console.log("APK successfully published!");
-    tl.exit(0);
+currentEdit = currentEdit.then(function (res) {
+    edits.commitAsync().then(function (res) {
+        console.log("APK successfully published!");
+        console.log("Track: " + track);
+        tl.exit(0);
+    });
 })
     .catch(function (err) {
     console.error(err);
-    tl.exit(0);
+    tl.exit(1);
 });
 
 
@@ -76,6 +85,7 @@ currentEdit = currentEdit.commitAsync().then(function (res) {
  * @return {string} packageName - Name extracted from package. null if extraction failed
  */
 function tryGetPackageName(apkFile) {
+    tl.debug("Candidate package: " + apkFile);
     var packageName = null;
     try {
         packageName = apkParser
@@ -109,11 +119,10 @@ function authorize() {
 /**
  * Uses the provided JWT client to request a new edit from the Play store and attach the edit id to all requests made this session
  * Assumes authorized
- * @param {Object} jwtClient - authorized client
  * @param {string} packageName - unique android package name (com.android.etc)
  * @return {Promise} edit - A promise that will return result from inserting a new edit
  */
-function getNewEdit(jwtClient, packageName) {
+function getNewEdit(packageName) {
     tl.debug("Creating a new edit");
     var requestParameters = {
         packageName: packageName
@@ -136,7 +145,7 @@ function getNewEdit(jwtClient, packageName) {
  *                          { versionCode: integer, binary: { sha1: string } }
  */
 function addApk(packageName, apkFile) {
-    tl.debug("Uploading a new apk");
+    tl.debug("Uploading a new apk: " + apkFile);
     var requestParameters = {
         packageName: packageName,
         media: {
@@ -188,7 +197,7 @@ function updateTrack(packageName, track, versionCode, userFraction) {
  * @return {}
  */
 function addChangelog(changeLogFile) {
-    tl.debug("Adding changelog file");
+    tl.debug("Adding changelog file: " + changeLogFile);
     var requestParameters = {
         apkVersionCode: globalParams.params.apkVersionCode,
         language: "en-US",
@@ -207,6 +216,7 @@ function updateGlobalParams(paramName, value) {
     tl.debug("SETTING " + paramName + " TO " + JSON.stringify(value));
     globalParams.params[paramName] = value;
     google.options(globalParams);
+    tl.debug("Global Params set to " + JSON.stringify(globalParams));
 }
 
 // Future features:
