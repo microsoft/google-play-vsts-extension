@@ -2,7 +2,7 @@
 	"manifestVersion": 1.0,
 	"extensionId": "joncart-vsoExtensionAndroid",
 	"name": "Android",
-	"version": "0.0.4",
+	"version": "0.0.8",
 	"publisher": "joncart",
 	"description": "A set of build tasks to better enable Android development",
 	"categories": [
@@ -21,6 +21,9 @@
 	"files": [
 		{
 			"path": "Tasks/vso-task-google-play"
+		},
+		{
+			"path": "Tasks/vso-task-google-play-promote"
 		}
 	],
 	"contributions": [
@@ -30,6 +33,14 @@
 			"targets": ["ms.vss-distributed-task.tasks"],
 			"properties": {
 				"name": "Tasks/vso-task-google-play"
+			}
+		},
+		{
+			"id": "google-play-promote",
+			"type": "ms.vss-distributed-task.task",
+			"targets": ["ms.vss-distributed-task.tasks"],
+			"properties": {
+				"name": "Tasks/vso-task-google-play-promote"
 			}
 		}
 	]

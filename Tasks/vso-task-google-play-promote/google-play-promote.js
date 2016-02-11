@@ -99,7 +99,7 @@ function getTrack(packageName, track) {
 
     tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
     
-    return edits.track.getAsync(requestParameters);
+    return edits.tracks.getAsync(requestParameters);
 }
 
 /**
