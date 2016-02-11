@@ -1,0 +1,86 @@
+{
+  "id": "4dae1f76-29d3-482f-97d5-e3189a8347c2",
+  "name": "GooglePlayPromote",
+  "friendlyName": "Google Play - Promote",
+  "description": "Promote an app from one release track to another",
+  "author": "Jonathan Carter",
+  "helpMarkDown": "Replace with markdown to show in help",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": ["npm"],
+  "version": {
+    "Major": "0",
+    "Minor": "0",
+    "Patch": "1"
+  },
+  "minimumAgentVersion": "1.83.0",
+  "instanceNameFormat": "Deploy $(apkFile) to the Google Play store",
+  "inputs": [
+    {
+      "name": "serviceAccountKey",
+      "type": "filePath",
+      "label": "Service Account Key",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The JSON file provided by Google Play that included the service account's identify that has permission to promote."
+    },
+    {
+      "name": "packageName",
+      "type": "string",
+      "label": "Package Name",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The unique package identifier (ie com.google.etc) that you wish to promote."
+    },
+    {
+      "name": "sourceTrack",
+      "type": "pickList",
+      "label": "Source Track",
+      "defaultValue": "alpha",
+      "required": true,
+      "helpMarkDown": "The track you wish to promote from.",
+      "options": {
+        "alpha": "Alpha",
+        "beta": "Beta",
+        "production": "Production",
+        "rollout": "Rollout"
+      }
+    },
+    {
+      "name": "destinationTrack",
+      "type": "pickList",
+      "label": "Destination Track",
+      "defaultValue": "beta",
+      "required": true,
+      "helpMarkDown": "The track you wish to promote to.",
+      "options": {
+        "alpha": "Alpha",
+        "beta": "Beta",
+        "production": "Production",
+        "rollout": "Rollout"
+      }
+    },
+    {
+      "name": "userFraction",
+      "type": "string",
+      "label": "Rollout Fraction",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "If promoting to the \"rollout\" track, this specifies the percentage of users to roll out your APK to."
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "google-play-promote.js",
+      "argumentFormat": ""
+    },
+    "PowerShell": {
+      "target": "$(currentDirectory)\\google-play-promote.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  }
+}
