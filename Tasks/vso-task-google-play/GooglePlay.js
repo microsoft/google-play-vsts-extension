@@ -11,6 +11,15 @@ var apkFile = tl.getPathInput("apkFile", true);
 var track = tl.getInput("track", true);
 var userFraction = tl.getInput("userFraction", false); // Used for staged rollouts
 var changeLogFile = tl.getInput("changeLogFile", false);
+var shouldUpdateContact = tl.getInput("updateContactInfo", false);
+var contactEmail, contactPhone, contactWebsite, contactLanguage;
+
+if (shouldUpdateContact) {
+    contactEmail = tl.getInput("contactEmail", false);
+    contactPhone = tl.getInput("contactPhone", false);
+    contactWebsite = tl.getInput("contactWebsite", false);
+    contactLanguage = tl.getInput("contactLanguage", false);
+}
 
 // Constants
 var GOOGLE_PLAY_SCOPES = ["https://www.googleapis.com/auth/androidpublisher"];
@@ -32,7 +41,7 @@ var globalParams = { auth: null, params: {} };
 var packageName = tryGetPackageName(apkFile);
 var jwtClient = setupAuthClient(key);
 var edits = publisher.edits;
-[edits, edits.apks, edits.tracks, jwtClient].forEach(Promise.promisifyAll);
+[edits, edits.apks, edits.tracks, edits.details, jwtClient].forEach(Promise.promisifyAll);
 
 globalParams.auth = jwtClient;
 updateGlobalParams("packageName", packageName);
@@ -63,6 +72,12 @@ try {
     }
 } catch (e) {
     tl.debug("No changelog found. log path was " + changeLogFile);
+}
+
+if (shouldUpdateContact) {
+    currentEdit = currentEdit.then(function(res) {
+        return updateContact(packageName, contactEmail, contactPhone, contactWebsite, contactLanguage);
+    });
 }
 
 currentEdit = currentEdit.then(function (res) {
@@ -213,13 +228,56 @@ function addChangelog(changeLogFile) {
     tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
     return edits.tracks.patchAsync(requestParameters);
 }
+
+/**
+ * Updates contact information asssociated with the package
+ * Assumes authorized
+ * @param {string} packageName - unique android package name (com.android.etc)
+ * @param {string} email - updated email address. null or empty will be ignored
+ * @param {string} phone - updated phone number. null or empty will be ignored
+ * @param {string} website - updated website address. null or empty will be ignored
+ * @param {string} language - updated default language. null, empty, or "none" will be ignored
+ * @returns {Promise} details - A promise that will return result from patching details
+ *                              { defaultLanguage: string, contactWebsite: string, contactEmail: string, contactPhone: string }
+ */
+function updateContact(packageName, email, phone, website, language) {
+    tl.debug("Updating Contact Information: ");
+    tl.debug("Email: " + email);
+    tl.debug("Phone: " + phone);
+    tl.debug("Website: " + website);
+    tl.debug("Language: " + language);
+    var requestParameters = {
+        packageName: packageName,
+        resource: {}
+    };
+    
+    if (email) {
+        requestParameters.resource.contactEmail = email;
+    }
+    
+    if (phone) {
+        requestParameters.resource.contactPhone = phone;
+    }
+    
+    if (website) {
+        requestParameters.resource.contactWebsite = website;
+    }
+    
+    if (language && language != "none") {
+        requestParameters.resource.defaultLanguage = language;
+    }
+    
+    
+    tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
+    return edits.details.patchAsync(requestParameters);
+}
+
 /**
  * Update the universal parameters attached to every request
  * @param {string} paramName - Name of parameter to add/update
  * @param {any} value - value to assign to paramName. Any value is admissible.
  * @returns {void} void
  */
-
 function updateGlobalParams(paramName, value) {
     tl.debug("Updating Global Parameters");
     tl.debug("SETTING " + paramName + " TO " + JSON.stringify(value));
@@ -233,4 +291,4 @@ function updateGlobalParams(paramName, value) {
 // 1) Adding testers
 // 2) Adding new images
 // 3) Adding expansion files
-// 4) Updating contact info
+// 4) Updating contact info - in progress
