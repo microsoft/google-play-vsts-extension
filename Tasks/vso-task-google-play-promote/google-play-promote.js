@@ -56,32 +56,6 @@ currentEdit = currentEdit.then(function (res) {
     tl.exit(1);
 });
 
-
-
-/**
- * Tries to extract the package name from an apk file
- * @param {Object} apkFile - The apk file from which to attempt name extraction
- * @return {string} packageName - Name extracted from package. null if extraction failed
- */
-function tryGetPackageName(apkFile) {
-    tl.debug("Candidate package: " + apkFile);
-    var packageName = null;
-    try {
-        packageName = apkParser
-            .readFile(apkFile)
-            .readManifestSync()
-        .package;
-
-        tl.debug("name extraction from apk succeeded: " + packageName);
-    }
-    catch (e) {
-        tl.debug("name extraction from apk failed: " + e.message);
-        console.error("The specified APK file isn't valid. Please check the path and try to queue another build.");
-    }
-
-    return packageName;
-}
-
 /**
  * Setups up a new JWT client for authentication
  * @param {Object} key - parsed object from google play provided JSON authentication informatoin
@@ -159,27 +133,6 @@ function updateTrack(packageName, track, versionCode, userFraction) {
 }
 
 /**
- * Add a changelog to an edit
- * Assumes authorized
- * @param {string} changeLogFile - path to changelog file. We assume this exists (behaviour may change)
- * @returns {Promise} track - A promise that will return result from updating a track
- *                            { track: string, versionCodes: [integer], userFraction: double }
- */
-function addChangelog(changeLogFile) {
-    tl.debug("Adding changelog file: " + changeLogFile);
-    var requestParameters = {
-        apkVersionCode: globalParams.params.apkVersionCode,
-        language: "en-US",
-        resource: {
-            language: "en-US",
-            recentChanges: fs.readFileSync(changeLogFile)
-        }
-    };
-
-    tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
-    return edits.tracks.patchAsync(requestParameters);
-}
-/**
  * Update the universal parameters attached to every request
  * @param {string} paramName - Name of parameter to add/update
  * @param {any} value - value to assign to paramName. Any value is admissible.
@@ -193,10 +146,3 @@ function updateGlobalParams(paramName, value) {
     google.options(globalParams);
     tl.debug("Global Params set to " + JSON.stringify(globalParams));
 }
-
-// Future features:
-// ----------------
-// 1) Adding testers
-// 2) Adding new images
-// 3) Adding expansion files
-// 4) Updating contact info
