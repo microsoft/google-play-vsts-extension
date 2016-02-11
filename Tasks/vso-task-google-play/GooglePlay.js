@@ -120,6 +120,7 @@ function authorize() {
  * Assumes authorized
  * @param {string} packageName - unique android package name (com.android.etc)
  * @return {Promise} edit - A promise that will return result from inserting a new edit
+ *                          { id: string, expiryTimeSeconds: string }
  */
 function getNewEdit(packageName) {
     tl.debug("Creating a new edit");
@@ -168,6 +169,8 @@ function addApk(packageName, apkFile) {
  * @param {string} track - one of the values {"alpha", "beta", "production", "rollout"}
  * @param {integer} versionCode - version code returned from an apk call.
  * @param {double} userFraction - for rollout, fraction of users to get update
+ * @returns {Promise} track - A promise that will return result from updating a track
+ *                            { track: string, versionCodes: [integer], userFraction: double }
  */
 function updateTrack(packageName, track, versionCode, userFraction) {
     tl.debug("Updating track");
@@ -192,8 +195,9 @@ function updateTrack(packageName, track, versionCode, userFraction) {
 /**
  * Add a changelog to an edit
  * Assumes authorized
- * @param {changeLogFile} string - path to changelog file. We assume this exists (behaviour may change)
- * @return {}
+ * @param {string} changeLogFile - path to changelog file. We assume this exists (behaviour may change)
+ * @returns {Promise} track - A promise that will return result from updating a track
+ *                            { track: string, versionCodes: [integer], userFraction: double }
  */
 function addChangelog(changeLogFile) {
     tl.debug("Adding changelog file: " + changeLogFile);
@@ -209,6 +213,12 @@ function addChangelog(changeLogFile) {
     tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
     return edits.tracks.patchAsync(requestParameters);
 }
+/**
+ * Update the universal parameters attached to every request
+ * @param {string} paramName - Name of parameter to add/update
+ * @param {any} value - value to assign to paramName. Any value is admissible.
+ * @returns {void} void
+ */
 
 function updateGlobalParams(paramName, value) {
     tl.debug("Updating Global Parameters");
