@@ -7,8 +7,6 @@ var publisher = google.androidpublisher("v2");
 // User inputs
 var key = require(tl.getPathInput("serviceAccountKey", true));
 var packageName = tl.getPathInput("packageName", true);
-var sourceTrack = tl.getInput("sourceTrack", true);
-var destinationTrack = tl.getInput("destinationTrack", true);
 var userFraction = tl.getInput("userFraction", false); // Used for staged rollouts
 
 // Constants
@@ -30,25 +28,18 @@ var currentEdit = authorize().then(function (res) {
 });
 
 currentEdit = currentEdit.then(function (res) {
-    console.log("Getting information for track " + sourceTrack);
-    return getTrack(packageName, sourceTrack);
+    console.log("Getting information for track rollout");
+    return getTrack(packageName, "rollout");
 });
 
 currentEdit = currentEdit.then(function (res) {
-    console.log("Promoting to track " + destinationTrack);
-    return updateTrack(packageName, destinationTrack, res[0].versionCodes, userFraction);
-});
-
-currentEdit = currentEdit.then(function (res) {
-    console.log("Cleaning up track " + sourceTrack);
-    return updateTrack(packageName, sourceTrack, [], userFraction);
+    console.log("Current User Fraction: " + res[0].userFraction);
+    return updateTrack(packageName, "rollout", res[0].versionCodes, userFraction);
 });
 
 currentEdit = currentEdit.then(function (res) {
     return edits.commitAsync().then(function (res) {
-        console.log("APK successfully promoted!");
-        console.log("Source Track: " + sourceTrack);
-        console.log("Destination Track: " + destinationTrack);
+        console.log("Rollout fraction updated!");
         tl.exit(0);
     });
 }).catch(function (err) {

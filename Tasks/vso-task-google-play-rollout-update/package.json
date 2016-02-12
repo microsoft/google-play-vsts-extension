@@ -1,0 +1,17 @@
+{
+  "name": "vso-task-google-play-rollout-update",
+  "version": "0.0.1",
+  "description": "A VSO build task for updating the rollout fraction of a Google Play store app",
+  "main": "google-play-rollout-update.js",
+  "scripts": {
+    "deploy": "tfx build tasks upload ./ --overwrite"
+  },
+  "author": "Jonathan Carter",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^2.10.1",
+    "googleapis": "^2.1.5",
+    "minimatch": "^3.0.0",
+    "vso-task-lib": "^0.4.5"
+  }
+}
