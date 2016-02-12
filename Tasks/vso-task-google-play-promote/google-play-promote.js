@@ -2,15 +2,14 @@ var Promise = require("bluebird");
 var google = require("googleapis");
 var fs = require("fs");
 var tl = require("vso-task-lib");
-var apkParser = require("node-apk-parser");
 var publisher = google.androidpublisher("v2");
 
 // User inputs
 var key = require(tl.getPathInput("serviceAccountKey", true));
-var apkFile = tl.getPathInput("apkFile", true);
-var track = tl.getInput("track", true);
+var packageName = tl.getPathInput("packageName", true);
+var sourceTrack = tl.getInput("sourceTrack", true);
+var destinationTrack = tl.getInput("destinationTrack", true);
 var userFraction = tl.getInput("userFraction", false); // Used for staged rollouts
-var changeLogFile = tl.getInput("changeLogFile", false);
 
 // Constants
 var GOOGLE_PLAY_SCOPES = ["https://www.googleapis.com/auth/androidpublisher"];
@@ -18,21 +17,9 @@ var APK_MIME_TYPE = "application/vnd.android.package-archive";
 
 var globalParams = { auth: null, params: {} };
 
-// The submission process is composed
-// of a transction with the following steps:
-// -----------------------------------------
-// #1) Extract the package name from the specified APK file
-// #2) Get an OAuth token by authentincating the service account
-// #3) Create a new editing transaction
-// #4) Upload the new APK
-// #5) Specify the track that should be used for the new APK (e.g. alpha, beta)
-// #6) Specify the new change log
-// #7) Commit the edit transaction
-
-var packageName = tryGetPackageName(apkFile);
 var jwtClient = setupAuthClient(key);
 var edits = publisher.edits;
-[edits, edits.apks, edits.tracks, jwtClient].forEach(Promise.promisifyAll);
+[edits, edits.tracks, jwtClient].forEach(Promise.promisifyAll);
 
 globalParams.auth = jwtClient;
 updateGlobalParams("packageName", packageName);
@@ -43,64 +30,31 @@ var currentEdit = authorize().then(function (res) {
 });
 
 currentEdit = currentEdit.then(function (res) {
-    console.log("Uploading APK file...");
-    return addApk(packageName, apkFile);
+    console.log("Getting information for track " + sourceTrack);
+    return getTrack(packageName, sourceTrack);
 });
 
 currentEdit = currentEdit.then(function (res) {
-    console.log("Updating track information...");
-    return updateTrack(packageName, track, res[0].versionCode, userFraction);
+    console.log("Promoting to track " + destinationTrack);
+    return updateTrack(packageName, destinationTrack, res[0].versionCodes, userFraction);
 });
 
-try {
-    var stats = fs.statSync(changeLogFile);
-    if (stats && stats.isFile()) {
-        currentEdit = currentEdit.then(function (res) {
-            console.log("Adding changelog file...");
-            return addChangelog(changeLogFile);
-        });
-
-    }
-} catch (e) {
-    tl.debug("No changelog found. log path was " + changeLogFile);
-}
+currentEdit = currentEdit.then(function (res) {
+    console.log("Cleaning up track " + sourceTrack);
+    return updateTrack(packageName, sourceTrack, [], userFraction);
+});
 
 currentEdit = currentEdit.then(function (res) {
     return edits.commitAsync().then(function (res) {
-        console.log("APK successfully published!");
-        console.log("Track: " + track);
+        console.log("APK successfully promoted!");
+        console.log("Source Track: " + sourceTrack);
+        console.log("Destination Track: " + destinationTrack);
         tl.exit(0);
     });
 }).catch(function (err) {
     console.error(err);
     tl.exit(1);
 });
-
-
-
-/**
- * Tries to extract the package name from an apk file
- * @param {Object} apkFile - The apk file from which to attempt name extraction
- * @return {string} packageName - Name extracted from package. null if extraction failed
- */
-function tryGetPackageName(apkFile) {
-    tl.debug("Candidate package: " + apkFile);
-    var packageName = null;
-    try {
-        packageName = apkParser
-            .readFile(apkFile)
-            .readManifestSync()
-        .package;
-
-        tl.debug("name extraction from apk succeeded: " + packageName);
-    }
-    catch (e) {
-        tl.debug("name extraction from apk failed: " + e.message);
-        console.error("The specified APK file isn't valid. Please check the path and try to queue another build.");
-    }
-
-    return packageName;
-}
 
 /**
  * Setups up a new JWT client for authentication
@@ -136,30 +90,16 @@ function getNewEdit(packageName) {
     });
 }
 
-/**
- * Adds an apk to an existing edit
- * Assumes authorized
- * @param {string} packageName - unique android package name (com.android.etc)
- * @param {string} apkFile - path to apk file
- * @returns {Promise} apk - A promise that will return result from uploading an apk 
- *                          { versionCode: integer, binary: { sha1: string } }
- */
-function addApk(packageName, apkFile) {
-    tl.debug("Uploading a new apk: " + apkFile);
+function getTrack(packageName, track) {
+    tl.debug("Getting Track information");
     var requestParameters = {
         packageName: packageName,
-        media: {
-            body: fs.createReadStream(apkFile),
-            mimeType: APK_MIME_TYPE
-        }
+        track: track
     };
 
     tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
-
-    return edits.apks.uploadAsync(requestParameters).then(function (res) {
-        updateGlobalParams("apkVersionCode", res[0].versionCode)
-        return res;
-    })
+    
+    return edits.tracks.getAsync(requestParameters);
 }
 
 /**
@@ -193,27 +133,6 @@ function updateTrack(packageName, track, versionCode, userFraction) {
 }
 
 /**
- * Add a changelog to an edit
- * Assumes authorized
- * @param {string} changeLogFile - path to changelog file. We assume this exists (behaviour may change)
- * @returns {Promise} track - A promise that will return result from updating a track
- *                            { track: string, versionCodes: [integer], userFraction: double }
- */
-function addChangelog(changeLogFile) {
-    tl.debug("Adding changelog file: " + changeLogFile);
-    var requestParameters = {
-        apkVersionCode: globalParams.params.apkVersionCode,
-        language: "en-US",
-        resource: {
-            language: "en-US",
-            recentChanges: fs.readFileSync(changeLogFile)
-        }
-    };
-
-    tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
-    return edits.tracks.patchAsync(requestParameters);
-}
-/**
  * Update the universal parameters attached to every request
  * @param {string} paramName - Name of parameter to add/update
  * @param {any} value - value to assign to paramName. Any value is admissible.
@@ -227,10 +146,3 @@ function updateGlobalParams(paramName, value) {
     google.options(globalParams);
     tl.debug("Global Params set to " + JSON.stringify(globalParams));
 }
-
-// Future features:
-// ----------------
-// 1) Adding testers
-// 2) Adding new images
-// 3) Adding expansion files
-// 4) Updating contact info
