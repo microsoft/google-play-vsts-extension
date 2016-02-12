@@ -14,7 +14,7 @@
   "version": {
     "Major": "0",
     "Minor": "0",
-    "Patch": "2"
+    "Patch": "3"
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "Deploy $(apkFile) to the Google Play store",
@@ -69,7 +69,8 @@
       "label": "Rollout Fraction",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "If promoting to the \"rollout\" track, this specifies the percentage of users to roll out your APK to."
+      "helpMarkDown": "If promoting to the \"rollout\" track, this specifies the percentage of users to roll out your APK to.",
+      "visibleRule": "destinationTrack = rollout"
     }
   ],
   "execution": {
