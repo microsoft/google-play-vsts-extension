@@ -24,6 +24,9 @@
 		},
 		{
 			"path": "Tasks/vso-task-google-play-promote"
+		},
+		{
+			"path": "Tasks/vso-task-google-play-rollout-update"
 		}
 	],
 	"contributions": [
@@ -41,6 +44,14 @@
 			"targets": ["ms.vss-distributed-task.tasks"],
 			"properties": {
 				"name": "Tasks/vso-task-google-play-promote"
+			}
+		},
+		{
+			"id": "google-play-rollout-update",
+			"type": "ms.vss-distributed-task.task",
+			"targets": ["ms.vss-distributed-task.tasks"],
+			"properties": {
+				"name": "Tasks/vso-task-google-play-rollout-update"
 			}
 		}
 	]
