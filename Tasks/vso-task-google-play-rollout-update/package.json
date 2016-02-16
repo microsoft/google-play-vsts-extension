@@ -1,6 +1,6 @@
 {
   "name": "vso-task-google-play-rollout-update",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A VSO build task for updating the rollout fraction of a Google Play store app",
   "main": "google-play-rollout-update.js",
   "scripts": {

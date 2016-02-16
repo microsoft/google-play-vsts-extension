@@ -12,12 +12,12 @@
   ],
   "demands": ["npm"],
   "version": {
-    "Major": "0",
+    "Major": "1",
     "Minor": "0",
-    "Patch": "3"
+    "Patch": "0"
   },
   "minimumAgentVersion": "1.83.0",
-  "instanceNameFormat": "Deploy $(apkFile) to the Google Play store",
+  "instanceNameFormat": "Promote $(packageName) on $(sourceTrack) to $(destinationTrack)",
   "inputs": [
     {
       "name": "serviceAccountKey",
