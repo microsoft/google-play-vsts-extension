@@ -5,7 +5,16 @@ var tl = require("vso-task-lib");
 var publisher = google.androidpublisher("v2");
 
 // User inputs
-var key = require(tl.getPathInput("serviceAccountKey", true));
+var serviceAccountKeyFile = tl.getPathInput("serviceAccountKey", false);
+var key = {};
+if (serviceAccountKeyFile) {
+    key = require(serviceAccountKeyFile);
+} else {
+    var serviceAccount = tl.getEndpointAuthorization(tl.getInput("serviceAccount", true));
+    key.client_email = serviceAccount.parameters.username;
+    key.private_key = serviceAccount.parameters.password.replace(/\\n/g, "\n");
+}
+
 var packageName = tl.getPathInput("packageName", true);
 var sourceTrack = tl.getInput("sourceTrack", true);
 var destinationTrack = tl.getInput("destinationTrack", true);
@@ -127,7 +136,7 @@ function updateTrack(packageName, track, versionCode, userFraction) {
         track: track,
         resource: {
             track: track,
-            versionCodes: (typeof versionCode === "number", [versionCode], versionCode)
+            versionCodes: (typeof versionCode === "number" ? [versionCode]: versionCode)
         }
     };
 

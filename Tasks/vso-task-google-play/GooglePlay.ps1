@@ -1,5 +1,6 @@
 param (
     [string]$serviceAccountKey,
+    [string]$serviceAccount,
     [string]$apkFile,
     [string]$track,
     [string]$userFraction,
@@ -7,6 +8,7 @@ param (
 ) 
   
 $env:INPUT_serviceAccountKey = $serviceAccountKey
+$env:INPUT_serviceAccount = $serviceAccount
 $env:INPUT_apkFile = $apkFile
 $env:INPUT_track = $track
 $env:INPUT_userFraction = $userFraction
