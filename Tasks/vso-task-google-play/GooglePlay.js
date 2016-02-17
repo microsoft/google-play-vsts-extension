@@ -8,9 +8,15 @@ var publisher = google.androidpublisher("v2");
 // User inputs;
 var serviceAccountKeyFile = tl.getPathInput("serviceAccountKey", false);
 var key = {};
-if (serviceAccountKeyFile) {
-    key = require(serviceAccountKeyFile);
-} else {
+
+try {
+    var stats = fs.statSync(serviceAccountKeyFile);
+    if (stats && stats.isFile()) {
+        key = require(serviceAccountKeyFile);
+    }
+} catch (e) { }
+
+if (!key.client_email || !key.private_key) {
     var serviceAccount = tl.getEndpointAuthorization(tl.getInput("serviceAccount", true));
     key.client_email = serviceAccount.parameters.username;
     key.private_key = serviceAccount.parameters.password.replace(/\\n/g, "\n");
