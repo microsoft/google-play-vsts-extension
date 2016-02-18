@@ -3,7 +3,7 @@
 	"extensionId": "google-play-store-extension",
 	"name": "Google Play Store",
 	"version": "0.1.0",
-	"publisher": "vs-client",
+	"publisher": "ms-vsclient",
 	"description": "A set of build tasks to better enable Android development",
 	"categories": [
         "Build and release"
