@@ -28,17 +28,17 @@
             "defaultValue": "ServiceAccount",
             "helpMarkDown": "",
             "options": {
-                "ServiceAccount": "Service Account",
+                "ServiceAccount": "Service Endpoint",
                 "JsonFile": "JSON Auth File"
             }
         },
         {
             "name": "serviceAccount",
             "type": "connectedService:google-play",
-            "label": "Service Account",
+            "label": "Service Endpoint",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The VSTS Service Account that specifies the identiy you wish to publish your APK under.",
+            "helpMarkDown": "The VSTS Service Endpoint that specifies the identiy you wish to publish your APK under.",
             "visibleRule": "authType = ServiceAccount"
         },
         {

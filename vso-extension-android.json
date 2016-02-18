@@ -76,8 +76,8 @@
                         "inputDescriptors": [
                             {
                                 "id": "username",
-                                "name": "Client Email",
-                                "description": "Client id from Google developer console",
+                                "name": "Service account e-mail",
+                                "description": "The e-mail address of the service account used to authenticate with the Google Play store",
                                 "inputMode": "textbox",
                                 "isConfidential": false,
                                 "validation": {
