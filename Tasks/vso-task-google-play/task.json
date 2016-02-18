@@ -1,6 +1,6 @@
 {
     "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
-    "name": "GooglePlay2",
+    "name": "GooglePlayRelease",
     "friendlyName": "Google Play - Release",
     "description": "Publish an APK to the Google Play store",
     "author": "Microsoft Corporation",
@@ -25,21 +25,21 @@
             "name": "authType",
             "type": "pickList",
             "label": "Authentication Method",
-            "defaultValue": "ServiceAccount",
+            "defaultValue": "ServiceEndpoint",
             "helpMarkDown": "",
             "options": {
-                "ServiceAccount": "Service Endpoint",
+                "ServiceEndpoint": "Service Endpoint",
                 "JsonFile": "JSON Auth File"
             }
         },
         {
-            "name": "serviceAccount",
+            "name": "serviceEndpoint",
             "type": "connectedService:google-play",
             "label": "Service Endpoint",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The VSTS Service Endpoint that specifies the identiy you wish to publish your APK under.",
-            "visibleRule": "authType = ServiceAccount"
+            "visibleRule": "authType = ServiceEndpoint"
         },
         {
             "name": "serviceAccountKey",

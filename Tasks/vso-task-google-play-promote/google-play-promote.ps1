@@ -1,6 +1,6 @@
 param (
     [string]$serviceAccountKey,
-    [string]$serviceAccount,
+    [string]$serviceEndpoint,
     [string]$packageName,
     [string]$sourceTrack,
     [string]$destinationTrack,
@@ -8,7 +8,7 @@ param (
 ) 
   
 $env:INPUT_serviceAccountKey = $serviceAccountKey
-$env:INPUT_serviceAccount = $serviceAccount
+$env:INPUT_serviceEndpoint = $serviceEndpoint
 $env:INPUT_packageName = $packageName
 $env:INPUT_sourceTrack = $sourceTrack
 $env:INPUT_destinationTrack = $destinationTrack

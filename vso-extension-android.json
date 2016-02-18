@@ -76,7 +76,7 @@
                         "inputDescriptors": [
                             {
                                 "id": "username",
-                                "name": "Service account e-mail",
+                                "name": "Service Account E-mail",
                                 "description": "The e-mail address of the service account used to authenticate with the Google Play store",
                                 "inputMode": "textbox",
                                 "isConfidential": false,

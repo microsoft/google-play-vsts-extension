@@ -1,12 +1,12 @@
 param (
     [string]$serviceAccountKey,
-    [string]$serviceAccount,
+    [string]$serviceEndpoint,
     [string]$packageName,
     [string]$userFraction
 ) 
   
 $env:INPUT_serviceAccountKey = $serviceAccountKey
-$env:INPUT_serviceAccount = $serviceAccount
+$env:INPUT_serviceEndpoint = $serviceEndpoint
 $env:INPUT_packageName = $packageName
 $env:INPUT_userFraction = $userFraction
 

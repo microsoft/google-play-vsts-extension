@@ -18,26 +18,10 @@ if (authType === "JsonFile") {
             tl.setResult(1, serviceAccountKeyFile + " was not a valid auth file");
         }
     } catch (e) { }
-} else if (authType === "ServiceAccount") {
-    var serviceAccount = tl.getEndpointAuthorization(tl.getInput("serviceAccount", true));
-    key.client_email = serviceAccount.parameters.username;
-    key.private_key = serviceAccount.parameters.password.replace(/\\n/g, "\n");
-}
-
-var serviceAccountKeyFile = tl.getPathInput("serviceAccountKey", false);
-var key = {};
-
-try {
-    var stats = fs.statSync(serviceAccountKeyFile);
-    if (stats && stats.isFile()) {
-        key = require(serviceAccountKeyFile);
-    }
-} catch (e) { }
-
-if (!key.client_email || !key.private_key) {
-    var serviceAccount = tl.getEndpointAuthorization(tl.getInput("serviceAccount", true));
-    key.client_email = serviceAccount.parameters.username;
-    key.private_key = serviceAccount.parameters.password.replace(/\\n/g, "\n");
+} else if (authType === "ServiceEndpoint") {
+    var serviceEndpoint = tl.getEndpointAuthorization(tl.getInput("serviceEndpoint", true));
+    key.client_email = serviceEndpoint.parameters.username;
+    key.private_key = serviceEndpoint.parameters.password.replace(/\\n/g, "\n");
 }
 
 var packageName = tl.getPathInput("packageName", true);

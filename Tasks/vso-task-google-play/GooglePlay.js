@@ -19,10 +19,10 @@ if (authType === "JsonFile") {
             tl.setResult(1, serviceAccountKeyFile + " was not a valid auth file");
         }
     } catch (e) { }
-} else if (authType === "ServiceAccount") {
-    var serviceAccount = tl.getEndpointAuthorization(tl.getInput("serviceAccount", true));
-    key.client_email = serviceAccount.parameters.username;
-    key.private_key = serviceAccount.parameters.password.replace(/\\n/g, "\n");
+} else if (authType === "ServiceEndpoint") {
+    var serviceEndpoint = tl.getEndpointAuthorization(tl.getInput("serviceEndpoint", true));
+    key.client_email = serviceEndpoint.parameters.username;
+    key.private_key = serviceEndpoint.parameters.password.replace(/\\n/g, "\n");
 }
 
 var apkFile = tl.getPathInput("apkFile", true);

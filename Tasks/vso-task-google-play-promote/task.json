@@ -25,21 +25,21 @@
             "name": "authType",
             "type": "pickList",
             "label": "Authentication Method",
-            "defaultValue": "ServiceAccount",
+            "defaultValue": "ServiceEndpoint",
             "helpMarkDown": "",
             "options": {
-                "ServiceAccount": "Service Endpoint",
+                "ServiceEndpoint": "Service Endpoint",
                 "JsonFile": "JSON Auth File"
             }
         },
         {
-            "name": "serviceAccount",
+            "name": "serviceEndpoint",
             "type": "connectedService:google-play",
             "label": "Service Endpoint",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The VSTS Service Endpoint that specifies the identiy you wish to publish your APK under.",
-            "visibleRule": "authType = ServiceAccount"
+            "visibleRule": "authType = ServiceEndpoint"
         },
         {
             "name": "serviceAccountKey",
@@ -56,7 +56,7 @@
             "label": "Package Name",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The unique package identifier (ie com.google.etc) that you wish to promote."
+            "helpMarkDown": "The unique package identifier (com.foo.myapp) that you wish to promote."
         },
         {
             "name": "sourceTrack",
@@ -92,7 +92,7 @@
             "label": "Rollout Fraction",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "If promoting to the \"rollout\" track, this specifies the percentage of users to roll out your APK to.",
+            "helpMarkDown": "Specifies the percentage of users to roll out your APK to.",
             "visibleRule": "destinationTrack = rollout"
         }
     ],
