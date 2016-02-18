@@ -3,7 +3,7 @@
     "name": "GooglePlay2",
     "friendlyName": "Google Play",
     "description": "Publish an APK to the Google Play store",
-    "author": "Jonathan Carter",
+    "author": "Microsoft Corporation",
     "helpMarkDown": "Replace with markdown to show in help",
     "category": "Deploy",
     "visibility": [

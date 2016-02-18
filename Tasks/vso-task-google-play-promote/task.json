@@ -3,7 +3,7 @@
     "name": "GooglePlayPromote",
     "friendlyName": "Google Play - Promote",
     "description": "Promote an app from one release track to another",
-    "author": "Jonathan Carter",
+    "author": "Microsoft Corporation",
     "helpMarkDown": "Replace with markdown to show in help",
     "category": "Deploy",
     "visibility": [
@@ -19,7 +19,7 @@
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
-    "instanceNameFormat": "Promote $(packageName) on $(sourceTrack) to $(destinationTrack)",
+    "instanceNameFormat": "Promote $(packageName) from $(sourceTrack) to $(destinationTrack)",
     "inputs": [
         {
             "name": "authType",

@@ -5,17 +5,20 @@ var tl = require("vso-task-lib");
 var publisher = google.androidpublisher("v2");
 
 // User inputs
-var serviceAccountKeyFile = tl.getPathInput("serviceAccountKey", false);
+var authType = tl.getInput("authType", true);
 var key = {};
-
-try {
-    var stats = fs.statSync(serviceAccountKeyFile);
-    if (stats && stats.isFile()) {
-        key = require(serviceAccountKeyFile);
-    }
-} catch (e) { }
-
-if (!key.client_email || !key.private_key) {
+if (authType === "JsonFile") {
+    var serviceAccountKeyFile = tl.getPathInput("serviceAccountKey", false);
+    try {
+        var stats = fs.statSync(serviceAccountKeyFile);
+        if (stats && stats.isFile()) {
+            key = require(serviceAccountKeyFile);
+        } else {
+            console.error("Specified Auth file was invalid");
+            tl.setResult(1, serviceAccountKeyFile + " was not a valid auth file");
+        }
+    } catch (e) { }
+} else if (authType === "ServiceAccount") {
     var serviceAccount = tl.getEndpointAuthorization(tl.getInput("serviceAccount", true));
     key.client_email = serviceAccount.parameters.username;
     key.private_key = serviceAccount.parameters.password.replace(/\\n/g, "\n");

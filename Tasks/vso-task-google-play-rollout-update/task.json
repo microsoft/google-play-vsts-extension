@@ -1,9 +1,9 @@
 {
     "id": "f8c97cf9-4e17-4244-b0fb-f540cea78153",
     "name": "GooglePlayRolloutUpdate",
-    "friendlyName": "Google Play - Rollout Update",
-    "description": "Update the rollout fraction of a Google Play App",
-    "author": "Jonathan Carter",
+    "friendlyName": "Google Play - Increase Rollout",
+    "description": "Increase the rollout fraction of a Google Play App",
+    "author": "Microsoft Corporation",
     "helpMarkDown": "Replace with markdown to show in help",
     "category": "Deploy",
     "visibility": [
@@ -19,7 +19,7 @@
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
-    "instanceNameFormat": "Update $(packageName) Rollout Fraction",
+    "instanceNameFormat": "Increase $(packageName) Rollout Fraction",
     "inputs": [
         {
             "name": "authType",
@@ -64,7 +64,7 @@
             "label": "Rollout Fraction",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "If promoting to the \"rollout\" track, this specifies the percentage of users to roll out your APK to."
+            "helpMarkDown": "User fraction to update your rollout release to."
         }
     ],
     "execution": {
