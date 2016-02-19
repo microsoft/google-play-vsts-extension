@@ -18,7 +18,7 @@ if (authType === "JsonFile") {
             tl.setResult(1, serviceAccountKeyFile + " was not a valid auth file");
         }
     } catch (e) { }
-} else if (authType === "ServiceEnpoint") {
+} else if (authType === "ServiceEndpoint") {
     var serviceEndpoint = tl.getEndpointAuthorization(tl.getInput("serviceEndpoint", true));
     key.client_email = serviceEndpoint.parameters.username;
     key.private_key = serviceEndpoint.parameters.password.replace(/\\n/g, "\n");
