@@ -1,6 +1,6 @@
 {
   "name": "vso-task-google-play-promote",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A VSO build task for promoting a Google Play store app from one track to another",
   "main": "GooglePlay.js",
   "scripts": {

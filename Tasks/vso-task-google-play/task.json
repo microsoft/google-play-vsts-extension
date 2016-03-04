@@ -14,8 +14,8 @@
         "npm"
     ],
     "version": {
-        "Major": "0",
-        "Minor": "1",
+        "Major": "1",
+        "Minor": "0",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
@@ -28,8 +28,8 @@
             "defaultValue": "ServiceEndpoint",
             "helpMarkDown": "",
             "options": {
-                "ServiceEndpoint": "Service Endpoint",
-                "JsonFile": "JSON Auth File"
+                "JsonFile": "JSON Auth File",
+                "ServiceEndpoint": "Service Endpoint"
             }
         },
         {
@@ -38,7 +38,7 @@
             "label": "Service Endpoint",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The VSTS Service Endpoint that specifies the identiy you wish to publish your APK under.",
+            "helpMarkDown": "Google Play service endpoint that is configured with your account credentials.",
             "visibleRule": "authType = ServiceEndpoint"
         },
         {
@@ -53,10 +53,10 @@
         {
             "name": "apkFile",
             "type": "filePath",
-            "label": "APK File",
+            "label": "APK Path",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The updated APK you wish to publish to the specified track."
+            "helpMarkDown": "Path to the APK file you want to publish to the specified track."
         },
         {
             "name": "track",
@@ -64,7 +64,7 @@
             "label": "Track",
             "defaultValue": "alpha",
             "required": true,
-            "helpMarkDown": "The track you wish to publish the APK to.",
+            "helpMarkDown": "Track you want to publish the APK to.",
             "options": {
                 "alpha": "Alpha",
                 "beta": "Beta",
@@ -77,8 +77,8 @@
             "type": "string",
             "label": "Rollout Fraction",
             "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "If publishing to the \"rollout\" track, this specifies the percentage of users to roll out your APK to.",
+            "required": true,
+            "helpMarkDown": "The percentage of users to roll the specified APK out to.",
             "visibleRule": "track = rollout"
         },
         {
@@ -87,7 +87,7 @@
             "label": "Release Notes (File)",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "A file specifying the changes included in this APK update."
+            "helpMarkDown": "Path to the file specifying the release notes for the APK you are publishing."
         }
     ],
     "execution": {

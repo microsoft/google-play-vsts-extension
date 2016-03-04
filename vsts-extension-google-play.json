@@ -1,10 +1,10 @@
 {
 	"manifestVersion": 1.0,
 	"extensionId": "google-play-store-extension",
-	"name": "Google Play Store",
-	"version": "0.1.0",
+	"name": "Google Play",
+	"version": "1.0.0",
 	"publisher": "ms-vsclient",
-	"description": "A set of build tasks to better enable Android development",
+	"description": "Provides build/release tasks that enable performing continuous delivery to the Google Play store from an automated VSTS build or release definition",
 	"categories": [
         "Build and release"
     ],

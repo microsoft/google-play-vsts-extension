@@ -14,8 +14,8 @@
         "npm"
     ],
     "version": {
-        "Major": "0",
-        "Minor": "1",
+        "Major": "1",
+        "Minor": "0",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
@@ -28,8 +28,8 @@
             "defaultValue": "ServiceEndpoint",
             "helpMarkDown": "",
             "options": {
-                "ServiceEndpoint": "Service Endpoint",
-                "JsonFile": "JSON Auth File"
+                "JsonFile": "JSON Auth File",
+                "ServiceEndpoint": "Service Endpoint"
             }
         },
         {
@@ -38,7 +38,7 @@
             "label": "Service Endpoint",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The VSTS Service Endpoint that specifies the identiy you wish to publish your APK under.",
+            "helpMarkDown": "Google Play service endpoint that is configured with your account credentials.",
             "visibleRule": "authType = ServiceEndpoint"
         },
         {
