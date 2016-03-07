@@ -5,8 +5,26 @@ var tl = require("vso-task-lib");
 var apkParser = require("node-apk-parser");
 var publisher = google.androidpublisher("v2");
 
-// User inputs
-var key = require(tl.getPathInput("serviceAccountKey", true));
+// User inputs;
+var authType = tl.getInput("authType", true);
+var key = {};
+if (authType === "JsonFile") {
+    var serviceAccountKeyFile = tl.getPathInput("serviceAccountKey", false);
+    try {
+        var stats = fs.statSync(serviceAccountKeyFile);
+        if (stats && stats.isFile()) {
+            key = require(serviceAccountKeyFile);
+        } else {
+            console.error("Specified Auth file was invalid");
+            tl.setResult(1, serviceAccountKeyFile + " was not a valid auth file");
+        }
+    } catch (e) { }
+} else if (authType === "ServiceEndpoint") {
+    var serviceEndpoint = tl.getEndpointAuthorization(tl.getInput("serviceEndpoint", true));
+    key.client_email = serviceEndpoint.parameters.username;
+    key.private_key = serviceEndpoint.parameters.password.replace(/\\n/g, "\n");
+}
+
 var apkFile = tl.getPathInput("apkFile", true);
 var track = tl.getInput("track", true);
 var userFraction = tl.getInput("userFraction", false); // Used for staged rollouts
@@ -179,7 +197,7 @@ function updateTrack(packageName, track, versionCode, userFraction) {
         track: track,
         resource: {
             track: track,
-            versionCodes: (typeof versionCode === "number", [versionCode], versionCode)
+            versionCodes: (typeof versionCode === "number" ? [versionCode] : versionCode)
         }
     };
 

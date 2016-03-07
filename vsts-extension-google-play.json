@@ -1,0 +1,105 @@
+{
+	"manifestVersion": 1.0,
+	"extensionId": "google-play-store-extension",
+	"name": "Google Play",
+	"version": "1.0.0",
+	"publisher": "ms-vsclient",
+	"description": "Provides build/release tasks that enable performing continuous delivery to the Google Play store from an automated VSTS build or release definition",
+	"categories": [
+        "Build and release"
+    ],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+	"galleryFlags": [],
+	"icons": {
+		"default": "android_default.png",
+		"wide": "android_wide.jpg"
+	},
+	"files": [
+		{
+			"path": "Tasks/vso-task-google-play"
+		},
+		{
+			"path": "Tasks/vso-task-google-play-promote"
+		},
+		{
+			"path": "Tasks/vso-task-google-play-rollout-update"
+		}
+	],
+    "scope": [
+        "vso.build_execute",
+        "vso.serviceendpoint_manage"
+    ],
+	"contributions": [
+		{
+			"id": "google-play",
+			"type": "ms.vss-distributed-task.task",
+			"targets": ["ms.vss-distributed-task.tasks"],
+			"properties": {
+				"name": "Tasks/vso-task-google-play"
+			}
+		},
+		{
+			"id": "google-play-promote",
+			"type": "ms.vss-distributed-task.task",
+			"targets": ["ms.vss-distributed-task.tasks"],
+			"properties": {
+				"name": "Tasks/vso-task-google-play-promote"
+			}
+		},
+		{
+			"id": "google-play-rollout-update",
+			"type": "ms.vss-distributed-task.task",
+			"targets": ["ms.vss-distributed-task.tasks"],
+			"properties": {
+				"name": "Tasks/vso-task-google-play-rollout-update"
+			}
+		},
+        {
+            "id": "google-play-service-endpoint",
+            "description": "GooglePlayAuthenticationEndpoint",
+            "type": "ms.vss-endpoint.service-endpoint-type",
+            "targets": [
+                "ms.vss-endpoint.endpoint-types"
+            ],
+            "properties": {
+                "name": "google-play",
+                "displayName": "Google Play",
+                "url": "https://accounts.google.com/o/oauth2/v2/auth",
+                "inputDescriptors": [],
+                "authenticationSchemes": [
+                    {
+                        "type": "ms.vss-endpoint.endpoint-auth-scheme-basic",
+                        "inputDescriptors": [
+                            {
+                                "id": "username",
+                                "name": "Service Account E-mail",
+                                "description": "The e-mail address of the service account used to authenticate with the Google Play store",
+                                "inputMode": "textbox",
+                                "isConfidential": false,
+                                "validation": {
+                                    "isRequired": true,
+                                    "dataType": "string"
+                                }
+                            },
+                            {
+                                "id": "password",
+                                "name": "Private Key",
+                                "description": "Private key in json from Google developer console",
+                                "inputMode": "textbox",
+                                "isConfidential": true,
+                                "validation": {
+                                    "isRequired": true,
+                                    "dataType": "string"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+	]
+}

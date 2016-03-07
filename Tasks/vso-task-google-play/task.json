@@ -1,81 +1,104 @@
 {
-  "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
-  "name": "GooglePlay2",
-  "friendlyName": "Google Play",
-  "description": "Publish an APK to the Google Play store",
-  "author": "Jonathan Carter",
-  "helpMarkDown": "Replace with markdown to show in help",
-  "category": "Deploy",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "demands": ["npm"],
-  "version": {
-    "Major": "1",
-    "Minor": "0",
-    "Patch": "0"
-  },
-  "minimumAgentVersion": "1.83.0",
-  "instanceNameFormat": "Deploy $(apkFile) to the Google Play store",
-  "inputs": [
-    {
-      "name": "serviceAccountKey",
-      "type": "filePath",
-      "label": "Service Account Key",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "The JSON file provided by Google Play that included the service account's identify you wish to publish your APK under."
+    "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
+    "name": "GooglePlayRelease",
+    "friendlyName": "Google Play - Release",
+    "description": "Publish an APK to the Google Play store",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "Replace with markdown to show in help",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "demands": [
+        "npm"
+    ],
+    "version": {
+        "Major": "1",
+        "Minor": "0",
+        "Patch": "0"
     },
-    {
-      "name": "apkFile",
-      "type": "filePath",
-      "label": "APK File",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "The updated APK you wish to publish to the specified track."
-    },
-    {
-      "name": "track",
-      "type": "pickList",
-      "label": "Track",
-      "defaultValue": "alpha",
-      "required": true,
-      "helpMarkDown": "The track you wish to publish the APK to.",
-      "options": {
-        "alpha": "Alpha",
-        "beta": "Beta",
-        "production": "Production",
-        "rollout": "Rollout"
-      }
-    },
-    {
-      "name": "userFraction",
-      "type": "string",
-      "label": "Rollout Fraction",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "If publishing to the \"rollout\" track, this specifies the percentage of users to roll out your APK to.",
-      "visibleRule": "track = rollout"
-    },
-    {
-      "name": "changeLogFile",
-      "type": "filePath",
-      "label": "Release Notes (File)",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "A file specifying the changes included in this APK update."
+    "minimumAgentVersion": "1.83.0",
+    "instanceNameFormat": "Release $(apkFile) to $(track)",
+    "inputs": [
+        {
+            "name": "authType",
+            "type": "pickList",
+            "label": "Authentication Method",
+            "defaultValue": "ServiceEndpoint",
+            "helpMarkDown": "",
+            "options": {
+                "JsonFile": "JSON Auth File",
+                "ServiceEndpoint": "Service Endpoint"
+            }
+        },
+        {
+            "name": "serviceEndpoint",
+            "type": "connectedService:google-play",
+            "label": "Service Endpoint",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Google Play service endpoint that is configured with your account credentials.",
+            "visibleRule": "authType = ServiceEndpoint"
+        },
+        {
+            "name": "serviceAccountKey",
+            "type": "filePath",
+            "label": "JSON Key Path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The JSON file provided by Google Play that includes the service account's identity you wish to publish your APK under.",
+            "visibleRule": "authType = JsonFile"
+        },
+        {
+            "name": "apkFile",
+            "type": "filePath",
+            "label": "APK Path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Path to the APK file you want to publish to the specified track."
+        },
+        {
+            "name": "track",
+            "type": "pickList",
+            "label": "Track",
+            "defaultValue": "alpha",
+            "required": true,
+            "helpMarkDown": "Track you want to publish the APK to.",
+            "options": {
+                "alpha": "Alpha",
+                "beta": "Beta",
+                "production": "Production",
+                "rollout": "Rollout"
+            }
+        },
+        {
+            "name": "userFraction",
+            "type": "string",
+            "label": "Rollout Fraction",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The percentage of users to roll the specified APK out to.",
+            "visibleRule": "track = rollout"
+        },
+        {
+            "name": "changeLogFile",
+            "type": "filePath",
+            "label": "Release Notes (File)",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path to the file specifying the release notes for the APK you are publishing."
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "GooglePlay.js",
+            "argumentFormat": ""
+        },
+        "PowerShell": {
+            "target": "$(currentDirectory)\\GooglePlay.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
     }
-  ],
-  "execution": {
-    "Node": {
-      "target": "GooglePlay.js",
-      "argumentFormat": ""
-    },
-    "PowerShell": {
-      "target": "$(currentDirectory)\\GooglePlay.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
-    }
-  }
 }

@@ -1,7 +1,7 @@
 {
   "name": "vso-android-extension",
-  "version": "0.0.4",
-  "description": "A set of build tasks to better enable Android development.",
+  "version": "1.0.0",
+  "description": "Provides build/release tasks that enable performing continuous delivery to the Google Play store from an automated VSTS build or release definition.",
   "author": "Microsoft",
   "license": "MIT",
   "dependencies": {

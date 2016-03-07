@@ -1,87 +1,110 @@
 {
-  "id": "4dae1f76-29d3-482f-97d5-e3189a8347c2",
-  "name": "GooglePlayPromote",
-  "friendlyName": "Google Play - Promote",
-  "description": "Promote an app from one release track to another",
-  "author": "Jonathan Carter",
-  "helpMarkDown": "Replace with markdown to show in help",
-  "category": "Deploy",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "demands": ["npm"],
-  "version": {
-    "Major": "1",
-    "Minor": "0",
-    "Patch": "0"
-  },
-  "minimumAgentVersion": "1.83.0",
-  "instanceNameFormat": "Promote $(packageName) on $(sourceTrack) to $(destinationTrack)",
-  "inputs": [
-    {
-      "name": "serviceAccountKey",
-      "type": "filePath",
-      "label": "Service Account Key",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "The JSON file provided by Google Play that included the service account's identify that has permission to promote."
+    "id": "4dae1f76-29d3-482f-97d5-e3189a8347c2",
+    "name": "GooglePlayPromote",
+    "friendlyName": "Google Play - Promote",
+    "description": "Promote an app from one release track to another",
+    "author": "Microsoft Corporation",
+    "helpMarkDown": "Replace with markdown to show in help",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "demands": [
+        "npm"
+    ],
+    "version": {
+        "Major": "1",
+        "Minor": "0",
+        "Patch": "0"
     },
-    {
-      "name": "packageName",
-      "type": "string",
-      "label": "Package Name",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "The unique package identifier (ie com.google.etc) that you wish to promote."
-    },
-    {
-      "name": "sourceTrack",
-      "type": "pickList",
-      "label": "Source Track",
-      "defaultValue": "alpha",
-      "required": true,
-      "helpMarkDown": "The track you wish to promote from.",
-      "options": {
-        "alpha": "Alpha",
-        "beta": "Beta",
-        "production": "Production",
-        "rollout": "Rollout"
-      }
-    },
-    {
-      "name": "destinationTrack",
-      "type": "pickList",
-      "label": "Destination Track",
-      "defaultValue": "beta",
-      "required": true,
-      "helpMarkDown": "The track you wish to promote to.",
-      "options": {
-        "alpha": "Alpha",
-        "beta": "Beta",
-        "production": "Production",
-        "rollout": "Rollout"
-      }
-    },
-    {
-      "name": "userFraction",
-      "type": "string",
-      "label": "Rollout Fraction",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "If promoting to the \"rollout\" track, this specifies the percentage of users to roll out your APK to.",
-      "visibleRule": "destinationTrack = rollout"
+    "minimumAgentVersion": "1.83.0",
+    "instanceNameFormat": "Promote $(packageName) from $(sourceTrack) to $(destinationTrack)",
+    "inputs": [
+        {
+            "name": "authType",
+            "type": "pickList",
+            "label": "Authentication Method",
+            "defaultValue": "ServiceEndpoint",
+            "helpMarkDown": "",
+            "options": {
+                "JsonFile": "JSON Auth File",
+                "ServiceEndpoint": "Service Endpoint"
+            }
+        },
+        {
+            "name": "serviceEndpoint",
+            "type": "connectedService:google-play",
+            "label": "Service Endpoint",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Google Play service endpoint that is configured with your account credentials.",
+            "visibleRule": "authType = ServiceEndpoint"
+        },
+        {
+            "name": "serviceAccountKey",
+            "type": "filePath",
+            "label": "JSON Key Path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The JSON file provided by Google Play that includes the service account's identity you wish to publish your APK under.",
+            "visibleRule": "authType = JsonFile"
+        },
+        {
+            "name": "packageName",
+            "type": "string",
+            "label": "Package Name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The unique package identifier (com.foo.myapp) that you wish to promote."
+        },
+        {
+            "name": "sourceTrack",
+            "type": "pickList",
+            "label": "Source Track",
+            "defaultValue": "alpha",
+            "required": true,
+            "helpMarkDown": "The track you wish to promote from.",
+            "options": {
+                "alpha": "Alpha",
+                "beta": "Beta",
+                "production": "Production",
+                "rollout": "Rollout"
+            }
+        },
+        {
+            "name": "destinationTrack",
+            "type": "pickList",
+            "label": "Destination Track",
+            "defaultValue": "beta",
+            "required": true,
+            "helpMarkDown": "The track you wish to promote to.",
+            "options": {
+                "alpha": "Alpha",
+                "beta": "Beta",
+                "production": "Production",
+                "rollout": "Rollout"
+            }
+        },
+        {
+            "name": "userFraction",
+            "type": "string",
+            "label": "Rollout Fraction",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Specifies the percentage of users to roll out your APK to.",
+            "visibleRule": "destinationTrack = rollout"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "google-play-promote.js",
+            "argumentFormat": ""
+        },
+        "PowerShell": {
+            "target": "$(currentDirectory)\\google-play-promote.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
     }
-  ],
-  "execution": {
-    "Node": {
-      "target": "google-play-promote.js",
-      "argumentFormat": ""
-    },
-    "PowerShell": {
-      "target": "$(currentDirectory)\\google-play-promote.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
-    }
-  }
 }
