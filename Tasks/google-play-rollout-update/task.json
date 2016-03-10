@@ -1,10 +1,9 @@
 {
-    "id": "4dae1f76-29d3-482f-97d5-e3189a8347c2",
-    "name": "GooglePlayPromote",
-    "friendlyName": "Google Play - Promote",
-    "description": "Promote an app from one release track to another",
+    "id": "f8c97cf9-4e17-4244-b0fb-f540cea78153",
+    "name": "GooglePlayRolloutUpdate",
+    "friendlyName": "Google Play Increase Rollout",
+    "description": "Increase the rollout fraction of a Google Play App",
     "author": "Microsoft Corporation",
-    "helpMarkDown": "Replace with markdown to show in help",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -19,7 +18,7 @@
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
-    "instanceNameFormat": "Promote $(packageName) from $(sourceTrack) to $(destinationTrack)",
+    "instanceNameFormat": "Increase $(packageName) Rollout Fraction",
     "inputs": [
         {
             "name": "authType",
@@ -56,35 +55,7 @@
             "label": "Package Name",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The unique package identifier (com.foo.myapp) that you wish to promote."
-        },
-        {
-            "name": "sourceTrack",
-            "type": "pickList",
-            "label": "Source Track",
-            "defaultValue": "alpha",
-            "required": true,
-            "helpMarkDown": "The track you wish to promote from.",
-            "options": {
-                "alpha": "Alpha",
-                "beta": "Beta",
-                "production": "Production",
-                "rollout": "Rollout"
-            }
-        },
-        {
-            "name": "destinationTrack",
-            "type": "pickList",
-            "label": "Destination Track",
-            "defaultValue": "beta",
-            "required": true,
-            "helpMarkDown": "The track you wish to promote to.",
-            "options": {
-                "alpha": "Alpha",
-                "beta": "Beta",
-                "production": "Production",
-                "rollout": "Rollout"
-            }
+            "helpMarkDown": "The unique package identifier (e.g. com.foo.myapp) that you wish to update."
         },
         {
             "name": "userFraction",
@@ -92,17 +63,16 @@
             "label": "Rollout Fraction",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specifies the percentage of users to roll out your APK to.",
-            "visibleRule": "destinationTrack = rollout"
+            "helpMarkDown": "User fraction to update your rollout release to."
         }
     ],
     "execution": {
         "Node": {
-            "target": "google-play-promote.js",
+            "target": "google-play-rollout-update.js",
             "argumentFormat": ""
         },
         "PowerShell": {
-            "target": "$(currentDirectory)\\google-play-promote.ps1",
+            "target": "$(currentDirectory)\\google-play-rollout-update.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }

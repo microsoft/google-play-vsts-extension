@@ -1,10 +1,9 @@
 {
     "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
     "name": "GooglePlayRelease",
-    "friendlyName": "Google Play - Release",
+    "friendlyName": "Google Play Release",
     "description": "Publish an APK to the Google Play store",
     "author": "Microsoft Corporation",
-    "helpMarkDown": "Replace with markdown to show in help",
     "category": "Deploy",
     "visibility": [
         "Build",
