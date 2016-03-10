@@ -18,6 +18,10 @@
 		"default": "android_default.png",
 		"wide": "android_wide.jpg"
 	},
+    "branding": {
+        "color": "#E5E5E5",
+        "theme": "dark"
+    },
     "content": {
         "details": {
             "path": "README.md"
