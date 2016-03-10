@@ -1,10 +1,9 @@
 {
-    "id": "4dae1f76-29d3-482f-97d5-e3189a8347c2",
-    "name": "GooglePlayPromote",
-    "friendlyName": "Google Play - Promote",
-    "description": "Promote an app from one release track to another",
+    "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
+    "name": "google-play-release",
+    "friendlyName": "Google Play Release",
+    "description": "Release an update for you Android app to the Google Play store",
     "author": "Microsoft Corporation",
-    "helpMarkDown": "Replace with markdown to show in help",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -19,7 +18,7 @@
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
-    "instanceNameFormat": "Promote $(packageName) from $(sourceTrack) to $(destinationTrack)",
+    "instanceNameFormat": "Release $(apkFile) to $(track)",
     "inputs": [
         {
             "name": "authType",
@@ -51,34 +50,20 @@
             "visibleRule": "authType = JsonFile"
         },
         {
-            "name": "packageName",
-            "type": "string",
-            "label": "Package Name",
+            "name": "apkFile",
+            "type": "filePath",
+            "label": "APK Path",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The unique package identifier (com.foo.myapp) that you wish to promote."
+            "helpMarkDown": "Path to the APK file you want to publish to the specified track."
         },
         {
-            "name": "sourceTrack",
+            "name": "track",
             "type": "pickList",
-            "label": "Source Track",
+            "label": "Track",
             "defaultValue": "alpha",
             "required": true,
-            "helpMarkDown": "The track you wish to promote from.",
-            "options": {
-                "alpha": "Alpha",
-                "beta": "Beta",
-                "production": "Production",
-                "rollout": "Rollout"
-            }
-        },
-        {
-            "name": "destinationTrack",
-            "type": "pickList",
-            "label": "Destination Track",
-            "defaultValue": "beta",
-            "required": true,
-            "helpMarkDown": "The track you wish to promote to.",
+            "helpMarkDown": "Track you want to publish the APK to.",
             "options": {
                 "alpha": "Alpha",
                 "beta": "Beta",
@@ -91,18 +76,26 @@
             "type": "string",
             "label": "Rollout Fraction",
             "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The percentage of users to roll the specified APK out to.",
+            "visibleRule": "track = rollout"
+        },
+        {
+            "name": "changeLogFile",
+            "type": "filePath",
+            "label": "Release Notes (File)",
+            "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Specifies the percentage of users to roll out your APK to.",
-            "visibleRule": "destinationTrack = rollout"
+            "helpMarkDown": "Path to the file specifying the release notes for the APK you are publishing."
         }
     ],
     "execution": {
         "Node": {
-            "target": "google-play-promote.js",
+            "target": "GooglePlay.js",
             "argumentFormat": ""
         },
         "PowerShell": {
-            "target": "$(currentDirectory)\\google-play-promote.ps1",
+            "target": "$(currentDirectory)\\GooglePlay.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }

@@ -1,6 +1,6 @@
 {
 	"manifestVersion": 1.0,
-	"extensionId": "google-play-store-extension",
+	"id": "google-play",
 	"name": "Google Play",
 	"version": "1.0.0",
 	"publisher": "ms-vsclient",
@@ -18,28 +18,54 @@
 		"default": "android_default.png",
 		"wide": "android_wide.jpg"
 	},
+    "branding": {
+        "color": "#E5E5E5",
+        "theme": "dark"
+    },
+    "content": {
+        "details": {
+            "path": "README.md"
+        },
+        "thirdpartynotice": {
+            "path": "ThirdPartyNotices.txt"
+        }
+    },
 	"files": [
 		{
-			"path": "Tasks/vso-task-google-play"
+			"path": "Tasks/google-play-release"
 		},
 		{
-			"path": "Tasks/vso-task-google-play-promote"
+			"path": "Tasks/google-play-promote"
 		},
 		{
-			"path": "Tasks/vso-task-google-play-rollout-update"
+			"path": "Tasks/google-play-rollout-update"
 		}
 	],
     "scope": [
-        "vso.build_execute",
-        "vso.serviceendpoint_manage"
+        "vso.build",
+        "vso.serviceendpoint"
     ],
+    "tags": [
+        "Android",
+        "Google Play",
+        "Deploy",
+        "Continuous Delivery"
+    ],
+    "links": {
+        "issues": {
+            "url": "https://github.com/Microsoft/google-play-vsts-extension/issues"
+        },
+        "repository": {
+            "url": "https://github.com/Microsoft/google-play-vsts-extension"
+        }
+    },
 	"contributions": [
 		{
-			"id": "google-play",
+			"id": "google-play-release",
 			"type": "ms.vss-distributed-task.task",
 			"targets": ["ms.vss-distributed-task.tasks"],
 			"properties": {
-				"name": "Tasks/vso-task-google-play"
+				"name": "Tasks/google-play-release"
 			}
 		},
 		{
@@ -47,7 +73,7 @@
 			"type": "ms.vss-distributed-task.task",
 			"targets": ["ms.vss-distributed-task.tasks"],
 			"properties": {
-				"name": "Tasks/vso-task-google-play-promote"
+				"name": "Tasks/google-play-promote"
 			}
 		},
 		{
@@ -55,7 +81,7 @@
 			"type": "ms.vss-distributed-task.task",
 			"targets": ["ms.vss-distributed-task.tasks"],
 			"properties": {
-				"name": "Tasks/vso-task-google-play-rollout-update"
+				"name": "Tasks/google-play-rollout-update"
 			}
 		},
         {

@@ -1,10 +1,9 @@
 {
-    "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
-    "name": "GooglePlayRelease",
-    "friendlyName": "Google Play - Release",
-    "description": "Publish an APK to the Google Play store",
+    "id": "f8c97cf9-4e17-4244-b0fb-f540cea78153",
+    "name": "google-play-increase-rollout",
+    "friendlyName": "Google Play Increase Rollout",
+    "description": "Increase the rollout fraction of an app previously deployed to the Google Play store",
     "author": "Microsoft Corporation",
-    "helpMarkDown": "Replace with markdown to show in help",
     "category": "Deploy",
     "visibility": [
         "Build",
@@ -19,7 +18,7 @@
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
-    "instanceNameFormat": "Release $(apkFile) to $(track)",
+    "instanceNameFormat": "Increase $(packageName) Rollout Fraction",
     "inputs": [
         {
             "name": "authType",
@@ -51,52 +50,29 @@
             "visibleRule": "authType = JsonFile"
         },
         {
-            "name": "apkFile",
-            "type": "filePath",
-            "label": "APK Path",
+            "name": "packageName",
+            "type": "string",
+            "label": "Package Name",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Path to the APK file you want to publish to the specified track."
-        },
-        {
-            "name": "track",
-            "type": "pickList",
-            "label": "Track",
-            "defaultValue": "alpha",
-            "required": true,
-            "helpMarkDown": "Track you want to publish the APK to.",
-            "options": {
-                "alpha": "Alpha",
-                "beta": "Beta",
-                "production": "Production",
-                "rollout": "Rollout"
-            }
+            "helpMarkDown": "The unique package identifier (e.g. com.foo.myapp) that you wish to update."
         },
         {
             "name": "userFraction",
             "type": "string",
             "label": "Rollout Fraction",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "The percentage of users to roll the specified APK out to.",
-            "visibleRule": "track = rollout"
-        },
-        {
-            "name": "changeLogFile",
-            "type": "filePath",
-            "label": "Release Notes (File)",
-            "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path to the file specifying the release notes for the APK you are publishing."
+            "helpMarkDown": "User fraction to update your rollout release to."
         }
     ],
     "execution": {
         "Node": {
-            "target": "GooglePlay.js",
+            "target": "google-play-rollout-update.js",
             "argumentFormat": ""
         },
         "PowerShell": {
-            "target": "$(currentDirectory)\\GooglePlay.ps1",
+            "target": "$(currentDirectory)\\google-play-rollout-update.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }
