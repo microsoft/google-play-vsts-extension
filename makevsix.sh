@@ -25,10 +25,10 @@ fi
 
 if [ $1 == "createtest" ] ; then
   echo "Creating Test VSIX..."
-  tfx extension create --manifest-globs vsts-extension-google-play.json --override '{ "public": "false", "name": "Google Play Store Deploy-Dev", "id": "vso-extension-android-dev", "publisher": "ms-mobiledevops-test"}' --share-with mobiledevops x04ty29er --token $PUBLISH_ACCESSTOKEN
+  tfx extension create --manifest-globs vsts-extension-google-play.json --override '{ "public": "false", "name": "Google Play-Dev", "id": "vso-extension-android-dev", "publisher": "ms-mobiledevops-test"}' --share-with mobiledevops x04ty29er --token $PUBLISH_ACCESSTOKEN
 fi
 
 if [ $1 == "publishtest" ] ; then
   echo "Creating and publishing test VSIX..."
-  tfx extension publish --manifest-globs vsts-extension-google-play.json --override '{ "public": "false", "name": "Google Play Store Deploy-Dev", "id": "vso-extension-android-dev", "publisher": "ms-mobiledevops-test"}' --share-with mobiledevops x04ty29er --token $PUBLISH_ACCESSTOKEN
+  tfx extension publish --manifest-globs vsts-extension-google-play.json --override '{ "public": "false", "name": "Google Play-Dev", "id": "vso-extension-android-dev", "publisher": "ms-mobiledevops-test"}' --share-with mobiledevops x04ty29er --token $PUBLISH_ACCESSTOKEN
 fi

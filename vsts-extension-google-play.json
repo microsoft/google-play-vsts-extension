@@ -20,11 +20,11 @@
 	},
     "branding": {
         "color": "#E5E5E5",
-        "theme": "dark"
+        "theme": "light"
     },
     "content": {
         "details": {
-            "path": "README.md"
+            "path": "docs/vsts-README.md"
         },
         "thirdpartynotice": {
             "path": "ThirdPartyNotices.txt"
