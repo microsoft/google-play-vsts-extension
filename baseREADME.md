@@ -118,4 +118,3 @@ The **Google Play Increase Rollout** task is a special task that allows you to u
 ## Contact Us
 * [Report an issue](https://github.com/Microsoft/google-play-vsts-extension/issues)
 
-Google Play and the Google Play logo are trademarks of Google Inc.

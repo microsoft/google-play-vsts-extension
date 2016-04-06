@@ -7,7 +7,8 @@ echo '<table style="width: 100%; border-style: none;"><tr>
 </tr></table>
 ' > README.md
 
-cat docs/vsts-README.md >> README.md
+cat baseREADME.md >> README.md
+cat baseREADME.md > docs/vsts-README.md
 
 echo '## Terms of Use
 By downloading and running this project, you agree to the license terms of the third party application software, Microsoft products, and components to be installed. 
@@ -40,3 +41,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 ' >> README.md
+
+echo 'Google Play and the Google Play logo are trademarks of Google Inc.' >> README.md
+echo 'Google Play and the Google Play logo are trademarks of Google Inc.' >> docs/vsts-README.md
+
