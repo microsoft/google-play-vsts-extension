@@ -1,7 +1,7 @@
 {
     "id": "4dae1f76-29d3-482f-97d5-e3189a8347c2",
     "name": "google-play-promote",
-    "friendlyName": "Google Play Promote",
+    "friendlyName": "Google Play - Promote",
     "description": "Promote an app from one release track to another",
     "author": "Microsoft Corporation",
     "category": "Deploy",
