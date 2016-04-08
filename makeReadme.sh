@@ -1,5 +1,5 @@
 echo '<table style="width: 100%; border-style: none;"><tr>
-<td style="width: 140px; text-align: center;"><img src="android_default.png" style="max-width: 100%"/></td>
+<td width="140px" style="text-align: center;"><img src="android_default.png" style="max-width:100%" /></td>
 <td><strong>Visual Studio Team Services Extension for Google Play</strong><br />
 <i>Provides build/release tasks that enable performing continuous delivery to the Google Play store from an automated VSTS build or release definition</i><br />
 <a href="https://marketplace.visualstudio.com/items/ms-vsclient.google-play">Install now!</a>
