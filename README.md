@@ -10,7 +10,9 @@
 
 This extension contains a set of deployment tasks which allow you to automate the release of app updates to the Google Play store from your CI environment. This can reduce the effort needed to keep your dev/alpha/beta/etc. deployments up-to-date, since you can simply push changes to the configured source control branches, and let your automated build take care of the rest.
 
-## Quick Start
+## Prerequisites
+
+In order to automate the release of app updates to the Google Play store, you need to create a service account that is authorized to manage your app(s) releases. If you haven't already done so, then perform the following steps to create one:
 
 1. Login to the [Google Play Developer Console](https://play.google.com/apps/publish/) and select **Settings** in the left-hand navigation menu
 
@@ -22,19 +24,23 @@ This extension contains a set of deployment tasks which allow you to automate th
  
 5. Ensure that the **Manage Production APKs** and **Manage Alpha & Beta APKs** permissions are selected, and then click the **Add user** button
 
-6. Install the Google Play extension from the [VSTS Marketplace](https://marketplace.visualstudio.com/items/ms-vsclient.google-play)
+## Quick Start
 
-7. Go to your Visual Studio Team Services or TFS project, click on the **Build** tab, and create a new build definition (the "+" icon) that is hooked up to your project's appropriate source repo
+Once you have created or retrieved credentials for you Google Play service account, then perform the following steps to automate releasing updates from a VSTS build or release definition:
 
-8. Click **Add build step...** and select the neccessary tasks to generate your release assets (e.g. **Gulp**, **Cordova Build**)
+1. Install the Google Play extension from the [VSTS Marketplace](https://marketplace.visualstudio.com/items/ms-vsclient.google-play)
 
-9. Click **Add build step...** and select **Google Play - Release** from the **Deploy** category
+2. Go to your Visual Studio Team Services or TFS project, click on the **Build** tab, and create a new build definition (the "+" icon) that is hooked up to your project's appropriate source repo
 
-10. Configure the **Google Play - Release** task with the JSON private key file created above, the generated APK file, and the desired release track.
+3. Click **Add build step...** and select the neccessary tasks to generate your release assets (e.g. **Gulp**, **Cordova Build**)
 
-11. Click the **Queue Build** button or push a change to your configured repo in order to run the newly defined build pipeline
+4. Click **Add build step...** and select **Google Play - Release** from the **Deploy** category
 
-12. Your app changes will now be automatically published to the Google Play store!
+5. Configure the **Google Play - Release** task with the JSON private key file created above, the generated APK file, and the desired release track.
+
+6. Click the **Queue Build** button or push a change to your configured repo in order to run the newly defined build pipeline
+
+7. Your app changes will now be automatically published to the Google Play store!
 
 ## Configuring Your Google Play Publisher Credentials
 
@@ -60,7 +66,7 @@ In addition to the custom service endpoint, this extension also contributes the 
 
 The **Google Play - Release** task allows you to release an update to your app on Google Play, and includes the following options:
 
-1. **JSON Key Path** (File path) or **Service Endpoint** - The access key to use to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your VSTS instance.
+1. **JSON Key Path** (File path) or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your VSTS instance.
 
 2. **APK Path** (File path, Required) - Path to the APK file you want to publish to the specified track.
 
@@ -74,7 +80,7 @@ The **Google Play - Release** task allows you to release an update to your app o
 
 The **Google Play - Promote** task allows you to promote a previously released APK from one track to another, and includes the following options:
 
-1. **JSON Key Path** (File path) or **Service Endpoint** - The access key to use to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your VSTS instance.
+1. **JSON Key Path** (File path) or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your VSTS instance.
 
 2. **Package Name** (String, Required) - The unique package identifier (e.g. com.foo.myapp) that you wish to promote.
 
@@ -88,7 +94,7 @@ The **Google Play - Promote** task allows you to promote a previously released A
 
 The **Google Play - Increase Rollout** task allows you to increase the rollout percentage of an app that was previously released to the **Rollout** track, and includes the following options:
 
-1. **JSON Key Path** (File path) or **Service Endpoint** - The access key to use to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your VSTS instance.
+1. **JSON Key Path** (File path) or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your VSTS instance.
 
 2. **Package Name** (String, Required) - The unique package identifier (e.g. com.foo.myapp) that you wish to promote.
 
@@ -100,7 +106,7 @@ The **Google Play - Increase Rollout** task allows you to increase the rollout p
 
 1. Install the [Visual Studio Team Services Extension for Google Play](https://marketplace.visualstudio.com/items/ms-vsclient.google-play)
 
-2. You will now find the **Google Player Release**, **Google Play Promote**, and **Google Play Increase Rollout** tasks underneath the **Deploy** category
+2. You will now find the **Google Player - Release**, **Google Play - Promote**, and **Google Play - Increase Rollout** tasks underneath the **Deploy** category
 
 ### TFS 2015 Update 1 or Earlier
 
