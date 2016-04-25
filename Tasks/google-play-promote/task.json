@@ -67,7 +67,6 @@
             "options": {
                 "alpha": "Alpha",
                 "beta": "Beta",
-                "production": "Production",
                 "rollout": "Rollout"
             }
         },
@@ -79,7 +78,6 @@
             "required": true,
             "helpMarkDown": "The track you wish to promote to.",
             "options": {
-                "alpha": "Alpha",
                 "beta": "Beta",
                 "production": "Production",
                 "rollout": "Rollout"
