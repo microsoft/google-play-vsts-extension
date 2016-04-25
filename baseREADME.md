@@ -1,10 +1,10 @@
 # Visual Studio Team Services Extension for Google Play
 
-This extension contains a set of deployment tasks which allow you to automate the release of app updates to the Google Play store from your CI environment. This can reduce the effort needed to keep your dev/alpha/beta/etc. deployments up-to-date, since you can simply push changes to the configured source control branches, and let your automated build take care of the rest.
+This extension contains a set of deployment tasks which allow you to automate the release of app updates to the Google Play store from your CI environment. This can reduce the effort needed to keep your alpha, beta, rollout and production deployments up-to-date, since you can simply push changes to the configured source control branches, and let your automated build take care of the rest.
 
 ## Prerequisites
 
-In order to automate the release of app updates to the Google Play store, you need to create a service account that is authorized to manage your app(s) releases. If you haven't already done so, then perform the following steps to create one:
+In order to automate the release of app updates to the Google Play store, you need to have manually released at least one version through the [Google Play Developer Console](https://play.google.com/apps/publish/). Additionally, you need to create a service account that is authorized to manage your app(s) releases on your behalf and can be used to authenticate from your VSTS build/release definitions. If you haven't already done so, then perform the following steps to create a service account:
 
 1. Login to the [Google Play Developer Console](https://play.google.com/apps/publish/) and select **Settings** in the left-hand navigation menu
 
@@ -56,77 +56,42 @@ In addition to the custom service endpoint, this extension also contributes the 
 
 ### Google Play - Release
 
-The **Google Play - Release** task allows you to release an update to your app on Google Play, and includes the following options:
+This task allows you to release an update to your app on Google Play, and includes the following options:
 
-1. **JSON Key Path** (File path) or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your VSTS instance.
+1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your VSTS instance.
 
-2. **APK Path** (File path, Required) - Path to the APK file you want to publish to the specified track.
+2. **APK Path** *(File path, Required)* - Path to the APK file you want to publish to the specified track.
 
-3. **Track** (String, Required) - Release track to publish the APK to.
+3. **Track** *(String, Required)* - Release track to publish the APK to.
 
-4. **User Fraction** (String, Required if visible) - The percentage of users to roll the specified APK out to. This option is only available when the **Track** input is set to **Rollout**.
+4. **User Fraction** *(String, Required if visible)* - The percentage of users to roll the specified APK out to. This option is only available when the **Track** input is set to **Rollout**.
 
-5. **Release Notes** (File path) - Path to the file specifying the release notes for the APK you are publishing.
+5. **Release Notes** *(File path)* - Path to the file specifying the release notes for the APK you are publishing.
 
 ### Google Play - Promote
 
-The **Google Play - Promote** task allows you to promote a previously released APK from one track to another, and includes the following options:
+This task allows you to promote a previously released APK from one track to another, and includes the following options:
 
-1. **JSON Key Path** (File path) or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your VSTS instance.
+1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your VSTS instance.
 
-2. **Package Name** (String, Required) - The unique package identifier (e.g. com.foo.myapp) that you wish to promote.
+2. **Package Name** *(String, Required)* - The unique package identifier (e.g. com.foo.myapp) that you wish to promote.
 
-3. **Source Track** (Required) - The track you wish to promote from.
+3. **Source Track** *(Required)* - The track you wish to promote your app from.
 
-4. **Destination Track** (Required) - The track you wish to promote to.
+4. **Destination Track** *(Required)* - The track you wish to promote your app to.
 
-5. **User Fraction** (String, Required if visible) - The percentage of users to roll the app out to. This option is only available when the **Destination Track** option is set to **Rollout**.
+5. **User Fraction** *(String, Required if visible)* - The percentage of users to roll the app out to. This option is only available when the **Destination Track** option is set to **Rollout**.
 
 ### Google Play - Increase Rollout
 
-The **Google Play - Increase Rollout** task allows you to increase the rollout percentage of an app that was previously released to the **Rollout** track, and includes the following options:
+This task allows you to increase the rollout percentage of an app that was previously released to the **Rollout** track, and includes the following options:
 
-1. **JSON Key Path** (File path) or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your VSTS instance.
+1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your VSTS instance.
 
-2. **Package Name** (String, Required) - The unique package identifier (e.g. com.foo.myapp) that you wish to promote.
+2. **Package Name** *(String, Required)* - The unique package identifier (e.g. com.foo.myapp) of the app you wish to increase the rollout percentage for.
 
-3. **User Fraction** (String, Required) - The new user fraction to increase the rollout to.
-
-## Installation
-
-### Visual Studio Team Services / Visual Studio Online
-
-1. Install the [Visual Studio Team Services Extension for Google Play](https://marketplace.visualstudio.com/items/ms-vsclient.google-play)
-
-2. You will now find the **Google Player - Release**, **Google Play - Promote**, and **Google Play - Increase Rollout** tasks underneath the **Deploy** category
-
-### TFS 2015 Update 1 or Earlier
-
-1. [Enable basic auth](http://go.microsoft.com/fwlink/?LinkID=699518) in your TFS instance
-
-2. Install the tfx-cli and login
-
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	npm install -g tfx-cli
-	tfx login --authType basic 
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-3. Enter your collection URL (Ex: https://localhost:8080/tfs/DefaultCollection) and user name and password 
-
-4. Download the [latest release](https://github.com/Microsoft/google-play-vsts-extension/releases) of the CodePush tasks locally and unzip it
-
-5. Type the following from the root of the repo from Windows:
-
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	upload
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-	Or from a Mac:
-
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	sh upload.sh
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+3. **User Fraction** *(String, Required)* - The new user fraction to increase the rollout to.
 
 ## Contact Us
-* [Report an issue](https://github.com/Microsoft/google-play-vsts-extension/issues)
 
+* [Report an issue](https://github.com/Microsoft/google-play-vsts-extension/issues)
