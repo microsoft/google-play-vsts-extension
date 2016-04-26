@@ -39,7 +39,11 @@
 		},
 		{
 			"path": "Tasks/google-play-rollout-update"
-		}
+		},
+        {
+            "path": "images",
+            "addressable": true
+        }
 	],
     "scope": [
         "vso.build",
