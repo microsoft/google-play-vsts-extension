@@ -1,6 +1,6 @@
 {
     "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
-    "name": "GooglePlayRelease",
+    "name": "google-play-release",
     "friendlyName": "Google Play - Release",
     "description": "Release an update for you Android app to the Google Play store",
     "author": "Microsoft Corporation",
