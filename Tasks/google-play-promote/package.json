@@ -11,7 +11,6 @@
   "dependencies": {
     "bluebird": "^2.10.1",
     "googleapis": "^2.1.5",
-    "minimatch": "^3.0.0",
     "vso-task-lib": "^0.4.5"
   }
 }

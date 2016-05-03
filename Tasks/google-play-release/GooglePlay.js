@@ -4,6 +4,7 @@ var fs = require("fs");
 var tl = require("vso-task-lib");
 var apkParser = require("node-apk-parser");
 var publisher = google.androidpublisher("v2");
+var glob = require("glob");
 
 // User inputs;
 var authType = tl.getInput("authType", true);
@@ -25,7 +26,7 @@ if (authType === "JsonFile") {
     key.private_key = serviceEndpoint.parameters.password.replace(/\\n/g, "\n");
 }
 
-var apkFile = tl.getPathInput("apkFile", true);
+var apkFile = resolveGlobPath(tl.getPathInput("apkFile", true));
 var track = tl.getInput("track", true);
 var userFraction = tl.getInput("userFraction", false); // Used for staged rollouts
 var changeLogFile = tl.getInput("changeLogFile", false);
@@ -231,19 +232,35 @@ function addChangelog(changeLogFile) {
     tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
     return edits.tracks.patchAsync(requestParameters);
 }
+
 /**
  * Update the universal parameters attached to every request
  * @param {string} paramName - Name of parameter to add/update
  * @param {any} value - value to assign to paramName. Any value is admissible.
  * @returns {void} void
  */
-
 function updateGlobalParams(paramName, value) {
     tl.debug("Updating Global Parameters");
     tl.debug("SETTING " + paramName + " TO " + JSON.stringify(value));
     globalParams.params[paramName] = value;
     google.options(globalParams);
     tl.debug("Global Params set to " + JSON.stringify(globalParams));
+}
+
+/**
+ * Get the appropriate file from the provided pattern
+ * @param {string} path - The minimatch pattern of glob to be resolved to file path
+ * @returns {string} path of the file resolved by glob
+ */
+function resolveGlobPath(path) {
+    if (path) {
+        var filesList = glob.sync(path);
+        if (filesList.length > 0) {
+            path = filesList[0];
+        }
+    }
+
+    return path;
 }
 
 // Future features:

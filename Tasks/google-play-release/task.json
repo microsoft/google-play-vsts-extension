@@ -1,6 +1,6 @@
 {
     "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
-    "name": "google-play-release",
+    "name": "GooglePlayRelease",
     "friendlyName": "Google Play - Release",
     "description": "Release an update for you Android app to the Google Play store",
     "author": "Microsoft Corporation",
@@ -55,7 +55,7 @@
             "label": "APK Path",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Path to the APK file you want to publish to the specified track."
+            "helpMarkDown": "Path to the APK file or the minimatch pattern for APK file you want to publish to the specified track."
         },
         {
             "name": "track",
