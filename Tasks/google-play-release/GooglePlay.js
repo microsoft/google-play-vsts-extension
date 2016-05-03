@@ -250,7 +250,7 @@ function updateGlobalParams(paramName, value) {
 /**
  * Get the appropriate file from the provided pattern
  * @param {string} path - The minimatch pattern of glob to be resolved to file path
- * @returns {string} path of the file resolved by glob
+ * @returns {string} path - path of the file resolved by glob
  */
 function resolveGlobPath(path) {
     if (path) {
