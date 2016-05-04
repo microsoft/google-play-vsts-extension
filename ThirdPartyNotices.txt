@@ -30,7 +30,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ---
-minimatch (https://github.com/isaacs/minimatch/) 
+glob (https://github.com/isaacs/node-glob) 
 The ISC License 
 Copyright (c) Isaac Z. Schlueter and Contributors 
 Permission to use, copy, modify, and/or distribute this software for any 
