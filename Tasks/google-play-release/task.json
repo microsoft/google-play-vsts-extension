@@ -55,7 +55,7 @@
             "label": "APK Path",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Path to the APK file you want to publish to the specified track. Wildcards can be used. For example, **/*.apk to match the first APK file."
+            "helpMarkDown": "Path to the APK file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory."
         },
         {
             "name": "track",
