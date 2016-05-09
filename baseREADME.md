@@ -62,11 +62,11 @@ In addition to specifying your publisher credentials file directly within each b
 
 In addition to the custom service endpoint, this extension also contributes the following three build and release tasks:
 
-* [`Google Play - Release`](#google-play---release) - Allows automating the release of a new Android app version to the Google Play store.
+* [Google Play - Release](#google-play---release) - Allows automating the release of a new Android app version to the Google Play store.
 
-* [`Google Play - Promote`](#google-play---promote) - Allows automating the promotion of a previously released Android app update from one track to another (e.g. `alpha` -> `beta`).
+* [Google Play - Promote](#google-play---promote) - Allows automating the promotion of a previously released Android app update from one track to another (e.g. `alpha` -> `beta`).
 
-* [`Google Play - Increase Rollout`](#google-play---increase-rollout) - Allows automating increasing the rollout percentage of a previous release app update.
+* [Google Play - Increase Rollout](#google-play---increase-rollout) - Allows automating increasing the rollout percentage of a previous release app update.
 
 ### Google Play - Release
 
