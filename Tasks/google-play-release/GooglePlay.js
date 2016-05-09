@@ -109,7 +109,7 @@ function tryGetPackageName(apkFile) {
         packageName = apkParser
             .readFile(apkFile)
             .readManifestSync()
-        .package;
+            .package;
 
         tl.debug("name extraction from apk succeeded: " + packageName);
     }
@@ -260,8 +260,26 @@ function resolveGlobPath(path) {
         }
     }
 
+    return fixSpacesInPath(path);
+}
+
+/**
+ * Adjusts the path string to properly escape spaces
+ * @param {string} path - path to fix
+ * @return {string} path - path with spaces fixed if needed
+ */
+function fixSpacesInPath(path) {
+    if (path.indexOf(" ") >= 0) {
+        if (process.platform === "win32") {
+            return `"${path}"`;
+        } else {
+            return path.replace(/ /g, "\\ ");
+        }
+    }
+    
     return path;
 }
+
 
 // Future features:
 // ----------------
