@@ -109,7 +109,7 @@ function tryGetPackageName(apkFile) {
         packageName = apkParser
             .readFile(apkFile)
             .readManifestSync()
-        .package;
+            .package;
 
         tl.debug("name extraction from apk succeeded: " + packageName);
     }
@@ -258,10 +258,14 @@ function resolveGlobPath(path) {
         if (filesList.length > 0) {
             path = filesList[0];
         }
+
+        // VSTS tries to be smart when passing in paths with spaces in them by quoting the whole path. Unfortunately, this actually breaks everything, so remove them here.
+        return path.replace(/\"/g, "");
     }
 
     return path;
 }
+
 
 // Future features:
 // ----------------
