@@ -260,24 +260,8 @@ function resolveGlobPath(path) {
         }
     }
 
-    return fixSpacesInPath(path);
-}
-
-/**
- * Adjusts the path string to properly escape spaces
- * @param {string} path - path to fix
- * @return {string} path - path with spaces fixed if needed
- */
-function fixSpacesInPath(path) {
-    if (path.indexOf(" ") >= 0) {
-        if (process.platform === "win32") {
-            return `"${path}"`;
-        } else {
-            return path.replace(/ /g, "\\ ");
-        }
-    }
-    
-    return path;
+    // VSTS tries to be smart when passing in paths with spaces in them by quoting the whole path. Unfortunately, this actually breaks everything, so remove them here.
+    return path.replace(/\"/g, "");
 }
 
 
