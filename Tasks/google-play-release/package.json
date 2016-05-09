@@ -1,6 +1,6 @@
 {
   "name": "vso-task-google-play-release",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A VSO build task for deloying an APK to the Google Play store",
   "main": "GooglePlay.js",
   "scripts": {
