@@ -254,13 +254,13 @@ function updateGlobalParams(paramName, value) {
  */
 function resolveGlobPath(path) {
     if (path) {
+        // VSTS tries to be smart when passing in paths with spaces in them by quoting the whole path. Unfortunately, this actually breaks everything, so remove them here.
+        path = path.replace(/\"/g, "");
+
         var filesList = glob.sync(path);
         if (filesList.length > 0) {
             path = filesList[0];
         }
-
-        // VSTS tries to be smart when passing in paths with spaces in them by quoting the whole path. Unfortunately, this actually breaks everything, so remove them here.
-        return path.replace(/\"/g, "");
     }
 
     return path;
