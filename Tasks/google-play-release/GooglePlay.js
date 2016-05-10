@@ -27,6 +27,7 @@ if (authType === "JsonFile") {
 }
 
 var apkFile = resolveGlobPath(tl.getPathInput("apkFile", true));
+var apkFileList = [apkFile]; // TODO: Fill in with code to get actual list of apkFiles, including the one above.
 var track = tl.getInput("track", true);
 var userFraction = tl.getInput("userFraction", false); // Used for staged rollouts
 var changeLogFile = tl.getInput("changeLogFile", false);
@@ -61,10 +62,12 @@ var currentEdit = authorize().then(function (res) {
     return getNewEdit(packageName);
 });
 
-currentEdit = currentEdit.then(function (res) {
-    console.log("Uploading APK file...");
-    return addApk(packageName, apkFile);
-});
+for (var apk in apkFileList) {
+    currentEdit = currentEdit.then(function (res) {
+        console.log(`Uploading APK file ${apkFileList[apk]}...`);
+        return addApk(packageName, apkFileList[apk]);
+    });
+}
 
 currentEdit = currentEdit.then(function (res) {
     console.log("Updating track information...");
