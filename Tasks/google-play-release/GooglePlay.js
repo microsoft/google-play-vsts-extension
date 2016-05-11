@@ -27,7 +27,17 @@ if (authType === "JsonFile") {
 }
 
 var apkFile = resolveGlobPath(tl.getPathInput("apkFile", true));
-var apkFileList = [apkFile]; // TODO: Fill in with code to get actual list of apkFiles, including the one above.
+var apkFileList = [apkFile];
+var additionaApks = tl.getDelimitedInput('additionalApks', '\n');
+if (additionaApks.length > 0) {
+    for (var i in additionaApks) {
+        apkFileList.push(resolveGlobPath(additionaApks[i]));
+    }
+    
+    console.log("Found multiple Apks to upload: ");
+    console.log(apkFileList);
+}
+
 var track = tl.getInput("track", true);
 var userFraction = tl.getInput("userFraction", false); // Used for staged rollouts
 var changeLogFile = tl.getInput("changeLogFile", false);
@@ -44,7 +54,7 @@ var globalParams = { auth: null, params: {} };
 // #1) Extract the package name from the specified APK file
 // #2) Get an OAuth token by authentincating the service account
 // #3) Create a new editing transaction
-// #4) Upload the new APK
+// #4) Upload the new APK(s)
 // #5) Specify the track that should be used for the new APK (e.g. alpha, beta)
 // #6) Specify the new change log
 // #7) Commit the edit transaction
