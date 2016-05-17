@@ -1,6 +1,6 @@
 {
     "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
-    "name": "google-play-release",
+    "name": "GooglePlayRelease",
     "friendlyName": "Google Play - Release",
     "description": "Release an update for you Android app to the Google Play store",
     "author": "Microsoft Corporation",
@@ -18,6 +18,13 @@
         "Patch": "3"
     },
     "minimumAgentVersion": "1.83.0",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced Options",
+            "isExpanded": false
+        }
+    ],
     "instanceNameFormat": "Release $(apkFile) to $(track)",
     "inputs": [
         {
@@ -87,6 +94,15 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Path to the file specifying the release notes for the APK you are publishing."
+        },
+        {
+            "name": "additionalApks",
+            "type": "multiLine",
+            "label": "Additional APK Path(s)",
+            "defaultValue": "",
+            "groupName": "advanced",
+            "required": false,
+            "helpMarkDown": "Paths to additional APK files you want to publish to the specified track (e.g. an x86 build). Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory. Supports multiple lines or minimatch patterns."
         }
     ],
     "execution": {

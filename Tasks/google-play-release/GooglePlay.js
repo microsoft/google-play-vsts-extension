@@ -27,6 +27,17 @@ if (authType === "JsonFile") {
 }
 
 var apkFile = resolveGlobPath(tl.getPathInput("apkFile", true));
+var apkFileList = [apkFile];
+var additionalApks = tl.getDelimitedInput("additionalApks", "\n");
+if (additionalApks.length > 0) {
+    for (var i in additionalApks) {
+        apkFileList.push(resolveGlobPath(additionalApks[i]));
+    }
+    
+    console.log("Found multiple Apks to upload: ");
+    console.log(apkFileList);
+}
+
 var track = tl.getInput("track", true);
 var userFraction = tl.getInput("userFraction", false); // Used for staged rollouts
 var changeLogFile = tl.getInput("changeLogFile", false);
@@ -43,7 +54,7 @@ var globalParams = { auth: null, params: {} };
 // #1) Extract the package name from the specified APK file
 // #2) Get an OAuth token by authentincating the service account
 // #3) Create a new editing transaction
-// #4) Upload the new APK
+// #4) Upload the new APK(s)
 // #5) Specify the track that should be used for the new APK (e.g. alpha, beta)
 // #6) Specify the new change log
 // #7) Commit the edit transaction
@@ -61,10 +72,12 @@ var currentEdit = authorize().then(function (res) {
     return getNewEdit(packageName);
 });
 
-currentEdit = currentEdit.then(function (res) {
-    console.log("Uploading APK file...");
-    return addApk(packageName, apkFile);
-});
+for (var apk in apkFileList) {
+    currentEdit = currentEdit.then(function (res) {
+        console.log(`Uploading APK file ${apkFileList[apk]}...`);
+        return addApk(packageName, apkFileList[apk]);
+    });
+}
 
 currentEdit = currentEdit.then(function (res) {
     console.log("Updating track information...");
