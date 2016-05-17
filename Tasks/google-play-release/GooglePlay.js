@@ -28,10 +28,10 @@ if (authType === "JsonFile") {
 
 var apkFile = resolveGlobPath(tl.getPathInput("apkFile", true));
 var apkFileList = [apkFile];
-var additionaApks = tl.getDelimitedInput('additionalApks', '\n');
-if (additionaApks.length > 0) {
-    for (var i in additionaApks) {
-        apkFileList.push(resolveGlobPath(additionaApks[i]));
+var additionalApks = tl.getDelimitedInput("additionalApks", "\n");
+if (additionalApks.length > 0) {
+    for (var i in additionalApks) {
+        apkFileList.push(resolveGlobPath(additionalApks[i]));
     }
     
     console.log("Found multiple Apks to upload: ");

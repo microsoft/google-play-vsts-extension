@@ -98,11 +98,11 @@
         {
             "name": "additionalApks",
             "type": "multiLine",
-            "label": "Additional APK paths",
+            "label": "Additional APK Path(s)",
             "defaultValue": "",
             "groupName": "advanced",
             "required": false,
-            "helpMarkDown": "Paths to additional APK files you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory. Supports multiple lines or minimatch patterns."
+            "helpMarkDown": "Paths to additional APK files you want to publish to the specified track (e.g. an x86 build). Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory. Supports multiple lines or minimatch patterns."
         }
     ],
     "execution": {
