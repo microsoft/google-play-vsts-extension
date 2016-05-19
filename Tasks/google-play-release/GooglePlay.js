@@ -41,6 +41,7 @@ if (additionalApks.length > 0) {
 var track = tl.getInput("track", true);
 var userFraction = tl.getInput("userFraction", false); // Used for staged rollouts
 var changeLogFile = tl.getInput("changeLogFile", false);
+var shouldAttachMetadata = tl.getBoolInput("shouldAttachMetadata", false);
 
 // Constants
 var GOOGLE_PLAY_SCOPES = ["https://www.googleapis.com/auth/androidpublisher"];
@@ -77,6 +78,13 @@ for (var apk in apkFileList) {
         console.log(`Uploading APK file ${apkFileList[apk]}...`);
         return addApk(packageName, apkFileList[apk]);
     });
+}
+
+if (shouldAttachMetadata) {
+    currentEdit = currentEdit.then(function (res) {
+        console.log(`Attempting to attach metadat to release...`);
+        return addMetadata(".");
+    })
 }
 
 currentEdit = currentEdit.then(function (res) {
@@ -244,6 +252,27 @@ function addChangelog(changeLogFile) {
 
     tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
     return edits.tracks.patchAsync(requestParameters);
+}
+
+/**
+ * Attaches the metadata in the specified directory to the edit. Assumes the metadata structure specified by Fastlane.
+ * Assumes authorized
+ * @param {string} metadataDirectory - Path to the folder where the Fastlane metadata structure is found
+ * @returns {promise} TBD
+ */
+function addMetadata(metadataDirectory) {
+    tl.debug("Attempting to add metadata from " + metadataDirectory);
+    var updateMetadataPromise = Promise();
+    var imageRequestParameters = {
+        imageType: "featureGraphic", //note: changes with different image types
+        language: "en-US",
+        uploadType: "media"
+    };
+    
+    var imageGlobs = ["featureGraphic*", "icon*", "promoGraphic*", "tvBanner*", "phoneScreenshots/*", "sevenInchScreenshots/*", "tenInchScreenshots/*", "tvScreenshots/*", "wearScreenshots/*"];
+    updateMetadataPromise = edits.images.uploadAsync(imageRequestParameters);
+    
+    return updateMetadataPromise;
 }
 
 /**
