@@ -1,6 +1,7 @@
 var Promise = require("bluebird");
 var google = require("googleapis");
 var fs = require("fs");
+var path = require("path");
 var tl = require("vso-task-lib");
 var apkParser = require("node-apk-parser");
 var publisher = google.androidpublisher("v2");
@@ -33,7 +34,7 @@ if (additionalApks.length > 0) {
     for (var i in additionalApks) {
         apkFileList.push(resolveGlobPath(additionalApks[i]));
     }
-    
+
     console.log("Found multiple Apks to upload: ");
     console.log(apkFileList);
 }
@@ -258,21 +259,111 @@ function addChangelog(changeLogFile) {
  * Attaches the metadata in the specified directory to the edit. Assumes the metadata structure specified by Fastlane.
  * Assumes authorized
  * @param {string} metadataDirectory - Path to the folder where the Fastlane metadata structure is found
- * @returns {promise} TBD
+ * @returns {Promise}  - A promise that will return the result from last metadata change that was attempted. Likely not useful information.
+ * 
+ * Notes: Metadata Structure:
+ * metadata
+ *  └ $(languageCodes)
+ *    ├ full_description.txt
+ *    ├ short_description.txt
+ *    ├ title.txt
+ *    ├ video.txt
+ *    ├ images
+ *    |  ├ featureGraphic.png    || featureGraphic.jpg   || featureGraphic.jpeg
+ *    |  ├ icon.png              || icon.jpg             || icon.jpeg
+ *    |  ├ promoGraphic.png      || promoGraphic.jpg     || promoGraphic.jpeg
+ *    |  ├ tvBanner.png          || tvBanner.jpg         || tvBanner.jpeg
+ *    |  ├ phoneScreenshots
+ *    |  |  └ *.png || *.jpg || *.jpeg
+ *    |  ├ sevenInchScreenshots
+ *    |  |  └ *.png || *.jpg || *.jpeg
+ *    |  ├ tenInchScreenshots
+ *    |  |  └ *.png || *.jpg || *.jpeg
+ *    |  ├ tvScreenshots
+ *    |  |  └ *.png || *.jpg || *.jpeg
+ *    |  └ wearScreenshots
+ *    |     └ *.png || *.jpg || *.jpeg
+ *    └ changelogs
+ *      └ $(versioncodes).txt
  */
 function addMetadata(metadataDirectory) {
-    tl.debug("Attempting to add metadata from " + metadataDirectory);
-    var updateMetadataPromise = Promise();
-    var imageRequestParameters = {
-        imageType: "featureGraphic", //note: changes with different image types
-        language: "en-US",
-        uploadType: "media"
+    tl.debug("Attempting to add metadata...");
+    var metadataRootDirectory = path.join(metadataDirectory, "metadata");
+    tl.debug(`Assuming root is at ${metadataDirectory}\n\rAdding metadata from ${metadataRootDirectory}`);
+
+    var metadataLanguageCodes = fs.readdirSync(metadataRootDirectory).filter(function (subPath) {
+        var pathIsDir = false;
+        try {
+            pathIsDir = fs.statSync(path.join(path2, subPath)).isDirectory();
+        } catch (e) {
+            console.log(`failed to stat path ${subPath}. ignoring...`);
+        }
+
+        return pathIsDir;
+    });
+
+    var addingAllMetadataPromise = Promise();
+
+    for (var i in metadataLanguageCodes) {
+        var nextLanguageCode = metadataLanguageCodes[i];
+        addingAllMetadataPromise = addingAllMetadataPromise.then(function () {
+            return uploadMetadataWithLanguageCode(nextLanguageCode, path.join(metadataDirectory, nextLanguageCode));
+        });
+    }
+
+    return addingAllMetadataPromise;
+}
+
+function uploadMetadataWithLanguageCode(languageCode, directory) {
+    tl.debug(`Attempting to upload metadata in ${directory} for language code ${languageCode}`);
+    /*{
+       imageType: "featureGraphic", //note: changes with different image types
+       language: languageCode,
+       uploadType: "media",
+    };*/
+    
+    var updatingMetadataPromise;
+
+    var patchListingRequestParameters = {
+        language: languageCode
+    };
+
+    patchListingRequestParameters.resource = createPatchListingResource(languageCode, directory);
+    
+    updatingMetadataPromise = edits.listings.patchAsync(patchListingRequestParameters);
+
+    var imageGlobs = ["featureGraphic*", "icon*", "promoGraphic*", "tvBanner*", "phoneScreenshots/*", "sevenInchScreenshots/*", "tenInchScreenshots/*", "tvScreenshots/*", "wearScreenshots/*"];
+    
+    return updatingMetadataPromise;
+}
+
+function createPatchListingResource(languageCode, directory) {
+    tl.debug(`Constructing resource to patch listing with language code ${languageCode} from ${directory}`);
+    var resourceParts = {
+        "fullDescription": "full_description.txt",
+        "shortDescription": "short_description.txt",
+        "title": "title.txt",
+        "video": "video.txt"
     };
     
-    var imageGlobs = ["featureGraphic*", "icon*", "promoGraphic*", "tvBanner*", "phoneScreenshots/*", "sevenInchScreenshots/*", "tenInchScreenshots/*", "tvScreenshots/*", "wearScreenshots/*"];
-    updateMetadataPromise = edits.images.uploadAsync(imageRequestParameters);
+    var resouce = {
+        language: languageCode
+    };
+
+    for (var i in resourceParts) {
+        var file = path.join(directory, resourceParts[i]);
+        var fileContents;
+        try {
+            fileContents = fs.readFileSync(file);
+        } catch (e) {
+            tl.debug(`Failed to read metadata file ${file}. Ignoring...`);
+        }
+
+        resource[i] = fileContents;
+    }
     
-    return updateMetadataPromise;
+    tl.debug(`Finished constructing resource ${resource}`);
+    return resouce;
 }
 
 /**
