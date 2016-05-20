@@ -258,10 +258,8 @@ function addChangelog(changeLogFile) {
 /**
  * Attaches the metadata in the specified directory to the edit. Assumes the metadata structure specified by Fastlane.
  * Assumes authorized
- * @param {string} metadataDirectory - Path to the folder where the Fastlane metadata structure is found
- * @returns {Promise}  - A promise that will return the result from last metadata change that was attempted. Likely not useful information.
  * 
- * Notes: Metadata Structure:
+ * Metadata Structure:
  * metadata
  *  └ $(languageCodes)
  *    ├ full_description.txt
@@ -285,6 +283,9 @@ function addChangelog(changeLogFile) {
  *    |     └ *.png || *.jpg || *.jpeg
  *    └ changelogs
  *      └ $(versioncodes).txt
+ * 
+ * @param {string} metadataDirectory - Path to the folder where the Fastlane metadata structure is found
+ * @returns {Promise}  - A promise that will return the result from last metadata change that was attempted. Likely not useful information.
  */
 function addMetadata(metadataDirectory) {
     tl.debug("Attempting to add metadata...");
@@ -314,6 +315,13 @@ function addMetadata(metadataDirectory) {
     return addingAllMetadataPromise;
 }
 
+/**
+ * Updates the details for a language with new information
+ * Assumes authorized
+ * @param {string} languageCode - Language code (a BCP-47 language tag) of the localized listing to update
+ * @param {string} directory - Directory where updated listing details can be found.
+ * @returns {Promise} - A Promise that will return after all metadata updating operations are completed.
+ */
 function uploadMetadataWithLanguageCode(languageCode, directory) {
     tl.debug(`Attempting to upload metadata in ${directory} for language code ${languageCode}`);
     /*{
@@ -321,7 +329,7 @@ function uploadMetadataWithLanguageCode(languageCode, directory) {
        language: languageCode,
        uploadType: "media",
     };*/
-    
+
     var updatingMetadataPromise;
 
     var patchListingRequestParameters = {
@@ -329,14 +337,23 @@ function uploadMetadataWithLanguageCode(languageCode, directory) {
     };
 
     patchListingRequestParameters.resource = createPatchListingResource(languageCode, directory);
-    
+
     updatingMetadataPromise = edits.listings.patchAsync(patchListingRequestParameters);
 
-    var imageGlobs = ["featureGraphic*", "icon*", "promoGraphic*", "tvBanner*", "phoneScreenshots/*", "sevenInchScreenshots/*", "tenInchScreenshots/*", "tvScreenshots/*", "wearScreenshots/*"];
-    
+    updatingMetadataPromise = updatingMetadataPromise.then(function () {
+        return attachImages(languageCode, directory);
+    });
+
     return updatingMetadataPromise;
 }
 
+/**
+ * Helper method for creating the resource for the edits.listings.patch method.
+ * @param {string} languageCode - Language code (a BCP-47 language tag) of the localized listing to update
+ * @param {string} directory - Directory where updated listing details can be found.
+ * @returns {Object} resource - A crafted resource for the edits.listings.patch method.
+ *                              { languageCode: string, fullDescription: string, shortDescription: string, title: string, video: string }
+ */
 function createPatchListingResource(languageCode, directory) {
     tl.debug(`Constructing resource to patch listing with language code ${languageCode} from ${directory}`);
     var resourceParts = {
@@ -345,7 +362,7 @@ function createPatchListingResource(languageCode, directory) {
         "title": "title.txt",
         "video": "video.txt"
     };
-    
+
     var resouce = {
         language: languageCode
     };
@@ -361,9 +378,79 @@ function createPatchListingResource(languageCode, directory) {
 
         resource[i] = fileContents;
     }
-    
+
     tl.debug(`Finished constructing resource ${resource}`);
     return resouce;
+}
+
+function attachImages(languageCode, directory) {
+    tl.debug(`Starting upload of images with language code ${languageCode} from ${directory}`);
+    var imageTypes = ["featureGraphic", "icon", "promoGraphic", "tvBanner", "phoneScreenshots", "sevenInchScreenshots", "tenInchScreenshots", "tvScreenshots", "wearScreenshots"];
+    var acceptedExtensions = [".png", ".jpg", ".jpeg"];
+
+    var uploadImagesPromise = Promise();
+    for (var i in imageTypes) {
+        var shouldAttemptUpload = false;
+        var imageType = imageTypes[i];
+        var imageUploadRequest = {
+            language: languageCode,
+            imageType: imageType,
+            uploadType: "media"
+        };
+
+        tl.debug(`Attempting construction of request for image type ${imageType}`);
+        switch (imageType) {
+            case "featureGraphic":
+            case "icon":
+            case "promoGraphic":
+            case "tvBanner":
+                try {
+                    for (var i = 0; i < acceptedExtensions.length && !shouldAttemptUpload; i++) {
+                        var imageStat = fs.statSync(imageType + acceptedExtensions[i]);
+                        if (imageStat) {
+                            tl.debug(`Found image for type ${imageType}`);
+                            shouldAttemptUpload = imageStat.isFile();
+                        }
+                    }
+                } catch (e) {
+                    tl.debug(`Image for ${imageType} was not found. Skipping...`);
+                }
+                break;
+            case "phoneScreenshots":
+            case "sevenInchScreenshots":
+            case "tenInchScreenshots":
+            case "tvScreenshots":
+            case "wearScreenshots":
+                try {
+                    var imageStat = fs.statSync(imageType);
+                    if (imageStat) {
+                        tl.debug(`Found image for type ${imageType}`);
+                        shouldAttemptUpload = imageStat.isDirectory();
+                        if (!shouldAttemptUpload) {
+                            tl.debug(`Stat returned that ${imageType} was not a directory. Is there a file that shares this name?`);
+                        }
+                    }
+                } catch (e) {
+                    tl.debug(`Image directory for ${imageType} was not found. Skipping...`);
+                }
+                break;
+            default:
+                tl.debug(`Image type ${imageType} is an unknown type and was ignored`);
+                continue;
+        }
+        
+        if (shouldAttemptUpload) {
+            uploadImagesPromise = uploadImagesPromise.then(function() {
+                return edits.images.uploadAsync.bind(this, imageUploadRequest)();
+            });
+            tl.debug(`Request construction complete and request queued.`);
+        } else {
+            tl.debug(`Upload of image type ${imageType} was skipped. Check log for details`);
+        }
+    }
+
+    tl.debug(`All image uploads queued`);
+    return uploadImagesPromise;
 }
 
 /**
