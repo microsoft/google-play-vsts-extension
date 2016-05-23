@@ -127,5 +127,4 @@ Allows you to increase the rollout percentage of an app that was previously rele
 ## Contact Us
 
 * [Report an issue](https://github.com/Microsoft/google-play-vsts-extension/issues)
-
-*Google Play and the Google Play logo are trademarks of Google Inc.*
+Google Play and the Google Play logo are trademarks of Google Inc.
