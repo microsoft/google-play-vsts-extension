@@ -41,7 +41,7 @@ if (additionalApks.length > 0) {
 
 var track = tl.getInput("track", true);
 var userFraction = tl.getInput("userFraction", false); // Used for staged rollouts
-var changeLogFile = tl.getInput("changeLogFile", false);
+var  changelogFile = tl.getInput(" changelogFile", false);
 var shouldAttachMetadata = tl.getBoolInput("shouldAttachMetadata", false);
 
 // Constants
@@ -95,16 +95,16 @@ currentEdit = currentEdit.then(function (res) {
 
 // This block will likely be deprecated by the metadata awareness
 try {
-    var stats = fs.statSync(changeLogFile);
+    var stats = fs.statSync( changelogFile);
     if (stats && stats.isFile()) {
         currentEdit = currentEdit.then(function (res) {
             console.log("Adding changelog file...");
-            return addChangelog("en-US", changeLogFile);
+            return addChangelog("en-US",  changelogFile);
         });
 
     }
 } catch (e) {
-    tl.debug("No changelog found. log path was " + changeLogFile);
+    tl.debug("No changelog found. log path was " +  changelogFile);
 }
 
 currentEdit = currentEdit.then(function (res) {
@@ -238,18 +238,28 @@ function updateTrack(packageName, track, versionCode, userFraction) {
  * Add a changelog to an edit
  * Assumes authorized
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
- * @param {string} changeLogFile path to changelog file. We assume this exists (behaviour may change)
+ * @param {string}  changelogFile path to changelog file. We assume this exists (behaviour may change)
  * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-function addChangelog(languageCode, changeLogFile) {
-    tl.debug("Adding changelog file: " + changeLogFile);
+function addChangelog(languageCode,  changelogFile) {
+    tl.debug("Adding changelog file: " +  changelogFile);
+    
+    var versionCode = globalParams.params.apkVersionCode;
+    try {
+        var changelogVersion = changelogFile.replace(/\.[^/.]+$/g, "");
+        versionCode = parseInt(changelogVersion);
+    } catch (e) {
+        tl.debug(e);
+        tl.debug(`Failed to extract version code from file ${changelogFile}. Defaulting to global version code ${globalParams.params.apkVersionCode}`);
+    }
+    
     var requestParameters = {
         apkVersionCode: globalParams.params.apkVersionCode,
         language: languageCode,
         resource: {
             language: languageCode,
-            recentChanges: fs.readFileSync(changeLogFile)
+            recentChanges: fs.readFileSync(changelogFile)
         }
     };
 
@@ -300,6 +310,7 @@ function addMetadata(metadataDirectory) {
         try {
             pathIsDir = fs.statSync(path.join(path2, subPath)).isDirectory();
         } catch (e) {
+            tl.debug(e);
             tl.debug(`failed to stat path ${subPath}. ignoring...`);
         }
 
