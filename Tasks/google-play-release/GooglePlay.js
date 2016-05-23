@@ -83,7 +83,7 @@ for (var apk in apkFileList) {
 
 if (shouldAttachMetadata) {
     currentEdit = currentEdit.then(function (res) {
-        console.log(`Attempting to attach metadat to release...`);
+        console.log(`Attempting to attach metadata to release...`);
         return addMetadata(".");
     })
 }
@@ -93,12 +93,13 @@ currentEdit = currentEdit.then(function (res) {
     return updateTrack(packageName, track, res[0].versionCode, userFraction);
 });
 
+// This block will likely be deprecated by the metadata awareness
 try {
     var stats = fs.statSync(changeLogFile);
     if (stats && stats.isFile()) {
         currentEdit = currentEdit.then(function (res) {
             console.log("Adding changelog file...");
-            return addChangelog(changeLogFile);
+            return addChangelog("en-US", changeLogFile);
         });
 
     }
@@ -121,8 +122,8 @@ currentEdit = currentEdit.then(function (res) {
 
 /**
  * Tries to extract the package name from an apk file
- * @param {Object} apkFile - The apk file from which to attempt name extraction
- * @return {string} packageName - Name extracted from package. null if extraction failed
+ * @param {Object} apkFile The apk file from which to attempt name extraction
+ * @return {string} packageName Name extracted from package. null if extraction failed
  */
 function tryGetPackageName(apkFile) {
     tl.debug("Candidate package: " + apkFile);
@@ -145,8 +146,8 @@ function tryGetPackageName(apkFile) {
 
 /**
  * Setups up a new JWT client for authentication
- * @param {Object} key - parsed object from google play provided JSON authentication informatoin
- * @return {Object} client - Returns object to be used for authenticating calls to the api.
+ * @param {Object} key parsed object from google play provided JSON authentication informatoin
+ * @return {Object} client Returns object to be used for authenticating calls to the api.
  */
 function setupAuthClient(key) {
     return new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
@@ -159,8 +160,8 @@ function authorize() {
 /**
  * Uses the provided JWT client to request a new edit from the Play store and attach the edit id to all requests made this session
  * Assumes authorized
- * @param {string} packageName - unique android package name (com.android.etc)
- * @return {Promise} edit - A promise that will return result from inserting a new edit
+ * @param {string} packageName unique android package name (com.android.etc)
+ * @return {Promise} edit A promise that will return result from inserting a new edit
  *                          { id: string, expiryTimeSeconds: string }
  */
 function getNewEdit(packageName) {
@@ -180,9 +181,9 @@ function getNewEdit(packageName) {
 /**
  * Adds an apk to an existing edit
  * Assumes authorized
- * @param {string} packageName - unique android package name (com.android.etc)
- * @param {string} apkFile - path to apk file
- * @returns {Promise} apk - A promise that will return result from uploading an apk 
+ * @param {string} packageName unique android package name (com.android.etc)
+ * @param {string} apkFile path to apk file
+ * @returns {Promise} apk A promise that will return result from uploading an apk 
  *                          { versionCode: integer, binary: { sha1: string } }
  */
 function addApk(packageName, apkFile) {
@@ -206,11 +207,11 @@ function addApk(packageName, apkFile) {
 /**
  * Update a given release track with the given information
  * Assumes authorized
- * @param {string} packageName - unique android package name (com.android.etc)
- * @param {string} track - one of the values {"alpha", "beta", "production", "rollout"}
- * @param {integer or [integers]} versionCode - version code returned from an apk call. will take either a number or a [number]
- * @param {double} userFraction - for rollout, fraction of users to get update
- * @returns {Promise} track - A promise that will return result from updating a track
+ * @param {string} packageName unique android package name (com.android.etc)
+ * @param {string} track one of the values {"alpha", "beta", "production", "rollout"}
+ * @param {(number|number[])} versionCode version code returned from an apk call. will take either a number or a number[]
+ * @param {double} userFraction for rollout, fraction of users to get update
+ * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
 function updateTrack(packageName, track, versionCode, userFraction) {
@@ -236,17 +237,18 @@ function updateTrack(packageName, track, versionCode, userFraction) {
 /**
  * Add a changelog to an edit
  * Assumes authorized
- * @param {string} changeLogFile - path to changelog file. We assume this exists (behaviour may change)
- * @returns {Promise} track - A promise that will return result from updating a track
+ * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
+ * @param {string} changeLogFile path to changelog file. We assume this exists (behaviour may change)
+ * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-function addChangelog(changeLogFile) {
+function addChangelog(languageCode, changeLogFile) {
     tl.debug("Adding changelog file: " + changeLogFile);
     var requestParameters = {
         apkVersionCode: globalParams.params.apkVersionCode,
-        language: "en-US",
+        language: languageCode,
         resource: {
-            language: "en-US",
+            language: languageCode,
             recentChanges: fs.readFileSync(changeLogFile)
         }
     };
@@ -284,8 +286,9 @@ function addChangelog(changeLogFile) {
  *    └ changelogs
  *      └ $(versioncodes).txt
  * 
- * @param {string} metadataDirectory - Path to the folder where the Fastlane metadata structure is found
- * @returns {Promise}  - A promise that will return the result from last metadata change that was attempted. Likely not useful information.
+ * @param {string} metadataDirectory Path to the folder where the Fastlane metadata structure is found
+ * @returns {Promise}  A promise that will return the result from last metadata change that was attempted. Currently, this is most likely an image upload.
+ *                     { image: { id: string, url: string, sha1: string } }
  */
 function addMetadata(metadataDirectory) {
     tl.debug("Attempting to add metadata...");
@@ -297,7 +300,7 @@ function addMetadata(metadataDirectory) {
         try {
             pathIsDir = fs.statSync(path.join(path2, subPath)).isDirectory();
         } catch (e) {
-            console.log(`failed to stat path ${subPath}. ignoring...`);
+            tl.debug(`failed to stat path ${subPath}. ignoring...`);
         }
 
         return pathIsDir;
@@ -318,17 +321,12 @@ function addMetadata(metadataDirectory) {
 /**
  * Updates the details for a language with new information
  * Assumes authorized
- * @param {string} languageCode - Language code (a BCP-47 language tag) of the localized listing to update
- * @param {string} directory - Directory where updated listing details can be found.
- * @returns {Promise} - A Promise that will return after all metadata updating operations are completed.
+ * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
+ * @param {string} directory Directory where updated listing details can be found.
+ * @returns {Promise} A Promise that will return after all metadata updating operations are completed.
  */
 function uploadMetadataWithLanguageCode(languageCode, directory) {
     tl.debug(`Attempting to upload metadata in ${directory} for language code ${languageCode}`);
-    /*{
-       imageType: "featureGraphic", //note: changes with different image types
-       language: languageCode,
-       uploadType: "media",
-    };*/
 
     var updatingMetadataPromise;
 
@@ -339,9 +337,32 @@ function uploadMetadataWithLanguageCode(languageCode, directory) {
     patchListingRequestParameters.resource = createPatchListingResource(languageCode, directory);
 
     updatingMetadataPromise = edits.listings.patchAsync(patchListingRequestParameters);
+    var changelogDir = path.join(directory, "changelog");
+
+    try {
+        var changelogs = fs.readdirSync(changelogDir).filter(function (subPath) {
+            var pathIsFile = false;
+            try {
+                pathIsFile = fs.statSync(path.join(changelogDir, subPath)).isFile();
+            } catch (e) {
+                tl.debug(`failed to stat path ${subPath}. ignoring...`);
+            }
+
+            return pathIsFile;
+        });
+
+        for (var i in changelogs) {
+            updatingMetadataPromise = updatingMetadatPromise.then(function (changelog) {
+                tl.debug(`Appending changelog ${changelog}`);
+                return addChangelog.bind(this, languageCode, changelog)();
+            }.bind(this, changelogs[i]));
+        }
+    } catch (e) {
+        tl.debug(`no changelogs found in ${changelogDir}`);
+    }
 
     updatingMetadataPromise = updatingMetadataPromise.then(function () {
-        return attachImages(languageCode, directory);
+        return attachImages.bind(this, languageCode, directory)();
     });
 
     return updatingMetadataPromise;
@@ -349,9 +370,9 @@ function uploadMetadataWithLanguageCode(languageCode, directory) {
 
 /**
  * Helper method for creating the resource for the edits.listings.patch method.
- * @param {string} languageCode - Language code (a BCP-47 language tag) of the localized listing to update
- * @param {string} directory - Directory where updated listing details can be found.
- * @returns {Object} resource - A crafted resource for the edits.listings.patch method.
+ * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
+ * @param {string} directory Directory where updated listing details can be found.
+ * @returns {Object} resource A crafted resource for the edits.listings.patch method.
  *                              { languageCode: string, fullDescription: string, shortDescription: string, title: string, video: string }
  */
 function createPatchListingResource(languageCode, directory) {
@@ -383,6 +404,14 @@ function createPatchListingResource(languageCode, directory) {
     return resouce;
 }
 
+/**
+ * Upload images to the app listing.
+ * Assumes authorized
+ * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
+ * @param {string} directory Directory where updated listing details can be found.
+ * @returns {Promise} response Response from last attempted image upload
+ *                             { image: { id: string, url: string, sha1: string } }
+ */
 function attachImages(languageCode, directory) {
     tl.debug(`Starting upload of images with language code ${languageCode} from ${directory}`);
     var imageTypes = ["featureGraphic", "icon", "promoGraphic", "tvBanner", "phoneScreenshots", "sevenInchScreenshots", "tenInchScreenshots", "tvScreenshots", "wearScreenshots"];
@@ -438,9 +467,9 @@ function attachImages(languageCode, directory) {
                 tl.debug(`Image type ${imageType} is an unknown type and was ignored`);
                 continue;
         }
-        
+
         if (shouldAttemptUpload) {
-            uploadImagesPromise = uploadImagesPromise.then(function() {
+            uploadImagesPromise = uploadImagesPromise.then(function () {
                 return edits.images.uploadAsync.bind(this, imageUploadRequest)();
             });
             tl.debug(`Request construction complete and request queued.`);
@@ -455,8 +484,8 @@ function attachImages(languageCode, directory) {
 
 /**
  * Update the universal parameters attached to every request
- * @param {string} paramName - Name of parameter to add/update
- * @param {any} value - value to assign to paramName. Any value is admissible.
+ * @param {string} paramName Name of parameter to add/update
+ * @param {any} value value to assign to paramName. Any value is admissible.
  * @returns {void} void
  */
 function updateGlobalParams(paramName, value) {
@@ -469,8 +498,8 @@ function updateGlobalParams(paramName, value) {
 
 /**
  * Get the appropriate file from the provided pattern
- * @param {string} path - The minimatch pattern of glob to be resolved to file path
- * @returns {string} path - path of the file resolved by glob
+ * @param {string} path The minimatch pattern of glob to be resolved to file path
+ * @returns {string} path path of the file resolved by glob
  */
 function resolveGlobPath(path) {
     if (path) {
