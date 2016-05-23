@@ -72,7 +72,7 @@ In addition to the custom service endpoint, this extension also contributes the 
 
 Allows you to release an update to your app on Google Play, and includes the following options:
 
-![Release task](images/release-task.png)
+![Release task](images/release-task-with-advanced.png)
 
 1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo.
 
@@ -83,6 +83,10 @@ Allows you to release an update to your app on Google Play, and includes the fol
 4. **User Fraction** *(String, Required if visible)* - The percentage of users to roll the specified APK out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). This option is only available when the **Track** input is set to **Rollout**.
 
 5. **Release Notes** *(File path)* - Path to the file specifying the release notes for the APK you are publishing.
+
+#### Advanced Options
+
+1. **Additional APK Path(s)** *(Text box)* - Paths to additional APK files you want to publish to the specified track (e.g. an x86 build) separated by new lines. This option allows the usage of wildcards and/or minimatch patterns. For example, **/*.apk to match the first APK file, in any directory.
 
 ### Google Play - Promote
 
