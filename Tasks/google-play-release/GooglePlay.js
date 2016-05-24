@@ -66,7 +66,7 @@ var globalParams = { auth: null, params: {} };
 var packageName = tryGetPackageName(apkFile);
 var jwtClient = setupAuthClient(key);
 var edits = publisher.edits;
-[edits, edits.apks, edits.tracks, edits.listings, edits.images, jwtClient].forEach(Promise.promisifyAll);
+[edits, edits.apklistings, edits.apks, edits.tracks, edits.listings, edits.images, jwtClient].forEach(Promise.promisifyAll);
 
 globalParams.auth = jwtClient;
 updateGlobalParams("packageName", packageName);
@@ -75,13 +75,6 @@ var currentEdit = authorize().then(function (res) {
     console.log("Authenticated with Google Play and getting new edit");
     return getNewEdit(packageName);
 });
-
-if (shouldAttachMetadata) {
-    currentEdit = currentEdit.then(function (res) {
-        console.log(`Attempting to attach metadata to release...`);
-        return addMetadata(".");
-    })
-}
 
 for (var apk in apkFileList) {
     currentEdit = currentEdit.then(function (res) {
@@ -92,8 +85,15 @@ for (var apk in apkFileList) {
 
 currentEdit = currentEdit.then(function (res) {
     console.log("Updating track information...");
-    return updateTrack(packageName, track, res[0].versionCode, userFraction);
+    return updateTrack(packageName, track, globalParams.params.versionCode, userFraction);
 });
+
+if (shouldAttachMetadata) {
+    currentEdit = currentEdit.then(function (res) {
+        console.log(`Attempting to attach metadata to release...`);
+        return addMetadata(".");
+    })
+}
 
 // This block will likely be deprecated by the metadata awareness
 try {
@@ -257,7 +257,7 @@ function addChangelog(languageCode, changelogFile) {
     }
 
     var requestParameters = {
-        apkVersionCode: globalParams.params.apkVersionCode,
+        apkVersionCode: versionCode,
         language: languageCode,
         resource: {
             language: languageCode,
@@ -266,10 +266,53 @@ function addChangelog(languageCode, changelogFile) {
     };
 
     tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
-    return edits.tracks.patchAsync(requestParameters).catch(function (err) {
+    return edits.apklistings.updateAsync(requestParameters).catch(function (err) {
         tl.debug(err);
         tl.error("Failed to upload changelogs. See log for details.");
     });
+}
+
+/**
+ * Adds all changelogs found in directory to an edit. Pulls version code from file name. Failing this, assumes the global version code inferred from apk
+ * Assumes authorized
+ * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
+ * @param {string} directory Directory with a changesogs folder where changelogs can be found.
+ * @returns {Promise} track A promise that will return result from updating an apk listing
+ *                            { language: string, recentChanges: string }
+ */
+function addAllChangelogs(languageCode, directory) {
+    var changelogDir = path.join(directory, "changelogs");
+
+    var addAllChangelogsPromise = new Promise(function (resolve, reject) { resolve(); });
+
+    try {
+        var changelogs = fs.readdirSync(changelogDir).filter(function (subPath) {
+            var pathIsFile = false;
+            try {
+                var fileToCheck = path.join(changelogDir, subPath);
+                tl.debug(`Checking File ${fileToCheck}`);
+                pathIsFile = fs.statSync(fileToCheck).isFile();
+            } catch (e) {
+                tl.debug(e);
+                tl.debug(`failed to stat path ${subPath}. ignoring...`);
+            }
+
+            return pathIsFile;
+        });
+
+        for (var i in changelogs) {
+            var fullChangelogPath = path.join(changelogDir, changelogs[i]);
+            addAllChangelogsPromise = addAllChangelogsPromise.then(function (changelog) {
+                console.log(`Appending changelog ${changelog}`);
+                return addChangelog.bind(this, languageCode, changelog)();
+            }.bind(this, fullChangelogPath));
+        }
+    } catch (e) {
+        tl.debug(e);
+        tl.debug(`no changelogs found in ${changelogDir}`);
+    }
+
+    return addAllChangelogsPromise;
 }
 
 /**
@@ -345,7 +388,7 @@ function addMetadata(metadataDirectory) {
  * @returns {Promise} A Promise that will return after all metadata updating operations are completed.
  */
 function uploadMetadataWithLanguageCode(languageCode, directory) {
-    tl.debug(`Attempting to upload metadata in ${directory} for language code ${languageCode}`);
+    console.log(`Attempting to upload metadata in ${directory} for language code ${languageCode}`);
 
     var updatingMetadataPromise;
 
@@ -354,36 +397,11 @@ function uploadMetadataWithLanguageCode(languageCode, directory) {
     };
 
     patchListingRequestParameters.resource = createPatchListingResource(languageCode, directory);
-
     updatingMetadataPromise = edits.listings.patchAsync(patchListingRequestParameters);
-    var changelogDir = path.join(directory, "changelogs");
-
-    try {
-        var changelogs = fs.readdirSync(changelogDir).filter(function (subPath) {
-            var pathIsFile = false;
-            try {
-                var fileToCheck = path.join(changelogDir, subPath);
-                tl.debug(`Checking File ${fileToCheck}`);
-                pathIsFile = fs.statSync(fileToCheck).isFile();
-            } catch (e) {
-                tl.debug(e);
-                tl.debug(`failed to stat path ${subPath}. ignoring...`);
-            }
-
-            return pathIsFile;
-        });
-
-        for (var i in changelogs) {
-            var fullChangelogPath = path.join(changelogDir, changelogs[i]);
-            updatingMetadataPromise = updatingMetadataPromise.then(function (changelog) {
-                tl.debug(`Appending changelog ${changelog}`);
-                return addChangelog.bind(this, languageCode, changelog)();
-            }.bind(this, fullChangelogPath));
-        }
-    } catch (e) {
-        tl.debug(e);
-        tl.debug(`no changelogs found in ${changelogDir}`);
-    }
+    
+    updatingMetadataPromise = updatingMetadataPromise.then(function () {
+        return addAllChangelogs.bind(this, languageCode, directory)();
+    });
 
     updatingMetadataPromise = updatingMetadataPromise.then(function () {
         return attachImages.bind(this, languageCode, directory)();
@@ -567,7 +585,7 @@ function getImageList(directory) {
  * @param {string} imageType One of the following values: "featureGraphic", "icon", "promoGraphic", "tvBanner", "phoneScreenshots", "sevenInchScreenshots", "tenInchScreenshots", "tvScreenshots", "wearScreenshots"
  * @param {string} imagePath Path to image to attempt upload with
  * @returns {Promise} imageUploadPromise A promise that will return after the image upload has completed or failed. Upon success, returns an object
- *                                       { image: { id: string, url: string, sha1: string } }
+ *                                       { image: [ { id: string, url: string, sha1: string } ] }
  */
 function uploadImage(languageCode, imageType, imagePath) {
     tl.debug(`Uploading image of type ${imageType} from ${imagePath}`);
