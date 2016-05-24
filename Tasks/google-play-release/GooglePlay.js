@@ -20,7 +20,9 @@ if (authType === "JsonFile") {
             console.error("Specified Auth file was invalid");
             tl.setResult(1, serviceAccountKeyFile + " was not a valid auth file");
         }
-    } catch (e) { }
+    } catch (e) {
+        tl.debug(`Couldn't stat keyfile ${serviceAccountKeyFile}. This task will likely fail due to unauthorised.`)
+    }
 } else if (authType === "ServiceEndpoint") {
     var serviceEndpoint = tl.getEndpointAuthorization(tl.getInput("serviceEndpoint", true));
     key.client_email = serviceEndpoint.parameters.username;
@@ -41,8 +43,8 @@ if (additionalApks.length > 0) {
 
 var track = tl.getInput("track", true);
 var userFraction = tl.getInput("userFraction", false); // Used for staged rollouts
-var  changelogFile = tl.getInput(" changelogFile", false);
-var shouldAttachMetadata = tl.getBoolInput("shouldAttachMetadata", false);
+var changelogFile = tl.getInput("changelogFile", false);
+var shouldAttachMetadata = JSON.parse(tl.getInput("shouldAttachMetadata", false));
 
 // Constants
 var GOOGLE_PLAY_SCOPES = ["https://www.googleapis.com/auth/androidpublisher"];
@@ -64,28 +66,28 @@ var globalParams = { auth: null, params: {} };
 var packageName = tryGetPackageName(apkFile);
 var jwtClient = setupAuthClient(key);
 var edits = publisher.edits;
-[edits, edits.apks, edits.tracks, jwtClient].forEach(Promise.promisifyAll);
+[edits, edits.apks, edits.tracks, edits.listings, edits.images, jwtClient].forEach(Promise.promisifyAll);
 
 globalParams.auth = jwtClient;
 updateGlobalParams("packageName", packageName);
 
-console.log("Authenticating with Google Play");
 var currentEdit = authorize().then(function (res) {
+    console.log("Authenticated with Google Play and getting new edit");
     return getNewEdit(packageName);
 });
-
-for (var apk in apkFileList) {
-    currentEdit = currentEdit.then(function (res) {
-        console.log(`Uploading APK file ${apkFileList[apk]}...`);
-        return addApk(packageName, apkFileList[apk]);
-    });
-}
 
 if (shouldAttachMetadata) {
     currentEdit = currentEdit.then(function (res) {
         console.log(`Attempting to attach metadata to release...`);
         return addMetadata(".");
     })
+}
+
+for (var apk in apkFileList) {
+    currentEdit = currentEdit.then(function (res) {
+        console.log(`Uploading APK file ${apkFileList[apk]}...`);
+        return addApk(packageName, apkFileList[apk]);
+    });
 }
 
 currentEdit = currentEdit.then(function (res) {
@@ -95,16 +97,16 @@ currentEdit = currentEdit.then(function (res) {
 
 // This block will likely be deprecated by the metadata awareness
 try {
-    var stats = fs.statSync( changelogFile);
+    var stats = fs.statSync(changelogFile);
     if (stats && stats.isFile()) {
         currentEdit = currentEdit.then(function (res) {
             console.log("Adding changelog file...");
-            return addChangelog("en-US",  changelogFile);
+            return addChangelog("en-US", changelogFile);
         });
 
     }
 } catch (e) {
-    tl.debug("No changelog found. log path was " +  changelogFile);
+    tl.debug("No changelog found. log path was " + changelogFile);
 }
 
 currentEdit = currentEdit.then(function (res) {
@@ -238,13 +240,13 @@ function updateTrack(packageName, track, versionCode, userFraction) {
  * Add a changelog to an edit
  * Assumes authorized
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
- * @param {string}  changelogFile path to changelog file. We assume this exists (behaviour may change)
+ * @param {string} changelogFile path to changelog file. We assume this exists (behaviour may change)
  * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-function addChangelog(languageCode,  changelogFile) {
-    tl.debug("Adding changelog file: " +  changelogFile);
-    
+function addChangelog(languageCode, changelogFile) {
+    tl.debug("Adding changelog file: " + changelogFile);
+
     var versionCode = globalParams.params.apkVersionCode;
     try {
         var changelogVersion = changelogFile.replace(/\.[^/.]+$/g, "");
@@ -253,18 +255,21 @@ function addChangelog(languageCode,  changelogFile) {
         tl.debug(e);
         tl.debug(`Failed to extract version code from file ${changelogFile}. Defaulting to global version code ${globalParams.params.apkVersionCode}`);
     }
-    
+
     var requestParameters = {
         apkVersionCode: globalParams.params.apkVersionCode,
         language: languageCode,
         resource: {
             language: languageCode,
-            recentChanges: fs.readFileSync(changelogFile)
+            recentChanges: fs.readFileSync(changelogFile).toString()
         }
     };
 
     tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
-    return edits.tracks.patchAsync(requestParameters);
+    return edits.tracks.patchAsync(requestParameters).catch(function (err) {
+        tl.debug(err);
+        tl.error("Failed to upload changelogs. See log for details.");
+    });
 }
 
 /**
@@ -302,13 +307,14 @@ function addChangelog(languageCode,  changelogFile) {
  */
 function addMetadata(metadataDirectory) {
     tl.debug("Attempting to add metadata...");
+    metadataDirectory = path.resolve(metadataDirectory);
     var metadataRootDirectory = path.join(metadataDirectory, "metadata");
     tl.debug(`Assuming root is at ${metadataDirectory}\n\rAdding metadata from ${metadataRootDirectory}`);
 
     var metadataLanguageCodes = fs.readdirSync(metadataRootDirectory).filter(function (subPath) {
         var pathIsDir = false;
         try {
-            pathIsDir = fs.statSync(path.join(path2, subPath)).isDirectory();
+            pathIsDir = fs.statSync(path.join(metadataRootDirectory, subPath)).isDirectory();
         } catch (e) {
             tl.debug(e);
             tl.debug(`failed to stat path ${subPath}. ignoring...`);
@@ -317,13 +323,15 @@ function addMetadata(metadataDirectory) {
         return pathIsDir;
     });
 
-    var addingAllMetadataPromise = Promise();
+    var addingAllMetadataPromise = new Promise(function (resolve, reject) { resolve(); });
 
     for (var i in metadataLanguageCodes) {
         var nextLanguageCode = metadataLanguageCodes[i];
-        addingAllMetadataPromise = addingAllMetadataPromise.then(function () {
-            return uploadMetadataWithLanguageCode(nextLanguageCode, path.join(metadataDirectory, nextLanguageCode));
-        });
+        var nextDir = path.join(metadataRootDirectory, nextLanguageCode);
+        addingAllMetadataPromise = addingAllMetadataPromise.then(function (languageCode, directory) {
+            tl.debug(`Processing metadata for language code ${languageCode}`);
+            return uploadMetadataWithLanguageCode.bind(this, languageCode, directory)();
+        }.bind(this, nextLanguageCode, nextDir));
     }
 
     return addingAllMetadataPromise;
@@ -348,14 +356,17 @@ function uploadMetadataWithLanguageCode(languageCode, directory) {
     patchListingRequestParameters.resource = createPatchListingResource(languageCode, directory);
 
     updatingMetadataPromise = edits.listings.patchAsync(patchListingRequestParameters);
-    var changelogDir = path.join(directory, "changelog");
+    var changelogDir = path.join(directory, "changelogs");
 
     try {
         var changelogs = fs.readdirSync(changelogDir).filter(function (subPath) {
             var pathIsFile = false;
             try {
-                pathIsFile = fs.statSync(path.join(changelogDir, subPath)).isFile();
+                var fileToCheck = path.join(changelogDir, subPath);
+                tl.debug(`Checking File ${fileToCheck}`);
+                pathIsFile = fs.statSync(fileToCheck).isFile();
             } catch (e) {
+                tl.debug(e);
                 tl.debug(`failed to stat path ${subPath}. ignoring...`);
             }
 
@@ -363,12 +374,14 @@ function uploadMetadataWithLanguageCode(languageCode, directory) {
         });
 
         for (var i in changelogs) {
-            updatingMetadataPromise = updatingMetadatPromise.then(function (changelog) {
+            var fullChangelogPath = path.join(changelogDir, changelogs[i]);
+            updatingMetadataPromise = updatingMetadataPromise.then(function (changelog) {
                 tl.debug(`Appending changelog ${changelog}`);
                 return addChangelog.bind(this, languageCode, changelog)();
-            }.bind(this, changelogs[i]));
+            }.bind(this, fullChangelogPath));
         }
     } catch (e) {
+        tl.debug(e);
         tl.debug(`no changelogs found in ${changelogDir}`);
     }
 
@@ -395,7 +408,7 @@ function createPatchListingResource(languageCode, directory) {
         "video": "video.txt"
     };
 
-    var resouce = {
+    var resource = {
         language: languageCode
     };
 
@@ -408,11 +421,11 @@ function createPatchListingResource(languageCode, directory) {
             tl.debug(`Failed to read metadata file ${file}. Ignoring...`);
         }
 
-        resource[i] = fileContents;
+        resource[i] = fileContents.toString();
     }
 
-    tl.debug(`Finished constructing resource ${resource}`);
-    return resouce;
+    tl.debug(`Finished constructing resource ${JSON.stringify(resource)}`);
+    return resource;
 }
 
 /**
@@ -425,34 +438,84 @@ function createPatchListingResource(languageCode, directory) {
  */
 function attachImages(languageCode, directory) {
     tl.debug(`Starting upload of images with language code ${languageCode} from ${directory}`);
+
+    var imageList = getImageList(directory);
+
+    var uploadImagesPromise = new Promise(function (resolve, reject) { resolve(); })
+
+    for (var imageType in imageList) {
+        var images = imageList[imageType];
+        for (var i in images) {
+            uploadImagesPromise = uploadImagesPromise.then(function (languageCode, imageType, image) {
+                return uploadImage(languageCode, imageType, image);
+            }.bind(this, languageCode, imageType, images[i]));
+        }
+    }
+
+    tl.debug(`All image uploads queued`);
+    return uploadImagesPromise;
+}
+
+/**
+ * Get all the images in the metadata directory that need to be uploaded.
+ * Assumes all files are in a folder labeled "images" at the root of directory
+ * directory
+ *  └ images
+ *    ├ featureGraphic.png    || featureGraphic.jpg   || featureGraphic.jpeg
+ *    ├ icon.png              || icon.jpg             || icon.jpeg
+ *    ├ promoGraphic.png      || promoGraphic.jpg     || promoGraphic.jpeg
+ *    ├ tvBanner.png          || tvBanner.jpg         || tvBanner.jpeg
+ *    ├ phoneScreenshots
+ *    |  └ *.png || *.jpg || *.jpeg
+ *    ├ sevenInchScreenshots
+ *    |  └ *.png || *.jpg || *.jpeg
+ *    ├ tenInchScreenshots
+ *    |  └ *.png || *.jpg || *.jpeg
+ *    ├ tvScreenshots
+ *    |  └ *.png || *.jpg || *.jpeg
+ *    └ wearScreenshots
+ *       └ *.png || *.jpg || *.jpeg
+ * @param {string} directory Directory where the "images" folder is found matching the structure specified above
+ * @returns {Object} imageList Map of image types to lists of images matching that type.
+ *                              { [imageType]: string[] }
+ */
+function getImageList(directory) {
     var imageTypes = ["featureGraphic", "icon", "promoGraphic", "tvBanner", "phoneScreenshots", "sevenInchScreenshots", "tenInchScreenshots", "tvScreenshots", "wearScreenshots"];
     var acceptedExtensions = [".png", ".jpg", ".jpeg"];
 
-    var uploadImagesPromise = Promise();
+    var imageDirectory = path.join(directory, "images");
+    var imageList = {};
+
     for (var i in imageTypes) {
         var shouldAttemptUpload = false;
         var imageType = imageTypes[i];
-        var imageUploadRequest = {
-            language: languageCode,
-            imageType: imageType,
-            uploadType: "media"
-        };
 
-        tl.debug(`Attempting construction of request for image type ${imageType}`);
+        imageList[imageType] = [];
+
+        tl.debug(`Attempting to get images of type ${imageType}`);
         switch (imageType) {
             case "featureGraphic":
             case "icon":
             case "promoGraphic":
             case "tvBanner":
-                try {
-                    for (var i = 0; i < acceptedExtensions.length && !shouldAttemptUpload; i++) {
-                        var imageStat = fs.statSync(imageType + acceptedExtensions[i]);
+                for (var i = 0; i < acceptedExtensions.length && !shouldAttemptUpload; i++) {
+                    var fullPathToFileToCheck = path.join(imageDirectory, imageType + acceptedExtensions[i]);
+                    try {
+                        var imageStat = fs.statSync(fullPathToFileToCheck);
                         if (imageStat) {
-                            tl.debug(`Found image for type ${imageType}`);
                             shouldAttemptUpload = imageStat.isFile();
+                            if (shouldAttemptUpload) {
+                                tl.debug(`Found image for type ${imageType} at ${fullPathToFileToCheck}`);
+                                imageList[imageType].push(fullPathToFileToCheck);
+                                break;
+                            }
                         }
+                    } catch (e) {
+                        tl.debug(`File ${fullPathToFileToCheck} doesn't exist. Skipping...`);
                     }
-                } catch (e) {
+                }
+
+                if (!shouldAttemptUpload) {
                     tl.debug(`Image for ${imageType} was not found. Skipping...`);
                 }
                 break;
@@ -462,15 +525,28 @@ function attachImages(languageCode, directory) {
             case "tvScreenshots":
             case "wearScreenshots":
                 try {
-                    var imageStat = fs.statSync(imageType);
+                    var fullPathToDirToCheck = path.join(imageDirectory, imageType);
+                    var imageStat = fs.statSync(fullPathToDirToCheck);
                     if (imageStat) {
-                        tl.debug(`Found image for type ${imageType}`);
+                        tl.debug(`Found something for type ${imageType}`);
                         shouldAttemptUpload = imageStat.isDirectory();
                         if (!shouldAttemptUpload) {
                             tl.debug(`Stat returned that ${imageType} was not a directory. Is there a file that shares this name?`);
+                        } else {
+                            imageList[imageType] = fs.readdirSync(fullPathToDirToCheck).filter(function (image) {
+                                try {
+                                    pathIsDir = fs.statSync(path.join(fullPathToDirToCheck, image)).isFile();
+                                } catch (e) {
+                                    tl.debug(e);
+                                    tl.debug(`failed to stat path ${image}. ignoring...`);
+                                }
+
+                                return pathIsDir;
+                            });
                         }
                     }
                 } catch (e) {
+                    tl.debug(e);
                     tl.debug(`Image directory for ${imageType} was not found. Skipping...`);
                 }
                 break;
@@ -478,19 +554,61 @@ function attachImages(languageCode, directory) {
                 tl.debug(`Image type ${imageType} is an unknown type and was ignored`);
                 continue;
         }
-
-        if (shouldAttemptUpload) {
-            uploadImagesPromise = uploadImagesPromise.then(function () {
-                return edits.images.uploadAsync.bind(this, imageUploadRequest)();
-            });
-            tl.debug(`Request construction complete and request queued.`);
-        } else {
-            tl.debug(`Upload of image type ${imageType} was skipped. Check log for details`);
-        }
     }
 
-    tl.debug(`All image uploads queued`);
-    return uploadImagesPromise;
+    tl.debug(`Finished enumerating images: ${JSON.stringify(imageList)}`);
+    return imageList;
+}
+
+/**
+ * Attempts to upload the specified image to the edit
+ * Assumes authorized
+ * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
+ * @param {string} imageType One of the following values: "featureGraphic", "icon", "promoGraphic", "tvBanner", "phoneScreenshots", "sevenInchScreenshots", "tenInchScreenshots", "tvScreenshots", "wearScreenshots"
+ * @param {string} imagePath Path to image to attempt upload with
+ * @returns {Promise} imageUploadPromise A promise that will return after the image upload has completed or failed. Upon success, returns an object
+ *                                       { image: { id: string, url: string, sha1: string } }
+ */
+function uploadImage(languageCode, imageType, imagePath) {
+    tl.debug(`Uploading image of type ${imageType} from ${imagePath}`);
+    var imageUploadRequest = {
+        language: languageCode,
+        imageType: imageType,
+        uploadType: "media",
+        media: {
+            body: fs.createReadStream(imagePath),
+            mimeType: helperResolveImageMimeType(imagePath)
+        }
+    };
+
+
+    tl.debug(`Making image upload request: ${JSON.stringify(imageUploadRequest)}`);
+    return edits.images.uploadAsync(imageUploadRequest).catch(function (request, err) {
+        tl.debug(err);
+        tl.error("Failed to upload image.");
+        tl.error(`Request Details: ${JSON.stringify(request)}`);
+    }.bind(this, imageUploadRequest));
+}
+
+/**
+ * Attempts to resolve the image mime type of the given path.
+ * Not compelete. DO NOT REUSE.
+ * @param {string} imagePath Path to attempt to resolve image mime for.
+ * @returns {string} mimeType Google Play accepted image mime type that imagePath most closely maps to.
+ */
+function helperResolveImageMimeType(imagePath) {
+    var extension = imagePath.split(".").pop();
+
+    switch (extension) {
+        case "png":
+            return "image/png";
+        case "jpg":
+        case "jpeg":
+            return "image/jpeg";
+        default:
+            tl.debug(`Could not resolve image mime type for ${imagePath}. Defaulting to jpeg.`);
+            return "image/jpeg";
+    }
 }
 
 /**
