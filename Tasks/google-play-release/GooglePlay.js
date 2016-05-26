@@ -647,7 +647,6 @@ function updateGlobalParams(paramName, value) {
     tl.debug("SETTING " + paramName + " TO " + JSON.stringify(value));
     globalParams.params[paramName] = value;
     google.options(globalParams);
-    tl.debug("Global Params set to " + JSON.stringify(globalParams));
 }
 
 /**
