@@ -11,7 +11,7 @@
   "dependencies": {
     "bluebird": "^2.10.1",
     "glob": "^7.0.3",
-    "googleapis": "^2.1.5",
+    "googleapis": "^7.1.0",
     "node-apk-parser": "^0.2.3",
     "vso-task-lib": "^0.4.5"
   }
