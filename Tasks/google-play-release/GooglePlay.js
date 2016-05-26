@@ -106,7 +106,7 @@ try {
 
     }
 } catch (e) {
-    tl.debug("No changelog found. log path was " + changelogFile);
+    tl.debug("No changelog found. Log path was " + changelogFile);
 }
 
 currentEdit = currentEdit.then(function (res) {
@@ -283,7 +283,7 @@ function addChangelog(languageCode, changelogFile) {
 function addAllChangelogs(languageCode, directory) {
     var changelogDir = path.join(directory, "changelogs");
 
-    var addAllChangelogsPromise = new Promise(function (resolve, reject) { resolve(); });
+    var addAllChangelogsPromise = Promise.resolve();
 
     try {
         var changelogs = fs.readdirSync(changelogDir).filter(function (subPath) {
@@ -294,7 +294,7 @@ function addAllChangelogs(languageCode, directory) {
                 pathIsFile = fs.statSync(fileToCheck).isFile();
             } catch (e) {
                 tl.debug(e);
-                tl.debug(`failed to stat path ${subPath}. ignoring...`);
+                tl.debug(`Failed to stat path ${subPath}. Ignoring...`);
             }
 
             return pathIsFile;
@@ -360,13 +360,13 @@ function addMetadata(metadataDirectory) {
             pathIsDir = fs.statSync(path.join(metadataRootDirectory, subPath)).isDirectory();
         } catch (e) {
             tl.debug(e);
-            tl.debug(`failed to stat path ${subPath}. ignoring...`);
+            tl.debug(`Failed to stat path ${subPath}. Ignoring...`);
         }
 
         return pathIsDir;
     });
 
-    var addingAllMetadataPromise = new Promise(function (resolve, reject) { resolve(); });
+    var addingAllMetadataPromise = Promise.resolve();
 
     for (var i in metadataLanguageCodes) {
         var nextLanguageCode = metadataLanguageCodes[i];
@@ -398,7 +398,7 @@ function uploadMetadataWithLanguageCode(languageCode, directory) {
 
     patchListingRequestParameters.resource = createPatchListingResource(languageCode, directory);
     updatingMetadataPromise = edits.listings.patchAsync(patchListingRequestParameters);
-    
+
     updatingMetadataPromise = updatingMetadataPromise.then(function () {
         return addAllChangelogs.bind(this, languageCode, directory)();
     });
@@ -435,11 +435,11 @@ function createPatchListingResource(languageCode, directory) {
         var fileContents;
         try {
             fileContents = fs.readFileSync(file);
+            resource[i] = fileContents.toString();
         } catch (e) {
             tl.debug(`Failed to read metadata file ${file}. Ignoring...`);
         }
 
-        resource[i] = fileContents.toString();
     }
 
     tl.debug(`Finished constructing resource ${JSON.stringify(resource)}`);
@@ -459,7 +459,7 @@ function attachImages(languageCode, directory) {
 
     var imageList = getImageList(directory);
 
-    var uploadImagesPromise = new Promise(function (resolve, reject) { resolve(); })
+    var uploadImagesPromise = Promise.resolve();
 
     for (var imageType in imageList) {
         var images = imageList[imageType];
@@ -556,7 +556,7 @@ function getImageList(directory) {
                                     pathIsDir = fs.statSync(path.join(fullPathToDirToCheck, image)).isFile();
                                 } catch (e) {
                                     tl.debug(e);
-                                    tl.debug(`failed to stat path ${image}. ignoring...`);
+                                    tl.debug(`Failed to stat path ${image}. Ignoring...`);
                                 }
 
                                 return pathIsDir;
