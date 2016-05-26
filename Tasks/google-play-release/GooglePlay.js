@@ -240,7 +240,7 @@ function updateTrack(packageName, track, versionCode, userFraction) {
  * Add a changelog to an edit
  * Assumes authorized
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
- * @param {string} changelogFile path to changelog file. We assume this exists (behaviour may change)
+ * @param {string} changelogFile Path to changelog file.
  * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
@@ -249,27 +249,34 @@ function addChangelog(languageCode, changelogFile) {
 
     var versionCode = globalParams.params.apkVersionCode;
     try {
-        var changelogVersion = changelogFile.replace(/\.[^/.]+$/g, "");
+        var changelogVersion = path.basename(changelogFile).replace(/\.[^/.]+$/g, "");
         versionCode = parseInt(changelogVersion);
     } catch (e) {
         tl.debug(e);
         tl.debug(`Failed to extract version code from file ${changelogFile}. Defaulting to global version code ${globalParams.params.apkVersionCode}`);
     }
 
-    var requestParameters = {
-        apkVersionCode: versionCode,
-        language: languageCode,
-        resource: {
+    try {
+        var requestParameters = {
+            apkVersionCode: versionCode,
             language: languageCode,
-            recentChanges: fs.readFileSync(changelogFile).toString()
-        }
-    };
+            resource: {
+                language: languageCode,
+                recentChanges: fs.readFileSync(changelogFile).toString()
+            }
+        };
 
-    tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
-    return edits.apklistings.updateAsync(requestParameters).catch(function (err) {
-        tl.debug(err);
-        tl.error("Failed to upload changelogs. See log for details.");
-    });
+        tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
+        return edits.apklistings.updateAsync(requestParameters).catch(function (err) {
+            tl.debug(err);
+            tl.error("Failed to upload changelogs. See log for details.");
+        });
+    } catch (e) {
+        tl.debug(e);
+        tl.debug(`Most likely failed to read specified changelog.`);
+    }
+
+    return Promise.reject(new Error(`Changelog upload failed for log ${changelogFile}. Check logs for details.`));
 }
 
 /**
@@ -523,7 +530,7 @@ function getImageList(directory) {
                         if (imageStat) {
                             shouldAttemptUpload = imageStat.isFile();
                             if (shouldAttemptUpload) {
-                                tl.debug(`Found image for type ${imageType} at ${fullPathToFileToCheck}`);
+                                console.log(`Found image for type ${imageType} at ${fullPathToFileToCheck}`);
                                 imageList[imageType].push(fullPathToFileToCheck);
                                 break;
                             }
@@ -534,7 +541,7 @@ function getImageList(directory) {
                 }
 
                 if (!shouldAttemptUpload) {
-                    tl.debug(`Image for ${imageType} was not found. Skipping...`);
+                    console.log(`Image for ${imageType} was not found. Skipping...`);
                 }
                 break;
             case "phoneScreenshots":
@@ -549,23 +556,24 @@ function getImageList(directory) {
                         tl.debug(`Found something for type ${imageType}`);
                         shouldAttemptUpload = imageStat.isDirectory();
                         if (!shouldAttemptUpload) {
-                            tl.debug(`Stat returned that ${imageType} was not a directory. Is there a file that shares this name?`);
+                            console.log(`Stat returned that ${imageType} was not a directory. Is there a file that shares this name?`);
                         } else {
                             imageList[imageType] = fs.readdirSync(fullPathToDirToCheck).filter(function (image) {
+                                var pathIsFile = false;
                                 try {
-                                    pathIsDir = fs.statSync(path.join(fullPathToDirToCheck, image)).isFile();
+                                    pathIsFile = fs.statSync(path.join(fullPathToDirToCheck, image)).isFile();
                                 } catch (e) {
                                     tl.debug(e);
                                     tl.debug(`Failed to stat path ${image}. Ignoring...`);
                                 }
 
-                                return pathIsDir;
+                                return pathIsFile;
                             });
                         }
                     }
                 } catch (e) {
                     tl.debug(e);
-                    tl.debug(`Image directory for ${imageType} was not found. Skipping...`);
+                    console.log(`Image directory for ${imageType} was not found. Skipping...`);
                 }
                 break;
             default:
@@ -598,7 +606,6 @@ function uploadImage(languageCode, imageType, imagePath) {
             mimeType: helperResolveImageMimeType(imagePath)
         }
     };
-
 
     tl.debug(`Making image upload request: ${JSON.stringify(imageUploadRequest)}`);
     return edits.images.uploadAsync(imageUploadRequest).catch(function (request, err) {
