@@ -89,7 +89,7 @@ currentEdit = currentEdit.then(function (res) {
 });
 
 if (shouldAttachMetadata) {
-    var metadataRootPath = tl.getInput("metadataRootPath", false);
+    var metadataRootPath = tl.getInput("metadataRootPath", true);
     currentEdit = currentEdit.then(function (res) {
         console.log(`Attempting to attach metadata to release...`);
         return addMetadata(metadataRootPath);
