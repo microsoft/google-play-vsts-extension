@@ -104,6 +104,15 @@
             "helpMarkDown": "Checking this box will make the task attempt to update the metadata on your app release"
         },
         {
+            "name": "metadataRootPath",
+            "type": "filePath",
+            "label": "Metadata Root Directory",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The path to the metadata folder with the fastlane metadata structure",
+            "visibleRule": "shouldAttachMetadata = true"
+        },
+        {
             "name": "additionalApks",
             "type": "multiLine",
             "label": "Additional APK Path(s)",
