@@ -112,6 +112,35 @@ Allows you to promote a previously released APK from one track to another (e.g. 
 
 5. **User Fraction** *(String, Required if visible)* - The percentage of users to roll the app out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). This option is only available when the **Destination Track** option is set to `Rollout`. If you use rollout, and want to be able to automate the process of increasing the rollout over time, refer to the `Google Play - Increase Rollout` task.
 
+6. **Update Metadata** *(Boolean, Optional)* - Checking this box will present an option allowing specification of a directory where metadata for the release can be found.
+
+7. **Metadata Root Directory** *(String, Required if visible)* - The task will attempt to read and upload metadata in the Fastlane format from the specified directory for the release. The expected format is: 
+```
+$(Specified Directory)
+   └ $(languageCodes)
+     ├ full_description.txt
+     ├ short_description.txt
+     ├ title.txt
+     ├ video.txt
+     ├ images
+     |  ├ featureGraphic.png    || featureGraphic.jpg   || featureGraphic.jpeg
+     |  ├ icon.png              || icon.jpg             || icon.jpeg
+     |  ├ promoGraphic.png      || promoGraphic.jpg     || promoGraphic.jpeg
+     |  ├ tvBanner.png          || tvBanner.jpg         || tvBanner.jpeg
+     |  ├ phoneScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  ├ sevenInchScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  ├ tenInchScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  ├ tvScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  └ wearScreenshots
+     |     └ *.png || *.jpg || *.jpeg
+     └ changelogs
+       └ $(versioncodes).txt
+```
+
 ### Google Play - Increase Rollout
 
 Allows you to increase the rollout percentage of an app that was previously released to the **Rollout** track, and includes the following options:
