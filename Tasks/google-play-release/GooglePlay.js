@@ -89,10 +89,11 @@ currentEdit = currentEdit.then(function (res) {
 });
 
 if (shouldAttachMetadata) {
+    var metadataRootPath = tl.getInput("metadataRootPath", true);
     currentEdit = currentEdit.then(function (res) {
         console.log(`Attempting to attach metadata to release...`);
-        return addMetadata(".");
-    })
+        return addMetadata(metadataRootPath);
+    });
 }
 
 // This block will likely be deprecated by the metadata awareness
@@ -134,7 +135,7 @@ function tryGetPackageName(apkFile) {
         packageName = apkParser
             .readFile(apkFile)
             .readManifestSync()
-            .package;
+        .package;
 
         tl.debug("name extraction from apk succeeded: " + packageName);
     }
@@ -351,15 +352,13 @@ function addAllChangelogs(languageCode, directory) {
  *    └ changelogs
  *      └ $(versioncodes).txt
  * 
- * @param {string} metadataDirectory Path to the folder where the Fastlane metadata structure is found
+ * @param {string} metadataRootDirectory Path to the folder where the Fastlane metadata structure is found. eg the folders under this directory should be the language codes
  * @returns {Promise}  A promise that will return the result from last metadata change that was attempted. Currently, this is most likely an image upload.
  *                     { image: { id: string, url: string, sha1: string } }
  */
-function addMetadata(metadataDirectory) {
+function addMetadata(metadataRootDirectory) {
     tl.debug("Attempting to add metadata...");
-    metadataDirectory = path.resolve(metadataDirectory);
-    var metadataRootDirectory = path.join(metadataDirectory, "metadata");
-    tl.debug(`Assuming root is at ${metadataDirectory}\n\rAdding metadata from ${metadataRootDirectory}`);
+    tl.debug(`Adding metadata from ${metadataRootDirectory}`);
 
     var metadataLanguageCodes = fs.readdirSync(metadataRootDirectory).filter(function (subPath) {
         var pathIsDir = false;
@@ -449,7 +448,7 @@ function createPatchListingResource(languageCode, directory) {
 
     }
 
-    tl.debug(`Finished constructing resource ${JSON.stringify(resource)}`);
+    tl.debug(`Finished constructing resource ${JSON.stringify(resource) }`);
     return resource;
 }
 
@@ -582,7 +581,7 @@ function getImageList(directory) {
         }
     }
 
-    tl.debug(`Finished enumerating images: ${JSON.stringify(imageList)}`);
+    tl.debug(`Finished enumerating images: ${JSON.stringify(imageList) }`);
     return imageList;
 }
 
@@ -607,11 +606,11 @@ function uploadImage(languageCode, imageType, imagePath) {
         }
     };
 
-    tl.debug(`Making image upload request: ${JSON.stringify(imageUploadRequest)}`);
+    tl.debug(`Making image upload request: ${JSON.stringify(imageUploadRequest) }`);
     return edits.images.uploadAsync(imageUploadRequest).catch(function (request, err) {
         tl.debug(err);
         tl.error("Failed to upload image.");
-        tl.error(`Request Details: ${JSON.stringify(request)}`);
+        tl.setResult(1, `Request Details: ${JSON.stringify(request) }`);
     }.bind(this, imageUploadRequest));
 }
 
