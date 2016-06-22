@@ -158,3 +158,6 @@ Allows you to increase the rollout percentage of an app that was previously rele
 
 * [Report an issue](https://github.com/Microsoft/google-play-vsts-extension/issues)
 Google Play and the Google Play logo are trademarks of Google Inc.
+
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
