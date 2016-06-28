@@ -24,21 +24,17 @@ In order to automate the release of app updates to the Google Play store, you ne
  
 9. Ensure that the **Role** is set to **Release Manager** and then click the **Add user** button
 
-To take advantage of the metadata updating capabilities, files need to be organized using a format similar to the Fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme). 
+To take advantage of the metadata updating capabilities, files need to be organized using fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) format:
 
 1. Install the supply tool
-
 ```
 sudo gem install supply
 ```
-
 2. Navigate to your root folder 
 ```
 cd [your_project_folder]
 ```
-
 3. Download metadata for an existing app to the  project folder
-
 ```
 supply init
 ```
