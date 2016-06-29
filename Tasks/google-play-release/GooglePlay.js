@@ -85,7 +85,7 @@ for (var apk in apkFileList) {
 
 currentEdit = currentEdit.then(function (res) {
     console.log("Updating track information...");
-    return updateTrack(packageName, track, globalParams.params.versionCode, userFraction);
+    return updateTrack(packageName, track, globalParams.params.apkVersionCode, userFraction);
 });
 
 if (shouldAttachMetadata) {
