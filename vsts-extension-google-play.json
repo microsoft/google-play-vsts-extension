@@ -2,7 +2,7 @@
 	"manifestVersion": 1.0,
 	"id": "google-play",
 	"name": "Google Play",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"publisher": "ms-vsclient",
 	"description": "Provides build/release tasks that enable performing continuous delivery to the Google Play store from an automated VSTS build or release definition",
 	"categories": [
