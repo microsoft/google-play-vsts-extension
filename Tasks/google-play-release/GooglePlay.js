@@ -76,12 +76,12 @@ var currentEdit = authorize().then(function (res) {
     return getNewEdit(packageName);
 });
 
-for (var apk in apkFileList) {
+apkFileList.forEach(function(apk) {
     currentEdit = currentEdit.then(function (res) {
-        console.log(`Uploading APK file ${apkFileList[apk]}...`);
-        return addApk(packageName, apkFileList[apk]);
+        console.log(`Uploading APK file ${apk}...`);
+        return addApk(packageName, apk);
     });
-}
+});
 
 currentEdit = currentEdit.then(function (res) {
     console.log("Updating track information...");
