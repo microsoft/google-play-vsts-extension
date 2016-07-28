@@ -51,6 +51,7 @@ var GOOGLE_PLAY_SCOPES = ["https://www.googleapis.com/auth/androidpublisher"];
 var APK_MIME_TYPE = "application/vnd.android.package-archive";
 
 var globalParams = { auth: null, params: {} };
+var apkVersionCodes = [];
 
 // The submission process is composed
 // of a transction with the following steps:
@@ -85,7 +86,7 @@ apkFileList.forEach(function(apk) {
 
 currentEdit = currentEdit.then(function (res) {
     console.log("Updating track information...");
-    return updateTrack(packageName, track, globalParams.params.apkVersionCode, userFraction);
+    return updateTrack(packageName, track, apkVersionCodes, userFraction);
 });
 
 if (shouldAttachMetadata) {
@@ -100,11 +101,12 @@ if (shouldAttachMetadata) {
 try {
     var stats = fs.statSync(changelogFile);
     if (stats && stats.isFile()) {
+        apkVersionCodes.forEach(function(apkVersionCode) {
         currentEdit = currentEdit.then(function (res) {
             console.log("Adding changelog file...");
-            return addChangelog("en-US", changelogFile);
+            return addChangelog("en-US", changelogFile, apkVersionCode);
+            });
         });
-
     }
 } catch (e) {
     tl.debug("No changelog found. Log path was " + changelogFile);
@@ -186,7 +188,7 @@ function getNewEdit(packageName) {
  * Assumes authorized
  * @param {string} packageName unique android package name (com.android.etc)
  * @param {string} apkFile path to apk file
- * @returns {Promise} apk A promise that will return result from uploading an apk 
+ * @returns {Promise} apk A promise that will return result from uploading an apk
  *                          { versionCode: integer, binary: { sha1: string } }
  */
 function addApk(packageName, apkFile) {
@@ -202,7 +204,8 @@ function addApk(packageName, apkFile) {
     tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
 
     return edits.apks.uploadAsync(requestParameters).then(function (res) {
-        updateGlobalParams("apkVersionCode", res[0].versionCode)
+        tl.debug("Uploaded version code ${res[0].versionCode}");
+        apkVersionCodes.push(res[0].versionCode);
         return res;
     })
 }
@@ -242,24 +245,16 @@ function updateTrack(packageName, track, versionCode, userFraction) {
  * Assumes authorized
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
  * @param {string} changelogFile Path to changelog file.
+ * @param {integer} APK version code
  * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-function addChangelog(languageCode, changelogFile) {
+function addChangelog(languageCode, changelogFile, apkVersionCode) {
     tl.debug("Adding changelog file: " + changelogFile);
-
-    var versionCode = globalParams.params.apkVersionCode;
-    try {
-        var changelogVersion = path.basename(changelogFile).replace(/\.[^/.]+$/g, "");
-        versionCode = parseInt(changelogVersion);
-    } catch (e) {
-        tl.debug(e);
-        tl.debug(`Failed to extract version code from file ${changelogFile}. Defaulting to global version code ${globalParams.params.apkVersionCode}`);
-    }
 
     try {
         var requestParameters = {
-            apkVersionCode: versionCode,
+            apkVersionCode: apkVersionCode,
             language: languageCode,
             resource: {
                 language: languageCode,
@@ -308,12 +303,32 @@ function addAllChangelogs(languageCode, directory) {
             return pathIsFile;
         });
 
-        for (var i in changelogs) {
+        var versionCodeFound = false;
+        changelogs.forEach(function(changeLogFile) {
+            var changelogVersion = path.basename(changelogFile).replace(/\.[^/.]+$/g, "");
+            if (apkVersionCodes.indexOf(changelogVersion) == -1) {
+                tl.debug(`File ${changelogFile} is not a valid version code`);
+                continue;
+            }
+
+            versionCodeFound = true;
             var fullChangelogPath = path.join(changelogDir, changelogs[i]);
             addAllChangelogsPromise = addAllChangelogsPromise.then(function (changelog) {
                 console.log(`Appending changelog ${changelog}`);
                 return addChangelog.bind(this, languageCode, changelog)();
             }.bind(this, fullChangelogPath));
+        });
+
+        // if there's a single change log file, and it doesn't match a version code, assume it's a global change log
+        if (!versionCodeFound && changelogs.length == 1) {
+            tl.debug(`Applying file ${changelogFile} to all version codes`);
+            var fullChangelogPath = path.join(changelogDir, changelogs[0]);
+            apkVersionCodes.forEach(function(apkVersionCode){
+                addAllChangelogsPromise = addAllChangelogsPromise.then(function (changelog) {
+                    console.log(`Appending changelog ${changelog}`);
+                    return addChangelog.bind(this, languageCode, changelog, apkVersionCode)();
+                }.bind(this, fullChangelogPath));
+            });
         }
     } catch (e) {
         tl.debug(e);
@@ -326,7 +341,7 @@ function addAllChangelogs(languageCode, directory) {
 /**
  * Attaches the metadata in the specified directory to the edit. Assumes the metadata structure specified by Fastlane.
  * Assumes authorized
- * 
+ *
  * Metadata Structure:
  * metadata
  *  └ $(languageCodes)
@@ -351,7 +366,7 @@ function addAllChangelogs(languageCode, directory) {
  *    |     └ *.png || *.jpg || *.jpeg
  *    └ changelogs
  *      └ $(versioncodes).txt
- * 
+ *
  * @param {string} metadataRootDirectory Path to the folder where the Fastlane metadata structure is found. eg the folders under this directory should be the language codes
  * @returns {Promise}  A promise that will return the result from last metadata change that was attempted. Currently, this is most likely an image upload.
  *                     { image: { id: string, url: string, sha1: string } }
