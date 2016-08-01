@@ -304,18 +304,19 @@ function addAllChangelogs(languageCode, directory) {
         });
 
         var versionCodeFound = false;
-        changelogs.forEach(function(changeLogFile) {
-            var changelogVersion = path.basename(changelogFile).replace(/\.[^/.]+$/g, "");
+        changelogs.forEach(function(changelogFile) {
+            var changelogName = path.basename(changelogFile, path.extname(changelogFile));
+            var changelogVersion = parseInt(changelogName, 10);
             if (apkVersionCodes.indexOf(changelogVersion) == -1) {
                 tl.debug(`File ${changelogFile} is not a valid version code`);
-                continue;
+                return;
             }
 
             versionCodeFound = true;
-            var fullChangelogPath = path.join(changelogDir, changelogs[i]);
+            var fullChangelogPath = path.join(changelogDir, changelogFile);
             addAllChangelogsPromise = addAllChangelogsPromise.then(function (changelog) {
                 console.log(`Appending changelog ${changelog}`);
-                return addChangelog.bind(this, languageCode, changelog)();
+                return addChangelog.bind(this, languageCode, changelog, changelogVersion)();
             }.bind(this, fullChangelogPath));
         });
 
