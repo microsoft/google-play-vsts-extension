@@ -15,7 +15,7 @@
     "version": {
         "Major": "1",
         "Minor": "2",
-        "Patch": "2"
+        "Patch": "3"
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -96,7 +96,7 @@
             "helpMarkDown": "Path to the file specifying the release notes for the APK you are publishing."
         },
         {
-            "name": "shouldAttachMetadata", 
+            "name": "shouldAttachMetadata",
             "type": "boolean",
             "label": "Update Metadata",
             "defaultValue": false,
