@@ -1,7 +1,7 @@
 {
-    "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
+    "id": "1cf7cac0-620b-11e5-b4cf-8565e60f4d27",
     "name": "GooglePlayRelease",
-    "friendlyName": "Google Play - Release",
+    "friendlyName": "Google Play - Release - Dev",
     "description": "Release an update for you Android app to the Google Play store",
     "author": "Microsoft Corporation",
     "category": "Deploy",
@@ -15,7 +15,7 @@
     "version": {
         "Major": "1",
         "Minor": "2",
-        "Patch": "3"
+        "Patch": "4"
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
