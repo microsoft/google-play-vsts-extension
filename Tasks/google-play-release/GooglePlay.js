@@ -97,22 +97,13 @@ if (shouldAttachMetadata) {
     });
 }
 
-// This block will likely be deprecated by the metadata awareness
-try {
-    var stats = fs.statSync(changelogFile);
-    if (stats && stats.isFile()) {
-        apkVersionCodes.forEach(function(apkVersionCode) {
-        currentEdit = currentEdit.then(function (res) {
-            console.log("Adding changelog file...");
-            return addChangelog("en-US", changelogFile, apkVersionCode);
-            });
-        });
-    }
-} catch (e) {
-    tl.debug("No changelog found. Log path was " + changelogFile);
-}
+currentEdit = currentEdit.then(function (res) {
+    tl.debug("Upload change logs if specified...");
+    return uploadChangeLogs(changelogFile, apkVersionCodes);
+});
 
 currentEdit = currentEdit.then(function (res) {
+    tl.debug("Commit all the edits");
     return edits.commitAsync().then(function (res) {
         console.log("APK successfully published!");
         console.log("Track: " + track);
@@ -204,7 +195,7 @@ function addApk(packageName, apkFile) {
     tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
 
     return edits.apks.uploadAsync(requestParameters).then(function (res) {
-        tl.debug("Uploaded version code ${res[0].versionCode}");
+        tl.debug(`Uploaded version code ${res[0].versionCode}`);
         apkVersionCodes.push(res[0].versionCode);
         return res;
     })
@@ -238,6 +229,32 @@ function updateTrack(packageName, track, versionCode, userFraction) {
     tl.debug("Additional Parameters: " + JSON.stringify(requestParameters));
 
     return edits.tracks.updateAsync(requestParameters);
+}
+
+/**
+ * Uploads change log files if specified for all the apk version codes in the update
+ * @param changelogFile
+ * @param apkVersionCodes
+ * @returns {*}
+ */
+function uploadChangeLogs(changelogFile, apkVersionCodes) {
+    try {
+        var stats = fs.statSync(changelogFile);
+        if (stats && stats.isFile()) {
+            var apkEdit = new Promise.resolve();
+            apkVersionCodes.forEach(function(apkVersionCode) {
+                apkEdit = apkEdit.then(function (res) {
+                    console.log("Adding changelog file...");
+                    return addChangelog("en-US", changelogFile, apkVersionCode);
+                });
+            });
+            return apkEdit;
+        }
+        return Promise.resolve();
+    } catch (e) {
+        tl.debug("No changelog found. Log path was " + changelogFile);
+        return Promise.reject(new Error("No changelog found. Log path was " + changelogFile));
+    }
 }
 
 /**
