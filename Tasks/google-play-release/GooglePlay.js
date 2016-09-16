@@ -590,7 +590,8 @@ function getImageList(directory) {
                         if (!shouldAttemptUpload) {
                             console.log(`Stat returned that ${imageType} was not a directory. Is there a file that shares this name?`);
                         } else {
-                            imageList[imageType] = fs.readdirSync(fullPathToDirToCheck).filter(function (image) {
+                            imageList[imageType] = fs.readdirSync(fullPathToDirToCheck)
+                            .filter(function (image) {
                                 var pathIsFile = false;
                                 try {
                                     pathIsFile = fs.statSync(path.join(fullPathToDirToCheck, image)).isFile();
@@ -600,6 +601,9 @@ function getImageList(directory) {
                                 }
 
                                 return pathIsFile;
+                            })
+                            .map(function (image) {
+                                return path.join(fullPathToDirToCheck, image);
                             });
                         }
                     }
