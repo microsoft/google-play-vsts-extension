@@ -2,7 +2,7 @@
     "id": "f8c97cf9-4e17-4244-b0fb-f540cea78153",
     "name": "GooglePlayIncreaseRollout",
     "friendlyName": "Google Play - Increase Rollout",
-    "description": "Increase the rollout fraction of an app previously deployed to the Google Play store",
+    "description": "Increase the rollout fraction of an app previously deployed to the Google Play Store",
     "author": "Microsoft Corporation",
     "category": "Deploy",
     "visibility": [
