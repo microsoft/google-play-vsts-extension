@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "1",
-        "Minor": "0",
+        "Minor": "112",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
@@ -103,5 +103,20 @@
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }
+    },
+    "messages": {
+        "InvalidAuthFile": "Specified Auth file was invalid",
+        "InvalidAuthFilewithName": "%s was not a valid auth file",
+        "EndpointNotFound": "The service account JSON key file could not be found.",
+        "JsonKeyFileNotFound": "The Service Endpoint could not be found.",
+        "Authenticating": "Authenticating with Google Play",
+        "GetTrackInfo": "Getting information for track %s",
+        "PromoteTrack": "Promoting to track %s",
+        "CleanTrack": "Cleaning up track %s",
+        "PromoteSucceed": "APK successfully promoted!",
+        "SourceTrack": "Source Track: %s",
+        "DestTrack": "Destination Track: %s",
+        "Success": "Successfully promote APK.",
+        "Failure": "Failed to promote APK."
     }
 }

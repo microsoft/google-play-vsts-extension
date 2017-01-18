@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "1",
-        "Minor": "0",
+        "Minor": "112",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
@@ -76,5 +76,17 @@
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }
+    },
+    "messages": {
+        "InvalidAuthFile": "Specified Auth file was invalid",
+        "InvalidAuthFilewithName": "%s was not a valid auth file",
+        "EndpointNotFound": "The service account JSON key file could not be found.",
+        "JsonKeyFileNotFound": "The Service Endpoint could not be found.",
+        "Authenticating": "Authenticating with Google Play",
+        "GetTrackRolloutInfo": "Getting information for track rollout",
+        "CurrentUserFrac": "Current User Fraction: %s",
+        "RolloutFracUpdate": "Rollout fraction updated!",
+        "Success": "Successfully update rollout fraction.",
+        "Failure": "Failed to update rollout fraction."
     }
 }
