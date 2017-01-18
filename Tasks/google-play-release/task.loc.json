@@ -1,0 +1,161 @@
+{
+  "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
+  "name": "GooglePlayRelease",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [
+    "npm"
+  ],
+  "version": {
+    "Major": "1",
+    "Minor": "112",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "1.83.0",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "authType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.authType",
+      "defaultValue": "ServiceEndpoint",
+      "helpMarkDown": "",
+      "options": {
+        "JsonFile": "JSON Auth File",
+        "ServiceEndpoint": "Service Endpoint"
+      }
+    },
+    {
+      "name": "serviceEndpoint",
+      "type": "connectedService:google-play",
+      "label": "ms-resource:loc.input.label.serviceEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serviceEndpoint",
+      "visibleRule": "authType = ServiceEndpoint"
+    },
+    {
+      "name": "serviceAccountKey",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.serviceAccountKey",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serviceAccountKey",
+      "visibleRule": "authType = JsonFile"
+    },
+    {
+      "name": "apkFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.apkFile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.apkFile"
+    },
+    {
+      "name": "track",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.track",
+      "defaultValue": "alpha",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.track",
+      "options": {
+        "alpha": "Alpha",
+        "beta": "Beta",
+        "production": "Production",
+        "rollout": "Rollout"
+      }
+    },
+    {
+      "name": "userFraction",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.userFraction",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.userFraction",
+      "visibleRule": "track = rollout"
+    },
+    {
+      "name": "changeLogFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.changeLogFile",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogFile"
+    },
+    {
+      "name": "shouldAttachMetadata",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.shouldAttachMetadata",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.shouldAttachMetadata"
+    },
+    {
+      "name": "metadataRootPath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.metadataRootPath",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.metadataRootPath",
+      "visibleRule": "shouldAttachMetadata = true"
+    },
+    {
+      "name": "additionalApks",
+      "type": "multiLine",
+      "label": "ms-resource:loc.input.label.additionalApks",
+      "defaultValue": "",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.additionalApks"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "GooglePlay.js",
+      "argumentFormat": ""
+    },
+    "PowerShell": {
+      "target": "$(currentDirectory)\\GooglePlay.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  },
+  "messages": {
+    "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
+    "InvalidAuthFilewithName": "ms-resource:loc.messages.InvalidAuthFilewithName",
+    "EndpointNotFound": "ms-resource:loc.messages.EndpointNotFound",
+    "JsonKeyFileNotFound": "ms-resource:loc.messages.JsonKeyFileNotFound",
+    "FoundMultiApks": "ms-resource:loc.messages.FoundMultiApks",
+    "GetNewEditAfterAuth": "ms-resource:loc.messages.GetNewEditAfterAuth",
+    "UploadApk": "ms-resource:loc.messages.UploadApk",
+    "UpdateTrack": "ms-resource:loc.messages.UpdateTrack",
+    "AttachingMetadataToRelease": "ms-resource:loc.messages.AttachingMetadataToRelease",
+    "AptPublishSucceed": "ms-resource:loc.messages.AptPublishSucceed",
+    "TrackInfo": "ms-resource:loc.messages.TrackInfo",
+    "Success": "ms-resource:loc.messages.Success",
+    "Failure": "ms-resource:loc.messages.Failure",
+    "AddChangelog": "ms-resource:loc.messages.AddChangelog",
+    "AppendChangelog": "ms-resource:loc.messages.AppendChangelog",
+    "UploadingMetadataForLanguage": "ms-resource:loc.messages.UploadingMetadataForLanguage",
+    "FoundImageAtPath": "ms-resource:loc.messages.FoundImageAtPath",
+    "ImageTypeNotFound": "ms-resource:loc.messages.ImageTypeNotFound",
+    "StatNotDirectory": "ms-resource:loc.messages.StatNotDirectory",
+    "ImageDirNotFound": "ms-resource:loc.messages.ImageDirNotFound",
+    "UploadImageFail": "ms-resource:loc.messages.UploadImageFail",
+    "RequestDetails": "ms-resource:loc.messages.RequestDetails"
+  },
+  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+}

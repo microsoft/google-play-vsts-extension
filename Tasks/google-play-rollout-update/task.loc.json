@@ -1,0 +1,93 @@
+{
+  "id": "f8c97cf9-4e17-4244-b0fb-f540cea78153",
+  "name": "GooglePlayIncreaseRollout",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [
+    "npm"
+  ],
+  "version": {
+    "Major": "1",
+    "Minor": "112",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "1.83.0",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "authType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.authType",
+      "defaultValue": "ServiceEndpoint",
+      "helpMarkDown": "",
+      "options": {
+        "JsonFile": "JSON Auth File",
+        "ServiceEndpoint": "Service Endpoint"
+      }
+    },
+    {
+      "name": "serviceEndpoint",
+      "type": "connectedService:google-play",
+      "label": "ms-resource:loc.input.label.serviceEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serviceEndpoint",
+      "visibleRule": "authType = ServiceEndpoint"
+    },
+    {
+      "name": "serviceAccountKey",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.serviceAccountKey",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serviceAccountKey",
+      "visibleRule": "authType = JsonFile"
+    },
+    {
+      "name": "packageName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packageName"
+    },
+    {
+      "name": "userFraction",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.userFraction",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.userFraction"
+    }
+  ],
+  "execution": {
+    "Node": {
+      "target": "google-play-rollout-update.js",
+      "argumentFormat": ""
+    },
+    "PowerShell": {
+      "target": "$(currentDirectory)\\google-play-rollout-update.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  },
+  "messages": {
+    "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
+    "InvalidAuthFilewithName": "ms-resource:loc.messages.InvalidAuthFilewithName",
+    "EndpointNotFound": "ms-resource:loc.messages.EndpointNotFound",
+    "JsonKeyFileNotFound": "ms-resource:loc.messages.JsonKeyFileNotFound",
+    "Authenticating": "ms-resource:loc.messages.Authenticating",
+    "GetTrackRolloutInfo": "ms-resource:loc.messages.GetTrackRolloutInfo",
+    "CurrentUserFrac": "ms-resource:loc.messages.CurrentUserFrac",
+    "RolloutFracUpdate": "ms-resource:loc.messages.RolloutFracUpdate",
+    "Success": "ms-resource:loc.messages.Success",
+    "Failure": "ms-resource:loc.messages.Failure"
+  },
+  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+}

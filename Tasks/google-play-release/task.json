@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "1",
-        "Minor": "3",
+        "Minor": "112",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
@@ -132,5 +132,29 @@
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }
+    },
+    "messages": {
+        "InvalidAuthFile": "Specified Auth file was invalid",
+        "InvalidAuthFilewithName": "%s was not a valid auth file",
+        "EndpointNotFound": "The service account JSON key file could not be found.",
+        "JsonKeyFileNotFound": "The Service Endpoint could not be found.",
+        "FoundMultiApks": "Found multiple Apks to upload: ",
+        "GetNewEditAfterAuth": "Authenticated with Google Play and getting new edit ",
+        "UploadApk": "Uploading APK file %s...",
+        "UpdateTrack": "Updating track information...",
+        "AttachingMetadataToRelease": "Attempting to attach metadata to release...",
+        "AptPublishSucceed": "APK successfully published!",
+        "TrackInfo": "Track: %s",
+        "Success": "Successfully publish APKs.",
+        "Failure": "Failed to publish APKs.",
+        "AddChangelog": "Adding changelog file...",
+        "AppendChangelog": "Appending changelog %s",
+        "UploadingMetadataForLanguage": "Attempting to upload metadata in %s for language code %s",
+        "FoundImageAtPath": "Found image for type %s at %s",
+        "ImageTypeNotFound": "Image for %s was not found. Skipping...",
+        "StatNotDirectory": "Stat returned that %s was not a directory. Is there a file that shares this name?",
+        "ImageDirNotFound": "Image directory for %s was not found. Skipping...",
+        "UploadImageFail": "Failed to upload image.",
+        "RequestDetails": "Request Details: %s"
     }
 }
