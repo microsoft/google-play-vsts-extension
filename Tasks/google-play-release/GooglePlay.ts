@@ -12,7 +12,7 @@ interface ClientKey {
     private_key?: string;
 }
 
-interface AndroidResourse {
+interface AndroidResource {
     track?: string;
     versionCodes?: any;
     userFraction?: number;
@@ -29,7 +29,7 @@ interface PackageParams {
     packageName?: string;
     editId?: any;
     track?: string;
-    resource?: AndroidResourse;
+    resource?: AndroidResource;
     media?: AndroidMedia;
     apkVersionCode?: number;
     language?: string;

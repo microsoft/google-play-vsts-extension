@@ -1,13 +1,13 @@
-# Visual Studio Team Services Extension for the Apple App Store Contributor Guide
+# Visual Studio Team Services Extension for the Google Play Contributor Guide
 The instructions below will help you set up your development environment to contribute to this repository.
 Make sure you've already cloned the repo.  :smile:
 
 ## Ways to Contribute
-Interested in contributing to the vsts-vscode project? There are plenty of ways to contribute, all of which help make the project better.
-* Submit a [bug report](https://github.com/Microsoft/app-store-vsts-extension/issues/new) or [feature request](https://github.com/Microsoft/app-store-vsts-extension/issues/new) through the Issue Tracker
-* Review the [source code changes](https://github.com/Microsoft/app-store-vsts-extension/pulls)
+Interested in contributing to the google-play-vsts-extension project? There are plenty of ways to contribute, all of which help make the project better.
+* Submit a [bug report](https://github.com/Microsoft/google-play-vsts-extension/issues/new) or [feature request](https://github.com/Microsoft/google-play-vsts-extension/issues/new) through the Issue Tracker
+* Review the [source code changes](https://github.com/Microsoft/google-play-vsts-extension/pulls)
 * Submit a code fix for a bug (see `Submitting Pull Requests` below)
-* Participate in [discussions](https://github.com/Microsoft/app-store-vsts-extension/issues)
+* Participate in [discussions](https://github.com/Microsoft/google-play-vsts-extension/issues)
 
 ## Set up Node, npm and gulp
 
@@ -47,11 +47,8 @@ If you open the root of the repository in Visual Studio Code, you can build with
 Tests should be run with changes.  Before you run tests, make sure you have built the extension.  Run the following from the root of the repo:
 
 ```bash
-gulp test
+gulp createtest
 ```
-To run the tests within Visual Studio Code, select the Debug viewlet, change the debug profile to "Launch L0 Tests", set a breakpoint directly in the
-L0.js file (e.g., _build/Tasks/AppStoreRelease/Tests/L0.js) and press `F5`.  At this time, you cannot debug the task itself during tests as a second
-node process is created (in which the task is run).
 
 ### Testing task changes
 In order to test your task changes, you will need to upload the new task to your own account and test it with a build definition.  First, create a build definition
@@ -59,7 +56,7 @@ you can use to test your changes.  Then, after building the task you changed, up
 [tfx-cli](https://www.npmjs.com/package/tfx-cli) tool, login in to your account with it (e.g., https://**account**.visualstudio.com/DefaultCollection) and then upload
 the task.  To do the actual uploading you can run the following from the *_build/Tasks* folder:
 ```bash
-tfx build tasks upload --task-path ./AppStorePromote
+tfx build tasks upload --task-path ./GooglePlayPromote
 ```
 **Note**: The task will only be uploaded if the version of the task has been incremented.  To do this, update the *patch* version in the task's **task.json** and **task.loc.json** file.  You will
 need to re-build the task after making this change.
@@ -72,19 +69,12 @@ The package command will package the extension into a Visual Studio extension in
 
 From the root of the repo:
 ```bash
-gulp packagetest
+gulp createtest
 ```
 The VSIX package will be created in the root of the repository.
 
 ## Code Styles
 1. gulp build will run `tslint` and flag any errors.  Please ensure that the code stays clean.
-2. All source files must have the following lines at the top:
-```
- /*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-```
 
 ## Contribution License Agreement
 In order to contribute, you will need to sign a [Contributor License Agreement](https://cla.microsoft.com/).

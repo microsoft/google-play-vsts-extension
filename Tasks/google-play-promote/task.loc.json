@@ -1,5 +1,5 @@
 {
-  "id": "1dae1f76-29d3-482f-97d5-e3189a8347c2",
+  "id": "4dae1f76-29d3-482f-97d5-e3189a8347c2",
   "name": "GooglePlayPromote",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -14,8 +14,8 @@
   ],
   "version": {
     "Major": "1",
-    "Minor": "3",
-    "Patch": "16"
+    "Minor": "112",
+    "Patch": "0"
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

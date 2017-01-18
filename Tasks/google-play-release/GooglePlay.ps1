@@ -14,4 +14,4 @@ $env:INPUT_track = $track
 $env:INPUT_userFraction = $userFraction
 $env:INPUT_changeLogFile = $changeLogFile
 
-node ../../_build/Tasks/GooglePlayRelease/GooglePlay.js
+node GooglePlay.js

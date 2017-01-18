@@ -1,5 +1,5 @@
 {
-  "id": "18c97cf9-4e17-4244-b0fb-f540cea78153",
+  "id": "f8c97cf9-4e17-4244-b0fb-f540cea78153",
   "name": "GooglePlayIncreaseRollout",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -14,8 +14,8 @@
   ],
   "version": {
     "Major": "1",
-    "Minor": "3",
-    "Patch": "16"
+    "Minor": "112",
+    "Patch": "0"
   },
   "minimumAgentVersion": "1.83.0",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",

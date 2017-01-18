@@ -1,5 +1,5 @@
 {
-  "id": "1cf7cac0-620b-11e5-b4cf-8565e60f4d27",
+  "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
   "name": "GooglePlayRelease",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -14,8 +14,8 @@
   ],
   "version": {
     "Major": "1",
-    "Minor": "3",
-    "Patch": "16"
+    "Minor": "112",
+    "Patch": "0"
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [

@@ -14,4 +14,4 @@ $env:INPUT_sourceTrack = $sourceTrack
 $env:INPUT_destinationTrack = $destinationTrack
 $env:INPUT_userFraction = $userFraction
 
-node ../../_build/Tasks/GooglePlayPromote/google-play-promote.js
+node google-play-promote.js
