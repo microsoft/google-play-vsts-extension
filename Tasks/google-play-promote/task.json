@@ -107,8 +107,8 @@
     "messages": {
         "InvalidAuthFile": "Specified Auth file was invalid",
         "InvalidAuthFilewithName": "%s was not a valid auth file",
-        "EndpointNotFound": "The service account JSON key file could not be found.",
-        "JsonKeyFileNotFound": "The Service Endpoint could not be found.",
+        "JsonKeyFileNotFound": "The service account JSON key file could not be found.",
+        "EndpointNotFound": "The Service Endpoint could not be found.",
         "Authenticating": "Authenticating with Google Play",
         "GetTrackInfo": "Getting information for track %s",
         "PromoteTrack": "Promoting to track %s",

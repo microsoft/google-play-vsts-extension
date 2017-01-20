@@ -112,10 +112,10 @@ function run() {
             });
         }).catch(function (err) {
             console.error(err);
-            throw new Error(tl.loc('Failure'));
+            tl.setResult(tl.TaskResult.Failed, tl.loc('Failure'));
         });
     } catch (err) {
-        tl.setResult(tl.TaskResult.Failed, err.message);
+        tl.setResult(tl.TaskResult.Failed, err);
     }
 }
 

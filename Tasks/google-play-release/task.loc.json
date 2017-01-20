@@ -136,8 +136,8 @@
   "messages": {
     "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
     "InvalidAuthFilewithName": "ms-resource:loc.messages.InvalidAuthFilewithName",
-    "EndpointNotFound": "ms-resource:loc.messages.EndpointNotFound",
     "JsonKeyFileNotFound": "ms-resource:loc.messages.JsonKeyFileNotFound",
+    "EndpointNotFound": "ms-resource:loc.messages.EndpointNotFound",
     "FoundMultiApks": "ms-resource:loc.messages.FoundMultiApks",
     "GetNewEditAfterAuth": "ms-resource:loc.messages.GetNewEditAfterAuth",
     "UploadApk": "ms-resource:loc.messages.UploadApk",

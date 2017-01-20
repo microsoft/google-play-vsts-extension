@@ -39,7 +39,18 @@ gulp.task('test', function (cb) {
 
 gulp.task('default', ['build']);
 
+var createProdOverride = { 
+    public: true
+};
+
 var createtestOverride = { 
+    public: false,
+    name: "Google Play-Dev", 
+    id: "vso-extension-android-dev", 
+    publisher: "ms-mobiledevops-test"
+};
+
+var createPublishOverride = { 
     public: false,
     name: "Google Play-Dev", 
     id: "vso-extension-android-dev", 
@@ -82,7 +93,7 @@ gulp.task('cleanpackagefiles', function (done) {
 
 gulp.task('create', ['installtaskdeps', 'cleanpackagefiles'], function (cb) {
     console.log('Creating PRODUCTION vsix...');
-    exec('tfx extension create --manifest-globs vsts-extension-google-play.json --override ' + '{ "public": true }', function (err, stdout, stderr) {
+    exec('tfx extension create --manifest-globs vsts-extension-google-play.json --override ' + toOverrideString(createProdOverride), function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         cb(err);
@@ -100,7 +111,7 @@ gulp.task('createtest', ['installtaskdeps', 'cleanpackagefiles'], function (cb) 
 
 gulp.task('publishtest', ['installtaskdeps', 'cleanpackagefiles'], function (cb) {
     console.log('Creating and publishing test VSIX...');
-    exec('tfx extension create --manifest-globs vsts-extension-google-play.json --override ' + '{ "public": "false", "name": "Google Play-Dev", "id": "vso-extension-android-dev", "publisher": "ms-mobiledevops-test"} ' + '--share-with mobiledevops x04ty29er --token $PUBLISH_ACCESSTOKEN', function (err, stdout, stderr) {
+    exec('tfx extension create --manifest-globs vsts-extension-google-play.json --override ' + toOverrideString(createPublishOverride) + '--share-with mobiledevops x04ty29er --token $PUBLISH_ACCESSTOKEN', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         cb(err);
