@@ -107,8 +107,8 @@
   "messages": {
     "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
     "InvalidAuthFilewithName": "ms-resource:loc.messages.InvalidAuthFilewithName",
-    "EndpointNotFound": "ms-resource:loc.messages.EndpointNotFound",
     "JsonKeyFileNotFound": "ms-resource:loc.messages.JsonKeyFileNotFound",
+    "EndpointNotFound": "ms-resource:loc.messages.EndpointNotFound",
     "Authenticating": "ms-resource:loc.messages.Authenticating",
     "GetTrackInfo": "ms-resource:loc.messages.GetTrackInfo",
     "PromoteTrack": "ms-resource:loc.messages.PromoteTrack",
