@@ -118,7 +118,7 @@
                             {
                                 "id": "password",
                                 "name": "Private Key",
-                                "description": "Private key in json from Google developer console",
+                                "description": "Enter the private key from the Google Play Developer Console in the format: -----BEGIN PRIVATE KEY-----\\nYourPrivateKeyHere\\n-----END PRIVATE KEY-----\\n",
                                 "inputMode": "textbox",
                                 "isConfidential": true,
                                 "validation": {
