@@ -14,7 +14,7 @@
   ],
   "version": {
     "Major": "1",
-    "Minor": "112",
+    "Minor": "116",
     "Patch": "0"
   },
   "minimumAgentVersion": "1.83.0",
@@ -113,6 +113,15 @@
       "visibleRule": "shouldAttachMetadata = true"
     },
     {
+      "name": "shouldUploadApks",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.shouldUploadApks",
+      "defaultValue": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadApks",
+      "visibleRule": "shouldAttachMetadata = true"
+    },
+    {
       "name": "additionalApks",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.additionalApks",
@@ -120,6 +129,40 @@
       "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.additionalApks"
+    },
+    {
+      "name": "versionCodeFilterType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.versionCodeFilterType",
+      "defaultValue": "all",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.versionCodeFilterType",
+      "options": {
+        "all": "All",
+        "list": "List",
+        "expression": "Regular expression"
+      }
+    },
+    {
+      "name": "replaceList",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.replaceList",
+      "defaultValue": "",
+      "groupName": "advanced",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.replaceList",
+      "visibleRule": "versionCodeFilterType = list"
+    },
+    {
+      "name": "replaceExpression",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.replaceExpression",
+      "defaultValue": "",
+      "groupName": "advanced",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.replaceExpression",
+      "visibleRule": "versionCodeFilterType = expression"
     }
   ],
   "execution": {
@@ -135,9 +178,6 @@
   },
   "messages": {
     "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
-    "InvalidAuthFilewithName": "ms-resource:loc.messages.InvalidAuthFilewithName",
-    "JsonKeyFileNotFound": "ms-resource:loc.messages.JsonKeyFileNotFound",
-    "EndpointNotFound": "ms-resource:loc.messages.EndpointNotFound",
     "FoundMultiApks": "ms-resource:loc.messages.FoundMultiApks",
     "GetNewEditAfterAuth": "ms-resource:loc.messages.GetNewEditAfterAuth",
     "UploadApk": "ms-resource:loc.messages.UploadApk",
@@ -155,7 +195,16 @@
     "StatNotDirectory": "ms-resource:loc.messages.StatNotDirectory",
     "ImageDirNotFound": "ms-resource:loc.messages.ImageDirNotFound",
     "UploadImageFail": "ms-resource:loc.messages.UploadImageFail",
-    "RequestDetails": "ms-resource:loc.messages.RequestDetails"
+    "RequestDetails": "ms-resource:loc.messages.RequestDetails",
+    "CannotGetPackageName": "ms-resource:loc.messages.CannotGetPackageName",
+    "CannotCreateTransaction": "ms-resource:loc.messages.CannotCreateTransaction",
+    "CannotUploadApk": "ms-resource:loc.messages.CannotUploadApk",
+    "CannotDownloadTrack": "ms-resource:loc.messages.CannotDownloadTrack",
+    "CannotUpdateTrack": "ms-resource:loc.messages.CannotUpdateTrack",
+    "CanotReadChangeLog": "ms-resource:loc.messages.CanotReadChangeLog",
+    "CannotUploadChangelog": "ms-resource:loc.messages.CannotUploadChangelog",
+    "CannotCreateListing": "ms-resource:loc.messages.CannotCreateListing",
+    "IncorrectVersionCodeFilter": "ms-resource:loc.messages.IncorrectVersionCodeFilter"
   },
   "helpMarkDown": "ms-resource:loc.helpMarkDown"
 }
