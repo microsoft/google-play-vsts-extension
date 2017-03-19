@@ -14,8 +14,8 @@
   ],
   "version": {
     "Major": "1",
-    "Minor": "112",
-    "Patch": "0"
+    "Minor": "115",
+    "Patch": "10"
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -113,6 +113,15 @@
       "visibleRule": "shouldAttachMetadata = true"
     },
     {
+      "name": "shouldUploadBinaryies",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.shouldUploadBinaryies",
+      "defaultValue": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadBinaryies",
+      "visibleRule": "shouldAttachMetadata = true"
+    },
+    {
       "name": "additionalApks",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.additionalApks",
@@ -120,6 +129,40 @@
       "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.additionalApks"
+    },
+    {
+      "name": "versioncodeList",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.versioncodeList",
+      "defaultValue": "all",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.versioncodeList",
+      "options": {
+        "all": "All",
+        "list": "List",
+        "expression": "Regular expression"
+      }
+    },
+    {
+      "name": "replaceList",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.replaceList",
+      "defaultValue": "",
+      "groupName": "advanced",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.replaceList",
+      "visibleRule": "versioncodeList = list"
+    },
+    {
+      "name": "replaceExpression",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.replaceExpression",
+      "defaultValue": "",
+      "groupName": "advanced",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.replaceExpression",
+      "visibleRule": "versioncodeList = expression"
     }
   ],
   "execution": {
