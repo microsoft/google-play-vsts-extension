@@ -3,7 +3,6 @@ import path = require('path');
 import tl = require('vsts-task-lib/task');
 import glob = require('glob');
 import bb = require('bluebird');
-import Q = require('q');
 let google = require('googleapis');
 let apkParser = require('node-apk-parser');
 let publisher = google.androidpublisher('v2');
@@ -64,51 +63,64 @@ interface Track {
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
+
+        tl.debug('Prepare task inputs.');
+
         let authType: string = tl.getInput('authType', true);
         let key: ClientKey = {};
         if (authType === 'JsonFile') {
-            let serviceAccountKeyFile: string = tl.getPathInput('serviceAccountKey', false);
-            if (!serviceAccountKeyFile) {
-                throw new Error(tl.loc('JsonKeyFileNotFound'));
-            }
+            let serviceAccountKeyFile: string = tl.getPathInput('serviceAccountKey', true, true);
+
             let stats: fs.Stats = fs.statSync(serviceAccountKeyFile);
             if (stats && stats.isFile()) {
                 key = require(serviceAccountKeyFile);
             } else {
-                console.error(tl.loc('InvalidAuthFile'));
-                throw new Error(tl.loc('InvalidAuthFilewithName', serviceAccountKeyFile));
+                tl.debug(`The service account file path ${serviceAccountKeyFile} points to a directory.`);
+                throw new Error(tl.loc('InvalidAuthFile', serviceAccountKeyFile));
             }
         } else if (authType === 'ServiceEndpoint') {
-            let serviceEndpoint: tl.EndpointAuthorization = tl.getEndpointAuthorization(tl.getInput('serviceEndpoint', true), true);
-            if (!serviceEndpoint) {
-                throw new Error(tl.loc('EndpointNotFound'));
-            }
+            let serviceEndpoint: tl.EndpointAuthorization = tl.getEndpointAuthorization(tl.getInput('serviceEndpoint', true), false);
             key.client_email = serviceEndpoint.parameters['username'];
             key.private_key = serviceEndpoint.parameters['password'].replace(/\\n/g, '\n');
         }
 
-        let apkFile: string = resolveGlobPath(tl.getPathInput('apkFile', true));
-        let apkFileList: string[] = [apkFile];
-        let additionalApks: string[] = tl.getDelimitedInput('additionalApks', '\n');
-        if (additionalApks.length > 0) {
-            for (let i = 0; i < additionalApks.length; i++) {
-                apkFileList.push(resolveGlobPath(additionalApks[i]));
-            }
+        let mainApkPattern = tl.getPathInput('apkFile', true);
+        tl.debug(`Main APK pattern: ${mainApkPattern}.`);
+
+        let apkFile: string = resolveGlobPath(mainApkPattern);
+        tl.checkPath(apkFile, 'apkFile');
+        tl.debug(`    Found the main APK file: ${apkFile}.`);
+
+        let apkFileList: string[] = getAllApkPaths(apkFile);
+        if (apkFileList.length > 1) {
             console.log(tl.loc('FoundMultiApks'));
             console.log(apkFileList);
+        }
+
+        let versionCodeFilterType: string = tl.getInput('versionCodeFilterType', false) ;
+        let versionCodeFilter: string | string[] = null;
+        if (versionCodeFilterType === 'list') {
+            versionCodeFilter = tl.getDelimitedInput('replaceList', ',', false);
+        } else if (versionCodeFilterType === 'expression') {
+            versionCodeFilter = tl.getInput('replaceExpression', false);
         }
 
         let track: string = tl.getInput('track', true);
         let userFraction: number = Number(tl.getInput('userFraction', false)); // Used for staged rollouts
         let changelogFile: string = tl.getInput('changelogFile', false);
-        let shouldAttachMetadata: any = JSON.parse(tl.getInput('shouldAttachMetadata', false));
+        let shouldAttachMetadata: boolean = tl.getBoolInput('shouldAttachMetadata', false);
+        let shouldUploadApks: boolean = !shouldAttachMetadata || tl.getBoolInput('shouldUploadApks', false);
+        let metadataRootPath: string = null;
+        if (shouldAttachMetadata) {
+            metadataRootPath = tl.getPathInput('metadataRootPath', true, true);
+        }
 
         // Constants
         let GOOGLE_PLAY_SCOPES: string[] = ['https://www.googleapis.com/auth/androidpublisher'];
         let APK_MIME_TYPE: string = 'application/vnd.android.package-archive';
 
         let globalParams: GlobalParams = { auth: null, params: {} };
-        let apkVersionCodes: any = [];
+        let apkVersionCodes: number[] = [];
 
         // The submission process is composed
         // of a transction with the following steps:
@@ -121,52 +133,57 @@ async function run() {
         // #6) Specify the new change log
         // #7) Commit the edit transaction
 
+        tl.debug(`Getting a package name from ${apkFile}.`);
         let packageName: string = tryGetPackageName(apkFile);
         updateGlobalParams(globalParams, 'packageName', packageName);
 
+        tl.debug('Initializing JWT.');
         let jwtClient: any = new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
-        await jwtClient.authorizeAsync();
         globalParams.auth = jwtClient;
 
+        tl.debug('Initializing Google Play publisher API.');
         let edits: any = publisher.edits;
         [edits, edits.apklistings, edits.apks, edits.tracks, edits.listings, edits.images, jwtClient].forEach(bb.promisifyAll);
 
+        tl.debug('Authorize JWT.');
+        await jwtClient.authorizeAsync();
+
         console.log(tl.loc('GetNewEditAfterAuth'));
+        tl.debug('Creating a new edit transaction in Google Play.');
         let currentEdit: Edit = await getNewEdit(edits, globalParams, packageName);
         updateGlobalParams(globalParams, 'editId', currentEdit.id);
 
-        apkFileList.forEach(async (apkFile) => {
-            let apk: Apk = await addApk(edits, packageName, apkFile, APK_MIME_TYPE);
+        if (shouldUploadApks) {
+            tl.debug(`Uploading ${apkFileList.length} APK(s).`);
 
-            tl.debug(`Uploaded version code ${apk.versionCode}`);
-            apkVersionCodes.push(apk.versionCode);
-        });
+            for (let apkFile of apkFileList) {
+                tl.debug(`Uploading APK ${apkFile}.`);
+                let apk: Apk = await addApk(edits, packageName, apkFile, APK_MIME_TYPE);
+                tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}.`);
+                apkVersionCodes.push(apk.versionCode);
+            }
 
-        console.log(tl.loc('UpdateTrack'));
-        let updatedTrack: Track = await updateTrack(edits, packageName, track, apkVersionCodes, userFraction);
-        tl.debug(`Updated layout ${JSON.stringify(updatedTrack)}`);
-
-        if (shouldAttachMetadata) {
-            let metadataRootPath: string = tl.getInput('metadataRootPath', true);
-
-            console.log(tl.loc('AttachingMetadataToRelease'));
-            await addMetadata(edits, apkVersionCodes, changelogFile, metadataRootPath);
+            console.log(tl.loc('UpdateTrack'));
+            tl.debug(`Updating the track ${track}.`);
+            let updatedTrack: Track = await updateTrack(edits, packageName, track, apkVersionCodes, versionCodeFilterType, versionCodeFilter, userFraction);
+            tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
         }
 
-        tl.debug('Upload change logs if specified...');
-        await uploadChangeLogs(edits, changelogFile, apkVersionCodes);
+        if (shouldAttachMetadata) {
+            console.log(tl.loc('AttachingMetadataToRelease'));
+            tl.debug(`Uploading metadata ${changelogFile} from ${metadataRootPath}.`);
+            await addMetadata(edits, apkVersionCodes, changelogFile, metadataRootPath);
+        } else if (!changelogFile) {
+            tl.debug(`Upload the common change log ${changelogFile} to all versions`);
+            await uploadCommonChangeLog(edits, 'en-US', changelogFile, apkVersionCodes);
+        }
 
-        edits.commitAsync()
-        .then(res => {
-            console.log(tl.loc('AptPublishSucceed'));
-            console.log(tl.loc('TrackInfo', track));
-            tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));
-        }).catch( err => {
-            tl.error(err);
-            tl.setResult(tl.TaskResult.Failed, tl.loc('Failure'));
-        });
-    } catch (err) {
-        tl.setResult(tl.TaskResult.Failed, err);
+        tl.debug('Commiting the edit transaction in Google Play.');
+        await commitEditTransaction(edits, track);
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));
+    } catch (e) {
+        tl.error(e);
+        tl.setResult(tl.TaskResult.Failed, tl.loc('Failure'));
     }
 }
 
@@ -175,21 +192,19 @@ async function run() {
  * @param {Object} apkFile The apk file from which to attempt name extraction
  * @return {string} packageName Name extracted from package. null if extraction failed
  */
-function tryGetPackageName(apkFile): string {
-    tl.debug('Candidate package: ' + apkFile);
-
-    let packageName: string;
+function tryGetPackageName(apkFile: string): string {
+    let packageName: string = null;
 
     try {
         packageName = apkParser
             .readFile(apkFile)
             .readManifestSync()
             .package;
-
-        tl.debug(`name extraction from apk succeeded: ${packageName}`);
+        tl.debug(`name extraction from apk ${apkFile} succeeded: ${packageName}`);
     } catch (e) {
-        tl.debug(`name extraction from apk failed: ${e}`);
-        throw new Error(`The specified APK file ${apkFile} is not valid. Please check the path and try to queue another build.`);
+        tl.debug(`name extraction from apk ${apkFile} failed:`);
+        tl.debug(e);
+        throw new Error(tl.loc('CannotGetPackageName', apkFile));
     }
 
     return packageName;
@@ -202,23 +217,28 @@ function tryGetPackageName(apkFile): string {
  * @return {Promise} edit A promise that will return result from inserting a new edit
  *                          { id: string, expiryTimeSeconds: string }
  */
-function getNewEdit(edits: any, globalParams: GlobalParams, packageName: string): Q.Promise<Edit> {
-    tl.debug('Creating a new edit');
-    let defer = Q.defer<Edit>();
-
+async function getNewEdit(edits: any, globalParams: GlobalParams, packageName: string): Promise<Edit> {
     let requestParameters: PackageParams = {
         packageName: packageName
     };
-    tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
 
-    edits.insertAsync(requestParameters)
-    .then(res => defer.resolve(res[0]))
-    .catch(err => {
-        tl.debug(err);
-        throw new Error(`Failed to create a new edit transaction for the package ${packageName}. See log for details.`);
-    });
+    try {
+        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
 
-    return defer.promise;
+        //let res: Edit = (await edits.insertAsync(requestParameters))[0];
+        let res: Edit = (await edits.insertAsync(requestParameters))[0];
+        return res;
+    } catch (e) {
+        tl.debug(`Failed to create a new edit transaction for the package ${packageName}.`);
+        tl.debug(e);
+        throw new Error(tl.loc('CannotCreateTransaction', packageName));
+    }
+}
+
+async function commitEditTransaction(edits: any, track: string) {
+    await edits.commitAsync();
+    console.log(tl.loc('AptPublishSucceed'));
+    console.log(tl.loc('TrackInfo', track));
 }
 
 /**
@@ -229,10 +249,7 @@ function getNewEdit(edits: any, globalParams: GlobalParams, packageName: string)
  * @returns {Promise} apk A promise that will return result from uploading an apk
  *                          { versionCode: integer, binary: { sha1: string } }
  */
-function addApk(edits: any, packageName: string, apkFile: string, APK_MIME_TYPE: string): Q.Promise<Apk> {
-    tl.debug('Uploading a new apk: ' + apkFile);
-    let defer = Q.defer<Apk>();
-
+async function addApk(edits: any, packageName: string, apkFile: string, APK_MIME_TYPE: string): Promise<Apk> {
     let requestParameters: PackageParams = {
         packageName: packageName,
         media: {
@@ -240,16 +257,19 @@ function addApk(edits: any, packageName: string, apkFile: string, APK_MIME_TYPE:
             mimeType: APK_MIME_TYPE
         }
     };
-    tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
 
-    edits.apks.uploadAsync(requestParameters)
-    .then(res => defer.resolve(res[0]))
-    .catch(err => {
-        tl.debug(err);
-        throw new Error(`Failed to upload the APK ${apkFile}. See log for details.`);
-    });
+    try {
+        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
+        let res: Apk = (await edits.apks.uploadAsync(requestParameters))[0];
 
-    return defer.promise;
+        tl.debug('returned: ' + JSON.stringify(res));
+
+        return res;
+    } catch (e) {
+        tl.debug(`Failed to upload the APK ${apkFile}.`);
+        tl.debug(e);
+        throw new Error(tl.loc('CannotUploadApk', apkFile));
+    }
 }
 
 /**
@@ -257,38 +277,101 @@ function addApk(edits: any, packageName: string, apkFile: string, APK_MIME_TYPE:
  * Assumes authorized
  * @param {string} packageName unique android package name (com.android.etc)
  * @param {string} track one of the values {"alpha", "beta", "production", "rollout"}
- * @param {(number|number[])} versionCode version code returned from an apk call. will take either a number or a number[]
+ * @param {number[]} apkVersionCodes version code of uploaded modules.
+ * @param {string} versionCodeListType type of version code replacement filter, i.e. 'all', 'list', or 'expression'
+ * @param {string | string[]} versionCodeFilter version code filter, i.e. either a list of version code or a regular expression string.
  * @param {double} userFraction for rollout, fraction of users to get update
  * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-function updateTrack(edits: any, packageName: string, track: string, versionCode: any, userFraction: number): Q.Promise<Track> {
-    tl.debug('Updating track');
-    let defer = Q.defer<Track>();
+async function updateTrack(
+    edits: any,
+    packageName: string,
+    track: string,
+    apkVersionCodes: number[],
+    versionCodeListType: string,
+    versionCodeFilter: string | string[],
+    userFraction: number): Promise<Track> {
 
     let requestParameters: PackageParams = {
         packageName: packageName,
-        track: track,
-        resource: {
-            track: track,
-            versionCodes: (typeof versionCode === 'number' ? [versionCode] : versionCode)
+        track: track
+    };
+
+    tl.debug(`Reading current ${track} track info.`);
+    tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
+
+    let res: Track;
+    let newTrackVersionCodes: number[] = [];
+
+    if (versionCodeListType === 'all') {
+        newTrackVersionCodes = apkVersionCodes;
+    } else {
+        try {
+            tl.debug(`Reading current ${track} track info.`);
+            tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
+
+            res = (await edits.tracks.getAsync(requestParameters))[0];
+        } catch (e) {
+            tl.debug(`Failed to download track ${track} information.`);
+            tl.debug(e);
+            throw new Error(tl.loc('CannotDownloadTrack', track));
         }
+
+        let oldTrackVersionCodes: number[] = res.versionCodes;
+        tl.debug(`Current version codes: ${oldTrackVersionCodes}.`);
+
+        if (typeof(versionCodeFilter) === 'string') {
+            let versionCodesToRemove: RegExp = new RegExp(`^${versionCodeFilter as string}$`);
+
+            oldTrackVersionCodes.forEach((versionCode) => {
+                if (!versionCode.toString().match(versionCodesToRemove)) {
+                    newTrackVersionCodes.push(versionCode);
+                }
+            });
+        } else {
+            let versionCodesToRemove: number[] = [];
+            (versionCodeFilter as string[]).forEach((versionCode) => {
+                versionCodesToRemove.push(parseInt(versionCode.trim(), 10));
+            });
+
+            oldTrackVersionCodes.forEach((versionCode) => {
+                if (versionCodesToRemove.indexOf(versionCode) === -1) {
+                    newTrackVersionCodes.push(versionCode);
+                }
+            });
+        }
+
+        tl.debug(`Version codes to keep: ${newTrackVersionCodes}.`);
+
+        apkVersionCodes.forEach((versionCode) => {
+            if (newTrackVersionCodes.indexOf(versionCode) === -1) {
+                newTrackVersionCodes.push(versionCode);
+            }
+        });
+    }
+
+    tl.debug(`New ${track} track version codes: ${newTrackVersionCodes}.`);
+    requestParameters.resource = {
+        track: track,
+        versionCodes: newTrackVersionCodes
     };
 
     if (track === 'rollout') {
         requestParameters.resource.userFraction = userFraction;
     }
 
-    tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
+    try {
+        tl.debug(`Updating the ${track} track info.`);
+        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
+        res = (await edits.tracks.updateAsync(requestParameters))[0];
+    } catch (e) {
+        tl.debug(`Failed to update track ${track}.`);
+        tl.debug(e);
+        throw new Error(tl.loc('CannotUpdateTrack', track));
+    }
 
-    edits.tracks.updateAsync(requestParameters)
-    .then(res => defer.resolve(res[0]))
-    .catch(err => {
-        tl.debug(err);
-        throw new Error(`Failed to update track ${track}}). See log for details.`);
-    });
-
-    return defer.promise;
+    return res;
 }
 
 /**
@@ -297,15 +380,16 @@ function updateTrack(edits: any, packageName: string, track: string, versionCode
  * @param apkVersionCodes
  * @returns {*}
  */
-function uploadChangeLogs(edits: any, changelogFile: string, apkVersionCodes: number[]) {
+async function uploadCommonChangeLog(edits: any, languageCode: string, changelogFile: string, apkVersionCodes: number[]) {
     let stats: fs.Stats = fs.statSync(changelogFile);
 
     if (stats && stats.isFile()) {
-        apkVersionCodes.forEach(async (apkVersionCode) => {
+        for (let apkVersionCode of apkVersionCodes) {
+            tl.debug(`Adding the changelog file ${changelogFile} to the APK version code ${apkVersionCode}`);
             await addChangelog(edits, 'en-US', changelogFile, apkVersionCode);
-        });
+        }
     } else {
-        throw new Error(`No changelog file ${changelogFile} found.`);
+        tl.debug(`The change log path ${changelogFile} either does not exists or points to a directory. Ignoring...`);
     }
 }
 
@@ -318,16 +402,14 @@ function uploadChangeLogs(edits: any, changelogFile: string, apkVersionCodes: nu
  * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-function addChangelog(edits: any, languageCode: string, changelogFile: string, apkVersionCode: number) {
-    tl.debug(`Adding the changelog file ${changelogFile} to the APK version code ${apkVersionCode}`);
-
+async function addChangelog(edits: any, languageCode: string, changelogFile: string, apkVersionCode: number) {
     let changelog: string;
     try {
         changelog = fs.readFileSync(changelogFile).toString();
     } catch (e) {
+        tl.debug(`Changelog reading failed for ${changelogFile}.`);
         tl.debug(e);
-        tl.debug(`Most likely failed to read the specified changelog.`);
-        throw new Error(`Changelog reading failed for log ${changelogFile}. Check logs for details.`);
+        throw new Error(tl.loc('CanotReadChangeLog', changelogFile));
     }
 
     let requestParameters: PackageParams = {
@@ -338,13 +420,15 @@ function addChangelog(edits: any, languageCode: string, changelogFile: string, a
             recentChanges: changelog
         }
     };
-    tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
 
-    edits.apklistings.updateAsync(requestParameters)
-    .catch(err => {
-        tl.debug(err);
-        throw new Error(`Failed to upload the changelog ${changelogFile}. See log for details.`);
-    });
+    try {
+        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
+        await edits.apklistings.updateAsync(requestParameters);
+    } catch (e) {
+        tl.debug(`Failed to upload the ${languageCode} changelog ${changelogFile} version ${apkVersionCode}.`);
+        tl.debug(e);
+        throw new Error(tl.loc('CannotUploadChangelog', languageCode, changelogFile, apkVersionCode));
+    }
 }
 
 /**
@@ -355,7 +439,7 @@ function addChangelog(edits: any, languageCode: string, changelogFile: string, a
  * @returns {Promise} track A promise that will return result from updating an apk listing
  *                            { language: string, recentChanges: string }
  */
-function addAllChangelogs(edits: any, changelogFile: string, apkVersionCodes: any, languageCode: string, directory: string) {
+async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: string, directory: string) {
     let changelogDir: string = path.join(directory, 'changelogs');
 
     let changelogs: string[] = fs.readdirSync(changelogDir).filter(subPath => {
@@ -364,8 +448,9 @@ function addAllChangelogs(edits: any, changelogFile: string, apkVersionCodes: an
             tl.debug(`Checking File ${fileToCheck}`);
             return fs.statSync(fileToCheck).isFile();
         } catch (e) {
+            tl.debug(`Failed to stat path ${subPath}:`);
             tl.debug(e);
-            tl.debug(`Failed to stat path ${subPath}. Ignoring...`);
+            tl.debug('Ignoring...');
             return false;
         }
     });
@@ -378,28 +463,22 @@ function addAllChangelogs(edits: any, changelogFile: string, apkVersionCodes: an
     changelogs.forEach(async (changelogFile) => {
         let changelogName: string = path.basename(changelogFile, path.extname(changelogFile));
         let changelogVersion: number = parseInt(changelogName, 10);
-        if (apkVersionCodes.indexOf(changelogVersion) === -1) {
-            tl.debug(`File ${changelogFile} is not a valid version code`);
-            return;
-        }
+        if (!isNaN(changelogVersion) && (apkVersionCodes.indexOf(changelogVersion) !== -1)) {
+            versionCodeFound = true;
+            let fullChangelogPath: string = path.join(changelogDir, changelogFile);
 
-        versionCodeFound = true;
-        let fullChangelogPath: string = path.join(changelogDir, changelogFile);
-        console.log(tl.loc('AppendChangelog', fullChangelogPath));
-        await addChangelog.bind(this, edits, languageCode, fullChangelogPath, changelogVersion)();
+            console.log(tl.loc('AppendChangelog', fullChangelogPath));
+            tl.debug(`Uploading change log version ${changelogVersion} from ${fullChangelogPath} for language code ${languageCode}`);
+            await addChangelog(edits, languageCode, fullChangelogPath, changelogVersion);
+        } else {
+            tl.debug(`The name of the file ${changelogFile} is not a valid version code. Skip it.`);
+        }
     });
 
-    if (versionCodeFound) {
-        return;
-    }
-
-    if (changelogs.length === 1) {
-        tl.debug(`Applying file ${changelogFile} to all version codes`);
+    if (!versionCodeFound && (changelogs.length === 1)) {
+        tl.debug(`Applying file ${changelogs[0]} to all version codes`);
         let fullChangelogPath: string = path.join(changelogDir, changelogs[0]);
-        apkVersionCodes.forEach(async (apkVersionCode) => {
-            console.log(tl.loc('AppendChangelog', fullChangelogPath));
-            await addChangelog(edits, languageCode, fullChangelogPath, apkVersionCode);
-        });
+        await uploadCommonChangeLog(edits, languageCode, fullChangelogPath, apkVersionCodes);
     }
 }
 
@@ -433,26 +512,26 @@ function addAllChangelogs(edits: any, changelogFile: string, apkVersionCodes: an
  *      └ $(versioncodes).txt
  *
  * @param {string} metadataRootDirectory Path to the folder where the Fastlane metadata structure is found. eg the folders under this directory should be the language codes
- * @returns {Promise}  A promise that will return the result from last metadata change that was attempted. Currently, this is most likely an image upload.
- *                     { image: { id: string, url: string, sha1: string } }
+ * @returns {Promise<void>}
  */
-function addMetadata(edits: any, apkVersionCodes: number[], changelogFile: string, metadataRootDirectory: string) {
-    tl.debug('Attempting to add metadata...');
-    tl.debug(`Adding metadata from ${metadataRootDirectory}`);
-
+async function addMetadata(edits: any, apkVersionCodes: number[], changelogFile: string, metadataRootDirectory: string) {
     let metadataLanguageCodes: string[] = fs.readdirSync(metadataRootDirectory).filter((subPath) => {
         try {
             return fs.statSync(path.join(metadataRootDirectory, subPath)).isDirectory();
         } catch (e) {
+            tl.debug(`Failed to stat path ${subPath}:`);
             tl.debug(e);
-            tl.debug(`Failed to stat path ${subPath}. Ignoring...`);
+            tl.debug('Ignoring...');
             return false;
     }});
 
+    tl.debug(`Found language codes: ${metadataLanguageCodes}.`);
+
     metadataLanguageCodes.forEach(async (languageCode) =>  {
-        let nextDir: string = path.join(metadataRootDirectory, languageCode);
-        tl.debug(`Processing metadata for language code ${languageCode}`);
-        await uploadMetadataWithLanguageCode(edits, apkVersionCodes, changelogFile, languageCode, nextDir);
+        let metadataDirectory: string = path.join(metadataRootDirectory, languageCode);
+
+        tl.debug(`Uploading metadata from ${metadataDirectory} for language code ${languageCode} and version codes ${apkVersionCodes}.`);
+        await uploadMetadataWithLanguageCode(edits, apkVersionCodes, changelogFile, languageCode, metadataDirectory);
     });
 }
 
@@ -461,21 +540,43 @@ function addMetadata(edits: any, apkVersionCodes: number[], changelogFile: strin
  * Assumes authorized
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
  * @param {string} directory Directory where updated listing details can be found.
- * @returns {Promise} A Promise that will return after all metadata updating operations are completed.
+ * @returns {Promise<void>}
  */
 async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: number[], changelogFile: string, languageCode: string, directory: string) {
     console.log(tl.loc('UploadingMetadataForLanguage', directory, languageCode));
 
+    tl.debug(`Adding loacalized store listing for language code ${languageCode} from ${directory}.`);
+    await addLanguageListing(edits, languageCode, directory);
+
+    tl.debug(`Uploading change logs for language code ${languageCode} from ${directory}`);
+    await addAllChangelogs(edits, apkVersionCodes, languageCode, directory);
+
+    tl.debug(`Uploading images for language code ${languageCode} from ${directory}`);
+    await attachImages(edits, languageCode, directory);
+}
+
+/**
+ * Updates the details for a language with new information
+ * Assumes authorized
+ * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
+ * @param {string} directory Directory where updated listing details can be found.
+ * @returns {Promise<void>}
+ */
+async function addLanguageListing(edits: any, languageCode: string, directory: string) {
     let patchListingRequestParameters: PackageParams = {
         language: languageCode
     };
-
     patchListingRequestParameters.resource = createPatchListingResource(languageCode, directory);
-    await edits.listings.patchAsync(patchListingRequestParameters);
 
-    await addAllChangelogs(edits, changelogFile, apkVersionCodes, languageCode, directory);
-
-    await attachImages(edits, languageCode, directory);
+    try {
+        tl.debug(`Uploading a loacalized ${languageCode} store listing.`);
+        tl.debug('Request Parameters: ' + JSON.stringify(patchListingRequestParameters));
+        await edits.listings.patchAsync(patchListingRequestParameters);
+    } catch (e) {
+        tl.debug(`Failed to create the loacalized ${languageCode} store listing.`);
+        tl.debug(e);
+        throw new Error(tl.loc('CannotCreateListing', languageCode));
+    }
 }
 
 /**
@@ -487,6 +588,7 @@ async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: numbe
  */
 function createPatchListingResource(languageCode: string, directory: string) { // TODO: the interface here is wrong!
     tl.debug(`Constructing resource to patch listing with language code ${languageCode} from ${directory}`);
+
     let resourceParts = {
         fullDescription: 'full_description.txt',
         shortDescription: 'short_description.txt',
@@ -506,7 +608,9 @@ function createPatchListingResource(languageCode: string, directory: string) { /
                 let fileContents: Buffer = fs.readFileSync(file);
                 resource[i] = fileContents.toString();
             } catch (e) {
-                tl.debug(`Failed to read metadata file ${file}. Ignoring...`);
+                tl.debug(`Failed to read metadata file ${file}:`);
+                tl.debug(e);
+                tl.debug('Ignoring...');
             }
         }
     }
@@ -524,22 +628,23 @@ function createPatchListingResource(languageCode: string, directory: string) { /
  *                             { image: { id: string, url: string, sha1: string } }
  */
 async function attachImages(edits: any, languageCode: string, directory: string) {
-    tl.debug(`Starting upload of images with language code ${languageCode} from ${directory}`);
-
     let imageList: any = getImageList(directory);
 
+    let cnt: number = 0;
     for (let imageType in imageList) {
         if (imageList.hasOwnProperty(imageType)) {
             let images: any = imageList[imageType];
             for (let i in images) {
                 if (images.hasOwnProperty(i)) {
+                    tl.debug(`Uploading image of type ${imageType} from ${images[i]}`);
                     await uploadImage(edits, languageCode, imageType, images[i]);
+                    cnt++;
                 }
             }
         }
     }
 
-    tl.debug(`All images uploaded`);
+    tl.debug(`${cnt} image(s) uploaded.`);
 }
 
 /**
@@ -572,9 +677,8 @@ function getImageList(directory: string): any {
     let imageDirectory: string = path.join(directory, 'images');
     let imageList: any = {};
 
-    for (let i = 0; i < imageTypes.length; i++) {
+    for (let imageType of imageTypes) {
         let shouldAttemptUpload: boolean = false;
-        let imageType: string = imageTypes[i];
 
         imageList[imageType] = [];
 
@@ -584,8 +688,8 @@ function getImageList(directory: string): any {
             case 'icon':
             case 'promoGraphic':
             case 'tvBanner':
-                for (let i = 0; i < acceptedExtensions.length && !shouldAttemptUpload; i++) {
-                    let fullPathToFileToCheck: string = path.join(imageDirectory, imageType + acceptedExtensions[i]);
+                for (let acceptedExtension of acceptedExtensions) {
+                    let fullPathToFileToCheck: string = path.join(imageDirectory, imageType + acceptedExtension);
                     try {
                         let imageStat: fs.Stats = fs.statSync(fullPathToFileToCheck);
                         if (imageStat) {
@@ -661,7 +765,6 @@ function getImageList(directory: string): any {
  *                                       { image: [ { id: string, url: string, sha1: string } ] }
  */
 function uploadImage(edits: any, languageCode: string, imageType: string, imagePath: string) {
-    tl.debug(`Uploading image of type ${imageType} from ${imagePath}`);
     let imageUploadRequest: PackageParams = {
         language: languageCode,
         imageType: imageType,
@@ -672,13 +775,14 @@ function uploadImage(edits: any, languageCode: string, imageType: string, imageP
         }
     };
 
-    tl.debug(`Making image upload request: ${JSON.stringify(imageUploadRequest)}`);
-    edits.images.uploadAsync(imageUploadRequest)
-    .catch((request, err) => {
-        tl.debug(err);
-        tl.debug(`Request detailes: ${JSON.stringify(request)}`);
+    try {
+        tl.debug('Request Parameters: ' + JSON.stringify(imageUploadRequest));
+        edits.images.uploadAsync(imageUploadRequest);
+    } catch (e) {
+        tl.debug(`Failed to upload image ${imagePath} of type ${imageType}.`);
+        tl.debug(e);
         throw new Error(tl.loc('UploadImageFail'));
-    });
+    }
 }
 
 /**
@@ -734,6 +838,46 @@ function resolveGlobPath(path: string): string {
     }
 
     return path;
+}
+
+/**
+ * Get the appropriate files from the provided pattern
+ * @param {string} path The minimatch pattern of glob to be resolved to file path
+ * @returns {string[]} paths of the files resolved by glob
+ */
+function resolveGlobPaths(path: string): string[] {
+    if (path) {
+        // Convert the path pattern to a rooted one. We do this to mimic for string inputs the behaviour of filePath inputs provided by Build Agent.
+        path = tl.resolve(tl.getVariable('System.DefaultWorkingDirectory'), path);
+
+        let filesList: string[] = glob.sync(path);
+        return filesList;
+    }
+
+    return [];
+}
+
+/**
+ * Get unique APK file paths from main and additional APK file inputs.
+ * @returns {string[]} paths of the files
+ */
+function getAllApkPaths(mainApkFile: string): string[] {
+    let apkFileList: { [key: string]: number } = {};
+
+    apkFileList[mainApkFile] = 0;
+
+    let additionalApks: string[] = tl.getDelimitedInput('additionalApks', '\n');
+    additionalApks.forEach((additionalApk) => {
+        tl.debug(`Additional APK pattern: ${additionalApk}.`);
+        let apkPaths: string[] = resolveGlobPaths(additionalApk);
+
+        apkPaths.forEach((apkPath) => {
+            tl.debug(`    Found the additional APK file: ${apkPath}.`);
+            apkFileList[apkPath] = 0;
+        });
+    });
+
+    return Object.keys(apkFileList);
 }
 
 // Future features:
