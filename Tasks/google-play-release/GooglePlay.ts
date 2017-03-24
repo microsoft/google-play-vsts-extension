@@ -47,17 +47,23 @@ interface Edit {
     expiryTimeSeconds: string;
 }
 
+interface SourceApk {
+    path: string,
+    package: string,
+    versionCode: number;
+}
+
 interface Apk {
-  versionCode: number;
-  binary: {
-    sha1: string;
-  };
+    versionCode: number;
+    binary: {
+        sha1: string;
+    };
 }
 
 interface Track {
-  track: string;
-  versionCodes: number[];
-  userFraction: number;
+    track: string;
+    versionCodes: number[];
+    userFraction: number;
 }
 
 async function run() {
@@ -87,14 +93,14 @@ async function run() {
         let mainApkPattern = tl.getPathInput('apkFile', true);
         tl.debug(`Main APK pattern: ${mainApkPattern}.`);
 
-        let apkFile: string = resolveGlobPath(mainApkPattern);
-        tl.checkPath(apkFile, 'apkFile');
-        tl.debug(`    Found the main APK file: ${apkFile}.`);
+        let mainApkFilePath: string = resolveGlobPath(mainApkPattern);
+        tl.checkPath(mainApkFilePath, 'mainApkFilePath');
+        tl.debug(`    Found the main APK file: ${mainApkFilePath}.`);
 
-        let apkFileList: string[] = getAllApkPaths(apkFile);
-        if (apkFileList.length > 1) {
+        let apkList: SourceApk[] = getAllApkPaths(mainApkFilePath);
+        if (apkList.length > 1) {
             console.log(tl.loc('FoundMultiApks'));
-            console.log(apkFileList);
+            console.log(JSON.stringify(apkList));
         }
 
         let versionCodeFilterType: string = tl.getInput('versionCodeFilterType', false) ;
@@ -125,7 +131,7 @@ async function run() {
         // The submission process is composed
         // of a transction with the following steps:
         // -----------------------------------------
-        // #1) Extract the package name from the specified APK file
+        // #1) Extract the package name from the specified main APK file
         // #2) Get an OAuth token by authentincating the service account
         // #3) Create a new editing transaction
         // #4) Upload the new APK(s)
@@ -134,19 +140,19 @@ async function run() {
         // #7) Commit the edit transaction
 
         tl.debug(`Getting a package name from ${apkFile}.`);
-        let packageName: string = tryGetPackageName(apkFile);
+        let packageName: string = apkList[mainApkFilePath];
         updateGlobalParams(globalParams, 'packageName', packageName);
 
         tl.debug('Initializing JWT.');
         let jwtClient: any = new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
         globalParams.auth = jwtClient;
 
-        tl.debug('Initializing Google Play publisher API.');
-        let edits: any = publisher.edits;
-        [edits, edits.apklistings, edits.apks, edits.tracks, edits.listings, edits.images, jwtClient].forEach(bb.promisifyAll);
-
         tl.debug('Authorize JWT.');
         await jwtClient.authorizeAsync();
+
+        tl.debug('Prepare Google Play publisher API.');
+        let edits: any = publisher.edits;
+        [edits, edits.apklistings, edits.apks, edits.tracks, edits.listings, edits.images, jwtClient].forEach(bb.promisifyAll);
 
         console.log(tl.loc('GetNewEditAfterAuth'));
         tl.debug('Creating a new edit transaction in Google Play.');
@@ -154,9 +160,9 @@ async function run() {
         updateGlobalParams(globalParams, 'editId', currentEdit.id);
 
         if (shouldUploadApks) {
-            tl.debug(`Uploading ${apkFileList.length} APK(s).`);
+            tl.debug(`Uploading ${apkList.length} APK(s).`);
 
-            for (let apkFile of apkFileList) {
+            for (let apkFile of apkList) {
                 tl.debug(`Uploading APK ${apkFile}.`);
                 let apk: Apk = await addApk(edits, packageName, apkFile, APK_MIME_TYPE);
                 tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}.`);
@@ -192,22 +198,21 @@ async function run() {
  * @param {Object} apkFile The apk file from which to attempt name extraction
  * @return {string} packageName Name extracted from package. null if extraction failed
  */
-function tryGetPackageName(apkFile: string): string {
-    let packageName: string = null;
-
+function getSourceApk(apkFilePath: string): SourceApk {
     try {
-        packageName = apkParser
-            .readFile(apkFile)
-            .readManifestSync()
-            .package;
-        tl.debug(`name extraction from apk ${apkFile} succeeded: ${packageName}`);
+        let manifest = apkParser
+            .readFile(apkFilePath)
+            .readManifestSync();
+        return {
+            path: apkFilePath,
+            package: manifest.package as string,
+            versionCode: manifest.vetsionCode as number
+        };
     } catch (e) {
-        tl.debug(`name extraction from apk ${apkFile} failed:`);
+        tl.debug(`name extraction from apk ${apkFilePath} failed:`);
         tl.debug(e);
-        throw new Error(tl.loc('CannotGetPackageName', apkFile));
+        throw new Error(tl.loc('CannotGetPackageName', apkFilePath));
     }
-
-    return packageName;
 }
 
 /**
@@ -813,12 +818,10 @@ function helperResolveImageMimeType(imagePath: string): string {
  * @returns {void} void
  */
 function updateGlobalParams(globalParams: GlobalParams, paramName: string, value: any): void {
-    tl.debug('Updating Global Parameters');
-    tl.debug('SETTING ' + paramName + ' TO ' + JSON.stringify(value));
+    tl.debug('Updating Global Parameter ${paramName}: ' + JSON.stringify(value));
     globalParams.params[paramName] = value;
-    tl.debug('One line before end');
     google.options(globalParams);
-    tl.debug('End Updating Global Parameters');
+    tl.debug('    ... updated.');
 }
 
 /**
@@ -861,23 +864,26 @@ function resolveGlobPaths(path: string): string[] {
  * Get unique APK file paths from main and additional APK file inputs.
  * @returns {string[]} paths of the files
  */
-function getAllApkPaths(mainApkFile: string): string[] {
-    let apkFileList: { [key: string]: number } = {};
+function getAllApkPaths(mainApkFilePath: string): SourceApk[] {
+    let apkFileList: { [key: string]: SourceApk } = {};
+    let apkPaths: string[] = [mainApkFilePath].concat(tl.getDelimitedInput('additionalApks', '\n'));
 
-    apkFileList[mainApkFile] = 0;
+    for (let apkPath in apkPaths) {
+        tl.debug(`Check APK pattern: ${apkPath}.`);
+        let apkPaths: string[] = resolveGlobPaths(apkPath);
 
-    let additionalApks: string[] = tl.getDelimitedInput('additionalApks', '\n');
-    additionalApks.forEach((additionalApk) => {
-        tl.debug(`Additional APK pattern: ${additionalApk}.`);
-        let apkPaths: string[] = resolveGlobPaths(additionalApk);
-
-        apkPaths.forEach((apkPath) => {
+        for(let apkPath in apkPaths) {
             tl.debug(`    Found the additional APK file: ${apkPath}.`);
-            apkFileList[apkPath] = 0;
-        });
-    });
+            apkFileList[apkPath] = getSourceApk(apkPath);
+        }
+    }
 
-    return Object.keys(apkFileList);
+    let sourceApks: SourceApk[] = [];
+    for (let apkPath in  Object.keys(apkFileList)) {
+        sourceApks.push(apkFileList[apkPath]);
+    }
+
+     return sourceApks;
 }
 
 // Future features:
