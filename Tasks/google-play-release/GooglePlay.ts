@@ -135,7 +135,7 @@ async function run() {
         // #7) Commit the edit transaction
 
         tl.debug(`Getting a package name from ${apkFile}.`);
-        let packageName: string = tryGetPackageName(apkFile);
+        let packageName: string = getPackageName(apkFile);
         updateGlobalParams(globalParams, 'packageName', packageName);
 
         tl.debug('Initializing JWT.');
@@ -191,9 +191,9 @@ async function run() {
 /**
  * Tries to extract the package name from an apk file
  * @param {Object} apkFile The apk file from which to attempt name extraction
- * @return {string} packageName Name extracted from package. null if extraction failed
+ * @return {string} packageName Name extracted from package.
  */
-function tryGetPackageName(apkFile: string): string {
+function getPackageName(apkFile: string): string {
     let packageName: string = null;
 
     try {
@@ -201,7 +201,11 @@ function tryGetPackageName(apkFile: string): string {
             .readFile(apkFile)
             .readManifestSync()
             .package;
-        tl.debug(`name extraction from apk ${apkFile} succeeded: ${packageName}`);
+        if (packageName) {
+            tl.debug(`name extraction from apk ${apkFile} succeeded: ${packageName}`);
+        } else {
+            throw new Error('node-apk-parser returned empty package name.');
+        }
     } catch (e) {
         tl.debug(`name extraction from apk ${apkFile} failed:`);
         tl.debug(e);
@@ -226,7 +230,6 @@ async function getNewEdit(edits: any, globalParams: GlobalParams, packageName: s
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
 
-        //let res: Edit = (await edits.insertAsync(requestParameters))[0];
         let res: Edit = (await edits.insertAsync(requestParameters))[0];
         return res;
     } catch (e) {

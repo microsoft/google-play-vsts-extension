@@ -118,7 +118,7 @@
             "label": "Update APK(s)",
             "defaultValue": true,
             "required": false,
-            "helpMarkDown": "By default, the task will update the specified binary APK file(s) on your app release. Unselecting this option you can update metadata keeping the APKs untouched.",
+            "helpMarkDown": "By default, the task will update the specified binary APK file(s) on your app release. By unselecting this option you can update metadata keeping the APKs untouched.",
             "visibleRule": "shouldAttachMetadata = true"
         },
         {
@@ -137,7 +137,7 @@
             "defaultValue": "all",
             "groupName": "advanced",
             "required": false,
-            "helpMarkDown": "Specify version codes to replace in the selected track with the new APKs: all, the comma separated list, or a regilar expression pattern.",
+            "helpMarkDown": "Specify version codes to replace in the selected track with the new APKs: all, the comma separated list, or a regular expression pattern.",
             "options": {
                 "all": "All",
                 "list": "List",
@@ -161,7 +161,7 @@
             "defaultValue": "",
             "groupName": "advanced",
             "required": true,
-            "helpMarkDown": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. .*12?(3|4)?5 .",
+            "helpMarkDown": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. .*12?(3|4)?5",
             "visibleRule": "versionCodeFilterType = expression"
         }
     ],
@@ -178,7 +178,7 @@
     },
     "messages": {
         "InvalidAuthFile": "%s is not a valid auth file",
-        "FoundMultiApks": "Found multiple Apks to upload:",
+        "FoundMultiApks": "Found multiple APKs to upload:",
         "GetNewEditAfterAuth": "Authenticated with Google Play and getting new edit ",
         "UploadApk": "Uploading APK file %s...",
         "UpdateTrack": "Updating track information...",
@@ -200,7 +200,7 @@
         "CannotCreateTransaction": "Failed to create a new edit transaction for the package %s. See log for details.",
         "CannotUploadApk": "Failed to upload the APK %s. See log for details.",
         "CannotDownloadTrack": "Failed to download track %s information. See log for details.",
-        "CannotUpdateTrack": "Failed to download track %s information. See log for details.",
+        "CannotUpdateTrack": "Failed to update track %s information. See log for details.",
         "CanotReadChangeLog": "Changelog reading failed for %s. Check logs for details.",
         "CannotUploadChangelog": "Failed to upload the %s changelog %s version %s. See log for details.",
         "CannotCreateListing": "Failed to create the loacalized %s store listing.",
