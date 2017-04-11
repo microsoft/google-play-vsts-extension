@@ -101,7 +101,7 @@
             "label": "Update Metadata",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Checking this box will make the task attempt to update the metadata on your app release."
+            "helpMarkDown": "Select this option to update the metadata on your app release."
         },
         {
             "name": "metadataRootPath",
@@ -161,7 +161,7 @@
             "defaultValue": "",
             "groupName": "advanced",
             "required": true,
-            "helpMarkDown": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. .*12?(3|4)?5",
+            "helpMarkDown": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. `.*12?(3|4)?5`",
             "visibleRule": "versionCodeFilterType = expression"
         }
     ],
@@ -178,6 +178,7 @@
     },
     "messages": {
         "InvalidAuthFile": "%s is not a valid auth file",
+        "FoundMainApk": "Found main APK to upload: %s (version code %s)",
         "FoundMultiApks": "Found multiple APKs to upload:",
         "GetNewEditAfterAuth": "Authenticated with Google Play and getting new edit ",
         "UploadApk": "Uploading APK file %s...",
@@ -201,9 +202,9 @@
         "CannotUploadApk": "Failed to upload the APK %s. See log for details.",
         "CannotDownloadTrack": "Failed to download track %s information. See log for details.",
         "CannotUpdateTrack": "Failed to update track %s information. See log for details.",
-        "CanotReadChangeLog": "Changelog reading failed for %s. Check logs for details.",
+        "CannotReadChangeLog": "Failed to read change log %s. Check logs for details.",
         "CannotUploadChangelog": "Failed to upload the %s changelog %s version %s. See log for details.",
-        "CannotCreateListing": "Failed to create the loacalized %s store listing.",
+        "CannotCreateListing": "Failed to create the localized %s store listing.",
         "IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s"
     }
 }

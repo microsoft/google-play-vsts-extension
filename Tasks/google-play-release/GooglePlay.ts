@@ -85,12 +85,13 @@ async function run() {
         }
 
         let mainApkPattern = tl.getPathInput('apkFile', true);
-        tl.debug(`Main APK pattern: ${mainApkPattern}.`);
+        tl.debug(`Main APK pattern: ${mainApkPattern}`);
 
         let apkFile: string = resolveGlobPath(mainApkPattern);
         tl.checkPath(apkFile, 'apkFile');
         let mainVersionCode = apkParser.readFile(apkFile).readManifestSync().versionCode;
-        tl.debug(`    Found the main APK file: ${apkFile}, versionCode: ${mainVersionCode}.`);
+        console.log(tl.loc('FoundMainApk', apkFile, mainVersionCode));
+        tl.debug(`    Found the main APK file: ${apkFile} (version code ${mainVersionCode}).`);
 
         let apkFileList: string[] = getAllApkPaths(apkFile);
         if (apkFileList.length > 1) {
@@ -103,7 +104,7 @@ async function run() {
         if (versionCodeFilterType === 'list') {
             versionCodeFilter = getVersionCodeListInput();
         } else if (versionCodeFilterType === 'expression') {
-            versionCodeFilter = tl.getInput('replaceExpression', false);
+            versionCodeFilter = tl.getInput('replaceExpression', true);
         }
 
         let track: string = tl.getInput('track', true);
@@ -134,7 +135,7 @@ async function run() {
         // #6) Specify the new change log
         // #7) Commit the edit transaction
 
-        tl.debug(`Getting a package name from ${apkFile}.`);
+        tl.debug(`Getting a package name from ${apkFile}`);
         let packageName: string = getPackageName(apkFile);
         updateGlobalParams(globalParams, 'packageName', packageName);
 
@@ -158,9 +159,9 @@ async function run() {
             tl.debug(`Uploading ${apkFileList.length} APK(s).`);
 
             for (let apkFile of apkFileList) {
-                tl.debug(`Uploading APK ${apkFile}.`);
+                tl.debug(`Uploading APK ${apkFile}`);
                 let apk: Apk = await addApk(edits, packageName, apkFile, APK_MIME_TYPE);
-                tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}.`);
+                tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}`);
                 apkVersionCodes.push(apk.versionCode);
             }
 
@@ -172,14 +173,14 @@ async function run() {
 
         if (shouldAttachMetadata) {
             console.log(tl.loc('AttachingMetadataToRelease'));
-            tl.debug(`Uploading metadata ${changelogFile} from ${metadataRootPath}.`);
+            tl.debug(`Uploading metadata ${changelogFile} from ${metadataRootPath}`);
             await addMetadata(edits, apkVersionCodes, changelogFile, metadataRootPath);
         } else if (!changelogFile) {
             tl.debug(`Upload the common change log ${changelogFile} to all versions`);
             await uploadCommonChangeLog(edits, 'en-US', changelogFile, apkVersionCodes);
         }
 
-        tl.debug('Commiting the edit transaction in Google Play.');
+        tl.debug('Committing the edit transaction in Google Play.');
         await commitEditTransaction(edits, track);
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));
     } catch (e) {
@@ -270,7 +271,7 @@ async function addApk(edits: any, packageName: string, apkFile: string, APK_MIME
 
         return res;
     } catch (e) {
-        tl.debug(`Failed to upload the APK ${apkFile}.`);
+        tl.debug(`Failed to upload the APK ${apkFile}`);
         tl.debug(e);
         throw new Error(tl.loc('CannotUploadApk', apkFile));
     }
@@ -385,12 +386,12 @@ async function uploadCommonChangeLog(edits: any, languageCode: string, changelog
 
     if (stats && stats.isFile()) {
         for (let apkVersionCode of apkVersionCodes) {
-            tl.debug(`Adding the changelog file ${changelogFile} to the APK version code ${apkVersionCode}`);
+            tl.debug(`Adding the change log file ${changelogFile} to the APK version code ${apkVersionCode}`);
             await addChangelog(edits, 'en-US', changelogFile, apkVersionCode);
-            tl.debug(`Successfully added the changelog file ${changelogFile} to the APK version code ${apkVersionCode}`);
+            tl.debug(`Successfully added the change log file ${changelogFile} to the APK version code ${apkVersionCode}`);
         }
     } else {
-        tl.debug(`The change log path ${changelogFile} either does not exists or points to a directory. Ignoring...`);
+        tl.debug(`The change log path ${changelogFile} either does not exist or points to a directory. Ignoring...`);
     }
 }
 
@@ -408,9 +409,9 @@ async function addChangelog(edits: any, languageCode: string, changelogFile: str
     try {
         changelog = fs.readFileSync(changelogFile).toString();
     } catch (e) {
-        tl.debug(`Changelog reading failed for ${changelogFile}.`);
+        tl.debug(`Changelog reading failed for ${changelogFile}`);
         tl.debug(e);
-        throw new Error(tl.loc('CanotReadChangeLog', changelogFile));
+        throw new Error(tl.loc('CannotReadChangeLog', changelogFile));
     }
 
     let requestParameters: PackageParams = {
@@ -426,7 +427,7 @@ async function addChangelog(edits: any, languageCode: string, changelogFile: str
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
         await edits.apklistings.updateAsync(requestParameters);
     } catch (e) {
-        tl.debug(`Failed to upload the ${languageCode} changelog ${changelogFile} version ${apkVersionCode}.`);
+        tl.debug(`Failed to upload the ${languageCode} changelog ${changelogFile} version ${apkVersionCode}`);
         tl.debug(e);
         throw new Error(tl.loc('CannotUploadChangelog', languageCode, changelogFile, apkVersionCode));
     }
@@ -473,7 +474,7 @@ async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: 
             await addChangelog(edits, languageCode, fullChangelogPath, changelogVersion);
             tl.debug(`Successfully uploaded change log version ${changelogVersion} from ${fullChangelogPath} for language code ${languageCode}`);
         } else {
-            tl.debug(`The name of the file ${changelogFile} is not a valid version code. Skip it.`);
+            tl.debug(`The name of the file ${changelogFile} is not a valid version code. Skipping it.`);
         }
     }
 
@@ -527,12 +528,12 @@ async function addMetadata(edits: any, apkVersionCodes: number[], changelogFile:
             return false;
     }});
 
-    tl.debug(`Found language codes: ${metadataLanguageCodes}.`);
+    tl.debug(`Found language codes: ${metadataLanguageCodes}`);
 
     for (let languageCode of metadataLanguageCodes) {
         let metadataDirectory: string = path.join(metadataRootDirectory, languageCode);
 
-        tl.debug(`Uploading metadata from ${metadataDirectory} for language code ${languageCode} and version codes ${apkVersionCodes}.`);
+        tl.debug(`Uploading metadata from ${metadataDirectory} for language code ${languageCode} and version codes ${apkVersionCodes}`);
         await uploadMetadataWithLanguageCode(edits, apkVersionCodes, changelogFile, languageCode, metadataDirectory);
     }
 }
@@ -547,7 +548,7 @@ async function addMetadata(edits: any, apkVersionCodes: number[], changelogFile:
 async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: number[], changelogFile: string, languageCode: string, directory: string) {
     console.log(tl.loc('UploadingMetadataForLanguage', directory, languageCode));
 
-    tl.debug(`Adding loacalized store listing for language code ${languageCode} from ${directory}.`);
+    tl.debug(`Adding localized store listing for language code ${languageCode} from ${directory}`);
     await addLanguageListing(edits, languageCode, directory);
 
     tl.debug(`Uploading change logs for language code ${languageCode} from ${directory}`);
@@ -571,14 +572,14 @@ async function addLanguageListing(edits: any, languageCode: string, directory: s
     patchListingRequestParameters.resource = createPatchListingResource(languageCode, directory);
 
     try {
-        tl.debug(`Uploading a loacalized ${languageCode} store listing.`);
+        tl.debug(`Uploading a localized ${languageCode} store listing.`);
         tl.debug('Request Parameters: ' + JSON.stringify(patchListingRequestParameters));
-        // The patchAsync method fails if the listing for the language does not exists,
+        // The patchAsync method fails if the listing for the language does not exist,
         // while updateAsync actually updates or creates.
         await edits.listings.updateAsync(patchListingRequestParameters);
-        tl.debug(`Successfully uploaded a loacalized ${languageCode} store listing.`);
+        tl.debug(`Successfully uploaded a localized ${languageCode} store listing.`);
     } catch (e) {
-        tl.debug(`Failed to create the loacalized ${languageCode} store listing.`);
+        tl.debug(`Failed to create the localized ${languageCode} store listing.`);
         tl.debug(e);
         throw new Error(tl.loc('CannotCreateListing', languageCode));
     }
@@ -885,13 +886,13 @@ function getAllApkPaths(mainApkFile: string): string[] {
 
     let additionalApks: string[] = tl.getDelimitedInput('additionalApks', '\n');
     additionalApks.forEach((additionalApk) => {
-        tl.debug(`Additional APK pattern: ${additionalApk}.`);
+        tl.debug(`Additional APK pattern: ${additionalApk}`);
         let apkPaths: string[] = resolveGlobPaths(additionalApk);
 
         apkPaths.forEach((apkPath) => {
             apkFileList[apkPath] = 0;
             let versionCode = apkParser.readFile(apkPath).readManifestSync().versionCode;
-            tl.debug(`    Found the additional APK file: ${apkPath}, versionCode: ${versionCode}.`);
+            tl.debug(`    Found the additional APK file: ${apkPath} (version code ${versionCode}).`);
         });
     });
 
