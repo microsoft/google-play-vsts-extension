@@ -178,6 +178,7 @@
   },
   "messages": {
     "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
+    "FoundMainApk": "ms-resource:loc.messages.FoundMainApk",
     "FoundMultiApks": "ms-resource:loc.messages.FoundMultiApks",
     "GetNewEditAfterAuth": "ms-resource:loc.messages.GetNewEditAfterAuth",
     "UploadApk": "ms-resource:loc.messages.UploadApk",
@@ -201,7 +202,7 @@
     "CannotUploadApk": "ms-resource:loc.messages.CannotUploadApk",
     "CannotDownloadTrack": "ms-resource:loc.messages.CannotDownloadTrack",
     "CannotUpdateTrack": "ms-resource:loc.messages.CannotUpdateTrack",
-    "CanotReadChangeLog": "ms-resource:loc.messages.CanotReadChangeLog",
+    "CannotReadChangeLog": "ms-resource:loc.messages.CannotReadChangeLog",
     "CannotUploadChangelog": "ms-resource:loc.messages.CannotUploadChangelog",
     "CannotCreateListing": "ms-resource:loc.messages.CannotCreateListing",
     "IncorrectVersionCodeFilter": "ms-resource:loc.messages.IncorrectVersionCodeFilter"

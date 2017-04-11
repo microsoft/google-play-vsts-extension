@@ -18,6 +18,10 @@ interface AndroidResource {
     userFraction?: number;
     language?: string;
     recentChanges?: string;
+    fullDescription?: string;
+    shortDescription?: string;
+    title?: string;
+    video?: string;
 }
 
 interface AndroidMedia {
@@ -569,7 +573,7 @@ async function addLanguageListing(edits: any, languageCode: string, directory: s
     let patchListingRequestParameters: PackageParams = {
         language: languageCode
     };
-    patchListingRequestParameters.resource = createPatchListingResource(languageCode, directory);
+    patchListingRequestParameters.resource = createListingResource(languageCode, directory);
 
     try {
         tl.debug(`Uploading a localized ${languageCode} store listing.`);
@@ -586,14 +590,14 @@ async function addLanguageListing(edits: any, languageCode: string, directory: s
 }
 
 /**
- * Helper method for creating the resource for the edits.listings.patch method.
+ * Helper method for creating the resource for the edits.listings.update method.
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
  * @param {string} directory Directory where updated listing details can be found.
- * @returns {Object} resource A crafted resource for the edits.listings.patch method.
- *                              { languageCode: string, fullDescription: string, shortDescription: string, title: string, video: string }
+ * @returns {AndroidResource} resource A crafted resource for the edits.listings.update method.
+ *          { languageCode: string, fullDescription: string, shortDescription: string, title: string, video: string }
  */
-function createPatchListingResource(languageCode: string, directory: string) { // TODO: the interface here is wrong!
-    tl.debug(`Constructing resource to patch listing with language code ${languageCode} from ${directory}`);
+function createListingResource(languageCode: string, directory: string): AndroidResource {
+    tl.debug(`Constructing resource to update listing with language code ${languageCode} from ${directory}`);
 
     let resourceParts = {
         fullDescription: 'full_description.txt',
@@ -602,7 +606,7 @@ function createPatchListingResource(languageCode: string, directory: string) { /
         video: 'video.txt'
     };
 
-    let resource = {
+    let resource: AndroidResource = {
         language: languageCode
     };
 
@@ -621,7 +625,7 @@ function createPatchListingResource(languageCode: string, directory: string) { /
         }
     }
 
-    tl.debug(`Finished constructing resource ${JSON.stringify(resource)}`);
+    tl.debug(`Finished constructing listing resource ${JSON.stringify(resource)}`);
     return resource;
 }
 
