@@ -52,11 +52,11 @@
   "loc.messages.RequestDetails": "Request Details: %s",
   "loc.messages.CannotGetPackageName": "The specified APK file %s is not valid. Please check the path and try to queue another build.",
   "loc.messages.CannotCreateTransaction": "Failed to create a new edit transaction for the package %s. See log for details.",
-  "loc.messages.CannotUploadApk": "Failed to upload the APK %s. See log for details.",
-  "loc.messages.CannotDownloadTrack": "Failed to download track %s information. See log for details.",
-  "loc.messages.CannotUpdateTrack": "Failed to update track %s information. See log for details.",
-  "loc.messages.CannotReadChangeLog": "Failed to read change log %s. Check logs for details.",
-  "loc.messages.CannotUploadChangelog": "Failed to upload the %s changelog %s version %s. See log for details.",
+  "loc.messages.CannotUploadApk": "Failed to upload the APK %s.",
+  "loc.messages.CannotDownloadTrack": "Failed to download track %s information",
+  "loc.messages.CannotUpdateTrack": "Failed to update track %s information.",
+  "loc.messages.CannotReadChangeLog": "Failed to read change log %s.",
+  "loc.messages.CannotUploadChangelog": "Failed to upload the %s changelog %s version %s.",
   "loc.messages.CannotCreateListing": "Failed to create the localized %s store listing.",
   "loc.messages.IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s"
 }

@@ -199,11 +199,11 @@
         "RequestDetails": "Request Details: %s",
         "CannotGetPackageName": "The specified APK file %s is not valid. Please check the path and try to queue another build.",
         "CannotCreateTransaction": "Failed to create a new edit transaction for the package %s. See log for details.",
-        "CannotUploadApk": "Failed to upload the APK %s. See log for details.",
-        "CannotDownloadTrack": "Failed to download track %s information. See log for details.",
-        "CannotUpdateTrack": "Failed to update track %s information. See log for details.",
-        "CannotReadChangeLog": "Failed to read change log %s. Check logs for details.",
-        "CannotUploadChangelog": "Failed to upload the %s changelog %s version %s. See log for details.",
+        "CannotUploadApk": "Failed to upload the APK %s.",
+        "CannotDownloadTrack": "Failed to download track %s information",
+        "CannotUpdateTrack": "Failed to update track %s information.",
+        "CannotReadChangeLog": "Failed to read change log %s.",
+        "CannotUploadChangelog": "Failed to upload the %s changelog %s version %s.",
         "CannotCreateListing": "Failed to create the localized %s store listing.",
         "IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s"
     }

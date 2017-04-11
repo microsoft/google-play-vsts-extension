@@ -787,7 +787,7 @@ async function uploadImage(edits: any, languageCode: string, imageType: string, 
         await edits.images.deleteallAsync(imageRequest);
         tl.debug(`Successfully removed old images of type ${imageType}.`);
     } catch (e) {
-        tl.debug(`Failed to removed old images of type ${imageType}.`);
+        tl.debug(`Failed to remove old images of type ${imageType}.`);
         tl.debug(e);
     }
 
