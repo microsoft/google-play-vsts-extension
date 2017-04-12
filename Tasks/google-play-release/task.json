@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "1",
-        "Minor": "112",
+        "Minor": "116",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
@@ -93,7 +93,7 @@
             "label": "Release Notes (File)",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "Path to the file specifying the release notes for the APK you are publishing."
+            "helpMarkDown": "Path to the file specifying the release notes (change log) for the APK you are publishing."
         },
         {
             "name": "shouldAttachMetadata",
@@ -101,7 +101,7 @@
             "label": "Update Metadata",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Checking this box will make the task attempt to update the metadata on your app release"
+            "helpMarkDown": "Select this option to update the metadata on your app release."
         },
         {
             "name": "metadataRootPath",
@@ -109,7 +109,16 @@
             "label": "Metadata Root Directory",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The path to the metadata folder with the fastlane metadata structure",
+            "helpMarkDown": "The path to the metadata folder with the fastlane metadata structure.",
+            "visibleRule": "shouldAttachMetadata = true"
+        },
+        {
+            "name": "shouldUploadApks",
+            "type": "boolean",
+            "label": "Update APK(s)",
+            "defaultValue": true,
+            "required": false,
+            "helpMarkDown": "By default, the task will update the specified binary APK file(s) on your app release. By unselecting this option you can update metadata keeping the APKs untouched.",
             "visibleRule": "shouldAttachMetadata = true"
         },
         {
@@ -119,7 +128,41 @@
             "defaultValue": "",
             "groupName": "advanced",
             "required": false,
-            "helpMarkDown": "Paths to additional APK files you want to publish to the specified track (e.g. an x86 build). Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory. Supports multiple lines or minimatch patterns."
+            "helpMarkDown": "Paths to additional APK files you want to publish to the specified track (e.g. an x86 build). Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match all APK files, in any directory."
+        },
+        {
+            "name": "versionCodeFilterType",
+            "type": "pickList",
+            "label": "Replace version codes",
+            "defaultValue": "all",
+            "groupName": "advanced",
+            "required": false,
+            "helpMarkDown": "Specify version codes to replace in the selected track with the new APKs: all, the comma separated list, or a regular expression pattern.",
+            "options": {
+                "all": "All",
+                "list": "List",
+                "expression": "Regular expression"
+            }
+        },
+        {
+            "name": "replaceList",
+            "type": "string",
+            "label": "Version code list",
+            "defaultValue": "",
+            "groupName": "advanced",
+            "required": true,
+            "helpMarkDown": "The comma separated list of APK version codes to be removed from the track with this deployment.",
+            "visibleRule": "versionCodeFilterType = list"
+        },
+        {
+            "name": "replaceExpression",
+            "type": "string",
+            "label": "Version code pattern",
+            "defaultValue": "",
+            "groupName": "advanced",
+            "required": true,
+            "helpMarkDown": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
+            "visibleRule": "versionCodeFilterType = expression"
         }
     ],
     "execution": {
@@ -134,11 +177,9 @@
         }
     },
     "messages": {
-        "InvalidAuthFile": "Specified Auth file was invalid",
-        "InvalidAuthFilewithName": "%s was not a valid auth file",
-        "JsonKeyFileNotFound": "The service account JSON key file could not be found.",
-        "EndpointNotFound": "The Service Endpoint could not be found.",
-        "FoundMultiApks": "Found multiple Apks to upload: ",
+        "InvalidAuthFile": "%s is not a valid auth file",
+        "FoundMainApk": "Found main APK to upload: %s (version code %s)",
+        "FoundMultiApks": "Found multiple APKs to upload:",
         "GetNewEditAfterAuth": "Authenticated with Google Play and getting new edit ",
         "UploadApk": "Uploading APK file %s...",
         "UpdateTrack": "Updating track information...",
@@ -155,6 +196,15 @@
         "StatNotDirectory": "Stat returned that %s was not a directory. Is there a file that shares this name?",
         "ImageDirNotFound": "Image directory for %s was not found. Skipping...",
         "UploadImageFail": "Failed to upload image.",
-        "RequestDetails": "Request Details: %s"
+        "RequestDetails": "Request Details: %s",
+        "CannotGetPackageName": "The specified APK file %s is not valid. Please check the path and try to queue another build.",
+        "CannotCreateTransaction": "Failed to create a new edit transaction for the package %s. See log for details.",
+        "CannotUploadApk": "Failed to upload the APK %s.",
+        "CannotDownloadTrack": "Failed to download track %s information",
+        "CannotUpdateTrack": "Failed to update track %s information.",
+        "CannotReadChangeLog": "Failed to read change log %s.",
+        "CannotUploadChangelog": "Failed to upload the %s changelog %s version %s.",
+        "CannotCreateListing": "Failed to create the localized %s store listing.",
+        "IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s"
     }
 }
