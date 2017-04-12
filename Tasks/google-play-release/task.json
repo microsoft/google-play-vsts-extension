@@ -161,7 +161,7 @@
             "defaultValue": "",
             "groupName": "advanced",
             "required": true,
-            "helpMarkDown": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. `.*12?(3|4)?5`",
+            "helpMarkDown": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
             "visibleRule": "versionCodeFilterType = expression"
         }
     ],

@@ -29,7 +29,7 @@
   "loc.input.label.replaceList": "Version code list",
   "loc.input.help.replaceList": "The comma separated list of APK version codes to be removed from the track with this deployment.",
   "loc.input.label.replaceExpression": "Version code pattern",
-  "loc.input.help.replaceExpression": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. `.*12?(3|4)?5`",
+  "loc.input.help.replaceExpression": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
   "loc.messages.InvalidAuthFile": "%s is not a valid auth file",
   "loc.messages.FoundMainApk": "Found main APK to upload: %s (version code %s)",
   "loc.messages.FoundMultiApks": "Found multiple APKs to upload:",
