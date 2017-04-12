@@ -88,20 +88,30 @@
             "visibleRule": "track = rollout"
         },
         {
-            "name": "changeLogFile",
-            "type": "filePath",
-            "label": "Release Notes (File)",
-            "defaultValue": "",
-            "required": false,
-            "helpMarkDown": "Path to the file specifying the release notes (change log) for the APK you are publishing."
-        },
-        {
             "name": "shouldAttachMetadata",
             "type": "boolean",
             "label": "Update Metadata",
             "defaultValue": false,
             "required": false,
             "helpMarkDown": "Select this option to update the metadata on your app release."
+        },
+        {
+            "name": "changeLogFile",
+            "type": "filePath",
+            "label": "Release Notes (File)",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Path to the file specifying the release notes (change log) for the APK you are publishing.",
+            "visibleRule": "shouldAttachMetadata = false"
+        },
+        {
+            "name": "languageCode",
+            "type": "string",
+            "label": "Language Code",
+            "defaultValue": "en-US",
+            "required": false,
+            "helpMarkDown": "An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_",
+            "visibleRule": "shouldAttachMetadata = false"
         },
         {
             "name": "metadataRootPath",
@@ -118,8 +128,7 @@
             "label": "Update APK(s)",
             "defaultValue": true,
             "required": false,
-            "helpMarkDown": "By default, the task will update the specified binary APK file(s) on your app release. By unselecting this option you can update metadata keeping the APKs untouched.",
-            "visibleRule": "shouldAttachMetadata = true"
+            "helpMarkDown": "By default, the task will update the specified binary APK file(s) on your app release. By unselecting this option you can update metadata keeping the APKs untouched."
         },
         {
             "name": "additionalApks",
@@ -203,7 +212,7 @@
         "CannotDownloadTrack": "Failed to download track %s information",
         "CannotUpdateTrack": "Failed to update track %s information.",
         "CannotReadChangeLog": "Failed to read change log %s.",
-        "CannotUploadChangelog": "Failed to upload the %s changelog %s version %s.",
+        "CannotUploadChangelog": "Failed to upload the %s change log for version %s.",
         "CannotCreateListing": "Failed to create the localized %s store listing.",
         "IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s"
     }

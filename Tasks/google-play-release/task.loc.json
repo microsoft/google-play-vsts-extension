@@ -88,20 +88,30 @@
       "visibleRule": "track = rollout"
     },
     {
-      "name": "changeLogFile",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.changeLogFile",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.changeLogFile"
-    },
-    {
       "name": "shouldAttachMetadata",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.shouldAttachMetadata",
       "defaultValue": false,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.shouldAttachMetadata"
+    },
+    {
+      "name": "changeLogFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.changeLogFile",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogFile",
+      "visibleRule": "shouldAttachMetadata = false"
+    },
+    {
+      "name": "languageCode",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.languageCode",
+      "defaultValue": "en-US",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.languageCode",
+      "visibleRule": "shouldAttachMetadata = false"
     },
     {
       "name": "metadataRootPath",
@@ -118,8 +128,7 @@
       "label": "ms-resource:loc.input.label.shouldUploadApks",
       "defaultValue": true,
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadApks",
-      "visibleRule": "shouldAttachMetadata = true"
+      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadApks"
     },
     {
       "name": "additionalApks",
