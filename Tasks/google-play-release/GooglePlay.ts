@@ -113,12 +113,19 @@ async function run() {
 
         let track: string = tl.getInput('track', true);
         let userFraction: number = Number(tl.getInput('userFraction', false)); // Used for staged rollouts
-        let changelogFile: string = tl.getInput('changelogFile', false);
+
         let shouldAttachMetadata: boolean = tl.getBoolInput('shouldAttachMetadata', false);
-        let shouldUploadApks: boolean = !shouldAttachMetadata || tl.getBoolInput('shouldUploadApks', false);
+        let shouldUploadApks: boolean = tl.getBoolInput('shouldUploadApks', false);
+
+        let changelogFile: string = null;
+        let languageCode: string = null;
         let metadataRootPath: string = null;
+
         if (shouldAttachMetadata) {
             metadataRootPath = tl.getPathInput('metadataRootPath', true, true);
+        } else {
+            changelogFile = tl.getInput('changelogFile', false);
+            languageCode = tl.getInput('languageCode', false) || 'en-US';
         }
 
         // Constants
@@ -173,15 +180,24 @@ async function run() {
             tl.debug(`Updating the track ${track}.`);
             let updatedTrack: Track = await updateTrack(edits, packageName, track, apkVersionCodes, versionCodeFilterType, versionCodeFilter, userFraction);
             tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
+        } else {
+            tl.debug(`Getting APK version codes of ${apkFileList.length} APK(s).`);
+
+            for (let apkFile of apkFileList) {
+                tl.debug(`Getting version code of APK ${apkFile}`);
+                let apkVersionCode: number = apkParser.readFile(apkFile).readManifestSync().versionCode;
+                tl.debug(`Got APK ${apkFile} version code: ${apkVersionCode}`);
+                apkVersionCodes.push(apkVersionCode);
+            }
         }
 
         if (shouldAttachMetadata) {
             console.log(tl.loc('AttachingMetadataToRelease'));
-            tl.debug(`Uploading metadata ${changelogFile} from ${metadataRootPath}`);
-            await addMetadata(edits, apkVersionCodes, changelogFile, metadataRootPath);
-        } else if (!changelogFile) {
+            tl.debug(`Uploading metadata from ${metadataRootPath}`);
+            await addMetadata(edits, apkVersionCodes, metadataRootPath);
+        } else if (changelogFile) {
             tl.debug(`Upload the common change log ${changelogFile} to all versions`);
-            await uploadCommonChangeLog(edits, 'en-US', changelogFile, apkVersionCodes);
+            await uploadCommonChangeLog(edits, languageCode, changelogFile, apkVersionCodes);
         }
 
         tl.debug('Committing the edit transaction in Google Play.');
@@ -207,12 +223,12 @@ function getPackageName(apkFile: string): string {
             .readManifestSync()
             .package;
         if (packageName) {
-            tl.debug(`name extraction from apk ${apkFile} succeeded: ${packageName}`);
+            tl.debug(`Successfully extracted the package name ${packageName} from the APK ${apkFile}`);
         } else {
-            throw new Error('node-apk-parser returned empty package name.');
+            throw new Error('node-apk-parser returned an empty package name.');
         }
     } catch (e) {
-        tl.debug(`name extraction from apk ${apkFile} failed:`);
+        tl.debug(`Failed extracting a package name from the APK ${apkFile}`);
         tl.debug(e);
         throw new Error(tl.loc('CannotGetPackageName', apkFile));
     }
@@ -389,9 +405,12 @@ async function uploadCommonChangeLog(edits: any, languageCode: string, changelog
     let stats: fs.Stats = fs.statSync(changelogFile);
 
     if (stats && stats.isFile()) {
+        console.log(tl.loc('AppendChangelog', changelogFile));
+        let changeLog = getChangelog(changelogFile);
+
         for (let apkVersionCode of apkVersionCodes) {
             tl.debug(`Adding the change log file ${changelogFile} to the APK version code ${apkVersionCode}`);
-            await addChangelog(edits, 'en-US', changelogFile, apkVersionCode);
+            await addChangelog(edits, languageCode, changeLog, apkVersionCode);
             tl.debug(`Successfully added the change log file ${changelogFile} to the APK version code ${apkVersionCode}`);
         }
     } else {
@@ -408,22 +427,13 @@ async function uploadCommonChangeLog(edits: any, languageCode: string, changelog
  * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-async function addChangelog(edits: any, languageCode: string, changelogFile: string, apkVersionCode: number) {
-    let changelog: string;
-    try {
-        changelog = fs.readFileSync(changelogFile).toString();
-    } catch (e) {
-        tl.debug(`Changelog reading failed for ${changelogFile}`);
-        tl.debug(e);
-        throw new Error(tl.loc('CannotReadChangeLog', changelogFile));
-    }
-
+async function addChangelog(edits: any, languageCode: string, changeLog: string, apkVersionCode: number) {
     let requestParameters: PackageParams = {
         apkVersionCode: apkVersionCode,
         language: languageCode,
         resource: {
             language: languageCode,
-            recentChanges: changelog
+            recentChanges: changeLog
         }
     };
 
@@ -431,10 +441,31 @@ async function addChangelog(edits: any, languageCode: string, changelogFile: str
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
         await edits.apklistings.updateAsync(requestParameters);
     } catch (e) {
-        tl.debug(`Failed to upload the ${languageCode} changelog ${changelogFile} version ${apkVersionCode}`);
+        tl.debug(`Failed to upload the ${languageCode} changelog for version ${apkVersionCode}`);
         tl.debug(e);
-        throw new Error(tl.loc('CannotUploadChangelog', languageCode, changelogFile, apkVersionCode));
+        throw new Error(tl.loc('CannotUploadChangelog', languageCode, apkVersionCode));
     }
+}
+
+/**
+ * Reads a change log from a file
+ * Assumes authorized
+ * @param {string} changelogFile Path to changelog file.
+ * @returns {string} change log file content as a string.
+ */
+function getChangelog(changelogFile: string): string {
+    let changelog: string;
+    tl.debug(`Reading change log from ${changelogFile}`);
+
+    try {
+        changelog = fs.readFileSync(changelogFile).toString();
+    } catch (e) {
+        tl.debug(`Change log reading from ${changelogFile} failed`);
+        tl.debug(e);
+        throw new Error(tl.loc('CannotReadChangeLog', changelogFile));
+    }
+
+    return changelog;
 }
 
 /**
@@ -474,8 +505,10 @@ async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: 
             let fullChangelogPath: string = path.join(changelogDir, changelogFile);
 
             console.log(tl.loc('AppendChangelog', fullChangelogPath));
+            let changeLog = getChangelog(fullChangelogPath);
+
             tl.debug(`Uploading change log version ${changelogVersion} from ${fullChangelogPath} for language code ${languageCode}`);
-            await addChangelog(edits, languageCode, fullChangelogPath, changelogVersion);
+            await addChangelog(edits, languageCode, changeLog, changelogVersion);
             tl.debug(`Successfully uploaded change log version ${changelogVersion} from ${fullChangelogPath} for language code ${languageCode}`);
         } else {
             tl.debug(`The name of the file ${changelogFile} is not a valid version code. Skipping it.`);
@@ -483,7 +516,7 @@ async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: 
     }
 
     if (!versionCodeFound && (changelogs.length === 1)) {
-        tl.debug(`Applying file ${changelogs[0]} to all version codes`);
+        tl.debug(`Applying the ${languageCode} change log file ${changelogs[0]} to all version codes`);
         let fullChangelogPath: string = path.join(changelogDir, changelogs[0]);
         await uploadCommonChangeLog(edits, languageCode, fullChangelogPath, apkVersionCodes);
     }
@@ -521,7 +554,7 @@ async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: 
  * @param {string} metadataRootDirectory Path to the folder where the Fastlane metadata structure is found. eg the folders under this directory should be the language codes
  * @returns {Promise<void>}
  */
-async function addMetadata(edits: any, apkVersionCodes: number[], changelogFile: string, metadataRootDirectory: string) {
+async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDirectory: string) {
     let metadataLanguageCodes: string[] = fs.readdirSync(metadataRootDirectory).filter((subPath) => {
         try {
             return fs.statSync(path.join(metadataRootDirectory, subPath)).isDirectory();
@@ -538,7 +571,7 @@ async function addMetadata(edits: any, apkVersionCodes: number[], changelogFile:
         let metadataDirectory: string = path.join(metadataRootDirectory, languageCode);
 
         tl.debug(`Uploading metadata from ${metadataDirectory} for language code ${languageCode} and version codes ${apkVersionCodes}`);
-        await uploadMetadataWithLanguageCode(edits, apkVersionCodes, changelogFile, languageCode, metadataDirectory);
+        await uploadMetadataWithLanguageCode(edits, apkVersionCodes, languageCode, metadataDirectory);
     }
 }
 
@@ -549,7 +582,7 @@ async function addMetadata(edits: any, apkVersionCodes: number[], changelogFile:
  * @param {string} directory Directory where updated listing details can be found.
  * @returns {Promise<void>}
  */
-async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: number[], changelogFile: string, languageCode: string, directory: string) {
+async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: number[], languageCode: string, directory: string) {
     console.log(tl.loc('UploadingMetadataForLanguage', directory, languageCode));
 
     tl.debug(`Adding localized store listing for language code ${languageCode} from ${directory}`);
@@ -570,17 +603,17 @@ async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: numbe
  * @returns {Promise<void>}
  */
 async function addLanguageListing(edits: any, languageCode: string, directory: string) {
-    let patchListingRequestParameters: PackageParams = {
+    let listingRequestParameters: PackageParams = {
         language: languageCode
     };
-    patchListingRequestParameters.resource = createListingResource(languageCode, directory);
+    listingRequestParameters.resource = createListingResource(languageCode, directory);
 
     try {
         tl.debug(`Uploading a localized ${languageCode} store listing.`);
-        tl.debug('Request Parameters: ' + JSON.stringify(patchListingRequestParameters));
+        tl.debug('Request Parameters: ' + JSON.stringify(listingRequestParameters));
         // The patchAsync method fails if the listing for the language does not exist,
         // while updateAsync actually updates or creates.
-        await edits.listings.updateAsync(patchListingRequestParameters);
+        await edits.listings.updateAsync(listingRequestParameters);
         tl.debug(`Successfully uploaded a localized ${languageCode} store listing.`);
     } catch (e) {
         tl.debug(`Failed to create the localized ${languageCode} store listing.`);
