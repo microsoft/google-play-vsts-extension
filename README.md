@@ -95,21 +95,40 @@ In addition to the custom service endpoint, this extension also contributes the 
 
 Allows you to release an update to your app on Google Play, and includes the following options:
 
-![Release task](images/release-task-with-advanced.png)
+1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), 
 
-1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo.
+    ![JSON Auth File](images/auth-with-json-file.png)
+
+    or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). 
+
+    ![Service Endpoint](images/auth-with-endpoint.png)
+
+    Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo.
+
 
 2. **APK Path** *(File path, Required)* - Path to the APK file you want to publish to the specified track.
 
+    ![APK Path](images/apk-path.png)
+
 3. **Track** *(String, Required)* - Release track to publish the APK to.
+
+    ![Track](images/track.png)
 
 4. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the specified APK out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). This option is only available when the **Track** input is set to **Rollout**.
 
+    ![Rollout Fraction](images/rollout-fraction.png)
+
 5. **Release Notes** *(File path)* - Path to the file specifying the release notes for the APK you are publishing.
 
-6. **Update Metadata** *(Boolean, Optional)* - Allows automating metadata updates to the Google Play store by leveraging the contents of the `Metadata Root Directory`.
+    ![Release Notes](images/release-notes.png)
 
-7. **Metadata Root Directory** *(String, Required if visible)* - Root directory for metadata related files. Becomes available after enabling the `Update Metadata` option. Expects a format similar to the Fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) which is summarized below:
+6. **Language Code** *(String, Optional)* - An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_.
+
+7. **Update Metadata** *(Boolean, Optional)* - Allows automating metadata updates to the Google Play store by leveraging the contents of the `Metadata Root Directory`.
+
+    ![Update Metadata](images/update-metadata.png)
+
+8. **Metadata Root Directory** *(String, Required if visible)* - Root directory for metadata related files. Becomes available after enabling the `Update Metadata` option. Expects a format similar to fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) which is summarized below:
  
 ```
 $(Specified Directory)
@@ -137,9 +156,17 @@ $(Specified Directory)
        └ $(versioncodes).txt
 ```
 
+9. **Update APK(s)** *(Boolean, Optional)* - By default, the task will update the specified binary APK file(s) on your app release. By unselecting this option you can update metadata keeping the APKs untouched. Default value is _true_.
+
+    ![Update APKs](images/update-apks.png)
+
 #### Advanced Options
 
 1. **Additional APK Path(s)** *(Text box)* - Paths to additional APK files you want to publish to the specified track (e.g. an x86 build) separated by new lines. This option allows the usage of wildcards and/or minimatch patterns. For example, **/*.apk to match the first APK file, in any directory.
+
+    ![Advanced Options](images/advanced-options.png)
+
+2. **Replace version codes** *(String, Required)* - You may specify which APK version codes should be replaced in the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
 
 ### Google Play - Promote
 
@@ -172,6 +199,7 @@ Allows you to increase the rollout percentage of an app that was previously rele
 ## Contact Us
 
 * [Report an issue](https://github.com/Microsoft/google-play-vsts-extension/issues)
+
 Google Play and the Google Play logo are trademarks of Google Inc.
 
 
