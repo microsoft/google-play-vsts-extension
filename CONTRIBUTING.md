@@ -69,7 +69,7 @@ The package command will package the extension into a Visual Studio extension in
 
 From the root of the repo:
 ```bash
-gulp createtest
+gulp create
 ```
 The VSIX package will be created in the root of the repository.
 
