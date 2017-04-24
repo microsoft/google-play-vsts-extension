@@ -212,7 +212,7 @@ async function run() {
 /**
  * Tries to extract the package name from an apk file
  * @param {Object} apkFile The apk file from which to attempt name extraction
- * @return {string} packageName Name extracted from package.
+ * @returns {string} packageName Name extracted from package.
  */
 function getPackageName(apkFile: string): string {
     let packageName: string = null;
@@ -240,7 +240,7 @@ function getPackageName(apkFile: string): string {
  * Uses the provided JWT client to request a new edit from the Play store and attach the edit id to all requests made this session
  * Assumes authorized
  * @param {string} packageName unique android package name (com.android.etc)
- * @return {Promise} edit A promise that will return result from inserting a new edit
+ * @returns {Promise<Edit>} edit A promise that will return result from inserting a new edit
  *                          { id: string, expiryTimeSeconds: string }
  */
 async function getNewEdit(edits: any, globalParams: GlobalParams, packageName: string): Promise<Edit> {
@@ -399,7 +399,7 @@ async function updateTrack(
  * Uploads change log files if specified for all the apk version codes in the update
  * @param changelogFile
  * @param apkVersionCodes
- * @returns {*}
+ * @returns nothing
  */
 async function uploadCommonChangeLog(edits: any, languageCode: string, changelogFile: string, apkVersionCodes: number[]) {
     let stats: fs.Stats = fs.statSync(changelogFile);
@@ -424,8 +424,7 @@ async function uploadCommonChangeLog(edits: any, languageCode: string, changelog
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
  * @param {string} changelogFile Path to changelog file.
  * @param {integer} APK version code
- * @returns {Promise} track A promise that will return result from updating a track
- *                            { track: string, versionCodes: [integer], userFraction: double }
+ * @returns nothing
  */
 async function addChangelog(edits: any, languageCode: string, changeLog: string, apkVersionCode: number) {
     let requestParameters: PackageParams = {
@@ -473,8 +472,7 @@ function getChangelog(changelogFile: string): string {
  * Assumes authorized
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
  * @param {string} directory Directory with a changesogs folder where changelogs can be found.
- * @returns {Promise} track A promise that will return result from updating an apk listing
- *                            { language: string, recentChanges: string }
+ * @returns nothing
  */
 async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: string, directory: string) {
     let changelogDir: string = path.join(directory, 'changelogs');
@@ -552,7 +550,7 @@ async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: 
  *      └ $(versioncodes).txt
  *
  * @param {string} metadataRootDirectory Path to the folder where the Fastlane metadata structure is found. eg the folders under this directory should be the language codes
- * @returns {Promise<void>}
+ * @returns nothing
  */
 async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDirectory: string) {
     let metadataLanguageCodes: string[] = fs.readdirSync(metadataRootDirectory).filter((subPath) => {
@@ -580,7 +578,7 @@ async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDi
  * Assumes authorized
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
  * @param {string} directory Directory where updated listing details can be found.
- * @returns {Promise<void>}
+ * @returns nothing
  */
 async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: number[], languageCode: string, directory: string) {
     console.log(tl.loc('UploadingMetadataForLanguage', directory, languageCode));
@@ -600,7 +598,7 @@ async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: numbe
  * Assumes authorized
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
  * @param {string} directory Directory where updated listing details can be found.
- * @returns {Promise<void>}
+ * @returns nothing
  */
 async function addLanguageListing(edits: any, languageCode: string, directory: string) {
     let listingRequestParameters: PackageParams = {
@@ -667,27 +665,54 @@ function createListingResource(languageCode: string, directory: string): Android
  * Assumes authorized
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
  * @param {string} directory Directory where updated listing details can be found.
- * @returns {Promise} response Response from last attempted image upload
- *                             { image: { id: string, url: string, sha1: string } }
+ * @returns nothing
  */
 async function attachImages(edits: any, languageCode: string, directory: string) {
-    let imageList: any = getImageList(directory);
+    let imageList: { [key: string]: string[] } = getImageList(directory);
+    tl.debug(`Found ${languageCode} images: ${JSON.stringify(imageList)}`);
 
     let cnt: number = 0;
-    for (let imageType in imageList) {
-        if (imageList.hasOwnProperty(imageType)) {
-            let images: any = imageList[imageType];
-            for (let i in images) {
-                if (images.hasOwnProperty(i)) {
-                    tl.debug(`Uploading image of type ${imageType} from ${images[i]}`);
-                    await uploadImage(edits, languageCode, imageType, images[i]);
-                    cnt++;
-                }
-            }
+    for (let imageType of Object.keys(imageList)) {
+        let images: string[] = imageList[imageType];
+        tl.debug(`Uploading images of type ${imageType}: ${JSON.stringify(images)}`);
+
+        if (images.length > 0) {
+            await removeOldImages(edits, languageCode, imageType);
+        }
+
+        for (let image of images) {
+            tl.debug(`Uploading image of type ${imageType} from ${image}`);
+            await uploadImage(edits, languageCode, imageType, image);
+            cnt++;
         }
     }
 
     tl.debug(`${cnt} image(s) uploaded.`);
+}
+
+/**
+ * Remove existing images from the app listing.
+ * See the user Story 955465 and https://github.com/Microsoft/google-play-vsts-extension/issues/34.
+ * Assumes authorized
+ * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
+ * @param {string} imageType type of images.
+ * @returns nothing
+ */
+async function removeOldImages(edits: any, languageCode: string, imageType: string) {
+    try {
+        let imageRequest: PackageParams = {
+            language: languageCode,
+            imageType: imageType
+        };
+
+        tl.debug(`Removing old images of type ${imageType} for language ${languageCode}.`);
+        tl.debug('Request Parameters: ' + JSON.stringify(imageRequest));
+        await edits.images.deleteallAsync(imageRequest);
+        tl.debug(`Successfully removed old images of type ${imageType} for language ${languageCode}.`);
+    } catch (e) {
+        tl.debug(`Failed to remove old images of type ${imageType} for language ${languageCode}.`);
+        tl.debug(e);
+    }
 }
 
 /**
@@ -713,12 +738,12 @@ async function attachImages(edits: any, languageCode: string, directory: string)
  * @returns {Object} imageList Map of image types to lists of images matching that type.
  *                              { [imageType]: string[] }
  */
-function getImageList(directory: string): any {
+function getImageList(directory: string): { [key: string]: string[] } {
     let imageTypes: string[] = ['featureGraphic', 'icon', 'promoGraphic', 'tvBanner', 'phoneScreenshots', 'sevenInchScreenshots', 'tenInchScreenshots', 'tvScreenshots', 'wearScreenshots'];
     let acceptedExtensions: string[] = ['.png', '.jpg', '.jpeg'];
 
     let imageDirectory: string = path.join(directory, 'images');
-    let imageList: any = {};
+    let imageList: { [key: string]: string[] }  = {};
 
     for (let imageType of imageTypes) {
         let shouldAttemptUpload: boolean = false;
@@ -804,25 +829,13 @@ function getImageList(directory: string): any {
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
  * @param {string} imageType One of the following values: "featureGraphic", "icon", "promoGraphic", "tvBanner", "phoneScreenshots", "sevenInchScreenshots", "tenInchScreenshots", "tvScreenshots", "wearScreenshots"
  * @param {string} imagePath Path to image to attempt upload with
- * @returns {Promise} imageUploadPromise A promise that will return after the image upload has completed or failed. Upon success, returns an object
- *                                       { image: [ { id: string, url: string, sha1: string } ] }
+ * @returns nothing
  */
 async function uploadImage(edits: any, languageCode: string, imageType: string, imagePath: string) {
     let imageRequest: PackageParams = {
         language: languageCode,
         imageType: imageType
     };
-
-    try {
-        // User Story 955465 and https://github.com/Microsoft/google-play-vsts-extension/issues/34
-        tl.debug(`Removing old images of type ${imageType}.`);
-        tl.debug('Request Parameters: ' + JSON.stringify(imageRequest));
-        await edits.images.deleteallAsync(imageRequest);
-        tl.debug(`Successfully removed old images of type ${imageType}.`);
-    } catch (e) {
-        tl.debug(`Failed to remove old images of type ${imageType}.`);
-        tl.debug(e);
-    }
 
     imageRequest.uploadType = 'media';
     imageRequest.media = {
