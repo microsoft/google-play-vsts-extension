@@ -919,6 +919,11 @@ function resolveGlobPaths(path: string): string[] {
         path = tl.resolve(tl.getVariable('System.DefaultWorkingDirectory'), path);
 
         let filesList: string[] = glob.sync(path);
+        if (filesList.length === 0) {
+            filesList.push(path);
+        }
+        tl.debug(`Additional APK paths: ${JSON.stringify(filesList)}`);
+
         return filesList;
     }
 
@@ -941,6 +946,7 @@ function getAllApkPaths(mainApkFile: string): string[] {
 
         apkPaths.forEach((apkPath) => {
             apkFileList[apkPath] = 0;
+            tl.debug(`Checking additional APK ${apkPath} version...`);
             let versionCode = apkParser.readFile(apkPath).readManifestSync().versionCode;
             tl.debug(`    Found the additional APK file: ${apkPath} (version code ${versionCode}).`);
         });
