@@ -607,13 +607,22 @@ async function addLanguageListing(edits: any, languageCode: string, directory: s
                           (!listingResource.shortDescription) ||
                           (!listingResource.title);
 
+    let isEmpty:boolean = (!listingResource.fullDescription) &&
+                          (!listingResource.shortDescription) &&
+                          (!listingResource.video) &&
+                          (!listingResource.title);
+
     let listingRequestParameters: PackageParams = {
         language: languageCode,
         resource: createListingResource(languageCode, directory)
     };
 
     try {
-        if (isPatch) {
+
+        if (isEmpty) {
+            tl.debug(`Skip localized ${languageCode} store listing.`);
+            tl.debug('Request Parameters: ' + JSON.stringify(listingRequestParameters));
+        } else if (isPatch) {
             tl.debug(`Patching an existing localized ${languageCode} store listing.`);
             tl.debug('Request Parameters: ' + JSON.stringify(listingRequestParameters));
             await edits.listings.patchAsync(listingRequestParameters);
