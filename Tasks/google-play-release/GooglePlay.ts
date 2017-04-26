@@ -601,17 +601,29 @@ async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: numbe
  * @returns nothing
  */
 async function addLanguageListing(edits: any, languageCode: string, directory: string) {
+    let listingResource: AndroidResource = createListingResource(languageCode, directory);
+
+    let isPatch:boolean = (!listingResource.fullDescription) ||
+                          (!listingResource.shortDescription) ||
+                          (!listingResource.title);
+
     let listingRequestParameters: PackageParams = {
-        language: languageCode
+        language: languageCode,
+        resource: createListingResource(languageCode, directory)
     };
-    listingRequestParameters.resource = createListingResource(languageCode, directory);
 
     try {
-        tl.debug(`Uploading a localized ${languageCode} store listing.`);
-        tl.debug('Request Parameters: ' + JSON.stringify(listingRequestParameters));
-        // The patchAsync method fails if the listing for the language does not exist,
-        // while updateAsync actually updates or creates.
-        await edits.listings.updateAsync(listingRequestParameters);
+        if (isPatch) {
+            tl.debug(`Patching an existing localized ${languageCode} store listing.`);
+            tl.debug('Request Parameters: ' + JSON.stringify(listingRequestParameters));
+            await edits.listings.patchAsync(listingRequestParameters);
+        } else {
+            // The patchAsync method fails if the listing for the language does not exist already,
+            // while updateAsync actually updates or creates.
+            tl.debug(`Uploading a localized ${languageCode} store listing.`);
+            tl.debug('Request Parameters: ' + JSON.stringify(listingRequestParameters));
+            await edits.listings.updateAsync(listingRequestParameters);
+        }
         tl.debug(`Successfully uploaded a localized ${languageCode} store listing.`);
     } catch (e) {
         tl.debug(`Failed to create the localized ${languageCode} store listing.`);
