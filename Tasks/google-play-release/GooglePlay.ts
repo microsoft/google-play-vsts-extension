@@ -204,7 +204,7 @@ async function run() {
         await commitEditTransaction(edits, track);
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));
     } catch (e) {
-        tl.error(e);
+        tl.error(`${JSON.stringify(e)}`);
         tl.setResult(tl.TaskResult.Failed, tl.loc('Failure'));
     }
 }
@@ -261,7 +261,20 @@ async function getNewEdit(edits: any, globalParams: GlobalParams, packageName: s
 }
 
 async function commitEditTransaction(edits: any, track: string) {
-    await edits.commitAsync();
+    if (!edits) {
+        tl.debug('edits is null in commitEditTransaction');
+    }
+    if (!track) {
+        tl.debug('track is null in commitEditTransaction');
+    }
+
+    try {
+        await edits.commitAsync();
+    } catch (e) {
+        tl.debug(`Error in edits.commitAsync(): ${JSON.stringify(e)}`);
+        throw new Error(`Error in edits.commitAsync(): ${JSON.stringify(e)}`);
+    }
+
     console.log(tl.loc('AptPublishSucceed'));
     console.log(tl.loc('TrackInfo', track));
 }
@@ -614,26 +627,26 @@ async function addLanguageListing(edits: any, languageCode: string, directory: s
 
     let listingRequestParameters: PackageParams = {
         language: languageCode,
-        resource: createListingResource(languageCode, directory)
+        resource: listingResource
     };
 
     try {
 
         if (isEmpty) {
             tl.debug(`Skip localized ${languageCode} store listing.`);
-            tl.debug('Request Parameters: ' + JSON.stringify(listingRequestParameters));
         } else if (isPatch) {
             tl.debug(`Patching an existing localized ${languageCode} store listing.`);
             tl.debug('Request Parameters: ' + JSON.stringify(listingRequestParameters));
             await edits.listings.patchAsync(listingRequestParameters);
+            tl.debug(`Successfully patched the localized ${languageCode} store listing.`);
         } else {
             // The patchAsync method fails if the listing for the language does not exist already,
             // while updateAsync actually updates or creates.
-            tl.debug(`Uploading a localized ${languageCode} store listing.`);
+            tl.debug(`Updating a localized ${languageCode} store listing.`);
             tl.debug('Request Parameters: ' + JSON.stringify(listingRequestParameters));
             await edits.listings.updateAsync(listingRequestParameters);
+            tl.debug(`Successfully updated the localized ${languageCode} store listing.`);
         }
-        tl.debug(`Successfully uploaded a localized ${languageCode} store listing.`);
     } catch (e) {
         tl.debug(`Failed to create the localized ${languageCode} store listing.`);
         tl.debug(e);
