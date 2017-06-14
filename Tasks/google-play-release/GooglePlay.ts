@@ -204,8 +204,7 @@ async function run() {
         await commitEditTransaction(edits, track);
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));
     } catch (e) {
-        tl.error(`${JSON.stringify(e)}`);
-        tl.setResult(tl.TaskResult.Failed, tl.loc('Failure'));
+        tl.setResult(tl.TaskResult.Failed, e);
     }
 }
 
