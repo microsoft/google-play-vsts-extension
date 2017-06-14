@@ -43,13 +43,6 @@ This command will create the _build folder at the root of the repository.
 
 If you open the root of the repository in Visual Studio Code, you can build with Ctrl+Shift+B.
 
-## Tests
-Tests should be run with changes.  Before you run tests, make sure you have built the extension.  Run the following from the root of the repo:
-
-```bash
-gulp createtest
-```
-
 ### Testing task changes
 In order to test your task changes, you will need to upload the new task to your own account and test it with a build definition.  First, create a build definition
 you can use to test your changes.  Then, after building the task you changed, upload the task to your account.  To upload a task, you will need to install the
@@ -85,4 +78,4 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 ## Submitting Pull Requests
 We welcome pull requests!  Fork this repo and send us your contributions.  Go [here](https://help.github.com/articles/using-pull-requests/) to get familiar with GitHub pull requests.
 
-Before submitting your request, ensure that both `gulp` and `gulp test` succeed.
+Before submitting your request, ensure that `gulp` succeeds and you have verified the task changes manually.
