@@ -8,6 +8,8 @@
 
 # Visual Studio Team Services Extension for Google Play
 
+![Build Status](https://mseng.visualstudio.com/_apis/public/build/definitions/b924d696-3eae-4116-8443-9a18392d8544/5350/badge?branch=master)
+
 This extension contains a set of deployment tasks which allow you to automate the release, promotion and rollout of app updates to the Google Play store from your CI environment. This can reduce the effort needed to keep your alpha, beta, rollout and production deployments up-to-date, since you can simply push changes to the configured source control branches, and let your automated build take care of the rest.
 
 ## Prerequisites
