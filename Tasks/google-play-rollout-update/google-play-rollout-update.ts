@@ -74,7 +74,7 @@ function run() {
         let GOOGLE_PLAY_SCOPES: string[] = ['https://www.googleapis.com/auth/androidpublisher'];
         let globalParams: GlobalParams = { auth: null, params: {} };
 
-        let jwtClient: any = google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
+        let jwtClient: any = new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
         let edits: any = publisher.edits;
 
         [edits, edits.tracks, jwtClient].forEach(Promise.promisifyAll);
