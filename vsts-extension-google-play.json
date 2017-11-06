@@ -30,6 +30,10 @@
             "path": "ThirdPartyNotices.txt"
         }
     },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/microsoft/google-play-vsts-extension"
+    },
 	"files": [
 		{
 			"path": "_build/Tasks/GooglePlayRelease"
