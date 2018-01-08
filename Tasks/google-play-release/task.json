@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "1",
-        "Minor": "119",
+        "Minor": "129",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
@@ -206,14 +206,13 @@
         "ImageDirNotFound": "Image directory for %s was not found. Skipping...",
         "UploadImageFail": "Failed to upload image.",
         "RequestDetails": "Request Details: %s",
-        "CannotGetPackageName": "The specified APK file %s is not valid. Please check the path and try to queue another build.",
-        "CannotCreateTransaction": "Failed to create a new edit transaction for the package %s. See log for details.",
-        "CannotUploadApk": "Failed to upload the APK %s.",
-        "CannotDownloadTrack": "Failed to download track %s information",
-        "CannotUpdateTrack": "Failed to update track %s information.",
-        "CannotReadChangeLog": "Failed to read change log %s.",
-        "CannotUploadChangelog": "Failed to upload the %s change log for version %s.",
-        "CannotCreateListing": "Failed to create the localized %s store listing.",
+        "CannotCreateTransaction": "Failed to create a new edit transaction for the package %s. Failed with message: %s. See log for details.",
+        "CannotUploadApk": "Failed to upload the APK %s. Failed with message: %s.",
+        "CannotDownloadTrack": "Failed to download track %s information. Failed with message: %s.",
+        "CannotUpdateTrack": "Failed to update track %s information. Failed with message: %s.",
+        "CannotReadChangeLog": "Failed to read change log %s. Failed with message: %s.",
+        "CannotUploadChangelog": "Failed to upload the %s change log for version %s. Failed with message: %s.",
+        "CannotCreateListing": "Failed to create the localized %s store listing. Failed with message: %s.",
         "IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s"
     }
 }

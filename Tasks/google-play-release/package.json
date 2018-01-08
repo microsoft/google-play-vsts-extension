@@ -12,7 +12,7 @@
     "bluebird": "^2.10.1",
     "glob": "^7.0.3",
     "googleapis": "^7.1.0",
-    "node-apk-parser": "^0.2.3",
-    "vsts-task-lib": "^0.9.7"
+    "adbkit-apkreader": "3.0.0",
+    "vsts-task-lib": "2.1.0"
   }
 }
