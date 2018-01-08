@@ -11,6 +11,6 @@
   "dependencies": {
     "bluebird": "^2.10.1",
     "googleapis": "^2.1.5",
-    "vsts-task-lib": "^0.9.7"
+    "vsts-task-lib": "2.1.0"
   }
 }

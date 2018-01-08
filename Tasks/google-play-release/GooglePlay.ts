@@ -4,7 +4,7 @@ import tl = require('vsts-task-lib/task');
 import glob = require('glob');
 import bb = require('bluebird');
 let google = require('googleapis');
-let apkParser = require('node-apk-parser');
+let apkReader = require('adbkit-apkreader');
 let publisher = google.androidpublisher('v2');
 
 interface ClientKey {
@@ -93,11 +93,13 @@ async function run() {
 
         let apkFile: string = resolveGlobPath(mainApkPattern);
         tl.checkPath(apkFile, 'apkFile');
-        let mainVersionCode = apkParser.readFile(apkFile).readManifestSync().versionCode;
+        const reader = await apkReader.open(apkFile);
+        const manifest = await reader.readManifest();
+        const mainVersionCode = manifest.versionCode;
         console.log(tl.loc('FoundMainApk', apkFile, mainVersionCode));
         tl.debug(`    Found the main APK file: ${apkFile} (version code ${mainVersionCode}).`);
 
-        let apkFileList: string[] = getAllApkPaths(apkFile);
+        let apkFileList: string[] = await getAllApkPaths(apkFile);
         if (apkFileList.length > 1) {
             console.log(tl.loc('FoundMultiApks'));
             console.log(apkFileList);
@@ -147,7 +149,7 @@ async function run() {
         // #7) Commit the edit transaction
 
         tl.debug(`Getting a package name from ${apkFile}`);
-        let packageName: string = getPackageName(apkFile);
+        let packageName: string = manifest.package;
         updateGlobalParams(globalParams, 'packageName', packageName);
 
         tl.debug('Initializing JWT.');
@@ -185,7 +187,9 @@ async function run() {
 
             for (let apkFile of apkFileList) {
                 tl.debug(`Getting version code of APK ${apkFile}`);
-                let apkVersionCode: number = apkParser.readFile(apkFile).readManifestSync().versionCode;
+                const reader = await apkReader.open(apkFile);
+                const manifest = await reader.readManifest();
+                const apkVersionCode: number = manifest.versionCode;
                 tl.debug(`Got APK ${apkFile} version code: ${apkVersionCode}`);
                 apkVersionCodes.push(apkVersionCode);
             }
@@ -209,33 +213,6 @@ async function run() {
 }
 
 /**
- * Tries to extract the package name from an apk file
- * @param {Object} apkFile The apk file from which to attempt name extraction
- * @returns {string} packageName Name extracted from package.
- */
-function getPackageName(apkFile: string): string {
-    let packageName: string = null;
-
-    try {
-        packageName = apkParser
-            .readFile(apkFile)
-            .readManifestSync()
-            .package;
-        if (packageName) {
-            tl.debug(`Successfully extracted the package name ${packageName} from the APK ${apkFile}`);
-        } else {
-            throw new Error('node-apk-parser returned an empty package name.');
-        }
-    } catch (e) {
-        tl.debug(`Failed extracting a package name from the APK ${apkFile}`);
-        tl.debug(e);
-        throw new Error(tl.loc('CannotGetPackageName', apkFile));
-    }
-
-    return packageName;
-}
-
-/**
  * Uses the provided JWT client to request a new edit from the Play store and attach the edit id to all requests made this session
  * Assumes authorized
  * @param {string} packageName unique android package name (com.android.etc)
@@ -255,7 +232,7 @@ async function getNewEdit(edits: any, globalParams: GlobalParams, packageName: s
     } catch (e) {
         tl.debug(`Failed to create a new edit transaction for the package ${packageName}.`);
         tl.debug(e);
-        throw new Error(tl.loc('CannotCreateTransaction', packageName));
+        throw new Error(tl.loc('CannotCreateTransaction', packageName, e));
     }
 }
 
@@ -305,7 +282,7 @@ async function addApk(edits: any, packageName: string, apkFile: string, APK_MIME
     } catch (e) {
         tl.debug(`Failed to upload the APK ${apkFile}`);
         tl.debug(e);
-        throw new Error(tl.loc('CannotUploadApk', apkFile));
+        throw new Error(tl.loc('CannotUploadApk', apkFile, e));
     }
 }
 
@@ -349,7 +326,7 @@ async function updateTrack(
         } catch (e) {
             tl.debug(`Failed to download track ${track} information.`);
             tl.debug(e);
-            throw new Error(tl.loc('CannotDownloadTrack', track));
+            throw new Error(tl.loc('CannotDownloadTrack', track, e));
         }
 
         let oldTrackVersionCodes: number[] = res.versionCodes;
@@ -401,7 +378,7 @@ async function updateTrack(
     } catch (e) {
         tl.debug(`Failed to update track ${track}.`);
         tl.debug(e);
-        throw new Error(tl.loc('CannotUpdateTrack', track));
+        throw new Error(tl.loc('CannotUpdateTrack', track, e));
     }
 
     return res;
@@ -454,7 +431,7 @@ async function addChangelog(edits: any, languageCode: string, changeLog: string,
     } catch (e) {
         tl.debug(`Failed to upload the ${languageCode} changelog for version ${apkVersionCode}`);
         tl.debug(e);
-        throw new Error(tl.loc('CannotUploadChangelog', languageCode, apkVersionCode));
+        throw new Error(tl.loc('CannotUploadChangelog', languageCode, apkVersionCode, e));
     }
 }
 
@@ -649,7 +626,7 @@ async function addLanguageListing(edits: any, languageCode: string, directory: s
     } catch (e) {
         tl.debug(`Failed to create the localized ${languageCode} store listing.`);
         tl.debug(e);
-        throw new Error(tl.loc('CannotCreateListing', languageCode));
+        throw new Error(tl.loc('CannotCreateListing', languageCode, e));
     }
 }
 
@@ -967,23 +944,24 @@ function resolveGlobPaths(path: string): string[] {
  * Get unique APK file paths from main and additional APK file inputs.
  * @returns {string[]} paths of the files
  */
-function getAllApkPaths(mainApkFile: string): string[] {
-    let apkFileList: { [key: string]: number } = {};
+async function getAllApkPaths(mainApkFile: string): Promise<string[]> {
+    const apkFileList: { [key: string]: number } = {};
 
     apkFileList[mainApkFile] = 0;
 
-    let additionalApks: string[] = tl.getDelimitedInput('additionalApks', '\n');
-    additionalApks.forEach((additionalApk) => {
+    const additionalApks: string[] = tl.getDelimitedInput('additionalApks', '\n');
+    for (const additionalApk of additionalApks) {
         tl.debug(`Additional APK pattern: ${additionalApk}`);
-        let apkPaths: string[] = resolveGlobPaths(additionalApk);
+        const apkPaths: string[] = resolveGlobPaths(additionalApk);
 
-        apkPaths.forEach((apkPath) => {
+        for (const apkPath of apkPaths) {
             apkFileList[apkPath] = 0;
             tl.debug(`Checking additional APK ${apkPath} version...`);
-            let versionCode = apkParser.readFile(apkPath).readManifestSync().versionCode;
-            tl.debug(`    Found the additional APK file: ${apkPath} (version code ${versionCode}).`);
-        });
-    });
+            const reader = await apkReader.open(apkPath);
+            const manifest = await reader.readManifest();
+            tl.debug(`    Found the additional APK file: ${apkPath} (version code ${manifest.versionCode}).`);
+        }
+    }
 
     return Object.keys(apkFileList);
 }
