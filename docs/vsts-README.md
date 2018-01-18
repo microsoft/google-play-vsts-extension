@@ -4,6 +4,8 @@ This extension contains a set of deployment tasks which allow you to automate th
 
 ## Prerequisites
 
+This extension supports Visual Studio Team Services (VSTS) and Team Foundation Server (TFS) 2017 and later.
+
 In order to automate the release of app updates to the Google Play store, you need to have manually released at least one version through the [Google Play Developer Console](https://play.google.com/apps/publish/). Additionally, you need to create a service account that is authorized to manage your app(s) releases on your behalf and can be used to authenticate "headlessly" from your VSTS build/release definitions. If you haven't already done so, then perform the following steps to create a service account:
 
 1. Login to the [Google Play Developer Console](https://play.google.com/apps/publish/) and select **Settings** in the left-hand navigation menu (the gear icon)
