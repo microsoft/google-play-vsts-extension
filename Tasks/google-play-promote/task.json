@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "1",
-        "Minor": "129",
+        "Minor": "130",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
@@ -61,10 +61,11 @@
             "name": "sourceTrack",
             "type": "pickList",
             "label": "Source Track",
-            "defaultValue": "alpha",
+            "defaultValue": "internal",
             "required": true,
             "helpMarkDown": "The track you wish to promote from.",
             "options": {
+                "internal": "Internal test",
                 "alpha": "Alpha",
                 "beta": "Beta",
                 "rollout": "Rollout"
@@ -78,6 +79,7 @@
             "required": true,
             "helpMarkDown": "The track you wish to promote to.",
             "options": {
+                "alpha": "Alpha",
                 "beta": "Beta",
                 "production": "Production",
                 "rollout": "Rollout"

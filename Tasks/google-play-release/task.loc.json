@@ -14,7 +14,7 @@
   ],
   "version": {
     "Major": "1",
-    "Minor": "129",
+    "Minor": "130",
     "Patch": "0"
   },
   "minimumAgentVersion": "1.83.0",
@@ -68,10 +68,11 @@
       "name": "track",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.track",
-      "defaultValue": "alpha",
+      "defaultValue": "internal",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.track",
       "options": {
+        "internal": "Internal test",
         "alpha": "Alpha",
         "beta": "Beta",
         "production": "Production",

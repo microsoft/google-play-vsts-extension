@@ -144,7 +144,7 @@ function getNewEdit(edits: any, globalParams: GlobalParams, packageName: string)
  * Gets information for the specified app and track
  * Assumes authorized
  * @param {string} packageName - unique android package name (com.android.etc)
- * @param {string} track - one of the values {"alpha", "beta", "production", "rollout"}
+ * @param {string} track - one of the values {"internal", "alpha", "beta", "production", "rollout"}
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
@@ -164,7 +164,7 @@ function getTrack(edits: any, packageName: string, track: string): Promise<any> 
  * Update a given release track with the given information
  * Assumes authorized
  * @param {string} packageName - unique android package name (com.android.etc)
- * @param {string} track - one of the values {"alpha", "beta", "production", "rollout"}
+ * @param {string} track - one of the values {"internal", "alpha", "beta", "production", "rollout"}
  * @param {integer or [integers]} versionCode - version code returned from an apk call. will take either a number or a [number]
  * @param {double} userFraction - for rollout, fraction of users to get update
  * @returns {Promise} track - A promise that will return result from updating a track

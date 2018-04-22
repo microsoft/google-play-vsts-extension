@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "1",
-        "Minor": "129",
+        "Minor": "130",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
@@ -68,12 +68,13 @@
             "name": "track",
             "type": "pickList",
             "label": "Track",
-            "defaultValue": "alpha",
+            "defaultValue": "internal",
             "required": true,
             "helpMarkDown": "Track you want to publish the APK to.",
             "options": {
+                "internal": "Internal test",
                 "alpha": "Alpha",
-                "beta": "Beta",
+                "beta": "Beta",            
                 "production": "Production",
                 "rollout": "Rollout"
             }
