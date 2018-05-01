@@ -290,7 +290,7 @@ async function addApk(edits: any, packageName: string, apkFile: string, APK_MIME
  * Update a given release track with the given information
  * Assumes authorized
  * @param {string} packageName unique android package name (com.android.etc)
- * @param {string} track one of the values {"alpha", "beta", "production", "rollout"}
+ * @param {string} track one of the values {"internal", "alpha", "beta", "production", "rollout"}
  * @param {number[]} apkVersionCodes version code of uploaded modules.
  * @param {string} versionCodeListType type of version code replacement filter, i.e. 'all', 'list', or 'expression'
  * @param {string | string[]} versionCodeFilter version code filter, i.e. either a list of version code or a regular expression string.

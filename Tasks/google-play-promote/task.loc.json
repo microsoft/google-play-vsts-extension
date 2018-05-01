@@ -13,8 +13,8 @@
     "npm"
   ],
   "version": {
-    "Major": "1",
-    "Minor": "129",
+    "Major": "2",
+    "Minor": "135",
     "Patch": "0"
   },
   "minimumAgentVersion": "1.83.0",
@@ -61,10 +61,11 @@
       "name": "sourceTrack",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.sourceTrack",
-      "defaultValue": "alpha",
+      "defaultValue": "internal",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.sourceTrack",
       "options": {
+        "internal": "Internal test",
         "alpha": "Alpha",
         "beta": "Beta",
         "rollout": "Rollout"
@@ -78,6 +79,7 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.destinationTrack",
       "options": {
+        "alpha": "Alpha",
         "beta": "Beta",
         "production": "Production",
         "rollout": "Rollout"
