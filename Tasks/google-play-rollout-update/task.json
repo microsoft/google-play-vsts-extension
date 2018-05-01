@@ -13,8 +13,8 @@
         "npm"
     ],
     "version": {
-        "Major": "1",
-        "Minor": "129",
+        "Major": "2",
+        "Minor": "135",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
