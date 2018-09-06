@@ -15,7 +15,7 @@ interface AndroidRelease {
     name?: string;
     userFraction?: number;
     releaseNotes?: [{ language: string; text: string; }];
-    versionCodes?: any;
+    versionCodes?: [number];
     status?: string;
 }
 
@@ -180,7 +180,7 @@ function updateTrack(edits: any, packageName: string, track: string, versionCode
         track: track,
         resource: {
             track: track,
-            releases: [ release ]
+            releases: [release]
         }
     };
 
