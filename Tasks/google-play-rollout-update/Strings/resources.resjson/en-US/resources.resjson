@@ -19,6 +19,7 @@
   "loc.messages.GetTrackRolloutInfo": "Getting information for track rollout",
   "loc.messages.CurrentUserFrac": "Current User Fraction: %s",
   "loc.messages.RolloutFracUpdate": "Rollout fraction updated!",
+  "loc.messages.InProgressNotFound": "Production rollout was not found.",
   "loc.messages.Success": "Successfully update rollout fraction.",
   "loc.messages.Failure": "Failed to update rollout fraction."
 }

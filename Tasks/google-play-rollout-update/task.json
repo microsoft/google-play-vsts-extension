@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "1",
-        "Minor": "129",
+        "Minor": "141",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
@@ -86,6 +86,7 @@
         "GetTrackRolloutInfo": "Getting information for track rollout",
         "CurrentUserFrac": "Current User Fraction: %s",
         "RolloutFracUpdate": "Rollout fraction updated!",
+        "InProgressNotFound": "Production rollout was not found.",
         "Success": "Successfully update rollout fraction.",
         "Failure": "Failed to update rollout fraction."
     }

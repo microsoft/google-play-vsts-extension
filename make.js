@@ -245,7 +245,7 @@ target.build = function() {
 // node make.js test --task ShellScript --suite L0
 //
 target.test = function() {
-    ensureTool('tsc', '--version', 'Version 1.8.7');
+    ensureTool('tsc', '--version', 'Version 2.4.0');
     ensureTool('mocha', '--version', '2.3.3');
 
     // run the tests
