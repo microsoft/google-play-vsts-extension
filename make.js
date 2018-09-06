@@ -106,8 +106,8 @@ target.build = function() {
     ensureTool('tsc', '--version', 'Version 2.6.2');
     ensureTool('typings', '--version', '2.1.1');
     ensureTool('npm', '--version', function (output) {
-        if (semver.lt(output, '5.6.0')) {
-            fail('expected 5.6.0 or higher');
+        if (semver.lt(output, '3.10.8')) {
+            fail('expected 3.10.8 or higher');
         }
     });
 

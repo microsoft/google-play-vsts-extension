@@ -119,17 +119,16 @@ async function run() {
  * @return {Promise} edit - A promise that will return result from inserting a new edit
  *                          { id: string, expiryTimeSeconds: string }
  */
-function getNewEdit(edits: any, globalParams: GlobalParams, packageName: string): Promise<any> {
+async function getNewEdit(edits: any, globalParams: GlobalParams, packageName: string): Promise<any> {
     tl.debug('Creating a new edit');
     const requestParameters: PackageParams = {
         packageName: packageName
     };
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
-    return edits.insert(requestParameters).then(function (res) {
-        updateGlobalParams(globalParams, 'editId', res.data.id);
-        return res;
-    });
+    const res = await edits.insert(requestParameters);
+    updateGlobalParams(globalParams, 'editId', res.data.id);
+    return res;
 }
 
 /**
