@@ -63,7 +63,7 @@
             "label": "Rollout Fraction",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "User fraction to update your rollout release to."
+            "helpMarkDown": "The fraction of your users who will receive the update. '1.0' will release to all users."
         }
     ],
     "execution": {
