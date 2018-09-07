@@ -13,7 +13,7 @@
   },
   "homepage": "https://github.com/Microsoft/google-play-vsts-extension",
   "dependencies": {
-    "adm-zip": "0.4.7",
+    "adm-zip": "0.4.11",
     "del": "^2.2.2",
     "gulp": "3.9.0",
     "gulp-util": "3.0.4",
