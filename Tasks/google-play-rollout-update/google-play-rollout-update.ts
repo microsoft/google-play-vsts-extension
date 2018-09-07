@@ -1,21 +1,22 @@
-import fs = require('fs');
-import path = require('path');
-import Promise = require('bluebird');
-import tl = require('vsts-task-lib/task');
-let google = require('googleapis');
-let publisher = google.androidpublisher('v2');
+import * as fs from 'fs';
+import * as path from 'path';
+import * as tl from 'vsts-task-lib/task';
+import { google } from 'googleapis';
+
+const publisher = google.androidpublisher('v3');
+const rolloutTrack = 'production'; // v2 it used to be called 'rollout'
 
 interface ClientKey {
     client_email?: string;
     private_key?: string;
 }
 
-interface AndroidResource {
-    track?: string;
-    versionCodes?: any;
+interface AndroidRelease {
+    name?: string;
     userFraction?: number;
-    language?: string;
-    recentChanges?: string;
+    releaseNotes?: [{ language: string; text: string; }];
+    versionCodes?: [number];
+    status?: string;
 }
 
 interface AndroidMedia {
@@ -23,11 +24,16 @@ interface AndroidMedia {
     mimeType: string;
 }
 
+interface AndroidResource {
+    track?: string;
+    releases?: AndroidRelease[];
+}
+
 interface PackageParams {
     packageName?: string;
     editId?: any;
     track?: string;
-    resource?: AndroidResource;
+    resource?: AndroidResource; // 'resource' goes into the 'body' of the http request
     media?: AndroidMedia;
     apkVersionCode?: number;
     language?: string;
@@ -40,18 +46,18 @@ interface GlobalParams {
     params?: PackageParams;
 }
 
-function run() {
+async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
-        let authType: string = tl.getInput('authType', true);
+        const authType: string = tl.getInput('authType', true);
         let key: ClientKey = {};
         if (authType === 'JsonFile') {
-            let serviceAccountKeyFile: string = tl.getPathInput('serviceAccountKey', false);
+            const serviceAccountKeyFile: string = tl.getPathInput('serviceAccountKey', false);
             if (!serviceAccountKeyFile) {
                 throw new Error(tl.loc('JsonKeyFileNotFound'));
             }
-            let stats: fs.Stats = fs.statSync(serviceAccountKeyFile);
+            const stats: fs.Stats = fs.statSync(serviceAccountKeyFile);
             if (stats && stats.isFile()) {
                 key = require(serviceAccountKeyFile);
             } else {
@@ -59,7 +65,7 @@ function run() {
                 throw new Error(tl.loc('InvalidAuthFilewithName', serviceAccountKeyFile));
             }
         } else if (authType === 'ServiceEndpoint') {
-            let serviceEndpoint: tl.EndpointAuthorization = tl.getEndpointAuthorization(tl.getInput('serviceEndpoint', true), true);
+            const serviceEndpoint: tl.EndpointAuthorization = tl.getEndpointAuthorization(tl.getInput('serviceEndpoint', true), true);
             if (!serviceEndpoint) {
                 throw new Error(tl.loc('EndpointNotFound'));
             }
@@ -67,45 +73,40 @@ function run() {
             key.private_key = serviceEndpoint.parameters['password'].replace(/\\n/g, '\n');
         }
 
-        let packageName: string = tl.getPathInput('packageName', true);
-        let userFraction: number = Number(tl.getInput('userFraction', false)); // Used for staged rollouts
+        const packageName: string = tl.getPathInput('packageName', true);
+        const userFraction: number = Number(tl.getInput('userFraction', false)); // Used for staged rollouts
 
         // Constants
-        let GOOGLE_PLAY_SCOPES: string[] = ['https://www.googleapis.com/auth/androidpublisher'];
-        let globalParams: GlobalParams = { auth: null, params: {} };
+        const GOOGLE_PLAY_SCOPES: string[] = ['https://www.googleapis.com/auth/androidpublisher'];
+        const globalParams: GlobalParams = { auth: null, params: {} };
 
-        let jwtClient: any = new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
-        let edits: any = publisher.edits;
-
-        [edits, edits.tracks, jwtClient].forEach(Promise.promisifyAll);
+        const jwtClient = new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
+        const edits: any = publisher.edits;
 
         globalParams.auth = jwtClient;
         updateGlobalParams(globalParams, 'packageName', packageName);
 
         console.log(tl.loc('Authenticating'));
-        let currentEdit: any = jwtClient.authorizeAsync().then(function (res) {
-            return getNewEdit(edits, globalParams, packageName);
-        });
+        await jwtClient.authorize();
+        await getNewEdit(edits, globalParams, packageName);
 
-        currentEdit = currentEdit.then(function (res) {
-            console.log(tl.loc('GetTrackRolloutInfo'));
-            return getTrack(edits, packageName, 'rollout');
-        });
+        console.log(tl.loc('GetTrackRolloutInfo'));
+        const track: any = await getTrack(edits, packageName, rolloutTrack);
+        tl.debug('Track' + JSON.stringify(track.data));
+        const inProgressTrack = track.data.releases.find(x => x.status === 'inProgress');
+        if (!inProgressTrack) {
+            throw new Error(tl.loc('InProgressNotFound'));
+        }
 
-        currentEdit = currentEdit.then(function (res) {
-            console.log(tl.loc('CurrentUserFrac', res[0].userFraction));
-            return updateTrack(edits, packageName, 'rollout', res[0].versionCodes, userFraction);
-        });
+        console.log(tl.loc('CurrentUserFrac', inProgressTrack.userFraction));
+        const updatedTrack: any = await updateTrack(edits, packageName, rolloutTrack, inProgressTrack.versionCodes, userFraction);
+        tl.debug('Update Track' + JSON.stringify(updatedTrack.data));
 
-        currentEdit = currentEdit.then(function (res) {
-            return edits.commitAsync().then(function (res) {
-                console.log(tl.loc('RolloutFracUpdate'));
-                tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));
-            });
-        }).catch(function (err) {
-            console.error(err);
-            tl.setResult(tl.TaskResult.Failed, tl.loc('Failure'));
-        });
+        console.log(tl.loc('RolloutFracUpdate'));
+        const commit: any = await edits.commit();
+        tl.debug('Commit' + JSON.stringify(commit.data));
+
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));
     } catch (err) {
         tl.setResult(tl.TaskResult.Failed, err);
     }
@@ -118,45 +119,42 @@ function run() {
  * @return {Promise} edit - A promise that will return result from inserting a new edit
  *                          { id: string, expiryTimeSeconds: string }
  */
-function getNewEdit(edits: any, globalParams: GlobalParams, packageName: string): Promise<any> {
+async function getNewEdit(edits: any, globalParams: GlobalParams, packageName: string): Promise<any> {
     tl.debug('Creating a new edit');
-    let requestParameters: PackageParams = {
+    const requestParameters: PackageParams = {
         packageName: packageName
     };
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
-
-    return edits.insertAsync(requestParameters).then(function (res) {
-        updateGlobalParams(globalParams, 'editId', res[0].id);
-        return res;
-    });
+    const res = await edits.insert(requestParameters);
+    updateGlobalParams(globalParams, 'editId', res.data.id);
+    return res;
 }
 
 /**
  * Gets information for the specified app and track
  * Assumes authorized
  * @param {string} packageName - unique android package name (com.android.etc)
- * @param {string} track - one of the values {"alpha", "beta", "production", "rollout"}
+ * @param {string} track - one of the values {"internal", "alpha", "beta", "production"}
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
 function getTrack(edits: any, packageName: string, track: string): Promise<any> {
     tl.debug('Getting Track information');
-    let requestParameters: PackageParams = {
+    const requestParameters: PackageParams = {
         packageName: packageName,
         track: track
     };
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
-
-    return edits.tracks.getAsync(requestParameters);
+    return edits.tracks.get(requestParameters);
 }
 
 /**
  * Update a given release track with the given information
  * Assumes authorized
  * @param {string} packageName - unique android package name (com.android.etc)
- * @param {string} track - one of the values {"alpha", "beta", "production", "rollout"}
+ * @param {string} track - one of the values {"internal", "alpha", "beta", "production"}
  * @param {integer or [integers]} versionCode - version code returned from an apk call. will take either a number or a [number]
  * @param {double} userFraction - for rollout, fraction of users to get update
  * @returns {Promise} track - A promise that will return result from updating a track
@@ -164,22 +162,29 @@ function getTrack(edits: any, packageName: string, track: string): Promise<any> 
  */
 function updateTrack(edits: any, packageName: string, track: string, versionCode: any, userFraction: number): Promise<any> {
     tl.debug('Updating track');
-    let requestParameters: PackageParams = {
+    const release: AndroidRelease = {
+        versionCodes: (typeof versionCode === 'number' ? [versionCode] : versionCode)
+    };
+
+    if (userFraction < 1.0) {
+        release.userFraction = userFraction;
+        release.status = 'inProgress';
+    } else {
+        tl.debug('User fraction is more than 100% marking rollout "completed"');
+        release.status = 'completed';
+    }
+
+    const requestParameters: PackageParams = {
         packageName: packageName,
         track: track,
         resource: {
             track: track,
-            versionCodes: (typeof versionCode === 'number' ? [versionCode] : versionCode)
+            releases: [release]
         }
     };
 
-    if (track === 'rollout') {
-        requestParameters.resource.userFraction = userFraction;
-    }
-
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
-
-    return edits.tracks.updateAsync(requestParameters);
+    return edits.tracks.update(requestParameters);
 }
 
 /**

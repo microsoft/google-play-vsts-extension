@@ -14,7 +14,7 @@
   ],
   "version": {
     "Major": "1",
-    "Minor": "129",
+    "Minor": "141",
     "Patch": "0"
   },
   "minimumAgentVersion": "1.83.0",
@@ -86,6 +86,7 @@
     "GetTrackRolloutInfo": "ms-resource:loc.messages.GetTrackRolloutInfo",
     "CurrentUserFrac": "ms-resource:loc.messages.CurrentUserFrac",
     "RolloutFracUpdate": "ms-resource:loc.messages.RolloutFracUpdate",
+    "InProgressNotFound": "ms-resource:loc.messages.InProgressNotFound",
     "Success": "ms-resource:loc.messages.Success",
     "Failure": "ms-resource:loc.messages.Failure"
   },

@@ -10,7 +10,7 @@
   "loc.input.label.packageName": "Package Name",
   "loc.input.help.packageName": "The unique package identifier (e.g. com.foo.myapp) that you wish to update.",
   "loc.input.label.userFraction": "Rollout Fraction",
-  "loc.input.help.userFraction": "User fraction to update your rollout release to.",
+  "loc.input.help.userFraction": "The fraction of the app's users who will receive the update. A value of `1.0` will release the app to all users.",
   "loc.messages.InvalidAuthFile": "Specified Auth file was invalid",
   "loc.messages.InvalidAuthFilewithName": "%s was not a valid auth file",
   "loc.messages.JsonKeyFileNotFound": "The service account JSON key file could not be found.",
@@ -19,6 +19,7 @@
   "loc.messages.GetTrackRolloutInfo": "Getting information for track rollout",
   "loc.messages.CurrentUserFrac": "Current User Fraction: %s",
   "loc.messages.RolloutFracUpdate": "Rollout fraction updated!",
+  "loc.messages.InProgressNotFound": "Production rollout was not found.",
   "loc.messages.Success": "Successfully update rollout fraction.",
   "loc.messages.Failure": "Failed to update rollout fraction."
 }
