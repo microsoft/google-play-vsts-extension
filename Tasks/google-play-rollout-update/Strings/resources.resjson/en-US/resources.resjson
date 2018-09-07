@@ -10,7 +10,7 @@
   "loc.input.label.packageName": "Package Name",
   "loc.input.help.packageName": "The unique package identifier (e.g. com.foo.myapp) that you wish to update.",
   "loc.input.label.userFraction": "Rollout Fraction",
-  "loc.input.help.userFraction": "The fraction of your users who will receive the update. '1.0' will release to all users.",
+  "loc.input.help.userFraction": "The fraction of the app's users who will receive the update. A value of `1.0` will release the app to all users.",
   "loc.messages.InvalidAuthFile": "Specified Auth file was invalid",
   "loc.messages.InvalidAuthFilewithName": "%s was not a valid auth file",
   "loc.messages.JsonKeyFileNotFound": "The service account JSON key file could not be found.",

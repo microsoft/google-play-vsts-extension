@@ -63,7 +63,7 @@
             "label": "Rollout Fraction",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The fraction of your users who will receive the update. '1.0' will release to all users."
+            "helpMarkDown": "The fraction of the app's users who will receive the update. A value of `1.0` will release the app to all users."
         }
     ],
     "execution": {
