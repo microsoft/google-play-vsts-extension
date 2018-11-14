@@ -30,11 +30,15 @@ In order to automate the release of app updates to the Google Play store, you ne
 
 6. Save the provided JSON file somewhere safe and memorable. You'll be using it later.
 
-7. Back in the **Google Play Developer Console**, click the **Done** button to close the modal
+7. Go to the **IAM** page and click on the **Add** button.
 
-8. Click the **Grant access** button in the row associated with the service account you just created.
+8. Select the newly created service account in the **New members** box and assign it the  **Service Account User Role**, then click **Save**.
+
+9. Back in the **Google Play Developer Console**, click the **Done** button to close the modal
+
+10. Click the **Grant access** button in the row associated with the service account you just created.
  
-9. Ensure that the **Role** is set to **Release Manager** and then click the **Add user** button
+11. Ensure that the **Role** is set to **Release Manager** and then click the **Add user** button
 
 To take advantage of the metadata updating capabilities, files need to be organized using fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) format:
 
