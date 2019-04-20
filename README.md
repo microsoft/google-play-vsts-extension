@@ -174,7 +174,9 @@ $(Specified Directory)
 
     ![Advanced Options](images/advanced-options.png)
 
-2. **Replace version codes** *(String, Required)* - You may specify which APK version codes should be replaced in the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
+2. **Upload deobfuscation file (mapping.txt)** *(File path, Optional)* - You may specify a path to the mapping.txt file that will be uploaded along with the main APK file.
+
+3. **Replace version codes** *(String, Required)* - You may specify which APK version codes should be replaced in the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
 
 ### Google Play - Promote
 
