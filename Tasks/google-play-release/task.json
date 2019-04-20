@@ -141,6 +141,15 @@
             "helpMarkDown": "Paths to additional APK files you want to publish to the specified track (e.g. an x86 build). Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match all APK files, in any directory."
         },
         {
+            "name": "mappingFilePath",
+            "type": "filePath",
+            "label": "Upload deobfuscation file (mapping.txt)",
+            "defaultValue": "",
+            "groupName": "advanced",
+            "required": false,
+            "helpMarkDown": "The path to the mapping.txt file to upload."
+        },
+        {
             "name": "versionCodeFilterType",
             "type": "pickList",
             "label": "Replace version codes",
@@ -190,6 +199,7 @@
         "InvalidAuthFile": "%s is not a valid auth file",
         "FoundMainApk": "Found main APK to upload: %s (version code %s)",
         "FoundMultiApks": "Found multiple APKs to upload:",
+        "FoundDeobfuscationFile": "Found deobfuscation (mapping) file: %s",
         "GetNewEditAfterAuth": "Authenticated with Google Play and getting new edit ",
         "UploadApk": "Uploading APK file %s...",
         "UpdateTrack": "Updating track information...",
@@ -209,6 +219,7 @@
         "RequestDetails": "Request Details: %s",
         "CannotCreateTransaction": "Failed to create a new edit transaction for the package %s. Failed with message: %s. See log for details.",
         "CannotUploadApk": "Failed to upload the APK %s. Failed with message: %s.",
+        "CannotUploadDeobfuscationFile": "Failed to upload the deobfuscation file %s. Failed with message: %s.",
         "CannotDownloadTrack": "Failed to download track %s information. Failed with message: %s.",
         "CannotUpdateTrack": "Failed to update track %s information. Failed with message: %s.",
         "CannotReadChangeLog": "Failed to read change log %s. Failed with message: %s.",

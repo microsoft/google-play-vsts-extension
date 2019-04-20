@@ -141,6 +141,15 @@
       "helpMarkDown": "ms-resource:loc.input.help.additionalApks"
     },
     {
+      "name": "mappingFilePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.mappingFilePath",
+      "defaultValue": "",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.mappingFilePath"
+    },
+    {
       "name": "versionCodeFilterType",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.versionCodeFilterType",
@@ -190,6 +199,7 @@
     "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
     "FoundMainApk": "ms-resource:loc.messages.FoundMainApk",
     "FoundMultiApks": "ms-resource:loc.messages.FoundMultiApks",
+    "FoundDeobfuscationFile": "ms-resource:loc.messages.FoundDeobfuscationFile",
     "GetNewEditAfterAuth": "ms-resource:loc.messages.GetNewEditAfterAuth",
     "UploadApk": "ms-resource:loc.messages.UploadApk",
     "UpdateTrack": "ms-resource:loc.messages.UpdateTrack",
@@ -209,6 +219,7 @@
     "RequestDetails": "ms-resource:loc.messages.RequestDetails",
     "CannotCreateTransaction": "ms-resource:loc.messages.CannotCreateTransaction",
     "CannotUploadApk": "ms-resource:loc.messages.CannotUploadApk",
+    "CannotUploadDeobfuscationFile": "ms-resource:loc.messages.CannotUploadDeobfuscationFile",
     "CannotDownloadTrack": "ms-resource:loc.messages.CannotDownloadTrack",
     "CannotUpdateTrack": "ms-resource:loc.messages.CannotUpdateTrack",
     "CannotReadChangeLog": "ms-resource:loc.messages.CannotReadChangeLog",

@@ -54,6 +54,9 @@ async function run() {
             console.log(apkFileList);
         }
 
+        let mappingFilePath = tl.getPathInput('mappingFilePath', false, true);
+        console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
+
         let versionCodeFilterType: string = tl.getInput('versionCodeFilterType', false) ;
         let versionCodeFilter: string | number[] = null;
         if (versionCodeFilterType === 'list') {
@@ -82,6 +85,7 @@ async function run() {
         // Constants
         let GOOGLE_PLAY_SCOPES: string[] = ['https://www.googleapis.com/auth/androidpublisher'];
         let APK_MIME_TYPE: string = 'application/vnd.android.package-archive';
+        let DEOBS_MIME_TYPE: string = '';
 
         let globalParams: GlobalOptions = { auth: null, params: {} };
         let apkVersionCodes: number[] = [];
@@ -93,9 +97,10 @@ async function run() {
         // #2) Get an OAuth token by authentincating the service account
         // #3) Create a new editing transaction
         // #4) Upload the new APK(s)
-        // #5) Specify the track that should be used for the new APK (e.g. alpha, beta)
-        // #6) Specify the new change log
-        // #7) Commit the edit transaction
+        // #5) Upload the mapping.txt
+        // #6) Specify the track that should be used for the new APK (e.g. alpha, beta)
+        // #7) Specify the new change log
+        // #8) Commit the edit transaction
 
         tl.debug(`Getting a package name from ${apkFile}`);
         let packageName: string = manifest.package;
@@ -120,11 +125,19 @@ async function run() {
         if (shouldUploadApks) {
             tl.debug(`Uploading ${apkFileList.length} APK(s).`);
 
-            for (let apkFile of apkFileList) {
+            for (let index = 0; index < apkFileList.length; index++) {
+                const apkFile = apkFileList[index];
                 tl.debug(`Uploading APK ${apkFile}`);
                 let apk = await addApk(edits, packageName, apkFile, APK_MIME_TYPE);
                 tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}`);
                 apkVersionCodes.push(apk.versionCode);
+
+                // Only upload mapping for the main APK
+                if (index === 0) {
+                    tl.debug(`Uploading deobfuscation file ${mappingFilePath}`);
+                    await uploadDeobfuscation(edits, mappingFilePath, packageName, apk.versionCode, DEOBS_MIME_TYPE);
+                    tl.debug(`Uploaded ${mappingFilePath} for APK ${apkFile}`);
+                }
             }
 
             console.log(tl.loc('UpdateTrack'));
@@ -233,6 +246,40 @@ async function addApk(edits: androidpublisher_v2.Resource$Edits, packageName: st
         tl.debug(`Failed to upload the APK ${apkFile}`);
         tl.debug(e);
         throw new Error(tl.loc('CannotUploadApk', apkFile, e));
+    }
+}
+
+/**
+ * Uploads a deobfuscation file (mapping.txt) for a given package
+ * Assumes authorized
+ * @param {string} mappingFilePath the path to the file to upload
+ * @param {string} packageName unique android package name (com.android.etc)
+ * @param apkVersionCode version code of uploaded APK
+ * @returns {Promise} deobfuscationFiles A promise that will return result from uploading a deobfuscation file
+ *                          { deobfuscationFile: { symbolType: string } }
+ */
+async function uploadDeobfuscation(edits: androidpublisher_v2.Resource$Edits, mappingFilePath: string, packageName: string, apkVersionCode: number, DEOBS_MIME_TYPE: string): Promise<androidpublisher_v2.Schema$DeobfuscationFilesUploadResponse> {
+    let requestParameters: androidpublisher_v2.Params$Resource$Edits$Deobfuscationfiles$Upload = {
+        deobfuscationFileType: 'proguard',
+        packageName: packageName,
+        apkVersionCode: apkVersionCode,
+        media: {
+            body: fs.createReadStream(mappingFilePath),
+            mimeType: DEOBS_MIME_TYPE
+        }
+    };
+
+    try {
+        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
+        let res = (await edits.deobfuscationfiles.upload()).data;
+
+        tl.debug('returned: ' + JSON.stringify(res));
+
+        return res;
+    } catch (e) {
+        tl.debug(`Failed to upload deobfuscation file ${mappingFilePath}`);
+        tl.debug(e);
+        throw new Error(tl.loc('CannotUploadDeobfuscationFile', mappingFilePath, e));
     }
 }
 
