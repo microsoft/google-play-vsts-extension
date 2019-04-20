@@ -11,7 +11,7 @@
   "dependencies": {
     "bluebird": "^2.10.1",
     "glob": "^7.0.3",
-    "googleapis": "^7.1.0",
+    "googleapis": "^39.2.0",
     "adbkit-apkreader": "3.1.0",
     "vsts-task-lib": "2.1.0"
   }

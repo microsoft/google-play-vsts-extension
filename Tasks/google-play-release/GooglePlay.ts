@@ -3,65 +3,14 @@ import path = require('path');
 import tl = require('vsts-task-lib/task');
 import glob = require('glob');
 import bb = require('bluebird');
-let google = require('googleapis');
+import { google, androidpublisher_v2 } from 'googleapis';
+import { GlobalOptions } from 'googleapis-common';
 let apkReader = require('adbkit-apkreader');
 let publisher = google.androidpublisher('v2');
 
 interface ClientKey {
     client_email?: string;
     private_key?: string;
-}
-
-interface AndroidResource {
-    track?: string;
-    versionCodes?: any;
-    userFraction?: number;
-    language?: string;
-    recentChanges?: string;
-    fullDescription?: string;
-    shortDescription?: string;
-    title?: string;
-    video?: string;
-}
-
-interface AndroidMedia {
-    body: fs.ReadStream;
-    mimeType: string;
-}
-
-interface PackageParams {
-    packageName?: string;
-    editId?: any;
-    track?: string;
-    resource?: AndroidResource;
-    media?: AndroidMedia;
-    apkVersionCode?: number;
-    language?: string;
-    imageType?: string;
-    uploadType?: string;
-}
-
-interface GlobalParams {
-    auth?: any;
-    params?: PackageParams;
-}
-
-interface Edit {
-    id: string;
-    expiryTimeSeconds: string;
-}
-
-interface Apk {
-  versionCode: number;
-  binary: {
-    sha1: string;
-  };
-}
-
-interface Track {
-  track: string;
-  versionCodes: number[];
-  userFraction: number;
 }
 
 async function run() {
@@ -134,7 +83,7 @@ async function run() {
         let GOOGLE_PLAY_SCOPES: string[] = ['https://www.googleapis.com/auth/androidpublisher'];
         let APK_MIME_TYPE: string = 'application/vnd.android.package-archive';
 
-        let globalParams: GlobalParams = { auth: null, params: {} };
+        let globalParams: GlobalOptions = { auth: null, params: {} };
         let apkVersionCodes: number[] = [];
 
         // The submission process is composed
@@ -153,19 +102,19 @@ async function run() {
         updateGlobalParams(globalParams, 'packageName', packageName);
 
         tl.debug('Initializing JWT.');
-        let jwtClient: any = new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
+        let jwtClient = new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
         globalParams.auth = jwtClient;
 
         tl.debug('Initializing Google Play publisher API.');
-        let edits: any = publisher.edits;
+        let edits = publisher.edits;
         [edits, edits.apklistings, edits.apks, edits.tracks, edits.listings, edits.images, jwtClient].forEach(bb.promisifyAll);
 
         tl.debug('Authorize JWT.');
-        await jwtClient.authorizeAsync();
+        await jwtClient.authorize();
 
         console.log(tl.loc('GetNewEditAfterAuth'));
         tl.debug('Creating a new edit transaction in Google Play.');
-        let currentEdit: Edit = await getNewEdit(edits, globalParams, packageName);
+        let currentEdit = await getNewEdit(edits, packageName);
         updateGlobalParams(globalParams, 'editId', currentEdit.id);
 
         if (shouldUploadApks) {
@@ -173,14 +122,14 @@ async function run() {
 
             for (let apkFile of apkFileList) {
                 tl.debug(`Uploading APK ${apkFile}`);
-                let apk: Apk = await addApk(edits, packageName, apkFile, APK_MIME_TYPE);
+                let apk = await addApk(edits, packageName, apkFile, APK_MIME_TYPE);
                 tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}`);
                 apkVersionCodes.push(apk.versionCode);
             }
 
             console.log(tl.loc('UpdateTrack'));
             tl.debug(`Updating the track ${track}.`);
-            let updatedTrack: Track = await updateTrack(edits, packageName, track, apkVersionCodes, versionCodeFilterType, versionCodeFilter, userFraction);
+            let updatedTrack = await updateTrack(edits, packageName, track, apkVersionCodes, versionCodeFilterType, versionCodeFilter, userFraction);
             tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
         } else {
             tl.debug(`Getting APK version codes of ${apkFileList.length} APK(s).`);
@@ -216,18 +165,19 @@ async function run() {
  * Uses the provided JWT client to request a new edit from the Play store and attach the edit id to all requests made this session
  * Assumes authorized
  * @param {string} packageName unique android package name (com.android.etc)
- * @returns {Promise<Edit>} edit A promise that will return result from inserting a new edit
+ * @returns {Promise<androidpublisher_v2.Schema$AppEdit>} edit A promise that will return result from inserting a new edit
  *                          { id: string, expiryTimeSeconds: string }
  */
-async function getNewEdit(edits: any, globalParams: GlobalParams, packageName: string): Promise<Edit> {
-    let requestParameters: PackageParams = {
+async function getNewEdit(edits: androidpublisher_v2.Resource$Edits, packageName: string): Promise<androidpublisher_v2.Schema$AppEdit> {
+    let requestParameters: androidpublisher_v2.Params$Resource$Edits$Insert = {
         packageName: packageName
     };
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
 
-        let res: Edit = (await edits.insertAsync(requestParameters))[0];
+        let res = (await edits.insert(requestParameters)).data;
+
         return res;
     } catch (e) {
         tl.debug(`Failed to create a new edit transaction for the package ${packageName}.`);
@@ -236,7 +186,7 @@ async function getNewEdit(edits: any, globalParams: GlobalParams, packageName: s
     }
 }
 
-async function commitEditTransaction(edits: any, track: string) {
+async function commitEditTransaction(edits: androidpublisher_v2.Resource$Edits, track: string) {
     if (!edits) {
         tl.debug('edits is null in commitEditTransaction');
     }
@@ -245,7 +195,7 @@ async function commitEditTransaction(edits: any, track: string) {
     }
 
     try {
-        await edits.commitAsync();
+        await edits.commit();
     } catch (e) {
         tl.debug(`Error in edits.commitAsync(): ${JSON.stringify(e)}`);
         throw new Error(`Error in edits.commitAsync(): ${JSON.stringify(e)}`);
@@ -260,11 +210,11 @@ async function commitEditTransaction(edits: any, track: string) {
  * Assumes authorized
  * @param {string} packageName unique android package name (com.android.etc)
  * @param {string} apkFile path to apk file
- * @returns {Promise} apk A promise that will return result from uploading an apk
+ * @returns {Promise<androidpublisher_v2.Schema$Apk>} apk A promise that will return result from uploading an apk
  *                          { versionCode: integer, binary: { sha1: string } }
  */
-async function addApk(edits: any, packageName: string, apkFile: string, APK_MIME_TYPE: string): Promise<Apk> {
-    let requestParameters: PackageParams = {
+async function addApk(edits: androidpublisher_v2.Resource$Edits, packageName: string, apkFile: string, APK_MIME_TYPE: string): Promise<androidpublisher_v2.Schema$Apk> {
+    let requestParameters: androidpublisher_v2.Params$Resource$Edits$Apks$Upload = {
         packageName: packageName,
         media: {
             body: fs.createReadStream(apkFile),
@@ -274,7 +224,7 @@ async function addApk(edits: any, packageName: string, apkFile: string, APK_MIME
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        let res: Apk = (await edits.apks.uploadAsync(requestParameters))[0];
+        let res = (await edits.apks.upload(requestParameters)).data;
 
         tl.debug('returned: ' + JSON.stringify(res));
 
@@ -299,20 +249,20 @@ async function addApk(edits: any, packageName: string, apkFile: string, APK_MIME
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
 async function updateTrack(
-    edits: any,
+    edits: androidpublisher_v2.Resource$Edits,
     packageName: string,
     track: string,
     apkVersionCodes: number[],
     versionCodeListType: string,
     versionCodeFilter: string | number[],
-    userFraction: number): Promise<Track> {
+    userFraction: number): Promise<androidpublisher_v2.Schema$Track> {
 
-    let requestParameters: PackageParams = {
+    let requestParameters: androidpublisher_v2.Params$Resource$Edits$Tracks$Patch = {
         packageName: packageName,
         track: track
     };
 
-    let res: Track;
+    let res: androidpublisher_v2.Schema$Track;
     let newTrackVersionCodes: number[] = [];
 
     if (versionCodeListType === 'all') {
@@ -322,7 +272,7 @@ async function updateTrack(
             tl.debug(`Reading current ${track} track info.`);
             tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
 
-            res = (await edits.tracks.getAsync(requestParameters))[0];
+            res = (await edits.tracks.get(requestParameters)).data;
         } catch (e) {
             tl.debug(`Failed to download track ${track} information.`);
             tl.debug(e);
@@ -362,19 +312,19 @@ async function updateTrack(
     }
 
     tl.debug(`New ${track} track version codes: ` + JSON.stringify(newTrackVersionCodes));
-    requestParameters.resource = {
+    requestParameters.requestBody = {
         track: track,
         versionCodes: newTrackVersionCodes
     };
 
     if (track === 'rollout') {
-        requestParameters.resource.userFraction = userFraction;
+        requestParameters.requestBody.userFraction = userFraction;
     }
 
     try {
         tl.debug(`Updating the ${track} track info.`);
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        res = (await edits.tracks.updateAsync(requestParameters))[0];
+        res = (await edits.tracks.update(requestParameters)).data;
     } catch (e) {
         tl.debug(`Failed to update track ${track}.`);
         tl.debug(e);
@@ -390,7 +340,7 @@ async function updateTrack(
  * @param apkVersionCodes
  * @returns nothing
  */
-async function uploadCommonChangeLog(edits: any, languageCode: string, changelogFile: string, apkVersionCodes: number[]) {
+async function uploadCommonChangeLog(edits: androidpublisher_v2.Resource$Edits, languageCode: string, changelogFile: string, apkVersionCodes: number[]) {
     let stats: fs.Stats = fs.statSync(changelogFile);
 
     if (stats && stats.isFile()) {
@@ -415,11 +365,11 @@ async function uploadCommonChangeLog(edits: any, languageCode: string, changelog
  * @param {integer} APK version code
  * @returns nothing
  */
-async function addChangelog(edits: any, languageCode: string, changeLog: string, apkVersionCode: number) {
-    let requestParameters: PackageParams = {
+async function addChangelog(edits: androidpublisher_v2.Resource$Edits, languageCode: string, changeLog: string, apkVersionCode: number) {
+    let requestParameters: androidpublisher_v2.Params$Resource$Edits$Apklistings$Update = {
         apkVersionCode: apkVersionCode,
         language: languageCode,
-        resource: {
+        requestBody: {
             language: languageCode,
             recentChanges: changeLog
         }
@@ -427,7 +377,7 @@ async function addChangelog(edits: any, languageCode: string, changeLog: string,
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        await edits.apklistings.updateAsync(requestParameters);
+        await edits.apklistings.update(requestParameters);
     } catch (e) {
         tl.debug(`Failed to upload the ${languageCode} changelog for version ${apkVersionCode}`);
         tl.debug(e);
@@ -463,7 +413,7 @@ function getChangelog(changelogFile: string): string {
  * @param {string} directory Directory with a changesogs folder where changelogs can be found.
  * @returns nothing
  */
-async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: string, directory: string) {
+async function addAllChangelogs(edits: androidpublisher_v2.Resource$Edits, apkVersionCodes: any, languageCode: string, directory: string) {
     let changelogDir: string = path.join(directory, 'changelogs');
 
     let changelogs: string[] = fs.readdirSync(changelogDir).filter(subPath => {
@@ -541,7 +491,7 @@ async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: 
  * @param {string} metadataRootDirectory Path to the folder where the Fastlane metadata structure is found. eg the folders under this directory should be the language codes
  * @returns nothing
  */
-async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDirectory: string) {
+async function addMetadata(edits: androidpublisher_v2.Resource$Edits, apkVersionCodes: number[], metadataRootDirectory: string) {
     let metadataLanguageCodes: string[] = fs.readdirSync(metadataRootDirectory).filter((subPath) => {
         try {
             return fs.statSync(path.join(metadataRootDirectory, subPath)).isDirectory();
@@ -569,7 +519,7 @@ async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDi
  * @param {string} directory Directory where updated listing details can be found.
  * @returns nothing
  */
-async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: number[], languageCode: string, directory: string) {
+async function uploadMetadataWithLanguageCode(edits: androidpublisher_v2.Resource$Edits, apkVersionCodes: number[], languageCode: string, directory: string) {
     console.log(tl.loc('UploadingMetadataForLanguage', directory, languageCode));
 
     tl.debug(`Adding localized store listing for language code ${languageCode} from ${directory}`);
@@ -589,8 +539,8 @@ async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: numbe
  * @param {string} directory Directory where updated listing details can be found.
  * @returns nothing
  */
-async function addLanguageListing(edits: any, languageCode: string, directory: string) {
-    let listingResource: AndroidResource = createListingResource(languageCode, directory);
+async function addLanguageListing(edits: androidpublisher_v2.Resource$Edits, languageCode: string, directory: string) {
+    let listingResource = createListingResource(languageCode, directory);
 
     let isPatch:boolean = (!listingResource.fullDescription) ||
                           (!listingResource.shortDescription) ||
@@ -601,9 +551,9 @@ async function addLanguageListing(edits: any, languageCode: string, directory: s
                           (!listingResource.video) &&
                           (!listingResource.title);
 
-    let listingRequestParameters: PackageParams = {
+    let listingRequestParameters: androidpublisher_v2.Params$Resource$Edits$Listings$Patch = {
         language: languageCode,
-        resource: listingResource
+        requestBody: listingResource
     };
 
     try {
@@ -613,14 +563,14 @@ async function addLanguageListing(edits: any, languageCode: string, directory: s
         } else if (isPatch) {
             tl.debug(`Patching an existing localized ${languageCode} store listing.`);
             tl.debug('Request Parameters: ' + JSON.stringify(listingRequestParameters));
-            await edits.listings.patchAsync(listingRequestParameters);
+            await edits.listings.patch(listingRequestParameters);
             tl.debug(`Successfully patched the localized ${languageCode} store listing.`);
         } else {
             // The patchAsync method fails if the listing for the language does not exist already,
             // while updateAsync actually updates or creates.
             tl.debug(`Updating a localized ${languageCode} store listing.`);
             tl.debug('Request Parameters: ' + JSON.stringify(listingRequestParameters));
-            await edits.listings.updateAsync(listingRequestParameters);
+            await edits.listings.update(listingRequestParameters);
             tl.debug(`Successfully updated the localized ${languageCode} store listing.`);
         }
     } catch (e) {
@@ -634,10 +584,10 @@ async function addLanguageListing(edits: any, languageCode: string, directory: s
  * Helper method for creating the resource for the edits.listings.update method.
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
  * @param {string} directory Directory where updated listing details can be found.
- * @returns {AndroidResource} resource A crafted resource for the edits.listings.update method.
+ * @returns {androidpublisher_v2.Schema$Listing} resource A crafted resource for the edits.listings.update method.
  *          { languageCode: string, fullDescription: string, shortDescription: string, title: string, video: string }
  */
-function createListingResource(languageCode: string, directory: string): AndroidResource {
+function createListingResource(languageCode: string, directory: string): androidpublisher_v2.Schema$Listing {
     tl.debug(`Constructing resource to update listing with language code ${languageCode} from ${directory}`);
 
     let resourceParts = {
@@ -647,7 +597,7 @@ function createListingResource(languageCode: string, directory: string): Android
         video: 'video.txt'
     };
 
-    let resource: AndroidResource = {
+    let resource: androidpublisher_v2.Schema$Listing = {
         language: languageCode
     };
 
@@ -677,7 +627,7 @@ function createListingResource(languageCode: string, directory: string): Android
  * @param {string} directory Directory where updated listing details can be found.
  * @returns nothing
  */
-async function attachImages(edits: any, languageCode: string, directory: string) {
+async function attachImages(edits: androidpublisher_v2.Resource$Edits, languageCode: string, directory: string) {
     let imageList: { [key: string]: string[] } = getImageList(directory);
     tl.debug(`Found ${languageCode} images: ${JSON.stringify(imageList)}`);
 
@@ -708,16 +658,16 @@ async function attachImages(edits: any, languageCode: string, directory: string)
  * @param {string} imageType type of images.
  * @returns nothing
  */
-async function removeOldImages(edits: any, languageCode: string, imageType: string) {
+async function removeOldImages(edits: androidpublisher_v2.Resource$Edits, languageCode: string, imageType: string) {
     try {
-        let imageRequest: PackageParams = {
+        let imageRequest: androidpublisher_v2.Params$Resource$Edits$Images$Deleteall = {
             language: languageCode,
             imageType: imageType
         };
 
         tl.debug(`Removing old images of type ${imageType} for language ${languageCode}.`);
         tl.debug('Request Parameters: ' + JSON.stringify(imageRequest));
-        await edits.images.deleteallAsync(imageRequest);
+        await edits.images.deleteall(imageRequest);
         tl.debug(`Successfully removed old images of type ${imageType} for language ${languageCode}.`);
     } catch (e) {
         tl.debug(`Failed to remove old images of type ${imageType} for language ${languageCode}.`);
@@ -841,13 +791,12 @@ function getImageList(directory: string): { [key: string]: string[] } {
  * @param {string} imagePath Path to image to attempt upload with
  * @returns nothing
  */
-async function uploadImage(edits: any, languageCode: string, imageType: string, imagePath: string) {
-    let imageRequest: PackageParams = {
+async function uploadImage(edits: androidpublisher_v2.Resource$Edits, languageCode: string, imageType: string, imagePath: string) {
+    let imageRequest: androidpublisher_v2.Params$Resource$Edits$Images$Upload = {
         language: languageCode,
         imageType: imageType
     };
 
-    imageRequest.uploadType = 'media';
     imageRequest.media = {
         body: fs.createReadStream(imagePath),
         mimeType: helperResolveImageMimeType(imagePath)
@@ -856,7 +805,8 @@ async function uploadImage(edits: any, languageCode: string, imageType: string, 
     try {
         tl.debug(`Uploading image ${imagePath} of type ${imageType}.`);
         tl.debug('Request Parameters: ' + JSON.stringify(imageRequest));
-        await edits.images.uploadAsync(imageRequest);
+        await edits.images.upload(imageRequest);
+
         tl.debug(`Successfully uploaded image ${imagePath} of type ${imageType}.`);
     } catch (e) {
         tl.debug(`Failed to upload image ${imagePath} of type ${imageType}.`);
@@ -892,7 +842,7 @@ function helperResolveImageMimeType(imagePath: string): string {
  * @param {any} value value to assign to paramName. Any value is admissible.
  * @returns {void} void
  */
-function updateGlobalParams(globalParams: GlobalParams, paramName: string, value: any): void {
+function updateGlobalParams(globalParams: GlobalOptions, paramName: string, value: any): void {
     tl.debug(`Updating Global Parameter ${paramName} to ` + JSON.stringify(value));
     globalParams.params[paramName] = value;
     google.options(globalParams);
