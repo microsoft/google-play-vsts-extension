@@ -186,7 +186,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "GooglePlay.js",
             "argumentFormat": ""
         },
