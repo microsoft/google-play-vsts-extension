@@ -2,7 +2,6 @@ import fs = require('fs');
 import path = require('path');
 import tl = require('vsts-task-lib/task');
 import glob = require('glob');
-import bb = require('bluebird');
 import { google, androidpublisher_v2 } from 'googleapis';
 import { GlobalOptions } from 'googleapis-common';
 let apkReader = require('adbkit-apkreader');
@@ -110,9 +109,7 @@ async function run() {
         let jwtClient = new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
         globalParams.auth = jwtClient;
 
-        tl.debug('Initializing Google Play publisher API.');
         let edits = publisher.edits;
-        [edits, edits.apklistings, edits.apks, edits.tracks, edits.listings, edits.images, jwtClient].forEach(bb.promisifyAll);
 
         tl.debug('Authorize JWT.');
         await jwtClient.authorize();

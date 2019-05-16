@@ -9,7 +9,6 @@
   "author": "Jonathan Carter",
   "license": "ISC",
   "dependencies": {
-    "bluebird": "^2.10.1",
     "glob": "^7.0.3",
     "googleapis": "^39.2.0",
     "adbkit-apkreader": "3.1.0",

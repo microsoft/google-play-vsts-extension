@@ -26,7 +26,7 @@
   "loc.input.help.shouldUploadApks": "By default, the task will update the specified binary APK file(s) on your app release. By unselecting this option you can update metadata keeping the APKs untouched.",
   "loc.input.label.additionalApks": "Additional APK Path(s)",
   "loc.input.help.additionalApks": "Paths to additional APK files you want to publish to the specified track (e.g. an x86 build). Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match all APK files, in any directory.",
-  "loc.input.label.mappingFilePath": "Upload deobfuscation file (mapping.txt)",
+  "loc.input.label.mappingFilePath": "Upload main deobfuscation file (mapping.txt)",
   "loc.input.help.mappingFilePath": "The path to the mapping.txt file to upload.",
   "loc.input.label.versionCodeFilterType": "Replace version codes",
   "loc.input.help.versionCodeFilterType": "Specify version codes to replace in the selected track with the new APKs: all, the comma separated list, or a regular expression pattern.",

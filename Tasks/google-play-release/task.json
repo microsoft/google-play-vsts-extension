@@ -144,7 +144,7 @@
         {
             "name": "mappingFilePath",
             "type": "filePath",
-            "label": "Upload deobfuscation file (mapping.txt)",
+            "label": "Upload main deobfuscation file (mapping.txt)",
             "defaultValue": "",
             "groupName": "advanced",
             "required": false,
