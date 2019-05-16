@@ -1,6 +1,6 @@
 import fs = require('fs');
 import path = require('path');
-import tl = require('vsts-task-lib/task');
+import tl = require('azure-pipelines-task-lib/task');
 import glob = require('glob');
 import { google, androidpublisher_v2 } from 'googleapis';
 import { GlobalOptions } from 'googleapis-common';
