@@ -268,7 +268,7 @@ async function uploadDeobfuscation(edits: androidpublisher_v2.Resource$Edits, ma
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        let res = (await edits.deobfuscationfiles.upload()).data;
+        let res = (await edits.deobfuscationfiles.upload(requestParameters)).data;
 
         tl.debug('returned: ' + JSON.stringify(res));
 
