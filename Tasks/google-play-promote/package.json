@@ -9,8 +9,8 @@
   "author": "Jonathan Carter",
   "license": "ISC",
   "dependencies": {
-    "bluebird": "^2.10.1",
-    "googleapis": "^2.1.5",
-    "vsts-task-lib": "2.1.0"
+    "googleapis": "41.0.0",
+    "utility-common": "file:../../_build/Tasks/Common/utility-common",
+    "vsts-task-lib": "2.7.0"
   }
 }
