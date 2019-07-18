@@ -1,0 +1,11 @@
+{
+  "name": "utility-common",
+  "version": "1.0.0",
+  "description": "Common Library for Google Play Tasks",
+  "author": "Microsoft Corporation",
+  "license": "ISC",
+  "dependencies": {
+    "googleapis": "41.0.0",
+    "vsts-task-lib": "2.7.0"
+  }
+}

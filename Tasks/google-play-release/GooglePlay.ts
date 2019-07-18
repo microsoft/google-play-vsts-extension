@@ -1,68 +1,9 @@
-import fs = require('fs');
-import path = require('path');
-import tl = require('vsts-task-lib/task');
-import glob = require('glob');
-import bb = require('bluebird');
-let google = require('googleapis');
-let apkReader = require('adbkit-apkreader');
-let publisher = google.androidpublisher('v2');
-
-interface ClientKey {
-    client_email?: string;
-    private_key?: string;
-}
-
-interface AndroidResource {
-    track?: string;
-    versionCodes?: any;
-    userFraction?: number;
-    language?: string;
-    recentChanges?: string;
-    fullDescription?: string;
-    shortDescription?: string;
-    title?: string;
-    video?: string;
-}
-
-interface AndroidMedia {
-    body: fs.ReadStream;
-    mimeType: string;
-}
-
-interface PackageParams {
-    packageName?: string;
-    editId?: any;
-    track?: string;
-    resource?: AndroidResource;
-    media?: AndroidMedia;
-    apkVersionCode?: number;
-    language?: string;
-    imageType?: string;
-    uploadType?: string;
-}
-
-interface GlobalParams {
-    auth?: any;
-    params?: PackageParams;
-}
-
-interface Edit {
-    id: string;
-    expiryTimeSeconds: string;
-}
-
-interface Apk {
-  versionCode: number;
-  binary: {
-    sha1: string;
-  };
-}
-
-interface Track {
-  track: string;
-  versionCodes: number[];
-  userFraction: number;
-}
+import * as fs from 'fs';
+import * as path from 'path';
+import * as tl from 'vsts-task-lib/task';
+import * as glob from 'glob';
+import * as apkReader from 'adbkit-apkreader';
+import * as googleutil from 'utility-common/googleutil';
 
 async function run() {
     try {
@@ -70,12 +11,12 @@ async function run() {
 
         tl.debug('Prepare task inputs.');
 
-        let authType: string = tl.getInput('authType', true);
-        let key: ClientKey = {};
+        const authType: string = tl.getInput('authType', true);
+        let key: googleutil.ClientKey = {};
         if (authType === 'JsonFile') {
-            let serviceAccountKeyFile: string = tl.getPathInput('serviceAccountKey', true, true);
+            const serviceAccountKeyFile: string = tl.getPathInput('serviceAccountKey', true, true);
 
-            let stats: fs.Stats = fs.statSync(serviceAccountKeyFile);
+            const stats: fs.Stats = fs.statSync(serviceAccountKeyFile);
             if (stats && stats.isFile()) {
                 key = require(serviceAccountKeyFile);
             } else {
@@ -88,10 +29,10 @@ async function run() {
             key.private_key = serviceEndpoint.parameters['password'].replace(/\\n/g, '\n');
         }
 
-        let mainApkPattern = tl.getPathInput('apkFile', true);
+        const mainApkPattern = tl.getPathInput('apkFile', true);
         tl.debug(`Main APK pattern: ${mainApkPattern}`);
 
-        let apkFile: string = resolveGlobPath(mainApkPattern);
+        const apkFile: string = resolveGlobPath(mainApkPattern);
         tl.checkPath(apkFile, 'apkFile');
         const reader = await apkReader.open(apkFile);
         const manifest = await reader.readManifest();
@@ -99,13 +40,13 @@ async function run() {
         console.log(tl.loc('FoundMainApk', apkFile, mainVersionCode));
         tl.debug(`    Found the main APK file: ${apkFile} (version code ${mainVersionCode}).`);
 
-        let apkFileList: string[] = await getAllApkPaths(apkFile);
+        const apkFileList: string[] = await getAllApkPaths(apkFile);
         if (apkFileList.length > 1) {
             console.log(tl.loc('FoundMultiApks'));
             console.log(apkFileList);
         }
 
-        let versionCodeFilterType: string = tl.getInput('versionCodeFilterType', false) ;
+        const versionCodeFilterType: string = tl.getInput('versionCodeFilterType', false) ;
         let versionCodeFilter: string | number[] = null;
         if (versionCodeFilterType === 'list') {
             versionCodeFilter = getVersionCodeListInput();
@@ -113,11 +54,11 @@ async function run() {
             versionCodeFilter = tl.getInput('replaceExpression', true);
         }
 
-        let track: string = tl.getInput('track', true);
-        let userFraction: number = Number(tl.getInput('userFraction', false)); // Used for staged rollouts
+        const track: string = tl.getInput('track', true);
+        const userFraction: number = Number(tl.getInput('userFraction', false)); // Used for staged rollouts
 
-        let shouldAttachMetadata: boolean = tl.getBoolInput('shouldAttachMetadata', false);
-        let shouldUploadApks: boolean = tl.getBoolInput('shouldUploadApks', false);
+        const shouldAttachMetadata: boolean = tl.getBoolInput('shouldAttachMetadata', false);
+        const shouldUploadApks: boolean = tl.getBoolInput('shouldUploadApks', false);
 
         let changelogFile: string = null;
         let languageCode: string = null;
@@ -130,12 +71,8 @@ async function run() {
             languageCode = tl.getInput('languageCode', false) || 'en-US';
         }
 
-        // Constants
-        let GOOGLE_PLAY_SCOPES: string[] = ['https://www.googleapis.com/auth/androidpublisher'];
-        let APK_MIME_TYPE: string = 'application/vnd.android.package-archive';
-
-        let globalParams: GlobalParams = { auth: null, params: {} };
-        let apkVersionCodes: number[] = [];
+        const globalParams: googleutil.GlobalParams = { auth: null, params: {} };
+        const apkVersionCodes: number[] = [];
 
         // The submission process is composed
         // of a transction with the following steps:
@@ -149,38 +86,37 @@ async function run() {
         // #7) Commit the edit transaction
 
         tl.debug(`Getting a package name from ${apkFile}`);
-        let packageName: string = manifest.package;
-        updateGlobalParams(globalParams, 'packageName', packageName);
+        const packageName: string = manifest.package;
+        googleutil.updateGlobalParams(globalParams, 'packageName', packageName);
 
         tl.debug('Initializing JWT.');
-        let jwtClient: any = new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
+        const jwtClient: any = googleutil.getJWT(key);
         globalParams.auth = jwtClient;
 
         tl.debug('Initializing Google Play publisher API.');
-        let edits: any = publisher.edits;
-        [edits, edits.apklistings, edits.apks, edits.tracks, edits.listings, edits.images, jwtClient].forEach(bb.promisifyAll);
+        const edits: any = googleutil.publisher.edits;
 
         tl.debug('Authorize JWT.');
         await jwtClient.authorizeAsync();
 
         console.log(tl.loc('GetNewEditAfterAuth'));
         tl.debug('Creating a new edit transaction in Google Play.');
-        let currentEdit: Edit = await getNewEdit(edits, globalParams, packageName);
-        updateGlobalParams(globalParams, 'editId', currentEdit.id);
+        const currentEdit: googleutil.Edit = await googleutil.getNewEdit(edits, globalParams, packageName);
+        googleutil.updateGlobalParams(globalParams, 'editId', currentEdit.id);
 
         if (shouldUploadApks) {
             tl.debug(`Uploading ${apkFileList.length} APK(s).`);
 
-            for (let apkFile of apkFileList) {
+            for (const apkFile of apkFileList) {
                 tl.debug(`Uploading APK ${apkFile}`);
-                let apk: Apk = await addApk(edits, packageName, apkFile, APK_MIME_TYPE);
+                const apk: googleutil.Apk = await googleutil.addApk(edits, packageName, apkFile);
                 tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}`);
                 apkVersionCodes.push(apk.versionCode);
             }
 
             console.log(tl.loc('UpdateTrack'));
             tl.debug(`Updating the track ${track}.`);
-            let updatedTrack: Track = await updateTrack(edits, packageName, track, apkVersionCodes, versionCodeFilterType, versionCodeFilter, userFraction);
+            const updatedTrack: googleutil.Track = await updateTrack(edits, packageName, track, apkVersionCodes, versionCodeFilterType, versionCodeFilter, userFraction);
             tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
         } else {
             tl.debug(`Getting APK version codes of ${apkFileList.length} APK(s).`);
@@ -205,84 +141,20 @@ async function run() {
         }
 
         tl.debug('Committing the edit transaction in Google Play.');
-        await commitEditTransaction(edits, track);
+        if (!edits) {
+            tl.debug('edits is null in commitEditTransaction');
+        }
+        if (!track) {
+            tl.debug('track is null in commitEditTransaction');
+        }
+
+        await edits.commit();
+
+        console.log(tl.loc('AptPublishSucceed'));
+        console.log(tl.loc('TrackInfo', track));
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));
     } catch (e) {
         tl.setResult(tl.TaskResult.Failed, e);
-    }
-}
-
-/**
- * Uses the provided JWT client to request a new edit from the Play store and attach the edit id to all requests made this session
- * Assumes authorized
- * @param {string} packageName unique android package name (com.android.etc)
- * @returns {Promise<Edit>} edit A promise that will return result from inserting a new edit
- *                          { id: string, expiryTimeSeconds: string }
- */
-async function getNewEdit(edits: any, globalParams: GlobalParams, packageName: string): Promise<Edit> {
-    let requestParameters: PackageParams = {
-        packageName: packageName
-    };
-
-    try {
-        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-
-        let res: Edit = (await edits.insertAsync(requestParameters))[0];
-        return res;
-    } catch (e) {
-        tl.debug(`Failed to create a new edit transaction for the package ${packageName}.`);
-        tl.debug(e);
-        throw new Error(tl.loc('CannotCreateTransaction', packageName, e));
-    }
-}
-
-async function commitEditTransaction(edits: any, track: string) {
-    if (!edits) {
-        tl.debug('edits is null in commitEditTransaction');
-    }
-    if (!track) {
-        tl.debug('track is null in commitEditTransaction');
-    }
-
-    try {
-        await edits.commitAsync();
-    } catch (e) {
-        tl.debug(`Error in edits.commitAsync(): ${JSON.stringify(e)}`);
-        throw new Error(`Error in edits.commitAsync(): ${JSON.stringify(e)}`);
-    }
-
-    console.log(tl.loc('AptPublishSucceed'));
-    console.log(tl.loc('TrackInfo', track));
-}
-
-/**
- * Adds an apk to an existing edit
- * Assumes authorized
- * @param {string} packageName unique android package name (com.android.etc)
- * @param {string} apkFile path to apk file
- * @returns {Promise} apk A promise that will return result from uploading an apk
- *                          { versionCode: integer, binary: { sha1: string } }
- */
-async function addApk(edits: any, packageName: string, apkFile: string, APK_MIME_TYPE: string): Promise<Apk> {
-    let requestParameters: PackageParams = {
-        packageName: packageName,
-        media: {
-            body: fs.createReadStream(apkFile),
-            mimeType: APK_MIME_TYPE
-        }
-    };
-
-    try {
-        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        let res: Apk = (await edits.apks.uploadAsync(requestParameters))[0];
-
-        tl.debug('returned: ' + JSON.stringify(res));
-
-        return res;
-    } catch (e) {
-        tl.debug(`Failed to upload the APK ${apkFile}`);
-        tl.debug(e);
-        throw new Error(tl.loc('CannotUploadApk', apkFile, e));
     }
 }
 
@@ -305,15 +177,15 @@ async function updateTrack(
     apkVersionCodes: number[],
     versionCodeListType: string,
     versionCodeFilter: string | number[],
-    userFraction: number): Promise<Track> {
+    userFraction: number): Promise<googleutil.Track> {
 
-    let requestParameters: PackageParams = {
+    let requestParameters: googleutil.PackageParams = {
         packageName: packageName,
         track: track
     };
 
-    let res: Track;
     let newTrackVersionCodes: number[] = [];
+    let res: googleutil.Track;
 
     if (versionCodeListType === 'all') {
         newTrackVersionCodes = apkVersionCodes;
@@ -322,7 +194,7 @@ async function updateTrack(
             tl.debug(`Reading current ${track} track info.`);
             tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
 
-            res = (await edits.tracks.getAsync(requestParameters))[0];
+            res = (await edits.tracks.get(requestParameters))[0];
         } catch (e) {
             tl.debug(`Failed to download track ${track} information.`);
             tl.debug(e);
@@ -362,25 +234,13 @@ async function updateTrack(
     }
 
     tl.debug(`New ${track} track version codes: ` + JSON.stringify(newTrackVersionCodes));
-    requestParameters.resource = {
-        track: track,
-        versionCodes: newTrackVersionCodes
-    };
-
-    if (track === 'rollout') {
-        requestParameters.resource.userFraction = userFraction;
-    }
-
     try {
-        tl.debug(`Updating the ${track} track info.`);
-        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        res = (await edits.tracks.updateAsync(requestParameters))[0];
+        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction);
     } catch (e) {
         tl.debug(`Failed to update track ${track}.`);
         tl.debug(e);
         throw new Error(tl.loc('CannotUpdateTrack', track, e));
     }
-
     return res;
 }
 
@@ -416,18 +276,22 @@ async function uploadCommonChangeLog(edits: any, languageCode: string, changelog
  * @returns nothing
  */
 async function addChangelog(edits: any, languageCode: string, changeLog: string, apkVersionCode: number) {
-    let requestParameters: PackageParams = {
+    let requestParameters: googleutil.PackageParams = {
         apkVersionCode: apkVersionCode,
         language: languageCode,
         resource: {
-            language: languageCode,
-            recentChanges: changeLog
+            releases: [{
+                releaseNotes: [{
+                    text: changeLog,
+                    language: languageCode
+                }]
+            }]
         }
     };
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        await edits.apklistings.updateAsync(requestParameters);
+        await edits.track.update(requestParameters);
     } catch (e) {
         tl.debug(`Failed to upload the ${languageCode} changelog for version ${apkVersionCode}`);
         tl.debug(e);
@@ -590,7 +454,7 @@ async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: numbe
  * @returns nothing
  */
 async function addLanguageListing(edits: any, languageCode: string, directory: string) {
-    let listingResource: AndroidResource = createListingResource(languageCode, directory);
+    let listingResource: googleutil.AndroidListingResource = createListingResource(languageCode, directory);
 
     let isPatch:boolean = (!listingResource.fullDescription) ||
                           (!listingResource.shortDescription) ||
@@ -601,7 +465,7 @@ async function addLanguageListing(edits: any, languageCode: string, directory: s
                           (!listingResource.video) &&
                           (!listingResource.title);
 
-    let listingRequestParameters: PackageParams = {
+    let listingRequestParameters: googleutil.PackageListingParams = {
         language: languageCode,
         resource: listingResource
     };
@@ -634,10 +498,10 @@ async function addLanguageListing(edits: any, languageCode: string, directory: s
  * Helper method for creating the resource for the edits.listings.update method.
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
  * @param {string} directory Directory where updated listing details can be found.
- * @returns {AndroidResource} resource A crafted resource for the edits.listings.update method.
+ * @returns {AndroidListingResource} resource A crafted resource for the edits.listings.update method.
  *          { languageCode: string, fullDescription: string, shortDescription: string, title: string, video: string }
  */
-function createListingResource(languageCode: string, directory: string): AndroidResource {
+function createListingResource(languageCode: string, directory: string): googleutil.AndroidListingResource {
     tl.debug(`Constructing resource to update listing with language code ${languageCode} from ${directory}`);
 
     let resourceParts = {
@@ -647,7 +511,7 @@ function createListingResource(languageCode: string, directory: string): Android
         video: 'video.txt'
     };
 
-    let resource: AndroidResource = {
+    let resource: googleutil.AndroidListingResource = {
         language: languageCode
     };
 
@@ -710,7 +574,7 @@ async function attachImages(edits: any, languageCode: string, directory: string)
  */
 async function removeOldImages(edits: any, languageCode: string, imageType: string) {
     try {
-        let imageRequest: PackageParams = {
+        let imageRequest: googleutil.PackageParams = {
             language: languageCode,
             imageType: imageType
         };
@@ -842,7 +706,7 @@ function getImageList(directory: string): { [key: string]: string[] } {
  * @returns nothing
  */
 async function uploadImage(edits: any, languageCode: string, imageType: string, imagePath: string) {
-    let imageRequest: PackageParams = {
+    let imageRequest: googleutil.PackageParams = {
         language: languageCode,
         imageType: imageType
     };
@@ -884,19 +748,6 @@ function helperResolveImageMimeType(imagePath: string): string {
             tl.debug(`Could not resolve image mime type for ${imagePath}. Defaulting to jpeg.`);
             return 'image/jpeg';
     }
-}
-
-/**
- * Update the universal parameters attached to every request
- * @param {string} paramName Name of parameter to add/update
- * @param {any} value value to assign to paramName. Any value is admissible.
- * @returns {void} void
- */
-function updateGlobalParams(globalParams: GlobalParams, paramName: string, value: any): void {
-    tl.debug(`Updating Global Parameter ${paramName} to ` + JSON.stringify(value));
-    globalParams.params[paramName] = value;
-    google.options(globalParams);
-    tl.debug('   ... updated.');
 }
 
 /**
