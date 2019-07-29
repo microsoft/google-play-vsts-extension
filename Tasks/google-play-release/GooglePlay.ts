@@ -97,7 +97,7 @@ async function run() {
         const edits: any = googleutil.publisher.edits;
 
         tl.debug('Authorize JWT.');
-        await jwtClient.authorizeAsync();
+        await jwtClient.authorize();
 
         console.log(tl.loc('GetNewEditAfterAuth'));
         tl.debug('Creating a new edit transaction in Google Play.');
@@ -477,14 +477,14 @@ async function addLanguageListing(edits: any, languageCode: string, directory: s
         } else if (isPatch) {
             tl.debug(`Patching an existing localized ${languageCode} store listing.`);
             tl.debug('Request Parameters: ' + JSON.stringify(listingRequestParameters));
-            await edits.listings.patchAsync(listingRequestParameters);
+            await edits.listings.patch(listingRequestParameters);
             tl.debug(`Successfully patched the localized ${languageCode} store listing.`);
         } else {
-            // The patchAsync method fails if the listing for the language does not exist already,
-            // while updateAsync actually updates or creates.
+            // The patch method fails if the listing for the language does not exist already,
+            // while update actually updates or creates.
             tl.debug(`Updating a localized ${languageCode} store listing.`);
             tl.debug('Request Parameters: ' + JSON.stringify(listingRequestParameters));
-            await edits.listings.updateAsync(listingRequestParameters);
+            await edits.listings.update(listingRequestParameters);
             tl.debug(`Successfully updated the localized ${languageCode} store listing.`);
         }
     } catch (e) {
@@ -581,7 +581,7 @@ async function removeOldImages(edits: any, languageCode: string, imageType: stri
 
         tl.debug(`Removing old images of type ${imageType} for language ${languageCode}.`);
         tl.debug('Request Parameters: ' + JSON.stringify(imageRequest));
-        await edits.images.deleteallAsync(imageRequest);
+        await edits.images.deleteall(imageRequest);
         tl.debug(`Successfully removed old images of type ${imageType} for language ${languageCode}.`);
     } catch (e) {
         tl.debug(`Failed to remove old images of type ${imageType} for language ${languageCode}.`);
@@ -720,7 +720,7 @@ async function uploadImage(edits: any, languageCode: string, imageType: string, 
     try {
         tl.debug(`Uploading image ${imagePath} of type ${imageType}.`);
         tl.debug('Request Parameters: ' + JSON.stringify(imageRequest));
-        await edits.images.uploadAsync(imageRequest);
+        await edits.images.upload(imageRequest);
         tl.debug(`Successfully uploaded image ${imagePath} of type ${imageType}.`);
     } catch (e) {
         tl.debug(`Failed to upload image ${imagePath} of type ${imageType}.`);
