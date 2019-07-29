@@ -74,7 +74,7 @@
             "options": {
                 "internal": "Internal test",
                 "alpha": "Alpha",
-                "beta": "Beta",            
+                "beta": "Beta",
                 "production": "Production",
                 "rollout": "Rollout"
             }

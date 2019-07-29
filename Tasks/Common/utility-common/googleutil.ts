@@ -195,10 +195,8 @@ export async function addApk(edits: any, packageName: string, apkFile: string): 
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        let res: Apk = (await edits.apks.uploadAsync(requestParameters))[0];
-
+        let res: Apk = (await edits.apks.upload(requestParameters))[0];
         tl.debug('returned: ' + JSON.stringify(res));
-
         return res;
     } catch (e) {
         tl.debug(`Failed to upload the APK ${apkFile}`);

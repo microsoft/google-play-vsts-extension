@@ -408,7 +408,7 @@ async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: 
 async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDirectory: string) {
     let metadataLanguageCodes: string[] = fs.readdirSync(metadataRootDirectory).filter((subPath) => {
         try {
-            return fs.statSync(path.join(metadataRootDirectory, subPath)).isDirectory();
+            return tl.stats(path.join(metadataRootDirectory, subPath)).isDirectory();
         } catch (e) {
             tl.debug(`Failed to stat path ${subPath}:`);
             tl.debug(e);

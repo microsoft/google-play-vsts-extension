@@ -65,4 +65,48 @@ describe('L0 Suite google-play-release', function () {
         assert(testRunner.failed, 'task should have failed');
         done();
     });
+
+    it('test succeeds on happy path', (done) => {
+        const testFile = path.join(__dirname, 'L0HappyPath.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(testRunner.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('test fails task when cannot read changelog', (done) => {
+        const testFile = path.join(__dirname, 'L0UseChangeLogFail.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(testRunner.stdOutContained('loc_mock_AppendChangelog /path/to/changelog'), 'Did not have expected localized message: ' + JSON.stringify(testRunner));
+        assert(testRunner.createdErrorIssue('Error: loc_mock_CannotReadChangeLog /path/to/changelog'), 'Did not have expected localized message: ' + JSON.stringify(testRunner));
+        assert(testRunner.failed, 'task should have failed');
+        done();
+    });
+
+    it('test succeeds task with updating changelog', (done) => {
+        const testFile = path.join(__dirname, 'L0UseChangeLog.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(testRunner.stdOutContained('loc_mock_AppendChangelog /path/to/changelog'), 'Did not have expected localized message: ' + JSON.stringify(testRunner));
+        assert(testRunner.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('test uploads metadata', (done) => {
+        const testFile = path.join(__dirname, 'L0AttachMetadata.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(testRunner.stdOutContained('loc_mock_AttachingMetadataToRelease'), 'Did not have expected localized message: ' + JSON.stringify(testRunner));
+        assert(testRunner.succeeded, 'task should have succeeded: ' + JSON.stringify(testRunner));
+        done();
+    });
 });
