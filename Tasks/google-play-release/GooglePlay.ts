@@ -16,7 +16,7 @@ async function run() {
         if (authType === 'JsonFile') {
             const serviceAccountKeyFile: string = tl.getPathInput('serviceAccountKey', true, true);
 
-            const stats: fs.Stats = fs.statSync(serviceAccountKeyFile);
+            const stats: tl.FsStats = tl.stats(serviceAccountKeyFile);
             if (stats && stats.isFile()) {
                 key = require(serviceAccountKeyFile);
             } else {
@@ -251,7 +251,7 @@ async function updateTrack(
  * @returns nothing
  */
 async function uploadCommonChangeLog(edits: any, languageCode: string, changelogFile: string, apkVersionCodes: number[]) {
-    let stats: fs.Stats = fs.statSync(changelogFile);
+    let stats: tl.FsStats = tl.stats(changelogFile);
 
     if (stats && stats.isFile()) {
         console.log(tl.loc('AppendChangelog', changelogFile));
@@ -334,7 +334,7 @@ async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: 
         try {
             let fileToCheck: string = path.join(changelogDir, subPath);
             tl.debug(`Checking File ${fileToCheck}`);
-            return fs.statSync(fileToCheck).isFile();
+            return tl.stats(fileToCheck).isFile();
         } catch (e) {
             tl.debug(`Failed to stat path ${subPath}:`);
             tl.debug(e);
@@ -633,7 +633,7 @@ function getImageList(directory: string): { [key: string]: string[] } {
                 for (let acceptedExtension of acceptedExtensions) {
                     let fullPathToFileToCheck: string = path.join(imageDirectory, imageType + acceptedExtension);
                     try {
-                        let imageStat: fs.Stats = fs.statSync(fullPathToFileToCheck);
+                        let imageStat: tl.FsStats = tl.stats(fullPathToFileToCheck);
                         if (imageStat) {
                             shouldAttemptUpload = imageStat.isFile();
                             if (shouldAttemptUpload) {
