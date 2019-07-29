@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import { google } from 'googleapis';
 
 export const publisher = google.androidpublisher('v3');

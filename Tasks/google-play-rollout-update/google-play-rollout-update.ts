@@ -1,6 +1,5 @@
-import * as fs from 'fs';
 import * as path from 'path';
-import * as tl from 'vsts-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as googleutil from 'utility-common/googleutil';
 
 const rolloutTrack = 'production'; // v2 it used to be called 'rollout'
@@ -16,7 +15,7 @@ async function run() {
             if (!serviceAccountKeyFile) {
                 throw new Error(tl.loc('JsonKeyFileNotFound'));
             }
-            const stats: fs.Stats = fs.statSync(serviceAccountKeyFile);
+            const stats: tl.FsStats = tl.stats(serviceAccountKeyFile);
             if (stats && stats.isFile()) {
                 key = require(serviceAccountKeyFile);
             } else {

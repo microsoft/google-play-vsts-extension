@@ -5,7 +5,7 @@
   "author": "Microsoft Corporation",
   "license": "ISC",
   "dependencies": {
-    "googleapis": "41.0.0",
-    "vsts-task-lib": "2.7.0"
+    "azure-pipelines-task-lib": "2.8.0",
+    "googleapis": "41.0.0"
   }
 }

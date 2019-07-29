@@ -9,8 +9,6 @@
   "author": "Jonathan Carter",
   "license": "ISC",
   "dependencies": {
-    "googleapis": "41.0.0",
-    "utility-common": "file:../../_build/Tasks/Common/utility-common",
-    "vsts-task-lib": "2.7.0"
+    "utility-common": "file:../../_build/Tasks/Common/utility-common"
   }
 }
