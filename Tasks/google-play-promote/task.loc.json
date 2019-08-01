@@ -13,7 +13,7 @@
     "npm"
   ],
   "version": {
-    "Major": "2",
+    "Major": "3",
     "Minor": "156",
     "Patch": "0"
   },
@@ -68,7 +68,7 @@
         "internal": "Internal test",
         "alpha": "Alpha",
         "beta": "Beta",
-        "rollout": "Rollout"
+        "production": "Production"
       }
     },
     {
@@ -81,18 +81,25 @@
       "options": {
         "alpha": "Alpha",
         "beta": "Beta",
-        "production": "Production",
-        "rollout": "Rollout"
+        "production": "Production"
       }
+    },
+    {
+      "name": "rolloutToUserFraction",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.rolloutToUserFraction",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rolloutToUserFraction"
     },
     {
       "name": "userFraction",
       "type": "string",
       "label": "ms-resource:loc.input.label.userFraction",
-      "defaultValue": "",
+      "defaultValue": "1.0",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.userFraction",
-      "visibleRule": "destinationTrack = rollout"
+      "visibleRule": "rolloutToUserFraction = true"
     }
   ],
   "execution": {

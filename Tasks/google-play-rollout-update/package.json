@@ -10,7 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "azure-pipelines-task-lib": "2.8.0",
-    "googleapis": "41.0.0",
-    "utility-common": "file:../../_build/Tasks/Common/utility-common"
+    "gaxios": "1.8.0",
+    "googleapis": "^33.0.0",
+    "google-auth-library": "1.6.1"
   }
 }

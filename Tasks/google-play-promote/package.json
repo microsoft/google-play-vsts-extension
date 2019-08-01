@@ -9,6 +9,9 @@
   "author": "Jonathan Carter",
   "license": "ISC",
   "dependencies": {
-    "utility-common": "file:../../_build/Tasks/Common/utility-common"
+    "azure-pipelines-task-lib": "2.8.0",
+    "gaxios": "1.8.0",
+    "googleapis": "^33.0.0",
+    "google-auth-library": "1.6.1"
   }
 }

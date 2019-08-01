@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as googleutil from 'utility-common/googleutil';
+import * as googleutil from './googleutil';
 
 async function run() {
     try {
@@ -31,7 +31,8 @@ async function run() {
         const packageName: string = tl.getPathInput('packageName', true);
         const sourceTrack: string = tl.getInput('sourceTrack', true);
         const destinationTrack: string = tl.getInput('destinationTrack', true);
-        const userFraction: number = Number(tl.getInput('userFraction', false)); // Used for staged rollouts
+        const userFractionString: string = tl.getInput('userFraction', false);
+        const userFraction: number = Number(userFractionString ? userFractionString : 1.0);
 
         // Constants
         const globalParams: googleutil.GlobalParams = { auth: null, params: {} };
@@ -47,16 +48,14 @@ async function run() {
         await googleutil.getNewEdit(edits, globalParams, packageName);
 
         console.log(tl.loc('GetTrackInfo', sourceTrack));
-        //const track: any = 
-        await googleutil.getTrack(edits, packageName, sourceTrack);
+        const track = await googleutil.getTrack(edits, packageName, sourceTrack);
 
         console.log(tl.loc('PromoteTrack', destinationTrack));
-        //await updateTrack(edits, packageName, destinationTrack, res[0].versionCodes, userFraction);
+        await googleutil.updateTrack(edits, packageName, destinationTrack, track.releases[0].versionCodes, userFraction);
 
         console.log(tl.loc('CleanTrack', sourceTrack));
         await googleutil.updateTrack(edits, packageName, sourceTrack, [], userFraction);
 
-        //const commit: any = 
         await edits.commit();
 
         console.log(tl.loc('PromoteSucceed'));

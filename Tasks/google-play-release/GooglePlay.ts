@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as glob from 'glob';
 import * as apkReader from 'adbkit-apkreader';
-import * as googleutil from 'utility-common/googleutil';
+import * as googleutil from './googleutil';
 
 async function run() {
     try {
@@ -55,7 +55,8 @@ async function run() {
         }
 
         const track: string = tl.getInput('track', true);
-        const userFraction: number = Number(tl.getInput('userFraction', false)); // Used for staged rollouts
+        const userFractionString: string = tl.getInput('userFraction', false);
+        const userFraction: number = Number(userFractionString ? userFractionString : 1.0);
 
         const shouldAttachMetadata: boolean = tl.getBoolInput('shouldAttachMetadata', false);
         const shouldUploadApks: boolean = tl.getBoolInput('shouldUploadApks', false);
@@ -101,8 +102,7 @@ async function run() {
 
         console.log(tl.loc('GetNewEditAfterAuth'));
         tl.debug('Creating a new edit transaction in Google Play.');
-        const currentEdit: googleutil.Edit = await googleutil.getNewEdit(edits, globalParams, packageName);
-        googleutil.updateGlobalParams(globalParams, 'editId', currentEdit.id);
+        await googleutil.getNewEdit(edits, globalParams, packageName);
 
         if (shouldUploadApks) {
             tl.debug(`Uploading ${apkFileList.length} APK(s).`);
@@ -141,13 +141,6 @@ async function run() {
         }
 
         tl.debug('Committing the edit transaction in Google Play.');
-        if (!edits) {
-            tl.debug('edits is null in commitEditTransaction');
-        }
-        if (!track) {
-            tl.debug('track is null in commitEditTransaction');
-        }
-
         await edits.commit();
 
         console.log(tl.loc('AptPublishSucceed'));
@@ -155,6 +148,7 @@ async function run() {
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));
     } catch (e) {
         tl.setResult(tl.TaskResult.Failed, e);
+        tl.debug(`Error: ${JSON.stringify(e)}`);
     }
 }
 
@@ -179,7 +173,7 @@ async function updateTrack(
     versionCodeFilter: string | number[],
     userFraction: number): Promise<googleutil.Track> {
 
-    let requestParameters: googleutil.PackageParams = {
+    const requestParameters: googleutil.PackageParams = {
         packageName: packageName,
         track: track
     };
@@ -193,20 +187,19 @@ async function updateTrack(
         try {
             tl.debug(`Reading current ${track} track info.`);
             tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-
-            res = (await edits.tracks.get(requestParameters))[0];
+            res = await edits.tracks.get(requestParameters);
         } catch (e) {
             tl.debug(`Failed to download track ${track} information.`);
             tl.debug(e);
             throw new Error(tl.loc('CannotDownloadTrack', track, e));
         }
 
-        let oldTrackVersionCodes: number[] = res.versionCodes;
+        const oldTrackVersionCodes: number[] = res.releases[0].versionCodes;
         tl.debug('Current version codes: ' + JSON.stringify(oldTrackVersionCodes));
 
         if (typeof(versionCodeFilter) === 'string') {
             tl.debug(`Removing version codes matching the regular expression: ^${versionCodeFilter as string}$`);
-            let versionCodesToRemove: RegExp = new RegExp(`^${versionCodeFilter as string}$`);
+            const versionCodesToRemove: RegExp = new RegExp(`^${versionCodeFilter as string}$`);
 
             oldTrackVersionCodes.forEach((versionCode) => {
                 if (!versionCode.toString().match(versionCodesToRemove)) {
@@ -214,7 +207,7 @@ async function updateTrack(
                 }
             });
         } else {
-            let versionCodesToRemove: number[] = versionCodeFilter as number[];
+            const versionCodesToRemove: number[] = versionCodeFilter as number[];
             tl.debug('Removing version codes: ' + JSON.stringify(versionCodesToRemove));
 
             oldTrackVersionCodes.forEach((versionCode) => {
@@ -251,13 +244,13 @@ async function updateTrack(
  * @returns nothing
  */
 async function uploadCommonChangeLog(edits: any, languageCode: string, changelogFile: string, apkVersionCodes: number[]) {
-    let stats: tl.FsStats = tl.stats(changelogFile);
+    const stats: tl.FsStats = tl.stats(changelogFile);
 
     if (stats && stats.isFile()) {
         console.log(tl.loc('AppendChangelog', changelogFile));
-        let changeLog = getChangelog(changelogFile);
+        const changeLog = getChangelog(changelogFile);
 
-        for (let apkVersionCode of apkVersionCodes) {
+        for (const apkVersionCode of apkVersionCodes) {
             tl.debug(`Adding the change log file ${changelogFile} to the APK version code ${apkVersionCode}`);
             await addChangelog(edits, languageCode, changeLog, apkVersionCode);
             tl.debug(`Successfully added the change log file ${changelogFile} to the APK version code ${apkVersionCode}`);
@@ -276,7 +269,7 @@ async function uploadCommonChangeLog(edits: any, languageCode: string, changelog
  * @returns nothing
  */
 async function addChangelog(edits: any, languageCode: string, changeLog: string, apkVersionCode: number) {
-    let requestParameters: googleutil.PackageParams = {
+    const requestParameters: googleutil.PackageParams = {
         apkVersionCode: apkVersionCode,
         language: languageCode,
         resource: {
@@ -306,18 +299,14 @@ async function addChangelog(edits: any, languageCode: string, changeLog: string,
  * @returns {string} change log file content as a string.
  */
 function getChangelog(changelogFile: string): string {
-    let changelog: string;
     tl.debug(`Reading change log from ${changelogFile}`);
-
     try {
-        changelog = fs.readFileSync(changelogFile).toString();
+        return fs.readFileSync(changelogFile).toString();
     } catch (e) {
         tl.debug(`Change log reading from ${changelogFile} failed`);
         tl.debug(e);
         throw new Error(tl.loc('CannotReadChangeLog', changelogFile));
     }
-
-    return changelog;
 }
 
 /**
@@ -328,11 +317,11 @@ function getChangelog(changelogFile: string): string {
  * @returns nothing
  */
 async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: string, directory: string) {
-    let changelogDir: string = path.join(directory, 'changelogs');
+    const changelogDir: string = path.join(directory, 'changelogs');
 
-    let changelogs: string[] = fs.readdirSync(changelogDir).filter(subPath => {
+    const changelogs: string[] = fs.readdirSync(changelogDir).filter(subPath => {
         try {
-            let fileToCheck: string = path.join(changelogDir, subPath);
+            const fileToCheck: string = path.join(changelogDir, subPath);
             tl.debug(`Checking File ${fileToCheck}`);
             return tl.stats(fileToCheck).isFile();
         } catch (e) {
@@ -348,15 +337,15 @@ async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: 
     }
 
     let versionCodeFound: boolean = false;
-    for (let changelogFile of changelogs) {
-        let changelogName: string = path.basename(changelogFile, path.extname(changelogFile));
-        let changelogVersion: number = parseInt(changelogName, 10);
+    for (const changelogFile of changelogs) {
+        const changelogName: string = path.basename(changelogFile, path.extname(changelogFile));
+        const changelogVersion: number = parseInt(changelogName, 10);
         if (!isNaN(changelogVersion) && (apkVersionCodes.indexOf(changelogVersion) !== -1)) {
             versionCodeFound = true;
-            let fullChangelogPath: string = path.join(changelogDir, changelogFile);
+            const fullChangelogPath: string = path.join(changelogDir, changelogFile);
 
             console.log(tl.loc('AppendChangelog', fullChangelogPath));
-            let changeLog = getChangelog(fullChangelogPath);
+            const changeLog = getChangelog(fullChangelogPath);
 
             tl.debug(`Uploading change log version ${changelogVersion} from ${fullChangelogPath} for language code ${languageCode}`);
             await addChangelog(edits, languageCode, changeLog, changelogVersion);
@@ -368,7 +357,7 @@ async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: 
 
     if (!versionCodeFound && (changelogs.length === 1)) {
         tl.debug(`Applying the ${languageCode} change log file ${changelogs[0]} to all version codes`);
-        let fullChangelogPath: string = path.join(changelogDir, changelogs[0]);
+        const fullChangelogPath: string = path.join(changelogDir, changelogs[0]);
         await uploadCommonChangeLog(edits, languageCode, fullChangelogPath, apkVersionCodes);
     }
 }
@@ -406,7 +395,7 @@ async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: 
  * @returns nothing
  */
 async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDirectory: string) {
-    let metadataLanguageCodes: string[] = fs.readdirSync(metadataRootDirectory).filter((subPath) => {
+    const metadataLanguageCodes: string[] = fs.readdirSync(metadataRootDirectory).filter((subPath) => {
         try {
             return tl.stats(path.join(metadataRootDirectory, subPath)).isDirectory();
         } catch (e) {
@@ -418,8 +407,8 @@ async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDi
 
     tl.debug(`Found language codes: ${metadataLanguageCodes}`);
 
-    for (let languageCode of metadataLanguageCodes) {
-        let metadataDirectory: string = path.join(metadataRootDirectory, languageCode);
+    for (const languageCode of metadataLanguageCodes) {
+        const metadataDirectory: string = path.join(metadataRootDirectory, languageCode);
 
         tl.debug(`Uploading metadata from ${metadataDirectory} for language code ${languageCode} and version codes ${apkVersionCodes}`);
         await uploadMetadataWithLanguageCode(edits, apkVersionCodes, languageCode, metadataDirectory);
@@ -454,18 +443,18 @@ async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: numbe
  * @returns nothing
  */
 async function addLanguageListing(edits: any, languageCode: string, directory: string) {
-    let listingResource: googleutil.AndroidListingResource = createListingResource(languageCode, directory);
+    const listingResource: googleutil.AndroidListingResource = createListingResource(languageCode, directory);
 
-    let isPatch:boolean = (!listingResource.fullDescription) ||
+    const isPatch:boolean = (!listingResource.fullDescription) ||
                           (!listingResource.shortDescription) ||
                           (!listingResource.title);
 
-    let isEmpty:boolean = (!listingResource.fullDescription) &&
+    const isEmpty:boolean = (!listingResource.fullDescription) &&
                           (!listingResource.shortDescription) &&
                           (!listingResource.video) &&
                           (!listingResource.title);
 
-    let listingRequestParameters: googleutil.PackageListingParams = {
+    const listingRequestParameters: googleutil.PackageListingParams = {
         language: languageCode,
         resource: listingResource
     };
@@ -504,23 +493,22 @@ async function addLanguageListing(edits: any, languageCode: string, directory: s
 function createListingResource(languageCode: string, directory: string): googleutil.AndroidListingResource {
     tl.debug(`Constructing resource to update listing with language code ${languageCode} from ${directory}`);
 
-    let resourceParts = {
+    const resourceParts = {
         fullDescription: 'full_description.txt',
         shortDescription: 'short_description.txt',
         title: 'title.txt',
         video: 'video.txt'
     };
 
-    let resource: googleutil.AndroidListingResource = {
+    const resource: googleutil.AndroidListingResource = {
         language: languageCode
     };
 
-    for (let i in resourceParts) {
+    for (const i in resourceParts) {
         if (resourceParts.hasOwnProperty(i)) {
-            let file: string = path.join(directory, resourceParts[i]);
-            // let fileContents;
+            const file: string = path.join(directory, resourceParts[i]);
             try {
-                let fileContents: Buffer = fs.readFileSync(file);
+                const fileContents: Buffer = fs.readFileSync(file);
                 resource[i] = fileContents.toString();
             } catch (e) {
                 tl.debug(`Failed to read metadata file ${file}:`);
@@ -542,19 +530,19 @@ function createListingResource(languageCode: string, directory: string): googleu
  * @returns nothing
  */
 async function attachImages(edits: any, languageCode: string, directory: string) {
-    let imageList: { [key: string]: string[] } = getImageList(directory);
+    const imageList: { [key: string]: string[] } = getImageList(directory);
     tl.debug(`Found ${languageCode} images: ${JSON.stringify(imageList)}`);
 
     let cnt: number = 0;
-    for (let imageType of Object.keys(imageList)) {
-        let images: string[] = imageList[imageType];
+    for (const imageType of Object.keys(imageList)) {
+        const images: string[] = imageList[imageType];
         tl.debug(`Uploading images of type ${imageType}: ${JSON.stringify(images)}`);
 
         if (images.length > 0) {
             await removeOldImages(edits, languageCode, imageType);
         }
 
-        for (let image of images) {
+        for (const image of images) {
             tl.debug(`Uploading image of type ${imageType} from ${image}`);
             await uploadImage(edits, languageCode, imageType, image);
             cnt++;
@@ -613,13 +601,13 @@ async function removeOldImages(edits: any, languageCode: string, imageType: stri
  *                              { [imageType]: string[] }
  */
 function getImageList(directory: string): { [key: string]: string[] } {
-    let imageTypes: string[] = ['featureGraphic', 'icon', 'promoGraphic', 'tvBanner', 'phoneScreenshots', 'sevenInchScreenshots', 'tenInchScreenshots', 'tvScreenshots', 'wearScreenshots'];
-    let acceptedExtensions: string[] = ['.png', '.jpg', '.jpeg'];
+    const imageTypes: string[] = ['featureGraphic', 'icon', 'promoGraphic', 'tvBanner', 'phoneScreenshots', 'sevenInchScreenshots', 'tenInchScreenshots', 'tvScreenshots', 'wearScreenshots'];
+    const acceptedExtensions: string[] = ['.png', '.jpg', '.jpeg'];
 
-    let imageDirectory: string = path.join(directory, 'images');
-    let imageList: { [key: string]: string[] }  = {};
+    const imageDirectory: string = path.join(directory, 'images');
+    const imageList: { [key: string]: string[] }  = {};
 
-    for (let imageType of imageTypes) {
+    for (const imageType of imageTypes) {
         let shouldAttemptUpload: boolean = false;
 
         imageList[imageType] = [];
@@ -667,15 +655,14 @@ function getImageList(directory: string): { [key: string]: string[] } {
                         } else {
                             imageList[imageType] = fs.readdirSync(fullPathToDirToCheck)
                                 .filter(function (image) {
-                                    let pathIsFile = false;
                                     try {
-                                        pathIsFile = fs.statSync(path.join(fullPathToDirToCheck, image)).isFile();
+                                        return fs.statSync(path.join(fullPathToDirToCheck, image)).isFile();
                                     } catch (e) {
                                         tl.debug(e);
                                         tl.debug(`Failed to stat path ${image}. Ignoring...`);
                                     }
 
-                                    return pathIsFile;
+                                    return false;
                                 })
                                 .map(function (image) {
                                     return path.join(fullPathToDirToCheck, image);
@@ -706,7 +693,7 @@ function getImageList(directory: string): { [key: string]: string[] } {
  * @returns nothing
  */
 async function uploadImage(edits: any, languageCode: string, imageType: string, imagePath: string) {
-    let imageRequest: googleutil.PackageParams = {
+    const imageRequest: googleutil.PackageParams = {
         language: languageCode,
         imageType: imageType
     };
@@ -736,7 +723,7 @@ async function uploadImage(edits: any, languageCode: string, imageType: string, 
  * @returns {string} mimeType Google Play accepted image mime type that imagePath most closely maps to.
  */
 function helperResolveImageMimeType(imagePath: string): string {
-    let extension: string = imagePath.split('.').pop();
+    const extension: string = imagePath.split('.').pop();
 
     switch (extension) {
         case 'png':
@@ -760,7 +747,7 @@ function resolveGlobPath(path: string): string {
         // VSTS tries to be smart when passing in paths with spaces in them by quoting the whole path. Unfortunately, this actually breaks everything, so remove them here.
         path = path.replace(/\"/g, '');
 
-        let filesList: string[] = glob.sync(path);
+        const filesList: string[] = glob.sync(path);
         if (filesList.length > 0) {
             path = filesList[0];
         }
@@ -818,12 +805,12 @@ async function getAllApkPaths(mainApkFile: string): Promise<string[]> {
 }
 
 function getVersionCodeListInput(): number[] {
-    let versionCodeFilterInput: string[] = tl.getDelimitedInput('replaceList', ',', false);
-    let versionCodeFilter: number[] = [];
-    let incorrectCodes: string[] = [];
+    const versionCodeFilterInput: string[] = tl.getDelimitedInput('replaceList', ',', false);
+    const versionCodeFilter: number[] = [];
+    const incorrectCodes: string[] = [];
 
-    for (let versionCode of versionCodeFilterInput) {
-        let versionCodeNumber: number = parseInt(versionCode.trim(), 10);
+    for (const versionCode of versionCodeFilterInput) {
+        const versionCodeNumber: number = parseInt(versionCode.trim(), 10);
 
         if (versionCodeNumber && (versionCodeNumber > 0)) {
             versionCodeFilter.push(versionCodeNumber);

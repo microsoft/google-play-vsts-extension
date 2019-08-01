@@ -22,7 +22,7 @@ const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
 };
 tr.setAnswers(a);
 
-tr.registerMock('utility-common/googleutil', {
+tr.registerMock('./googleutil', {
     publisher: {
         edits: {
             commit: sinon.stub()

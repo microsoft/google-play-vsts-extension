@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { google } from 'googleapis';
+import { JWT } from 'google-auth-library';
 
 export const publisher = google.androidpublisher('v3');
 
@@ -71,10 +72,22 @@ export interface PackageListingParams {
     uploadType?: string;
 }
 
+export interface ReleaseNote {
+    language?: string;
+    text?: string;
+}
+
+export interface Release {
+    name?: string;
+    versionCodes?: number[];
+    userFraction?: number;
+    releaseNotes: ReleaseNote[];
+    status?: string;
+}
+
 export interface Track {
     track: string;
-    versionCodes: number[];
-    userFraction: number;
+    releases: Release[];
 }
 
 export interface GlobalParams {
@@ -82,9 +95,9 @@ export interface GlobalParams {
     params?: PackageParams;
 }
 
-export function getJWT(key: ClientKey) {
+export function getJWT(key: ClientKey): JWT {
     const GOOGLE_PLAY_SCOPES: string[] = ['https://www.googleapis.com/auth/androidpublisher'];
-    return new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null)
+    return new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
 }
 
 /**
@@ -94,7 +107,7 @@ export function getJWT(key: ClientKey) {
  * @return {Promise} edit - A promise that will return result from inserting a new edit
  *                          { id: string, expiryTimeSeconds: string }
  */
-export async function getNewEdit(edits: any, globalParams: GlobalParams, packageName: string): Promise<any> {
+export async function getNewEdit(edits: any, globalParams: GlobalParams, packageName: string): Promise<Edit> {
     tl.debug('Creating a new edit');
     const requestParameters: PackageParams = {
         packageName: packageName
@@ -103,7 +116,7 @@ export async function getNewEdit(edits: any, globalParams: GlobalParams, package
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
     const res = await edits.insert(requestParameters);
     updateGlobalParams(globalParams, 'editId', res.data.id);
-    return res;
+    return res.data;
 }
 
 /**
@@ -114,7 +127,7 @@ export async function getNewEdit(edits: any, globalParams: GlobalParams, package
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-export function getTrack(edits: any, packageName: string, track: string): Promise<any> {
+export async function getTrack(edits: any, packageName: string, track: string): Promise<Track> {
     tl.debug('Getting Track information');
     const requestParameters: PackageParams = {
         packageName: packageName,
@@ -122,7 +135,8 @@ export function getTrack(edits: any, packageName: string, track: string): Promis
     };
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
-    return edits.tracks.get(requestParameters);
+    const getTrack = await edits.tracks.get(requestParameters);
+    return getTrack.data;
 }
 
 /**
@@ -131,11 +145,11 @@ export function getTrack(edits: any, packageName: string, track: string): Promis
  * @param {string} packageName - unique android package name (com.android.etc)
  * @param {string} track - one of the values {"internal", "alpha", "beta", "production"}
  * @param {integer or [integers]} versionCode - version code returned from an apk call. will take either a number or a [number]
- * @param {double} userFraction - for rollout, fraction of users to get update
+ * @param {double} userFraction - for rollouting out a release to a track, it's the fraction of users to get update 1.0 is all users
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-export function updateTrack(edits: any, packageName: string, track: string, versionCode: any, userFraction: number): Promise<any> {
+export async function updateTrack(edits: any, packageName: string, track: string, versionCode: any, userFraction: number): Promise<Track> {
     tl.debug('Updating track');
     const release: AndroidRelease = {
         versionCodes: (typeof versionCode === 'number' ? [versionCode] : versionCode)
@@ -159,7 +173,8 @@ export function updateTrack(edits: any, packageName: string, track: string, vers
     };
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
-    return edits.tracks.update(requestParameters);
+    const updatedTrack = await edits.tracks.update(requestParameters);
+    return updatedTrack.data;
 }
 
 /**
@@ -195,7 +210,7 @@ export async function addApk(edits: any, packageName: string, apkFile: string): 
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        let res: Apk = (await edits.apks.upload(requestParameters))[0];
+        const res: Apk = (await edits.apks.upload(requestParameters)).data;
         tl.debug('returned: ' + JSON.stringify(res));
         return res;
     } catch (e) {

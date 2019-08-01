@@ -13,8 +13,8 @@
         "npm"
     ],
     "version": {
-        "Major": "2",
-        "Minor": "142",
+        "Major": "3",
+        "Minor": "156",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
@@ -75,18 +75,25 @@
                 "internal": "Internal test",
                 "alpha": "Alpha",
                 "beta": "Beta",
-                "production": "Production",
-                "rollout": "Rollout"
+                "production": "Production"
             }
+        },
+        {
+            "name": "rolloutToUserFraction",
+            "type": "boolean",
+            "label": "Rollout Release",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Rollout the release to a percentage of users."
         },
         {
             "name": "userFraction",
             "type": "string",
             "label": "Rollout Fraction",
-            "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "The percentage of users to roll the specified APK out to.",
-            "visibleRule": "track = rollout"
+            "defaultValue": "1.0",
+            "required": false,
+            "helpMarkDown": "The percentage of users to release the specified APK out to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.",
+            "visibleRule": "rolloutToUserFraction = true"
         },
         {
             "name": "shouldAttachMetadata",

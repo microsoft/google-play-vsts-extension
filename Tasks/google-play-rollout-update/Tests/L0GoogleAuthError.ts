@@ -11,7 +11,7 @@ tr.setInput('serviceEndpoint', 'myServiceEndpoint');
 tr.setInput('packageName', 'myPackageName');
 tr.setInput('userFraction', '1.0');
 
-tr.registerMock('utility-common/googleutil', {
+tr.registerMock('./googleutil', {
     publisher: {
         edits: {}
     },

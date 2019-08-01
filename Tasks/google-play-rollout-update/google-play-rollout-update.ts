@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as googleutil from 'utility-common/googleutil';
+import * as googleutil from './googleutil';
 
 const rolloutTrack = 'production'; // v2 it used to be called 'rollout'
 
@@ -48,20 +48,20 @@ async function run() {
         await googleutil.getNewEdit(edits, globalParams, packageName);
 
         console.log(tl.loc('GetTrackRolloutInfo'));
-        const track: any = await googleutil.getTrack(edits, packageName, rolloutTrack);
-        tl.debug('Track' + JSON.stringify(track.data));
-        const inProgressTrack = track.data.releases.find(x => x.status === 'inProgress');
+        const track: googleutil.Track = await googleutil.getTrack(edits, packageName, rolloutTrack);
+        tl.debug('Track: ' + JSON.stringify(track));
+        const inProgressTrack = track.releases.find(x => x.status === 'inProgress');
         if (!inProgressTrack) {
             throw new Error(tl.loc('InProgressNotFound'));
         }
 
         console.log(tl.loc('CurrentUserFrac', inProgressTrack.userFraction));
-        const updatedTrack: any = await googleutil.updateTrack(edits, packageName, rolloutTrack, inProgressTrack.versionCodes, userFraction);
-        tl.debug('Update Track' + JSON.stringify(updatedTrack.data));
+        const updatedTrack: googleutil.Track = await googleutil.updateTrack(edits, packageName, rolloutTrack, inProgressTrack.versionCodes, userFraction);
+        tl.debug('Update Track: ' + JSON.stringify(updatedTrack));
 
         console.log(tl.loc('RolloutFracUpdate'));
-        const commit: any = await edits.commit();
-        tl.debug('Commit' + JSON.stringify(commit.data));
+        const commit = await edits.commit();
+        tl.debug('Commit: ' + JSON.stringify(commit.data));
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));
     } catch (err) {
