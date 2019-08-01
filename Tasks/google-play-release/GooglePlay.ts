@@ -55,8 +55,8 @@ async function run() {
         }
 
         const track: string = tl.getInput('track', true);
-        const userFractionString: string = tl.getInput('userFraction', false);
-        const userFraction: number = Number(userFractionString ? userFractionString : 1.0);
+        const userFractionSupplied: boolean = tl.getBoolInput('rolloutToUserFraction');
+        const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
 
         const shouldAttachMetadata: boolean = tl.getBoolInput('shouldAttachMetadata', false);
         const shouldUploadApks: boolean = tl.getBoolInput('shouldUploadApks', false);
@@ -148,7 +148,6 @@ async function run() {
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));
     } catch (e) {
         tl.setResult(tl.TaskResult.Failed, e);
-        tl.debug(`Error: ${JSON.stringify(e)}`);
     }
 }
 

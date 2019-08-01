@@ -17,7 +17,7 @@ describe('L0 Suite google-play-promote', function () {
 
         testRunner.run();
 
-        assert(testRunner.createdErrorIssue('Error: loc_mock_EndpointNotFound'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.createdErrorIssue('Error: loc_mock_EndpointNotFound'), 'Did not print the expected message');
         assert(testRunner.failed, 'task should have failed');
         done();
     });
@@ -28,7 +28,7 @@ describe('L0 Suite google-play-promote', function () {
 
         testRunner.run();
 
-        assert(testRunner.createdErrorIssue('Error: loc_mock_JsonKeyFileNotFound'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.createdErrorIssue('Error: loc_mock_JsonKeyFileNotFound'), 'Did not print the expected message');
         assert(testRunner.failed, 'task should have failed');
         done();
     });
@@ -39,7 +39,7 @@ describe('L0 Suite google-play-promote', function () {
 
         testRunner.run();
 
-        assert(testRunner.createdErrorIssue('Error: loc_mock_InvalidAuthFilewithName myServiceAccountKey'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.createdErrorIssue('Error: loc_mock_InvalidAuthFilewithName myServiceAccountKey'), 'Did not print the expected message');
         assert(testRunner.failed, 'task should have failed');
         done();
     });

@@ -11,13 +11,17 @@ describe('L0 Suite google-play-release', function () {
         done();
     });
 
+    describe('Google Util tests', function() {
+        require('./L0_googleutil');
+    });
+
     it('test no service endpoint fails', (done) => {
         const testFile = path.join(__dirname, 'L0NoServiceEndpoint.js');
         const testRunner = new ttm.MockTestRunner(testFile);
 
         testRunner.run();
 
-        assert(testRunner.createdErrorIssue('Error: Input required: serviceEndpoint'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.createdErrorIssue('Error: Input required: serviceEndpoint'), 'Did not print the expected message');
         assert(testRunner.failed, 'task should have failed');
         done();
     });
@@ -28,7 +32,7 @@ describe('L0 Suite google-play-release', function () {
 
         testRunner.run();
 
-        assert(testRunner.createdErrorIssue('Error: Input required: serviceAccountKey'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.createdErrorIssue('Error: Input required: serviceAccountKey'), 'Did not print the expected message');
         assert(testRunner.failed, 'task should have failed');
         done();
     });
@@ -39,7 +43,7 @@ describe('L0 Suite google-play-release', function () {
 
         testRunner.run();
 
-        assert(testRunner.createdErrorIssue('Error: loc_mock_InvalidAuthFile myServiceAccountKey'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.createdErrorIssue('Error: loc_mock_InvalidAuthFile myServiceAccountKey'), 'Did not print the expected message');
         assert(testRunner.failed, 'task should have failed');
         done();
     });
@@ -50,7 +54,7 @@ describe('L0 Suite google-play-release', function () {
 
         testRunner.run();
 
-        assert(testRunner.createdErrorIssue('Error: Input required: apkFile'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.createdErrorIssue('Error: Input required: apkFile'), 'Did not print the expected message');
         assert(testRunner.failed, 'task should have failed');
         done();
     });
@@ -61,7 +65,7 @@ describe('L0 Suite google-play-release', function () {
 
         testRunner.run();
 
-        assert(testRunner.createdErrorIssue('Error: Not found /path/to/apk'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.createdErrorIssue('Error: Not found /path/to/apk'), 'Did not print the expected message');
         assert(testRunner.failed, 'task should have failed');
         done();
     });
@@ -82,8 +86,8 @@ describe('L0 Suite google-play-release', function () {
 
         testRunner.run();
 
-        assert(testRunner.stdOutContained('loc_mock_AppendChangelog /path/to/changelog'), 'Did not have expected localized message: ' + JSON.stringify(testRunner));
-        assert(testRunner.createdErrorIssue('Error: loc_mock_CannotReadChangeLog /path/to/changelog'), 'Did not have expected localized message: ' + JSON.stringify(testRunner));
+        assert(testRunner.stdOutContained('loc_mock_AppendChangelog /path/to/changelog'), 'Did not have expected localized message');
+        assert(testRunner.createdErrorIssue('Error: loc_mock_CannotReadChangeLog /path/to/changelog'), 'Did not have expected localized message');
         assert(testRunner.failed, 'task should have failed');
         done();
     });
@@ -94,7 +98,7 @@ describe('L0 Suite google-play-release', function () {
 
         testRunner.run();
 
-        assert(testRunner.stdOutContained('loc_mock_AppendChangelog /path/to/changelog'), 'Did not have expected localized message: ' + JSON.stringify(testRunner));
+        assert(testRunner.stdOutContained('loc_mock_AppendChangelog /path/to/changelog'), 'Did not have expected localized message');
         assert(testRunner.succeeded, 'task should have succeeded');
         done();
     });
@@ -105,8 +109,8 @@ describe('L0 Suite google-play-release', function () {
 
         testRunner.run();
 
-        assert(testRunner.stdOutContained('loc_mock_AttachingMetadataToRelease'), 'Did not have expected localized message: ' + JSON.stringify(testRunner));
-        assert(testRunner.succeeded, 'task should have succeeded: ' + JSON.stringify(testRunner));
+        assert(testRunner.stdOutContained('loc_mock_AttachingMetadataToRelease'), 'Did not have expected localized message');
+        assert(testRunner.succeeded, 'task should have succeeded');
         done();
     });
 });

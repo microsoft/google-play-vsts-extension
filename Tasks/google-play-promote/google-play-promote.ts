@@ -31,8 +31,8 @@ async function run() {
         const packageName: string = tl.getPathInput('packageName', true);
         const sourceTrack: string = tl.getInput('sourceTrack', true);
         const destinationTrack: string = tl.getInput('destinationTrack', true);
-        const userFractionString: string = tl.getInput('userFraction', false);
-        const userFraction: number = Number(userFractionString ? userFractionString : 1.0);
+        const userFractionSupplied: boolean = tl.getBoolInput('rolloutToUserFraction');
+        const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
 
         // Constants
         const globalParams: googleutil.GlobalParams = { auth: null, params: {} };
