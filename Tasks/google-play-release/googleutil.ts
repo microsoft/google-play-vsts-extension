@@ -1,3 +1,4 @@
+// common code shared by all tasks
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { google } from 'googleapis';
