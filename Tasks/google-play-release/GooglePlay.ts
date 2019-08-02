@@ -135,7 +135,7 @@ async function run() {
             releaseNotes = await addMetadata(edits, apkVersionCodes, metadataRootPath);
             requireTrackUpdate = true;
         } else if (changelogFile) {
-            tl.debug(`Upload the common change log ${changelogFile} to all versions`);
+            tl.debug(`Uploading the common change log ${changelogFile} to all versions`);
             const commonNotes = await getCommonReleaseNotes(languageCode, changelogFile);
             releaseNotes = commonNotes && [commonNotes];
             requireTrackUpdate = true;
@@ -287,21 +287,10 @@ function getChangelog(changelogFile: string): string {
 async function addAllReleaseNotes(apkVersionCodes: any, languageCode: string, directory: string): Promise<googleutil.ReleaseNotes[]> {
     const changelogDir: string = path.join(directory, 'changelogs');
 
-    const changelogs: string[] = fs.readdirSync(changelogDir).filter(subPath => {
-        try {
-            const fileToCheck: string = path.join(changelogDir, subPath);
-            tl.debug(`Checking File ${fileToCheck}`);
-            return tl.stats(fileToCheck).isFile();
-        } catch (e) {
-            tl.debug(`Failed to stat path ${subPath}:`);
-            tl.debug(e);
-            tl.debug('Ignoring...');
-            return false;
-        }
-    });
+    const changelogs: string[] = filterDirectoryContents(changelogDir, stat => stat.isFile());
 
     if (changelogs.length === 0) {
-        return;
+        return [];
     }
 
     const releaseNotes: googleutil.ReleaseNotes[] = [];
@@ -324,6 +313,27 @@ async function addAllReleaseNotes(apkVersionCodes: any, languageCode: string, di
 
     tl.debug(`All release notes found for ${changelogDir}: ${JSON.stringify(releaseNotes)}`);
     return releaseNotes;
+}
+
+/**
+ * Filters the directory contents to find files or directories
+ * @param {string} directory the directory to search
+ * @param {(stats: tl.FsStats) => boolean} filter callback on every item in the directory, return true to keep the results
+ * @returns the filtered contents of the directory
+ */
+function filterDirectoryContents(directory: string, filter: (stats: tl.FsStats) => boolean): string[] {
+    return fs.readdirSync(directory).filter(subPath => {
+        try {
+            const fullPath: string = path.join(directory, subPath);
+            tl.debug(`Checking path ${fullPath}`);
+            return filter(tl.stats(fullPath));
+        } catch (e) {
+            tl.debug(`Failed to stat path ${subPath}:`);
+            tl.debug(e);
+            tl.debug('Ignoring...');
+            return false;
+        }
+    });
 }
 
 /**
@@ -359,16 +369,7 @@ async function addAllReleaseNotes(apkVersionCodes: any, languageCode: string, di
  * @returns nothing
  */
 async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDirectory: string): Promise<googleutil.ReleaseNotes[]> {
-    const metadataLanguageCodes: string[] = fs.readdirSync(metadataRootDirectory).filter((subPath) => {
-        try {
-            return tl.stats(path.join(metadataRootDirectory, subPath)).isDirectory();
-        } catch (e) {
-            tl.debug(`Failed to stat path ${subPath}:`);
-            tl.debug(e);
-            tl.debug('Ignoring...');
-            return false;
-    }});
-
+    const metadataLanguageCodes: string[] = filterDirectoryContents(metadataRootDirectory, stat => stat.isDirectory());
     tl.debug(`Found language codes: ${metadataLanguageCodes}`);
 
     let allReleaseNotes: googleutil.ReleaseNotes[] = [];

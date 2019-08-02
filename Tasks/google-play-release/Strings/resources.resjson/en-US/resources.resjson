@@ -15,7 +15,7 @@
   "loc.input.label.rolloutToUserFraction": "Rollout Release",
   "loc.input.help.rolloutToUserFraction": "Rollout the release to a percentage of users.",
   "loc.input.label.userFraction": "Rollout Fraction",
-  "loc.input.help.userFraction": "The percentage of users to release the specified APK out to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.",
+  "loc.input.help.userFraction": "The percentage of users the specified APK will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.",
   "loc.input.label.shouldAttachMetadata": "Update Metadata",
   "loc.input.help.shouldAttachMetadata": "Select this option to update the metadata on your app release.",
   "loc.input.label.changeLogFile": "Release Notes (File)",

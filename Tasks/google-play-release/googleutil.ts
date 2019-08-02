@@ -147,6 +147,7 @@ export async function getTrack(edits: any, packageName: string, track: string): 
  * @param {string} track - one of the values {"internal", "alpha", "beta", "production"}
  * @param {integer or [integers]} versionCode - version code returned from an apk call. will take either a number or a [number]
  * @param {double} userFraction - for rollouting out a release to a track, it's the fraction of users to get update 1.0 is all users
+ * @param {releaseNotes} releaseNotes - optional release notes to be attached as part of the update
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */

@@ -113,4 +113,26 @@ describe('L0 Suite google-play-release', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
         done();
     });
+
+    it('test update track with specified versions', (done) => {
+        const testFile = path.join(__dirname, 'L0UpdateTrackWithVersionList.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(testRunner.stdOutContained('New Production track version codes: [2,4]'), 'Did not have expected localized message: ' + JSON.stringify(testRunner));
+        assert(testRunner.succeeded, 'task should have succeeded: ' + JSON.stringify(testRunner));
+        done();
+    });
+
+    it('test fails with bad version list', (done) => {
+        const testFile = path.join(__dirname, 'L0BadVersionList.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(testRunner.createdErrorIssue('Error: loc_mock_IncorrectVersionCodeFilter ["notreal"]'), 'Did not have expected localized message: ' + JSON.stringify(testRunner));
+        assert(testRunner.failed, 'task should have failed: ' + JSON.stringify(testRunner));
+        done();
+    });
 });
