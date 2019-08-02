@@ -43,4 +43,16 @@ describe('L0 Suite google-play-promote', function () {
         assert(testRunner.failed, 'task should have failed');
         done();
     });
+
+    it('test pass through release notes', (done) => {
+        const testFile = path.join(__dirname, 'L0SendReleaseNotes.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        // This test returns 'release notes' from `getTrack` and tests the 'Track' printed from `updateTrack`
+        assert(testRunner.stdOutContained('Update track: [{"text":"release contents","language":"en-US"}]'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.succeeded, 'task should have succeeded');
+        done();
+    });
 });

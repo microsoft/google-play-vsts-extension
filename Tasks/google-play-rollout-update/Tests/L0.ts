@@ -54,4 +54,27 @@ describe('L0 Suite google-play-rollout-update', function () {
         assert(testRunner.failed, 'task should have failed');
         done();
     });
+
+    it('test nothing in progress fails', (done) => {
+        const testFile = path.join(__dirname, 'L0NothingInProgress.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(testRunner.createdErrorIssue('Error: loc_mock_InProgressNotFound'), 'Did not print the expected message');
+        assert(testRunner.failed, 'task should have failed');
+        done();
+    });
+
+    it('test pass through release notes', (done) => {
+        const testFile = path.join(__dirname, 'L0SendReleaseNotes.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        // This test returns 'release notes' from `getTrack` and tests the 'Track' printed from `updateTrack`
+        assert(testRunner.stdOutContained('Update Track: [{"text":"release contents","language":"en-US"}]'), 'Did not print the expected message');
+        assert(testRunner.succeeded, 'task should have succeeded');
+        done();
+    });
 });
