@@ -2,8 +2,6 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as googleutil from './googleutil';
 
-const rolloutTrack = 'production'; // v2 it used to be called 'rollout'
-
 async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -33,6 +31,7 @@ async function run() {
 
         const packageName: string = tl.getPathInput('packageName', true);
         const userFraction: number = Number(tl.getInput('userFraction', false)); // Used for staged rollouts
+        const rolloutTrack: string = tl.getInput('track', true);
 
         // Constants
         const globalParams: googleutil.GlobalParams = { auth: null, params: {} };
@@ -56,7 +55,7 @@ async function run() {
         }
 
         console.log(tl.loc('CurrentUserFrac', inProgressTrack.userFraction));
-        const updatedTrack: googleutil.Track = await googleutil.updateTrack(edits, packageName, rolloutTrack, inProgressTrack.versionCodes, userFraction);
+        const updatedTrack: googleutil.Track = await googleutil.updateTrack(edits, packageName, rolloutTrack, inProgressTrack.versionCodes, userFraction, inProgressTrack.releaseNotes);
         tl.debug('Update Track: ' + JSON.stringify(updatedTrack));
 
         console.log(tl.loc('RolloutFracUpdate'));

@@ -9,6 +9,7 @@ const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 tr.setInput('authType', 'ServiceEndpoint');
 tr.setInput('serviceEndpoint', 'myServiceEndpoint');
 tr.setInput('packageName', 'myPackageName');
+tr.setInput('track', 'production');
 tr.setInput('userFraction', '1.0');
 
 tr.registerMock('./googleutil', {

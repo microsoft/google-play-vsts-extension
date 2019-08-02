@@ -13,7 +13,7 @@
         "npm"
     ],
     "version": {
-        "Major": "1",
+        "Major": "2",
         "Minor": "156",
         "Patch": "0"
     },
@@ -56,6 +56,20 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The unique package identifier (e.g. com.foo.myapp) that you wish to update."
+        },
+        {
+            "name": "track",
+            "type": "pickList",
+            "label": "Track",
+            "defaultValue": "production",
+            "required": true,
+            "helpMarkDown": "Track you want to publish the APK to.",
+            "options": {
+                "internal": "Internal test",
+                "alpha": "Alpha",
+                "beta": "Beta",
+                "production": "Production"
+            }
         },
         {
             "name": "userFraction",

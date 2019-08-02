@@ -13,7 +13,7 @@
     "npm"
   ],
   "version": {
-    "Major": "1",
+    "Major": "2",
     "Minor": "156",
     "Patch": "0"
   },
@@ -56,6 +56,20 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.packageName"
+    },
+    {
+      "name": "track",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.track",
+      "defaultValue": "production",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.track",
+      "options": {
+        "internal": "Internal test",
+        "alpha": "Alpha",
+        "beta": "Beta",
+        "production": "Production"
+      }
     },
     {
       "name": "userFraction",

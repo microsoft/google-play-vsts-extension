@@ -49,12 +49,15 @@ async function run() {
 
         console.log(tl.loc('GetTrackInfo', sourceTrack));
         const track = await googleutil.getTrack(edits, packageName, sourceTrack);
+        tl.debug(`Current track: ${JSON.stringify(track)}`);
 
         console.log(tl.loc('PromoteTrack', destinationTrack));
-        await googleutil.updateTrack(edits, packageName, destinationTrack, track.releases[0].versionCodes, userFraction);
+        await googleutil.updateTrack(edits, packageName, destinationTrack, track.releases[0].versionCodes, userFraction, track.releases[0].releaseNotes);
+        tl.debug(`Update track: ${JSON.stringify(track)}`);
 
         console.log(tl.loc('CleanTrack', sourceTrack));
         await googleutil.updateTrack(edits, packageName, sourceTrack, [], userFraction);
+        tl.debug(`Update clean track: ${JSON.stringify(track)}`);
 
         await edits.commit();
 

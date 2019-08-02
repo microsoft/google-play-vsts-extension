@@ -9,6 +9,8 @@
   "loc.input.help.serviceAccountKey": "The JSON file provided by Google Play that includes the service account's identity you wish to publish your APK under.",
   "loc.input.label.packageName": "Package Name",
   "loc.input.help.packageName": "The unique package identifier (e.g. com.foo.myapp) that you wish to update.",
+  "loc.input.label.track": "Track",
+  "loc.input.help.track": "Track you want to publish the APK to.",
   "loc.input.label.userFraction": "Rollout Fraction",
   "loc.input.help.userFraction": "The fraction of the app's users who will receive the update. A value of `1.0` will release the app to all users.",
   "loc.messages.InvalidAuthFile": "Specified Auth file was invalid",
