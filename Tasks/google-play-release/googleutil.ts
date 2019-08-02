@@ -21,7 +21,7 @@ export interface Apk {
 export interface AndroidRelease {
     name?: string;
     userFraction?: number;
-    releaseNotes?: [{ language: string; text: string; }];
+    releaseNotes?: ReleaseNotes[];
     versionCodes?: [number];
     status?: string;
 }
@@ -73,7 +73,7 @@ export interface PackageListingParams {
     uploadType?: string;
 }
 
-export interface ReleaseNote {
+export interface ReleaseNotes {
     language?: string;
     text?: string;
 }
@@ -82,7 +82,7 @@ export interface Release {
     name?: string;
     versionCodes?: number[];
     userFraction?: number;
-    releaseNotes: ReleaseNote[];
+    releaseNotes: ReleaseNotes[];
     status?: string;
 }
 
@@ -150,11 +150,16 @@ export async function getTrack(edits: any, packageName: string, track: string): 
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-export async function updateTrack(edits: any, packageName: string, track: string, versionCode: any, userFraction: number): Promise<Track> {
+export async function updateTrack(edits: any, packageName: string, track: string, versionCode: any, userFraction: number, releaseNotes?: ReleaseNotes[]): Promise<Track> {
     tl.debug('Updating track');
     const release: AndroidRelease = {
         versionCodes: (typeof versionCode === 'number' ? [versionCode] : versionCode)
     };
+
+    if (releaseNotes && releaseNotes.length > 0) {
+        tl.debug('Attaching release notes to the update');
+        release.releaseNotes = releaseNotes;
+    }
 
     if (userFraction < 1.0) {
         release.userFraction = userFraction;

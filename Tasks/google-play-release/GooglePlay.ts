@@ -104,20 +104,17 @@ async function run() {
         tl.debug('Creating a new edit transaction in Google Play.');
         await googleutil.getNewEdit(edits, globalParams, packageName);
 
+        let requireTrackUpdate = false;
         if (shouldUploadApks) {
             tl.debug(`Uploading ${apkFileList.length} APK(s).`);
 
+            requireTrackUpdate = true;
             for (const apkFile of apkFileList) {
                 tl.debug(`Uploading APK ${apkFile}`);
                 const apk: googleutil.Apk = await googleutil.addApk(edits, packageName, apkFile);
                 tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}`);
                 apkVersionCodes.push(apk.versionCode);
             }
-
-            console.log(tl.loc('UpdateTrack'));
-            tl.debug(`Updating the track ${track}.`);
-            const updatedTrack: googleutil.Track = await updateTrack(edits, packageName, track, apkVersionCodes, versionCodeFilterType, versionCodeFilter, userFraction);
-            tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
         } else {
             tl.debug(`Getting APK version codes of ${apkFileList.length} APK(s).`);
 
@@ -131,13 +128,24 @@ async function run() {
             }
         }
 
+        let releaseNotes: googleutil.ReleaseNotes[];
         if (shouldAttachMetadata) {
             console.log(tl.loc('AttachingMetadataToRelease'));
             tl.debug(`Uploading metadata from ${metadataRootPath}`);
-            await addMetadata(edits, apkVersionCodes, metadataRootPath);
+            releaseNotes = await addMetadata(edits, apkVersionCodes, metadataRootPath);
+            requireTrackUpdate = true;
         } else if (changelogFile) {
             tl.debug(`Upload the common change log ${changelogFile} to all versions`);
-            await uploadCommonChangeLog(edits, languageCode, changelogFile, apkVersionCodes);
+            const commonNotes = await getCommonReleaseNotes(languageCode, changelogFile);
+            releaseNotes = commonNotes && [commonNotes];
+            requireTrackUpdate = true;
+        }
+
+        if (requireTrackUpdate) {
+            console.log(tl.loc('UpdateTrack'));
+            tl.debug(`Updating the track ${track}.`);
+            const updatedTrack: googleutil.Track = await updateTrack(edits, packageName, track, apkVersionCodes, versionCodeFilterType, versionCodeFilter, userFraction, releaseNotes);
+            tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
         }
 
         tl.debug('Committing the edit transaction in Google Play.');
@@ -170,12 +178,8 @@ async function updateTrack(
     apkVersionCodes: number[],
     versionCodeListType: string,
     versionCodeFilter: string | number[],
-    userFraction: number): Promise<googleutil.Track> {
-
-    const requestParameters: googleutil.PackageParams = {
-        packageName: packageName,
-        track: track
-    };
+    userFraction: number,
+    releaseNotes?: googleutil.ReleaseNotes[]): Promise<googleutil.Track> {
 
     let newTrackVersionCodes: number[] = [];
     let res: googleutil.Track;
@@ -184,9 +188,7 @@ async function updateTrack(
         newTrackVersionCodes = apkVersionCodes;
     } else {
         try {
-            tl.debug(`Reading current ${track} track info.`);
-            tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-            res = await edits.tracks.get(requestParameters);
+            res = await googleutil.getTrack(edits, packageName, track);
         } catch (e) {
             tl.debug(`Failed to download track ${track} information.`);
             tl.debug(e);
@@ -217,7 +219,6 @@ async function updateTrack(
         }
 
         tl.debug('Version codes to keep: ' + JSON.stringify(newTrackVersionCodes));
-
         apkVersionCodes.forEach((versionCode) => {
             if (newTrackVersionCodes.indexOf(versionCode) === -1) {
                 newTrackVersionCodes.push(versionCode);
@@ -227,7 +228,7 @@ async function updateTrack(
 
     tl.debug(`New ${track} track version codes: ` + JSON.stringify(newTrackVersionCodes));
     try {
-        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction);
+        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction, releaseNotes);
     } catch (e) {
         tl.debug(`Failed to update track ${track}.`);
         tl.debug(e);
@@ -242,53 +243,21 @@ async function updateTrack(
  * @param apkVersionCodes
  * @returns nothing
  */
-async function uploadCommonChangeLog(edits: any, languageCode: string, changelogFile: string, apkVersionCodes: number[]) {
+async function getCommonReleaseNotes(languageCode: string, changelogFile: string): Promise<googleutil.ReleaseNotes | null> {
     const stats: tl.FsStats = tl.stats(changelogFile);
 
+    let releaseNotes: googleutil.ReleaseNotes = null;
     if (stats && stats.isFile()) {
         console.log(tl.loc('AppendChangelog', changelogFile));
-        const changeLog = getChangelog(changelogFile);
+        releaseNotes = {
+            language: languageCode,
+            text: getChangelog(changelogFile)
+        };
 
-        for (const apkVersionCode of apkVersionCodes) {
-            tl.debug(`Adding the change log file ${changelogFile} to the APK version code ${apkVersionCode}`);
-            await addChangelog(edits, languageCode, changeLog, apkVersionCode);
-            tl.debug(`Successfully added the change log file ${changelogFile} to the APK version code ${apkVersionCode}`);
-        }
     } else {
         tl.debug(`The change log path ${changelogFile} either does not exist or points to a directory. Ignoring...`);
     }
-}
-
-/**
- * Add a changelog to an edit
- * Assumes authorized
- * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
- * @param {string} changelogFile Path to changelog file.
- * @param {integer} APK version code
- * @returns nothing
- */
-async function addChangelog(edits: any, languageCode: string, changeLog: string, apkVersionCode: number) {
-    const requestParameters: googleutil.PackageParams = {
-        apkVersionCode: apkVersionCode,
-        language: languageCode,
-        resource: {
-            releases: [{
-                releaseNotes: [{
-                    text: changeLog,
-                    language: languageCode
-                }]
-            }]
-        }
-    };
-
-    try {
-        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        await edits.track.update(requestParameters);
-    } catch (e) {
-        tl.debug(`Failed to upload the ${languageCode} changelog for version ${apkVersionCode}`);
-        tl.debug(e);
-        throw new Error(tl.loc('CannotUploadChangelog', languageCode, apkVersionCode, e));
-    }
+    return releaseNotes;
 }
 
 /**
@@ -309,13 +278,13 @@ function getChangelog(changelogFile: string): string {
 }
 
 /**
- * Adds all changelogs found in directory to an edit. Pulls version code from file name. Failing this, assumes the global version code inferred from apk
+ * Adds all release notes found in directory to an edit. Pulls version code from file name. Failing this, assumes the global version code inferred from apk
  * Assumes authorized
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
- * @param {string} directory Directory with a changesogs folder where changelogs can be found.
+ * @param {string} directory Directory with a changesogs folder where release notes can be found.
  * @returns nothing
  */
-async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: string, directory: string) {
+async function addAllReleaseNotes(apkVersionCodes: any, languageCode: string, directory: string): Promise<googleutil.ReleaseNotes[]> {
     const changelogDir: string = path.join(directory, 'changelogs');
 
     const changelogs: string[] = fs.readdirSync(changelogDir).filter(subPath => {
@@ -335,30 +304,26 @@ async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: 
         return;
     }
 
-    let versionCodeFound: boolean = false;
+    const releaseNotes: googleutil.ReleaseNotes[] = [];
     for (const changelogFile of changelogs) {
         const changelogName: string = path.basename(changelogFile, path.extname(changelogFile));
         const changelogVersion: number = parseInt(changelogName, 10);
         if (!isNaN(changelogVersion) && (apkVersionCodes.indexOf(changelogVersion) !== -1)) {
-            versionCodeFound = true;
             const fullChangelogPath: string = path.join(changelogDir, changelogFile);
 
             console.log(tl.loc('AppendChangelog', fullChangelogPath));
-            const changeLog = getChangelog(fullChangelogPath);
-
-            tl.debug(`Uploading change log version ${changelogVersion} from ${fullChangelogPath} for language code ${languageCode}`);
-            await addChangelog(edits, languageCode, changeLog, changelogVersion);
-            tl.debug(`Successfully uploaded change log version ${changelogVersion} from ${fullChangelogPath} for language code ${languageCode}`);
+            releaseNotes.push({
+                language: languageCode,
+                text: getChangelog(fullChangelogPath)
+            });
+            tl.debug(`Found release notes version ${changelogVersion} from ${fullChangelogPath} for language code ${languageCode}`);
         } else {
             tl.debug(`The name of the file ${changelogFile} is not a valid version code. Skipping it.`);
         }
     }
 
-    if (!versionCodeFound && (changelogs.length === 1)) {
-        tl.debug(`Applying the ${languageCode} change log file ${changelogs[0]} to all version codes`);
-        const fullChangelogPath: string = path.join(changelogDir, changelogs[0]);
-        await uploadCommonChangeLog(edits, languageCode, fullChangelogPath, apkVersionCodes);
-    }
+    tl.debug(`All release notes found for ${changelogDir}: ${JSON.stringify(releaseNotes)}`);
+    return releaseNotes;
 }
 
 /**
@@ -393,7 +358,7 @@ async function addAllChangelogs(edits: any, apkVersionCodes: any, languageCode: 
  * @param {string} metadataRootDirectory Path to the folder where the Fastlane metadata structure is found. eg the folders under this directory should be the language codes
  * @returns nothing
  */
-async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDirectory: string) {
+async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDirectory: string): Promise<googleutil.ReleaseNotes[]> {
     const metadataLanguageCodes: string[] = fs.readdirSync(metadataRootDirectory).filter((subPath) => {
         try {
             return tl.stats(path.join(metadataRootDirectory, subPath)).isDirectory();
@@ -406,12 +371,17 @@ async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDi
 
     tl.debug(`Found language codes: ${metadataLanguageCodes}`);
 
+    let allReleaseNotes: googleutil.ReleaseNotes[] = [];
     for (const languageCode of metadataLanguageCodes) {
         const metadataDirectory: string = path.join(metadataRootDirectory, languageCode);
 
         tl.debug(`Uploading metadata from ${metadataDirectory} for language code ${languageCode} and version codes ${apkVersionCodes}`);
-        await uploadMetadataWithLanguageCode(edits, apkVersionCodes, languageCode, metadataDirectory);
+        const releaseNotesForLanguage = await uploadMetadataWithLanguageCode(edits, apkVersionCodes, languageCode, metadataDirectory);
+        allReleaseNotes = allReleaseNotes.concat(releaseNotesForLanguage);
     }
+
+    tl.debug(`Collected ${allReleaseNotes.length} release notes`);
+    return allReleaseNotes;
 }
 
 /**
@@ -421,17 +391,19 @@ async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDi
  * @param {string} directory Directory where updated listing details can be found.
  * @returns nothing
  */
-async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: number[], languageCode: string, directory: string) {
+async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: number[], languageCode: string, directory: string): Promise<googleutil.ReleaseNotes[]> {
     console.log(tl.loc('UploadingMetadataForLanguage', directory, languageCode));
 
     tl.debug(`Adding localized store listing for language code ${languageCode} from ${directory}`);
     await addLanguageListing(edits, languageCode, directory);
 
     tl.debug(`Uploading change logs for language code ${languageCode} from ${directory}`);
-    await addAllChangelogs(edits, apkVersionCodes, languageCode, directory);
+    const releaseNotes: googleutil.ReleaseNotes[] = await addAllReleaseNotes(apkVersionCodes, languageCode, directory);
 
     tl.debug(`Uploading images for language code ${languageCode} from ${directory}`);
     await attachImages(edits, languageCode, directory);
+
+    return releaseNotes;
 }
 
 /**

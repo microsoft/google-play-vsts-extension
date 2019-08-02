@@ -59,7 +59,6 @@
   "loc.messages.CannotDownloadTrack": "Failed to download track %s information. Failed with message: %s.",
   "loc.messages.CannotUpdateTrack": "Failed to update track %s information. Failed with message: %s.",
   "loc.messages.CannotReadChangeLog": "Failed to read change log %s. Failed with message: %s.",
-  "loc.messages.CannotUploadChangelog": "Failed to upload the %s change log for version %s. Failed with message: %s.",
   "loc.messages.CannotCreateListing": "Failed to create the localized %s store listing. Failed with message: %s.",
   "loc.messages.IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s"
 }

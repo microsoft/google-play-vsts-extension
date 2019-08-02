@@ -15,6 +15,7 @@ tr.setInput('apkFile', '/path/to/apk');
 tr.setInput('track', 'Production');
 tr.setInput('shouldAttachMetadata', 'true');
 tr.setInput('metadataRootPath', '/path/to/metadata/folder');
+tr.setInput('versionCodeFilterType', 'list');
 
 // provide answers for task mock
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -29,9 +30,6 @@ tr.registerMock('./googleutil', {
     publisher: {
         edits: {
             commit: sinon.stub(),
-            track: {
-                update: sinon.stub()
-            },
             listings: {
                 update: sinon.stub()
             }
@@ -43,7 +41,7 @@ tr.registerMock('./googleutil', {
         };
     },
     getNewEdit: () => Promise.resolve({}),
-    getTrack: () => Promise.resolve({ update: sinon.stub() }),
+    getTrack: () => Promise.resolve({ releases: [{ versionCodes: [1, 2, 3 ]}]}),
     updateTrack: () => Promise.resolve({}),
     updateGlobalParams: () => Promise.resolve({}),
     addApk: () => Promise.resolve({})

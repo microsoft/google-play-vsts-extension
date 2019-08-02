@@ -219,7 +219,6 @@
     "CannotDownloadTrack": "ms-resource:loc.messages.CannotDownloadTrack",
     "CannotUpdateTrack": "ms-resource:loc.messages.CannotUpdateTrack",
     "CannotReadChangeLog": "ms-resource:loc.messages.CannotReadChangeLog",
-    "CannotUploadChangelog": "ms-resource:loc.messages.CannotUploadChangelog",
     "CannotCreateListing": "ms-resource:loc.messages.CannotCreateListing",
     "IncorrectVersionCodeFilter": "ms-resource:loc.messages.IncorrectVersionCodeFilter"
   },

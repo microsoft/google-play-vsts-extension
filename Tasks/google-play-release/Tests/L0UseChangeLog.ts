@@ -16,6 +16,7 @@ tr.setInput('track', 'Production');
 tr.setInput('shouldAttachMetadata', 'false');
 tr.setInput('changelogFile', '/path/to/changelog');
 tr.setInput('languageCode', 'lang-Code');
+tr.setInput('versionCodeFilterType', 'list');
 
 // provide answers for task mock
 const a: ma.TaskLibAnswers = <ma.TaskLibAnswers>{
@@ -35,10 +36,7 @@ tr.setAnswers(a);
 tr.registerMock('./googleutil', {
     publisher: {
         edits: {
-            commit: sinon.stub(),
-            track: {
-                update: sinon.stub()
-            }
+            commit: sinon.stub()
         }
     },
     getJWT: () => {
@@ -47,7 +45,7 @@ tr.registerMock('./googleutil', {
         };
     },
     getNewEdit: () => Promise.resolve({}),
-    getTrack: () => Promise.resolve({ update: sinon.stub() }),
+    getTrack: () => Promise.resolve({ releases: [{ versionCodes: [1, 2, 3 ]}]}),
     updateTrack: () => Promise.resolve({}),
     updateGlobalParams: () => Promise.resolve({}),
     addApk: () => Promise.resolve({})
