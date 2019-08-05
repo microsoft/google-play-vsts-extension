@@ -163,11 +163,11 @@ async function run() {
  * Update a given release track with the given information
  * Assumes authorized
  * @param {string} packageName unique android package name (com.android.etc)
- * @param {string} track one of the values {"internal", "alpha", "beta", "production", "rollout"}
+ * @param {string} track one of the values {"internal", "alpha", "beta", "production"}
  * @param {number[]} apkVersionCodes version code of uploaded modules.
  * @param {string} versionCodeListType type of version code replacement filter, i.e. 'all', 'list', or 'expression'
  * @param {string | string[]} versionCodeFilter version code filter, i.e. either a list of version code or a regular expression string.
- * @param {double} userFraction for rollout, fraction of users to get update
+ * @param {double} userFraction the fraction of users to get update
  * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */

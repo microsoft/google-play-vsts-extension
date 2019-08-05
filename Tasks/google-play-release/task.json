@@ -30,27 +30,27 @@
         {
             "name": "authType",
             "type": "pickList",
-            "label": "Authentication Method",
+            "label": "Authentication method",
             "defaultValue": "ServiceEndpoint",
             "helpMarkDown": "",
             "options": {
                 "JsonFile": "JSON Auth File",
-                "ServiceEndpoint": "Service Endpoint"
+                "ServiceEndpoint": "Service connection"
             }
         },
         {
             "name": "serviceEndpoint",
             "type": "connectedService:google-play",
-            "label": "Service Endpoint",
+            "label": "Service connection",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Google Play service endpoint that is configured with your account credentials.",
+            "helpMarkDown": "Google Play service connection that is configured with your account credentials.",
             "visibleRule": "authType = ServiceEndpoint"
         },
         {
             "name": "serviceAccountKey",
             "type": "filePath",
-            "label": "JSON Key Path",
+            "label": "JSON key path",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The JSON file provided by Google Play that includes the service account's identity you wish to publish your APK under.",
@@ -59,7 +59,7 @@
         {
             "name": "apkFile",
             "type": "filePath",
-            "label": "APK Path",
+            "label": "APK path",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "Path to the APK file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory."
@@ -81,15 +81,15 @@
         {
             "name": "rolloutToUserFraction",
             "type": "boolean",
-            "label": "Rollout Release",
+            "label": "Roll out release",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Rollout the release to a percentage of users."
+            "helpMarkDown": "Roll out the release to a percentage of users."
         },
         {
             "name": "userFraction",
             "type": "string",
-            "label": "Rollout Fraction",
+            "label": "Rollout fraction",
             "defaultValue": "1.0",
             "required": false,
             "helpMarkDown": "The percentage of users the specified APK will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.",
@@ -98,7 +98,7 @@
         {
             "name": "shouldAttachMetadata",
             "type": "boolean",
-            "label": "Update Metadata",
+            "label": "Update metadata",
             "defaultValue": false,
             "required": false,
             "helpMarkDown": "Select this option to update the metadata on your app release."
@@ -106,7 +106,7 @@
         {
             "name": "changeLogFile",
             "type": "filePath",
-            "label": "Release Notes (File)",
+            "label": "Release notes (file)",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "Path to the file specifying the release notes (change log) for the APK you are publishing.",
@@ -115,7 +115,7 @@
         {
             "name": "languageCode",
             "type": "string",
-            "label": "Language Code",
+            "label": "Language code",
             "defaultValue": "en-US",
             "required": false,
             "helpMarkDown": "An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_",
@@ -124,7 +124,7 @@
         {
             "name": "metadataRootPath",
             "type": "filePath",
-            "label": "Metadata Root Directory",
+            "label": "Metadata root directory",
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The path to the metadata folder with the fastlane metadata structure.",
@@ -141,7 +141,7 @@
         {
             "name": "additionalApks",
             "type": "multiLine",
-            "label": "Additional APK Path(s)",
+            "label": "Additional APK path(s)",
             "defaultValue": "",
             "groupName": "advanced",
             "required": false,

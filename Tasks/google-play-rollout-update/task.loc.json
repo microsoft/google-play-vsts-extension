@@ -27,8 +27,8 @@
       "defaultValue": "ServiceEndpoint",
       "helpMarkDown": "",
       "options": {
-        "JsonFile": "JSON Auth File",
-        "ServiceEndpoint": "Service Endpoint"
+        "JsonFile": "JSON auth file",
+        "ServiceEndpoint": "Service connection"
       }
     },
     {

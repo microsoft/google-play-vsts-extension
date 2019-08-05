@@ -28,7 +28,7 @@
       "helpMarkDown": "",
       "options": {
         "JsonFile": "JSON Auth File",
-        "ServiceEndpoint": "Service Endpoint"
+        "ServiceEndpoint": "Service connection"
       }
     },
     {
