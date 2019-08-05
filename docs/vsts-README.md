@@ -108,7 +108,7 @@ Allows you to release an update to your app on Google Play, and includes the fol
 
     ![Track](images/track.png)
 
-4. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the specified APK out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). This option is only available when the **Track** input is set to **Rollout**.
+4. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the specified APK out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users).
 
     ![Rollout Fraction](images/rollout-fraction.png)
 
@@ -176,7 +176,7 @@ Allows you to promote a previously released APK from one track to another (e.g. 
 
 4. **Destination Track** *(Required, Required)* - The track you wish to promote your app to (e.g. `production`).
 
-5. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the app out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). This option is only available when the **Destination Track** option is set to `Rollout`. If you use this task to promote to a percentage of users, use the task `Googe Play - Increase Rollout` with the value set to `1.0` to complete the rollout for all users of your app.
+5. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the app out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). If you use this task to promote to a percentage of users, use the task `Googe Play - Increase Rollout` with the value set to `1.0` to complete the rollout for all users of your app.
 
 ### Google Play - Increase Rollout
 
