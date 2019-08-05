@@ -116,7 +116,6 @@ export async function getNewEdit(edits: any, globalParams: GlobalParams, package
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
     const res = await edits.insert(requestParameters);
-    updateGlobalParams(globalParams, 'editId', res.data.id);
     return res.data;
 }
 

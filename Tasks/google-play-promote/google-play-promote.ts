@@ -45,7 +45,8 @@ async function run() {
 
         console.log(tl.loc('Authenticating'));
         await jwtClient.authorize();
-        await googleutil.getNewEdit(edits, globalParams, packageName);
+        const edit = await googleutil.getNewEdit(edits, globalParams, packageName);
+        googleutil.updateGlobalParams(globalParams, 'editId', edit.id);
 
         console.log(tl.loc('GetTrackInfo', sourceTrack));
         let track = await googleutil.getTrack(edits, packageName, sourceTrack);

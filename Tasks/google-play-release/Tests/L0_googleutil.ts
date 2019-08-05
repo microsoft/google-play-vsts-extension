@@ -39,10 +39,12 @@ it('getNewEdit tests', async function () {
 
     const edit = await googleutil.getNewEdit(edits, p, packname);
 
-    assert.equal(fakeEditId, p.params['editId']);
     assert.equal(edit.id, fakeEditId);
     assert(stub.called);
     assert.equal(packname, stub.args[0][0].packageName);
+
+    googleutil.updateGlobalParams(p, 'editId', edit.id);
+    assert.equal(fakeEditId, p.params['editId']);
 });
 
 it('getTrack tests', async function () {

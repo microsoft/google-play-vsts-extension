@@ -102,7 +102,8 @@ async function run() {
 
         console.log(tl.loc('GetNewEditAfterAuth'));
         tl.debug('Creating a new edit transaction in Google Play.');
-        await googleutil.getNewEdit(edits, globalParams, packageName);
+        const edit = await googleutil.getNewEdit(edits, globalParams, packageName);
+        googleutil.updateGlobalParams(globalParams, 'editId', edit.id);
 
         let requireTrackUpdate = false;
         if (shouldUploadApks) {
