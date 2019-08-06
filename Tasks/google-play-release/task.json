@@ -40,6 +40,9 @@
         },
         {
             "name": "serviceEndpoint",
+            "aliases": [
+                "serviceConnection"
+            ],
             "type": "connectedService:google-play",
             "label": "Service connection",
             "defaultValue": "",
