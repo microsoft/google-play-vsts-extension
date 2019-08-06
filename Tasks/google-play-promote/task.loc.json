@@ -13,8 +13,8 @@
     "npm"
   ],
   "version": {
-    "Major": "2",
-    "Minor": "142",
+    "Major": "3",
+    "Minor": "156",
     "Patch": "0"
   },
   "minimumAgentVersion": "1.83.0",
@@ -28,11 +28,14 @@
       "helpMarkDown": "",
       "options": {
         "JsonFile": "JSON Auth File",
-        "ServiceEndpoint": "Service Endpoint"
+        "ServiceEndpoint": "Service connection"
       }
     },
     {
       "name": "serviceEndpoint",
+      "aliases": [
+        "serviceConnection"
+      ],
       "type": "connectedService:google-play",
       "label": "ms-resource:loc.input.label.serviceEndpoint",
       "defaultValue": "",
@@ -68,7 +71,7 @@
         "internal": "Internal test",
         "alpha": "Alpha",
         "beta": "Beta",
-        "rollout": "Rollout"
+        "production": "Production"
       }
     },
     {
@@ -81,18 +84,25 @@
       "options": {
         "alpha": "Alpha",
         "beta": "Beta",
-        "production": "Production",
-        "rollout": "Rollout"
+        "production": "Production"
       }
+    },
+    {
+      "name": "rolloutToUserFraction",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.rolloutToUserFraction",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rolloutToUserFraction"
     },
     {
       "name": "userFraction",
       "type": "string",
       "label": "ms-resource:loc.input.label.userFraction",
-      "defaultValue": "",
+      "defaultValue": "1.0",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.userFraction",
-      "visibleRule": "destinationTrack = rollout"
+      "visibleRule": "rolloutToUserFraction = true"
     }
   ],
   "execution": {

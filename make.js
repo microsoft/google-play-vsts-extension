@@ -246,7 +246,7 @@ target.build = function() {
 //
 target.test = function() {
     ensureTool('tsc', '--version', 'Version 2.6.2');
-    ensureTool('mocha', '--version', '2.3.3');
+    ensureTool('mocha', '--version', '6.1.4');
 
     // run the tests
     var suiteType = options.suite || 'L0';

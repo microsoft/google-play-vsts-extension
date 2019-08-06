@@ -9,10 +9,11 @@
   "author": "Jonathan Carter",
   "license": "ISC",
   "dependencies": {
-    "bluebird": "^2.10.1",
-    "glob": "^7.0.3",
-    "googleapis": "^7.1.0",
     "adbkit-apkreader": "3.1.0",
-    "vsts-task-lib": "2.1.0"
+    "azure-pipelines-task-lib": "2.8.0",
+    "gaxios": "1.8.0",
+    "glob": "^7.0.3",
+    "googleapis": "^33.0.0",
+    "google-auth-library": "1.6.1"
   }
 }

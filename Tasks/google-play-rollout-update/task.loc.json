@@ -13,8 +13,8 @@
     "npm"
   ],
   "version": {
-    "Major": "1",
-    "Minor": "142",
+    "Major": "2",
+    "Minor": "156",
     "Patch": "0"
   },
   "minimumAgentVersion": "1.83.0",
@@ -27,12 +27,15 @@
       "defaultValue": "ServiceEndpoint",
       "helpMarkDown": "",
       "options": {
-        "JsonFile": "JSON Auth File",
-        "ServiceEndpoint": "Service Endpoint"
+        "JsonFile": "JSON auth file",
+        "ServiceEndpoint": "Service connection"
       }
     },
     {
       "name": "serviceEndpoint",
+      "aliases": [
+        "serviceConnection"
+      ],
       "type": "connectedService:google-play",
       "label": "ms-resource:loc.input.label.serviceEndpoint",
       "defaultValue": "",
@@ -56,6 +59,20 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.packageName"
+    },
+    {
+      "name": "track",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.track",
+      "defaultValue": "production",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.track",
+      "options": {
+        "internal": "Internal test",
+        "alpha": "Alpha",
+        "beta": "Beta",
+        "production": "Production"
+      }
     },
     {
       "name": "userFraction",
