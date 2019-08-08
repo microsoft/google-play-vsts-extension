@@ -108,13 +108,29 @@ async function run() {
         let requireTrackUpdate = false;
         if (shouldUploadApks) {
             tl.debug(`Uploading ${apkFileList.length} APK(s).`);
-
             requireTrackUpdate = true;
+
+            let tryUploadMappingFile = tl.getBoolInput('shouldUploadMappingFile', false);
             for (const apkFile of apkFileList) {
                 tl.debug(`Uploading APK ${apkFile}`);
                 const apk: googleutil.Apk = await googleutil.addApk(edits, packageName, apkFile);
                 tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}`);
                 apkVersionCodes.push(apk.versionCode);
+
+                if (tryUploadMappingFile) {
+                    const mappingFilePattern = tl.getPathInput('mappingFilePath', false);
+                    tl.debug(`Mapping file pattern: ${mappingFilePattern}`);
+
+                    const mappingFilePath = resolveGlobPath(mappingFilePattern);
+                    tl.checkPath(mappingFilePath, 'mappingFilePath');
+                    console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
+                    tl.debug(`Uploading mapping file ${mappingFilePath}`);
+                    await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, apk.versionCode);
+                    tl.debug(`Uploaded ${mappingFilePath} for APK ${apkFile}`);
+
+                    // Only upload the first / main APK
+                    tryUploadMappingFile = false;
+                }
             }
         } else {
             tl.debug(`Getting APK version codes of ${apkFileList.length} APK(s).`);
