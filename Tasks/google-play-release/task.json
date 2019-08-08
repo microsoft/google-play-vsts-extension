@@ -147,15 +147,15 @@
             "label": "Upload deobfuscation file (mapping.txt)",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "By default, the task will update the specified binary APK file(s) on your app release. By unselecting this option you can update metadata keeping the APKs untouched."
+            "helpMarkDown": "Select this option to attach your proguard mapping.txt file to the primary APK."
         },
         {
             "name": "mappingFilePath",
             "type": "filePath",
-            "label": "Upload main deobfuscation file (mapping.txt)",
+            "label": "Deobfuscation path",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The path to the mapping.txt file to upload.",
+            "helpMarkDown": "The path to the proguard mapping.txt file to upload.",
             "visibleRule": "shouldUploadApks = true && shouldUploadMappingFile = true"
         },
         {
