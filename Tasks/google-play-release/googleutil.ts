@@ -225,3 +225,34 @@ export async function addApk(edits: any, packageName: string, apkFile: string): 
         throw new Error(tl.loc('CannotUploadApk', apkFile, e));
     }
 }
+
+/**
+ * Uploads a deobfuscation file (mapping.txt) for a given package
+ * Assumes authorized
+ * @param {string} mappingFilePath the path to the file to upload
+ * @param {string} packageName unique android package name (com.android.etc)
+ * @param apkVersionCode version code of uploaded APK
+ * @returns {Promise} deobfuscationFiles A promise that will return result from uploading a deobfuscation file
+ *                          { deobfuscationFile: { symbolType: string } }
+ */
+export async function uploadDeobfuscation(edits: any, mappingFilePath: string, packageName: string, apkVersionCode: number): Promise<void> {
+    const requestParameters = {
+        deobfuscationFileType: 'proguard',
+        packageName: packageName,
+        apkVersionCode: apkVersionCode,
+        media: {
+            body: fs.createReadStream(mappingFilePath),
+            mimeType: ''
+        }
+    };
+
+    try {
+        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
+        const res = (await edits.deobfuscationfiles.upload(requestParameters)).data;
+        tl.debug('returned: ' + JSON.stringify(res));
+    } catch (e) {
+        tl.debug(`Failed to upload deobfuscation file ${mappingFilePath}`);
+        tl.debug(e);
+        throw new Error(tl.loc('CannotUploadDeobfuscationFile', mappingFilePath, e));
+    }
+}

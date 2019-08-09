@@ -70,6 +70,28 @@ describe('L0 Suite google-play-release', function () {
         done();
     });
 
+    it('test found deobfuscation file', (done) => {
+        const testFile = path.join(__dirname, 'L0FoundDeobfuscationFile.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(testRunner.stdOutContained('loc_mock_FoundDeobfuscationFile /path/to/mapping'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.succeeded, 'task should have succeeded: ' + JSON.stringify(testRunner));
+        done();
+    });
+
+    it('test deobfuscation file not found', (done) => {
+        const testFile = path.join(__dirname, 'L0DeobfuscationFileNotFound.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(testRunner.createdErrorIssue('Error: Not found /path/to/mapping'), 'Did not print the expected message');
+        assert(testRunner.failed, 'task should have failed');
+        done();
+    });
+
     it('test succeeds on happy path', (done) => {
         const testFile = path.join(__dirname, 'L0HappyPath.js');
         const testRunner = new ttm.MockTestRunner(testFile);

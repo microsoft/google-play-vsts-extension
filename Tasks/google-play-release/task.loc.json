@@ -14,7 +14,7 @@
   ],
   "version": {
     "Major": "3",
-    "Minor": "156",
+    "Minor": "157",
     "Patch": "0"
   },
   "minimumAgentVersion": "1.83.0",
@@ -142,6 +142,23 @@
       "helpMarkDown": "ms-resource:loc.input.help.shouldUploadApks"
     },
     {
+      "name": "shouldUploadMappingFile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.shouldUploadMappingFile",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadMappingFile"
+    },
+    {
+      "name": "mappingFilePath",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.mappingFilePath",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.mappingFilePath",
+      "visibleRule": "shouldUploadApks = true && shouldUploadMappingFile = true"
+    },
+    {
       "name": "additionalApks",
       "type": "multiLine",
       "label": "ms-resource:loc.input.label.additionalApks",
@@ -200,6 +217,7 @@
     "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
     "FoundMainApk": "ms-resource:loc.messages.FoundMainApk",
     "FoundMultiApks": "ms-resource:loc.messages.FoundMultiApks",
+    "FoundDeobfuscationFile": "ms-resource:loc.messages.FoundDeobfuscationFile",
     "GetNewEditAfterAuth": "ms-resource:loc.messages.GetNewEditAfterAuth",
     "UploadApk": "ms-resource:loc.messages.UploadApk",
     "UpdateTrack": "ms-resource:loc.messages.UpdateTrack",
@@ -219,6 +237,7 @@
     "RequestDetails": "ms-resource:loc.messages.RequestDetails",
     "CannotCreateTransaction": "ms-resource:loc.messages.CannotCreateTransaction",
     "CannotUploadApk": "ms-resource:loc.messages.CannotUploadApk",
+    "CannotUploadDeobfuscationFile": "ms-resource:loc.messages.CannotUploadDeobfuscationFile",
     "CannotDownloadTrack": "ms-resource:loc.messages.CannotDownloadTrack",
     "CannotUpdateTrack": "ms-resource:loc.messages.CannotUpdateTrack",
     "CannotReadChangeLog": "ms-resource:loc.messages.CannotReadChangeLog",
