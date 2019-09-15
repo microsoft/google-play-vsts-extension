@@ -80,7 +80,7 @@ export function getJWT(key: ClientKey): JWT {
  */
 export async function getNewEdit(edits: pub3.Resource$Edits, globalParams: GlobalParams, packageName: string): Promise<pub3.Schema$AppEdit> {
     tl.debug('Creating a new edit');
-    const requestParameters: PackageParams = {
+    const requestParameters: pub3.Params$Resource$Edits$Insert = {
         packageName: packageName
     };
 
@@ -99,7 +99,7 @@ export async function getNewEdit(edits: pub3.Resource$Edits, globalParams: Globa
  */
 export async function getTrack(edits: pub3.Resource$Edits, packageName: string, track: string): Promise<pub3.Schema$Track> {
     tl.debug('Getting Track information');
-    const requestParameters: PackageParams = {
+    const requestParameters: pub3.Params$Resource$Edits$Tracks$Get = {
         packageName: packageName,
         track: track
     };
