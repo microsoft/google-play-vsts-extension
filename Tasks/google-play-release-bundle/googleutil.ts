@@ -1,6 +1,6 @@
 // common code shared by all tasks
 import * as fs from 'fs';
-import * as tl from 'azure-pipelines-task-lib/task';
+import * as tl from 'azure-pipelines-task-lib';
 import { google, androidpublisher_v3 as pub3 } from 'googleapis';
 import { JWT } from 'google-auth-library';
 

@@ -1,5 +1,6 @@
 {
     "tasks": [
+        "google-play-release-bundle",
         "google-play-release",
         "google-play-promote",
         "google-play-rollout-update"
