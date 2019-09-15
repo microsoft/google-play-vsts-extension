@@ -39,6 +39,9 @@
             "path": "_build/Tasks/GooglePlayRelease"
         },
         {
+            "path": "_build/Tasks/GooglePlayReleaseBundle"
+        },
+        {
             "path": "_build/Tasks/GooglePlayPromote"
         },
         {
@@ -76,6 +79,16 @@
             ],
             "properties": {
                 "name": "_build/Tasks/GooglePlayRelease"
+            }
+        },
+        {
+            "id": "google-play-release-bundle",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "_build/Tasks/GooglePlayReleaseBundle"
             }
         },
         {

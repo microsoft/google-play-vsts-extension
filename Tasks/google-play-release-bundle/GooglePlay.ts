@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as tl from 'azure-pipelines-task-lib';
+import * as tl from 'azure-pipelines-task-lib/task';
 import * as glob from 'glob';
 import * as googleutil from './googleutil';
 
@@ -12,9 +12,7 @@ async function run() {
 
         tl.debug('Prepare task inputs.');
 
-        const packageName: string = tl.getInput('packageName', true);
         const authType: string = tl.getInput('authType', true);
-
         let key: googleutil.ClientKey = {};
         if (authType === 'JsonFile') {
             const serviceAccountKeyFile: string = tl.getPathInput('serviceAccountKey', true, true);
@@ -32,6 +30,9 @@ async function run() {
             key.private_key = serviceEndpoint.parameters['password'].replace(/\\n/g, '\n');
         }
 
+        const packageName: string = tl.getInput('packageName', true);
+        tl.debug(`Application identifier: ${packageName}`);
+
         const mainBundlePattern = tl.getPathInput('bundleFile', true);
         tl.debug(`Main bundle pattern: ${mainBundlePattern}`);
 
@@ -40,10 +41,10 @@ async function run() {
         console.log(tl.loc('FoundMainBundle', bundleFile));
         tl.debug(`Found the main bundle file: ${bundleFile}.`);
 
-        const versionCodeFilterType: string = tl.getInput('versionCodeFilterType', false) ;
+        const versionCodeFilterType: string = tl.getInput('versionCodeFilterType', false) || 'all';
         let versionCodeFilter: string | string[] = null;
         if (versionCodeFilterType === 'list') {
-            versionCodeFilter = tl.getDelimitedInput('replaceList', ',', false).map((s) => s.trim());
+            versionCodeFilter = getVersionCodeListInput();
         } else if (versionCodeFilterType === 'expression') {
             versionCodeFilter = tl.getInput('replaceExpression', true);
         }
@@ -147,7 +148,7 @@ async function run() {
  * @param {string} packageName unique android package name (com.android.etc)
  * @param {string} track one of the values {"internal", "alpha", "beta", "production"}
  * @param {number[]} bundleVersionCode version code of uploaded modules.
- * @param {string} versionCodeListType type of version code replacement filter, i.e. 'all', 'list', or 'expression'
+ * @param {string} versionCodeFilterType type of version code replacement filter, i.e. 'all', 'list', or 'expression'
  * @param {string | string[]} versionCodeFilter version code filter, i.e. either a list of version code or a regular expression string.
  * @param {double} userFraction the fraction of users to get update
  * @returns {Promise} track A promise that will return result from updating a track
@@ -158,7 +159,7 @@ async function updateTrack(
     packageName: string,
     track: string,
     bundleVersionCode: string,
-    versionCodeListType: string,
+    versionCodeFilterType: string,
     versionCodeFilter: string | string[],
     userFraction: number,
     releaseNotes?: pub3.Schema$LocalizedText[]): Promise<pub3.Schema$Track> {
@@ -166,7 +167,7 @@ async function updateTrack(
     let newTrackVersionCodes: string[] = [];
     let res: pub3.Schema$Track;
 
-    if (versionCodeListType === 'all') {
+    if (versionCodeFilterType === 'all') {
         newTrackVersionCodes = [bundleVersionCode];
     } else {
         try {
@@ -177,7 +178,7 @@ async function updateTrack(
             throw new Error(tl.loc('CannotDownloadTrack', track, e));
         }
 
-        const oldTrackVersionCodes: string[] = res.releases[0].versionCodes;
+        const oldTrackVersionCodes: string[] = res.releases[0].versionCodes.map((v) => `${v}`);
         tl.debug('Current version codes: ' + JSON.stringify(oldTrackVersionCodes));
 
         if (typeof(versionCodeFilter) === 'string') {
@@ -706,6 +707,28 @@ function resolveGlobPath(path: string): string {
     }
 
     return path;
+}
+
+function getVersionCodeListInput(): string[] {
+    const versionCodeFilterInput: string[] = tl.getDelimitedInput('replaceList', ',', false);
+    const versionCodeFilter: string[] = [];
+    const incorrectCodes: string[] = [];
+
+    for (const versionCode of versionCodeFilterInput) {
+        const versionCodeNumber: number = parseInt(versionCode.trim(), 10);
+
+        if (versionCodeNumber && (versionCodeNumber > 0)) {
+            versionCodeFilter.push(`${versionCodeNumber}`);
+        } else {
+            incorrectCodes.push(versionCode.trim());
+        }
+    }
+
+    if (incorrectCodes.length > 0) {
+        throw new Error(tl.loc('IncorrectVersionCodeFilter', JSON.stringify(incorrectCodes)));
+    } else {
+        return versionCodeFilter;
+    }
 }
 
 // Future features:

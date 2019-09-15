@@ -114,16 +114,16 @@ export async function getTrack(edits: pub3.Resource$Edits, packageName: string, 
  * Assumes authorized
  * @param {string} packageName - unique android package name (com.android.etc)
  * @param {string} track - one of the values {"internal", "alpha", "beta", "production"}
- * @param {integer or [integers]} versionCode - version code returned from an apk call. will take either a number or a [number]
+ * @param {string | [string]} versionCode - version codes that will be exposed to the users of this track when this release is rolled out
  * @param {double} userFraction - for rollouting out a release to a track, it's the fraction of users to get update 1.0 is all users
  * @param {releaseNotes} releaseNotes - optional release notes to be attached as part of the update
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-export async function updateTrack(edits: pub3.Resource$Edits, packageName: string, track: string, versionCode: any, userFraction: number, releaseNotes?: pub3.Schema$LocalizedText[]): Promise<pub3.Schema$Track> {
+export async function updateTrack(edits: pub3.Resource$Edits, packageName: string, track: string, versionCode: string | string[], userFraction: number, releaseNotes?: pub3.Schema$LocalizedText[]): Promise<pub3.Schema$Track> {
     tl.debug('Updating track');
     const release: pub3.Schema$TrackRelease = {
-        versionCodes: (typeof versionCode === 'number' ? [versionCode] : versionCode)
+        versionCodes: (Array.isArray(versionCode) ? versionCode : [versionCode])
     };
 
     if (releaseNotes && releaseNotes.length > 0) {
@@ -168,35 +168,6 @@ export function updateGlobalParams(globalParams: GlobalParams, paramName: string
 }
 
 /**
- * Adds an apk to an existing edit
- * Assumes authorized
- * @param {string} packageName unique android package name (com.android.etc)
- * @param {string} apkFile path to apk file
- * @returns {Promise} apk A promise that will return result from uploading an apk
- *                          { versionCode: integer, binary: { sha1: string } }
- */
-export async function addApk(edits: pub3.Resource$Edits, packageName: string, apkFile: string): Promise<pub3.Schema$Apk> {
-    let requestParameters: pub3.Params$Resource$Edits$Apks$Upload = {
-        packageName: packageName,
-        media: {
-            body: fs.createReadStream(apkFile),
-            mimeType: 'application/vnd.android.package-archive'
-        }
-    };
-
-    try {
-        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        const res = (await edits.apks.upload(requestParameters)).data;
-        tl.debug('returned: ' + JSON.stringify(res));
-        return res;
-    } catch (e) {
-        tl.debug(`Failed to upload the APK ${apkFile}`);
-        tl.debug(e);
-        throw new Error(tl.loc('CannotUploadApk', apkFile, e));
-    }
-}
-
-/**
  * Adds a bundle to an existing edit
  * Assumes authorized
  * @param {string} packageName unique android package name (com.android.etc)
@@ -215,9 +186,13 @@ export async function addBundle(edits: pub3.Resource$Edits, packageName: string,
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        const res = (await edits.bundles.upload(requestParameters)).data;
-        tl.debug('returned: ' + JSON.stringify(res));
-        return res;
+        const res = await edits.bundles.upload(requestParameters, {
+            onUploadProgress: (progress) => {
+                tl.debug('Upload progress: ' + JSON.stringify(progress));
+            }
+        });
+        tl.debug('Returned: ' + JSON.stringify(res));
+        return res.data;
     } catch (e) {
         tl.debug(`Failed to upload Bundle ${bundleFile}`);
         tl.debug(e);
