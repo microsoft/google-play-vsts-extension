@@ -155,7 +155,7 @@
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "The path to the proguard mapping.txt file to upload.",
-            "visibleRule": "shouldUploadApks = true && shouldUploadMappingFile = true"
+            "visibleRule": "shouldUploadMappingFile = true"
         },
         {
             "name": "versionCodeFilterType",
