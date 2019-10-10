@@ -1,8 +1,8 @@
 {
-    "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
-    "name": "GooglePlayRelease",
-    "friendlyName": "Google Play - Release",
-    "description": "Release an app to the Google Play Store",
+    "id": "64f05ee7-e81b-4fdb-85a0-ad518819e0d4",
+    "name": "GooglePlayReleaseBundle",
+    "friendlyName": "Google Play - Release Bundle",
+    "description": "Release an app bundle to the Google Play Store",
     "author": "Microsoft Corporation",
     "category": "Deploy",
     "visibility": [
@@ -25,7 +25,7 @@
             "isExpanded": false
         }
     ],
-    "instanceNameFormat": "Release $(apkFile) to $(track)",
+    "instanceNameFormat": "Release $(bundleFile) to $(track)",
     "inputs": [
         {
             "name": "authType",
@@ -60,12 +60,19 @@
             "visibleRule": "authType = JsonFile"
         },
         {
-            "name": "apkFile",
+            "name": "applicationId",
+            "type": "string",
+            "label": "Application id (com.google.MyApp)",
+            "required": true,
+            "helpMarkDown": "The application id of the bundle you want to release, e.g. com.company.MyApp"
+        },
+        {
+            "name": "bundleFile",
             "type": "filePath",
-            "label": "APK path",
+            "label": "Bundle path",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "Path to the APK file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory."
+            "helpMarkDown": "Path to the bundle (.aab) file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.aab_ to match the first APK file, in any directory."
         },
         {
             "name": "track",
@@ -73,7 +80,7 @@
             "label": "Track",
             "defaultValue": "internal",
             "required": true,
-            "helpMarkDown": "Track you want to publish the APK to.",
+            "helpMarkDown": "Track you want to publish the bundle to.",
             "options": {
                 "internal": "Internal test",
                 "alpha": "Alpha",
@@ -134,14 +141,6 @@
             "visibleRule": "shouldAttachMetadata = true"
         },
         {
-            "name": "shouldUploadApks",
-            "type": "boolean",
-            "label": "Update APK(s)",
-            "defaultValue": true,
-            "required": false,
-            "helpMarkDown": "By default, the task will update the specified binary APK file(s) on your app release. By unselecting this option you can update metadata keeping the APKs untouched."
-        },
-        {
             "name": "shouldUploadMappingFile",
             "type": "boolean",
             "label": "Upload deobfuscation file (mapping.txt)",
@@ -157,15 +156,6 @@
             "required": false,
             "helpMarkDown": "The path to the proguard mapping.txt file to upload.",
             "visibleRule": "shouldUploadApks = true && shouldUploadMappingFile = true"
-        },
-        {
-            "name": "additionalApks",
-            "type": "multiLine",
-            "label": "Additional APK path(s)",
-            "defaultValue": "",
-            "groupName": "advanced",
-            "required": false,
-            "helpMarkDown": "Paths to additional APK files you want to publish to the specified track (e.g. an x86 build). Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match all APK files, in any directory."
         },
         {
             "name": "versionCodeFilterType",
@@ -215,17 +205,16 @@
     },
     "messages": {
         "InvalidAuthFile": "%s is not a valid auth file",
-        "FoundMainApk": "Found main APK to upload: %s (version code %s)",
-        "FoundMultiApks": "Found multiple APKs to upload:",
+        "FoundMainBundle": "Found main bundle to upload: %s (version code %s)",
         "FoundDeobfuscationFile": "Found deobfuscation (mapping) file: %s",
         "GetNewEditAfterAuth": "Authenticated with Google Play and getting new edit ",
-        "UploadApk": "Uploading APK file %s...",
+        "UploadBundle": "Uploading bundle file %s...",
         "UpdateTrack": "Updating track information...",
         "AttachingMetadataToRelease": "Attempting to attach metadata to release...",
-        "AptPublishSucceed": "APK successfully published!",
+        "AptPublishSucceed": "Bundle successfully published!",
         "TrackInfo": "Track: %s",
-        "Success": "Successfully publish APKs.",
-        "Failure": "Failed to publish APKs.",
+        "Success": "Successfully published bundle.",
+        "Failure": "Failed to publish bundle.",
         "AddChangelog": "Adding changelog file...",
         "AppendChangelog": "Appending changelog %s",
         "UploadingMetadataForLanguage": "Attempting to upload metadata in %s for language code %s",
@@ -237,6 +226,7 @@
         "RequestDetails": "Request Details: %s",
         "CannotCreateTransaction": "Failed to create a new edit transaction for the package %s. Failed with message: %s. See log for details.",
         "CannotUploadApk": "Failed to upload the APK %s. Failed with message: %s.",
+        "CannotUploadBundle": "Failed to upload the bundle %s. Failed with message: %s.",
         "CannotUploadDeobfuscationFile": "Failed to upload the deobfuscation file %s. Failed with message: %s.",
         "CannotDownloadTrack": "Failed to download track %s information. Failed with message: %s.",
         "CannotUpdateTrack": "Failed to update track %s information. Failed with message: %s.",
