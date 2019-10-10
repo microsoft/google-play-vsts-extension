@@ -99,6 +99,8 @@ In addition to the custom service endpoint, this extension also contributes the 
 
 * [Google Play - Increase Rollout](#google-play---increase-rollout) - Allows automating increasing the rollout percentage of a previous release app update.
 
+* [Google Play - Release Bundle](#google-play---release-bundle) - Allows automating the release of a new Android bundle to the Google Play store.
+
 ### Google Play - Release
 
 Allows you to release an update to your app on Google Play, and includes the following options:
@@ -212,3 +214,72 @@ Google Play and the Google Play logo are trademarks of Google Inc.
 
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
+### Google Play - Release Bundle
+
+Allows you to release an android bundle, and includes the following options:
+
+1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), 
+
+    ![JSON Auth File](images/auth-with-json-file.png)
+
+    or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). 
+
+    ![Service Endpoint](images/auth-with-endpoint.png)
+
+    Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo.
+
+
+2. **Application id** *(String, Required)* - The application id of the bundle you want to release, e.g. com.company.MyApp
+
+3. **Bundle path** *(String, Required)* - Path to the bundle (.aab) file you want to publish to the specified track. Wildcards can be used. For example, **/*.aab to match the first APK file, in any directory.
+
+4. **Track** *(String, Required)* - Release track to publish the APK to.
+
+    ![Track](images/track.png)
+
+5. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the specified APK out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). This option is only available when the **Track** input is set to **Rollout**.
+
+    ![Rollout Fraction](images/rollout-fraction.png)
+
+6. **Release Notes** *(File path)* - Path to the file specifying the release notes for the APK you are publishing.
+
+    ![Release Notes](images/release-notes.png)
+
+7. **Language Code** *(String, Optional)* - An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_.
+
+8. **Update Metadata** *(Boolean, Optional)* - Allows automating metadata updates to the Google Play store by leveraging the contents of the `Metadata Root Directory`.
+
+    ![Update Metadata](images/update-metadata.png)
+
+9. **Metadata Root Directory** *(String, Required if visible)* - Root directory for metadata related files. Becomes available after enabling the `Update Metadata` option. Expects a format similar to fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) which is summarized below:
+ 
+```
+$(Specified Directory)
+   └ $(languageCodes)
+     ├ full_description.txt
+     ├ short_description.txt
+     ├ title.txt
+     ├ video.txt
+     ├ images
+     |  ├ featureGraphic.png    || featureGraphic.jpg   || featureGraphic.jpeg
+     |  ├ icon.png              || icon.jpg             || icon.jpeg
+     |  ├ promoGraphic.png      || promoGraphic.jpg     || promoGraphic.jpeg
+     |  ├ tvBanner.png          || tvBanner.jpg         || tvBanner.jpeg
+     |  ├ phoneScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  ├ sevenInchScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  ├ tenInchScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  ├ tvScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  └ wearScreenshots
+     |     └ *.png || *.jpg || *.jpeg
+     └ changelogs
+       └ $(versioncodes).txt
+```
+
+#### Advanced Options
+
+1. **Replace version codes** *(String, Required)* - You may specify which APK version codes should be replaced in the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
