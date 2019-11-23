@@ -1,7 +1,7 @@
 param (
     [string]$serviceAccountKey,
     [string]$serviceEndpoint,
-    [string]$packageName
+    [string]$packageName,
     [string]$bundleFile,
     [string]$track,
     [string]$userFraction,
