@@ -22,22 +22,23 @@ function make (target, cb) {
         return false;
     }
 
+    cb();
     return true;
 }
 
-gulp.task('clean', function (done) {
+gulp.task('clean', gulp.series(function (done) {
     return del(['_build/**', '_results/**'], done);
-});
+}));
 
-gulp.task('build', ['clean'], function (cb) {
+gulp.task('build', gulp.series('clean', function (cb) {
     make('build', cb);
-});
+}));
 
-gulp.task('test', function (cb) {
+gulp.task('test', gulp.series(function (cb) {
     make('test', cb);
-});
+}));
 
-gulp.task('default', ['build']);
+gulp.task('default', gulp.series('build'));
 
 var createProdOverride = { 
     public: true
@@ -57,7 +58,7 @@ var createPublishOverride = {
     publisher: "ms-mobiledevops-test"
 };
 
-gulp.task('installtaskdeps', function (cb) {
+gulp.task('installtaskdeps', gulp.series(function (cb) {
     console.log('Installing task dependencies...');
 
     var rootPath = process.cwd(); 
@@ -81,42 +82,42 @@ gulp.task('installtaskdeps', function (cb) {
     process.chdir(rootPath);
 
     cb();
-});
+}));
 
 function toOverrideString(object) {
     return JSON.stringify(object).replace(/"/g, '\\"');
 }
 
-gulp.task('cleanpackagefiles', function (done) {
+gulp.task('cleanpackagefiles', gulp.series(function (done) {
     return del(['_build/Tasks/**/Tests', '_build/Tasks/**/*.js.map'], done);
-});
+}));
 
-gulp.task('create', ['installtaskdeps', 'cleanpackagefiles'], function (cb) {
+gulp.task('create', gulp.series('installtaskdeps', 'cleanpackagefiles', function (cb) {
     console.log('Creating PRODUCTION vsix...');
     exec('tfx extension create --manifest-globs vsts-extension-google-play.json --override ' + toOverrideString(createProdOverride), function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         cb(err);
     });
-});
+}));
 
-gulp.task('createtest', ['installtaskdeps', 'cleanpackagefiles'], function (cb) {
+gulp.task('createtest', gulp.series('installtaskdeps', 'cleanpackagefiles', function (cb) {
     console.log('"Creating Test VSIX...');
     exec('tfx extension create --manifest-globs vsts-extension-google-play.json --override ' + toOverrideString(createtestOverride) + ' --share-with mobiledevops x04ty29er --token $PUBLISH_ACCESSTOKEN', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         cb(err);
     });
-});
+}));
 
-gulp.task('publishtest', ['installtaskdeps', 'cleanpackagefiles'], function (cb) {
+gulp.task('publishtest', gulp.series('installtaskdeps', 'cleanpackagefiles', function (cb) {
     console.log('Creating and publishing test VSIX...');
     exec('tfx extension create --manifest-globs vsts-extension-google-play.json --override ' + toOverrideString(createPublishOverride) + '--share-with mobiledevops x04ty29er --token $PUBLISH_ACCESSTOKEN', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
         cb(err);
     });
-});
+}));
 
 // Default to list reporter when run directly.
 // CI build can pass '--reporter=junit' to create JUnit results files
@@ -128,11 +129,11 @@ if (argv.reporter === "junit") {
 }
 
 // gulp testwithresults --reporter junit
-gulp.task('testwithresults', function (cb) {
+gulp.task('testwithresults', gulp.series(function (cb) {
     console.log('Running tests and publishing test results...');
     var cmdline = 'test --testResults true --testReporter ' + reporter;
     if (reporterLocation) {
         cmdline += ' --testReportLocation ' + reporterLocation;
     }
     make(cmdline, cb);
-});
+}));
