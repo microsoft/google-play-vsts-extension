@@ -30,7 +30,7 @@ async function run() {
             key.private_key = serviceEndpoint.parameters['password'].replace(/\\n/g, '\n');
         }
 
-        const packageName: string = tl.getInput('packageName', true);
+        const packageName: string = tl.getInput('applicationId', true);
         tl.debug(`Application identifier: ${packageName}`);
 
         const mainBundlePattern = tl.getPathInput('bundleFile', true);
