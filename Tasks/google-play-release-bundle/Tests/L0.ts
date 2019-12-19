@@ -50,7 +50,7 @@ describe('L0 Suite google-play-release-bundle', function () {
 
         testRunner.run();
 
-        assert(testRunner.createdErrorIssue('Error: Input required: packageName'), 'Did not print the expected message');
+        assert(testRunner.createdErrorIssue('Error: Input required: applicationId'), 'Did not print the expected message');
         assert(testRunner.failed, 'task should have failed');
         done();
     });

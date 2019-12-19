@@ -11,7 +11,7 @@ process.env['ENDPOINT_AUTH_myServiceEndpoint'] = '{ "parameters": {"username": "
 
 tr.setInput('authType', 'ServiceEndpoint');
 tr.setInput('serviceEndpoint', 'myServiceEndpoint');
-tr.setInput('packageName', 'myPackage');
+tr.setInput('applicationId', 'myPackage');
 tr.setInput('bundleFile', '/path/to/bundle');
 tr.setInput('track', 'Alpha');
 tr.setInput('versionCodeFilterType', 'all');
