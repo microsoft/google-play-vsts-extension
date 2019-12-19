@@ -6,7 +6,7 @@ const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('authType', 'ServiceEndpoint');
 tr.setInput('serviceEndpoint', 'myServiceEndpoint');
-tr.setInput('packageName', 'myPackage');
+tr.setInput('applicationId', 'myPackage');
 tr.setInput('bundleFile', '');
 
 process.env['ENDPOINT_AUTH_myServiceEndpoint'] = '{ "parameters": {"username": "myUser", "password": "myPass"}, "scheme": "UsernamePassword"}';
