@@ -168,6 +168,11 @@ async function run() {
         console.log(tl.loc('TrackInfo', track));
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));
     } catch (e) {
+        if (e) {
+            tl.debug('Exception thrown releasing to Google Play: ' + e);
+        } else {
+            tl.debug('Unknown error, no response given from Google Play');
+        }
         tl.setResult(tl.TaskResult.Failed, e);
     }
 }
