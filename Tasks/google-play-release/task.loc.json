@@ -13,9 +13,9 @@
     "npm"
   ],
   "version": {
-    "Major": "3",
-    "Minor": "164",
-    "Patch": "1"
+    "Major": "1",
+    "Minor": "168",
+    "Patch": "0"
   },
   "minimumAgentVersion": "1.83.0",
   "groups": [
@@ -68,6 +68,14 @@
       "helpMarkDown": "ms-resource:loc.input.help.apkFile"
     },
     {
+      "name": "shouldPickObbFile",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.shouldPickObbFile",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.shouldPickObbFile"
+    },
+    {
       "name": "track",
       "type": "pickList",
       "label": "ms-resource:loc.input.label.track",
@@ -81,7 +89,7 @@
         "production": "Production"
       },
       "properties": {
-          "EditableOptions": "True"
+        "EditableOptions": "True"
       }
     },
     {
@@ -169,6 +177,15 @@
       "groupName": "advanced",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.additionalApks"
+    },
+    {
+      "name": "shouldPickObbFileForAdditonalApks",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.shouldPickObbFileForAdditonalApks",
+      "defaultValue": false,
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.shouldPickObbFileForAdditonalApks"
     },
     {
       "name": "versionCodeFilterType",

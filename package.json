@@ -1,6 +1,6 @@
 {
   "name": "vso-android-extension",
-  "version": "2.164.1",
+  "version": "1.168.0",
   "description": "Provides build/release tasks that enable performing continuous delivery to the Google Play store from an automated VSTS build or release definition.",
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
     "adm-zip": "0.4.11",
     "azure-pipelines-task-lib": "2.8.0",
     "del": "^2.2.2",
+    "gem": "^2.4.3",
     "gulp": "4.0.2",
     "gulp-util": "3.0.4",
     "minimatch": "3.0.2",
