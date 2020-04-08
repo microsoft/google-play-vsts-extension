@@ -182,10 +182,6 @@ async function run() {
     }
 }
 
-// function sleep(ms) {
-//     return new Promise(resolve => setTimeout(resolve, ms));
-//   }
-
 /**
  * Update a given release track with the given information
  * Assumes authorized
