@@ -42,6 +42,7 @@ async function run() {
         const apkFileList: string[] = await getAllApkPaths(mainApkFile);
         if (apkFileList.length > 1) {
             console.log(tl.loc('FoundMultiApks'));
+            console.log(apkFileList);
         }
 
         const versionCodeFilterType: string = tl.getInput('versionCodeFilterType', false) ;
