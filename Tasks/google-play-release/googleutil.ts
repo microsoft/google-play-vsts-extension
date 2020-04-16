@@ -249,7 +249,7 @@ export async function addApk(edits: any, packageName: string, apkFile: string): 
 }
 
 export async function addObb(edits: any, packageName: string, obbFile: string, obbVersionCode: number, obbFileType: string): Promise<ObbResponse> {
-    let requestParameters: ObbRequest = {
+    const requestParameters: ObbRequest = {
         packageName: packageName,
         media: {
             body: fs.createReadStream(obbFile),

@@ -31,16 +31,16 @@ async function run() {
         const mainApkPattern = tl.getPathInput('apkFile', true);
         tl.debug(`Main APK pattern: ${mainApkPattern}`);
 
-        const apkFile: string = resolveGlobPath(mainApkPattern);
-        tl.checkPath(apkFile, 'apkFile');
-        const reader = await apkReader.open(apkFile);
+        const mainApkFile: string = resolveGlobPath(mainApkPattern);
+        tl.checkPath(mainApkFile, 'apkFile');
+        const reader = await apkReader.open(mainApkFile);
         const manifest = await reader.readManifest();
         const mainVersionCode = manifest.versionCode;
-        console.log(tl.loc('FoundMainApk', apkFile, mainVersionCode));
-        tl.debug(`    Found the main APK file: ${apkFile} (version code ${mainVersionCode}).`);
+        console.log(tl.loc('FoundMainApk', mainApkFile, mainVersionCode));
+        tl.debug(`    Found the main APK file: ${mainApkFile} (version code ${mainVersionCode}).`);
 
-        const apkToObbMapping: Object = await getAllApkPaths(apkFile);
-        if (Object.keys(apkToObbMapping).length > 1) {
+        const apkFileList: string[] = await getAllApkPaths(mainApkFile);
+        if (apkFileList.length > 1) {
             console.log(tl.loc('FoundMultiApks'));
         }
 
@@ -84,7 +84,7 @@ async function run() {
         // #6) Specify the new change log
         // #7) Commit the edit transaction
 
-        tl.debug(`Getting a package name from ${apkFile}`);
+        tl.debug(`Getting a package name from ${mainApkFile}`);
         const packageName: string = manifest.package;
         googleutil.updateGlobalParams(globalParams, 'packageName', packageName);
 
@@ -105,18 +105,17 @@ async function run() {
 
         let requireTrackUpdate = false;
         if (shouldUploadApks) {
-            tl.debug(`Uploading ${Object.keys(apkToObbMapping).length} APK(s).`);
+            tl.debug(`Uploading ${apkFileList.length} APK(s).`);
             requireTrackUpdate = true;
 
-            for (const apkFile of Object.keys(apkToObbMapping)) {
+            for (const apkFile of apkFileList) {
                 tl.debug(`Uploading APK ${apkFile}`);
-                console.log(apkFile);
                 const apk: googleutil.Apk = await googleutil.addApk(edits, packageName, apkFile);
                 tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}`);
-                if (apkToObbMapping[apkFile] !== null) {
-                    const obb: googleutil.ObbResponse = await googleutil.addObb(edits, packageName, apkToObbMapping[apkFile], await getVersionCodeForApk(apkFile), 'main');
+                if ((shouldPickObbForApk(apkFile, mainApkFile)) && (getObbFromParentDirectroy(apkFile) !== null)) {
+                    const obb: googleutil.ObbResponse = await googleutil.addObb(edits, packageName, getObbFromParentDirectroy(apkFile), apk.versionCode, 'main');
                     if (obb.expansionFile.fileSize !== 0) {
-                        tl.debug(`Uploaded ${apkToObbMapping[apkFile]} with size ${obb.expansionFile.fileSize}`);
+                        tl.debug(`Uploaded ${getObbFromParentDirectroy(apkFile)} with size ${obb.expansionFile.fileSize}`);
                     }
                 }
                 apkVersionCodes.push(apk.versionCode);
@@ -131,12 +130,12 @@ async function run() {
                 console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
                 tl.debug(`Uploading mapping file ${mappingFilePath}`);
                 await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, apkVersionCodes[0]);
-                tl.debug(`Uploaded ${mappingFilePath} for APK ${apkFile}`);
+                tl.debug(`Uploaded ${mappingFilePath} for APK ${mainApkFile}`);
             }
         } else {
-            tl.debug(`Getting APK version codes of ${Object.keys(apkToObbMapping).length} APK(s).`);
+            tl.debug(`Getting APK version codes of ${apkFileList.length} APK(s).`);
 
-            for (let apkFile of Object.keys(apkToObbMapping)) {
+            for (let apkFile of Object.keys(apkFileList)) {
                 tl.debug(`Getting version code of APK ${apkFile}`);
                 const reader = await apkReader.open(apkFile);
                 const manifest = await reader.readManifest();
@@ -775,10 +774,10 @@ function resolveGlobPaths(path: string): string[] {
 
 function getObbFromParentDirectroy(apkPath: string): string {
     let obbFile: string = null;
-    let apkDirectory = path.dirname(apkPath);
-    let parentDirectory = path.dirname(apkDirectory);
-    let filenames = fs.readdirSync(parentDirectory);
-    filenames.forEach(file => {
+    const apkDirectory = path.dirname(apkPath);
+    const parentDirectory = path.dirname(apkDirectory);
+    const filenames = fs.readdirSync(parentDirectory);
+    filenames.find(file => {
         if (path.extname(file) === '.obb') {
             obbFile = file;
         }
@@ -796,20 +795,19 @@ function getObbFromParentDirectroy(apkPath: string): string {
  * Get unique APK file paths from main and additional APK file inputs.
  * @returns {string[]} paths of the files
  */
-async function getAllApkPaths(mainApkFile: string): Promise<Object> {
-    const apkToObbMapping: { [key: string]: string } = {};
+async function getAllApkPaths(mainApkFile: string): Promise<string[]> {
+    const apkFileList: { [key: string]: number } = {};
 
-    const shouldPickObbFile: boolean = tl.getBoolInput('shouldPickObbFile', false);
-    apkToObbMapping[mainApkFile] = shouldPickObbFile ? getObbFromParentDirectroy(mainApkFile) : null;
+    apkFileList[mainApkFile] = 0;
 
-    const shouldPickObbFileForAdditonalApks: boolean = tl.getBoolInput('shouldPickObbFileForAdditonalApks', false);
     const additionalApks: string[] = tl.getDelimitedInput('additionalApks', '\n');
 
     for (const additionalApk of additionalApks) {
         tl.debug(`Additional APK pattern: ${additionalApk}`);
         const apkPaths: string[] = resolveGlobPaths(additionalApk);
+
         for (const apkPath of apkPaths) {
-            apkToObbMapping[apkPath] = shouldPickObbFileForAdditonalApks ? getObbFromParentDirectroy(apkPath) : null;
+            apkFileList[apkPath] = 0;
             tl.debug(`Checking additional APK ${apkPath} version...`);
             const reader = await apkReader.open(apkPath);
             const manifest = await reader.readManifest();
@@ -817,7 +815,7 @@ async function getAllApkPaths(mainApkFile: string): Promise<Object> {
         }
     }
 
-    return apkToObbMapping;
+    return Object.keys(apkFileList);
 }
 
 function getVersionCodeListInput(): number[] {
@@ -842,12 +840,16 @@ function getVersionCodeListInput(): number[] {
     }
 }
 
-async function getVersionCodeForApk(apk: string): Promise<number> {
-    const reader = await apkReader.open(apk);
-    const manifest = await reader.readManifest();
-    const mainVersionCode = manifest.versionCode;
+function shouldPickObbForApk(apk: string, mainApk: string): boolean {
+    const shouldPickObbFile = tl.getBoolInput('shouldPickObbFile', false);
+    const shouldPickObbFileForAdditonalApks = tl.getBoolInput('shouldPickObbFileForAdditonalApks', false);
 
-    return mainVersionCode;
+    if ((apk === mainApk) && shouldPickObbFile) {
+        return true;
+    } else if ((apk !== mainApk) && shouldPickObbFileForAdditonalApks) {
+        return true;
+    }
+    return false;
 }
 
 // Future features:
