@@ -135,7 +135,7 @@ async function run() {
         } else {
             tl.debug(`Getting APK version codes of ${apkFileList.length} APK(s).`);
 
-            for (let apkFile of Object.keys(apkFileList)) {
+            for (let apkFile of apkFileList) {
                 tl.debug(`Getting version code of APK ${apkFile}`);
                 const reader = await apkReader.open(apkFile);
                 const manifest = await reader.readManifest();
@@ -801,7 +801,6 @@ async function getAllApkPaths(mainApkFile: string): Promise<string[]> {
     apkFileList[mainApkFile] = 0;
 
     const additionalApks: string[] = tl.getDelimitedInput('additionalApks', '\n');
-
     for (const additionalApk of additionalApks) {
         tl.debug(`Additional APK pattern: ${additionalApk}`);
         const apkPaths: string[] = resolveGlobPaths(additionalApk);
