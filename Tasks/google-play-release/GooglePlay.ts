@@ -60,6 +60,9 @@ async function run() {
         const shouldAttachMetadata: boolean = tl.getBoolInput('shouldAttachMetadata', false);
         const shouldUploadApks: boolean = tl.getBoolInput('shouldUploadApks', false);
 
+        const shouldPickObbFile = tl.getBoolInput('shouldPickObbFile', false);
+        const shouldPickObbFileForAdditonalApks = tl.getBoolInput('shouldPickObbFileForAdditonalApks', false);
+
         let changelogFile: string = null;
         let languageCode: string = null;
         let metadataRootPath: string = null;
@@ -113,7 +116,7 @@ async function run() {
                 tl.debug(`Uploading APK ${apkFile}`);
                 const apk: googleutil.Apk = await googleutil.addApk(edits, packageName, apkFile);
                 tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}`);
-                if ((shouldPickObbForApk(apkFile, mainApkFile)) && (getObbFromParentDirectroy(apkFile) !== null)) {
+                if ((shouldPickObbForApk(apkFile, mainApkFile, shouldPickObbFile, shouldPickObbFileForAdditonalApks)) && (getObbFromParentDirectroy(apkFile) !== null)) {
                     const obb: googleutil.ObbResponse = await googleutil.addObb(edits, packageName, getObbFromParentDirectroy(apkFile), apk.versionCode, 'main');
                     if (obb.expansionFile.fileSize !== 0) {
                         tl.debug(`Uploaded ${getObbFromParentDirectroy(apkFile)} with size ${obb.expansionFile.fileSize}`);
@@ -774,15 +777,10 @@ function resolveGlobPaths(path: string): string[] {
 }
 
 function getObbFromParentDirectroy(apkPath: string): string {
-    let obbFile: string = null;
     const apkDirectory = path.dirname(apkPath);
     const parentDirectory = path.dirname(apkDirectory);
     const filenames = fs.readdirSync(parentDirectory);
-    filenames.find(file => {
-        if (path.extname(file) === '.obb') {
-            obbFile = file;
-        }
-    });
+    const obbFile: string | undefined = filenames.find(file => path.extname(file) === '.obb');
 
     if (obbFile !== null) {
         return path.join(parentDirectory, obbFile);
@@ -840,9 +838,7 @@ function getVersionCodeListInput(): number[] {
     }
 }
 
-function shouldPickObbForApk(apk: string, mainApk: string): boolean {
-    const shouldPickObbFile = tl.getBoolInput('shouldPickObbFile', false);
-    const shouldPickObbFileForAdditonalApks = tl.getBoolInput('shouldPickObbFileForAdditonalApks', false);
+function shouldPickObbForApk(apk: string, mainApk: string, shouldPickObbFile: boolean, shouldPickObbFileForAdditonalApks: boolean): boolean {
 
     if ((apk === mainApk) && shouldPickObbFile) {
         return true;

@@ -70,6 +70,16 @@ describe('L0 Suite google-play-release', function () {
         done();
     });
 
+    it('test pass on Obb file not found', (done) => {
+        const testFile = path.join(__dirname, 'L0ObbFileNotFound.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(testRunner.succeeded, 'task should have succeeded' );
+        done();
+    });
+
     it('test found deobfuscation file', (done) => {
         const testFile = path.join(__dirname, 'L0FoundDeobfuscationFile.js');
         const testRunner = new ttm.MockTestRunner(testFile);
