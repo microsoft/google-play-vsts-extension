@@ -776,17 +776,22 @@ function resolveGlobPaths(path: string): string[] {
     return [];
 }
 
+/**
+ * Get obb file for the apk from the parent directory.
+ * @returns {string[]} path of the obb file if present else null
+ */
 function getObbFromParentDirectroy(apkPath: string): string {
     const apkDirectory = path.dirname(apkPath);
     const parentDirectory = path.dirname(apkDirectory);
     const filenames = fs.readdirSync(parentDirectory);
     const obbFile: string | undefined = filenames.find(file => path.extname(file) === '.obb');
 
-    if (obbFile !== null) {
+    if (obbFile !== undefined) {
+        tl.debug(`Found Obb file for upload: ${obbFile}`);
         return path.join(parentDirectory, obbFile);
     } else {
         tl.debug(`No Obb found for ${apkPath}, skipping upload`);
-        return obbFile;
+        return null;
     }
 }
 

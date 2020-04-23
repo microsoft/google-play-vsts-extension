@@ -70,13 +70,25 @@ describe('L0 Suite google-play-release', function () {
         done();
     });
 
-    it('test pass on Obb file not found', (done) => {
+    it('test found obb file', (done) => {
+        const testFile = path.join(__dirname, 'L0ObbFileFound.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(testRunner.stdOutContained('Found Obb file for upload: /path/to/obbfolder/filename.obb'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.succeeded, 'task should have succeeded' + JSON.stringify(testRunner));
+        done();
+    });
+
+    it('test obb file not found', (done) => {
         const testFile = path.join(__dirname, 'L0ObbFileNotFound.js');
         const testRunner = new ttm.MockTestRunner(testFile);
 
         testRunner.run();
 
-        assert(testRunner.succeeded, 'task should have succeeded' );
+        assert(testRunner.stdOutContained('No Obb found for /path/to/apk, skipping upload'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.succeeded, 'task should have succeeded' + JSON.stringify(testRunner));
         done();
     });
 

@@ -42,8 +42,6 @@
   "loc.messages.FoundMainApk": "Found main APK to upload: %s (version code %s)",
   "loc.messages.FoundMultiApks": "Found multiple APKs to upload:",
   "loc.messages.FoundDeobfuscationFile": "Found deobfuscation (mapping) file: %s",
-  "loc.messages.FoundObbFile": "Found Obb file for upload: %s",
-  "loc.messages.ObbFileNotFound": "Obb file not found for %s, skipping upload",
   "loc.messages.GetNewEditAfterAuth": "Authenticated with Google Play and getting new edit ",
   "loc.messages.UploadApk": "Uploading APK file %s...",
   "loc.messages.UpdateTrack": "Updating track information...",

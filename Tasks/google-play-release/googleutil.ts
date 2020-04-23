@@ -60,14 +60,8 @@ export interface Edit {
 
 export interface ObbRequest {
     packageName?: string;
-    editId?: any;
-    track?: string;
-    resource?: AndroidResource; // 'resource' goes into the 'body' of the http request
     media?: AndroidMedia;
     apkVersionCode?: number;
-    language?: string;
-    imageType?: string;
-    uploadType?: string;
     expansionFileType?: string;
 }
 
@@ -248,6 +242,16 @@ export async function addApk(edits: any, packageName: string, apkFile: string): 
     }
 }
 
+/**
+ * Adds an obb for an apk to an existing edit
+ * Assumes authorized
+ * @param {string} packageName unique android package name (com.android.etc)
+ * @param {string} obbFile path to obb file
+ * @param {string} obbVersionCode version code of the corresponding apk
+ * @param {string} obbFileType type of obb to be uploaded (main/patch)
+ * @returns {Promise} ObbResponse A promise that will return result from uploading an obb
+ *                          { expansionFile: { referencesVersion: number, fileSize: number } }
+ */
 export async function addObb(edits: any, packageName: string, obbFile: string, obbVersionCode: number, obbFileType: string): Promise<ObbResponse> {
     const requestParameters: ObbRequest = {
         packageName: packageName,
