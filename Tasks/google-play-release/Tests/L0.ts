@@ -77,7 +77,7 @@ describe('L0 Suite google-play-release', function () {
         testRunner.run();
 
         assert(testRunner.stdOutContained('Found Obb file for upload: /path/to/obbfolder/filename.obb'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
-        assert(testRunner.succeeded, 'task should have succeeded' + JSON.stringify(testRunner));
+        assert(testRunner.succeeded, 'task should have succeeded');
         done();
     });
 
@@ -88,7 +88,7 @@ describe('L0 Suite google-play-release', function () {
         testRunner.run();
 
         assert(testRunner.stdOutContained('No Obb found for /path/to/apk, skipping upload'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
-        assert(testRunner.succeeded, 'task should have succeeded' + JSON.stringify(testRunner));
+        assert(testRunner.succeeded, 'task should have succeeded');
         done();
     });
 
