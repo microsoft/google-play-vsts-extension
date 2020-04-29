@@ -18,6 +18,15 @@ export interface Apk {
     };
 }
 
+export interface Obb {
+    referencesVersion: number;
+    fileSize: number;
+}
+
+export interface ObbResponse {
+    expansionFile: Obb;
+}
+
 export interface AndroidRelease {
     name?: string;
     userFraction?: number;
@@ -47,6 +56,13 @@ export interface AndroidListingResource {
 export interface Edit {
     id: string;
     expiryTimeSeconds: string;
+}
+
+export interface ObbRequest {
+    packageName?: string;
+    media?: AndroidMedia;
+    apkVersionCode?: number;
+    expansionFileType?: string;
 }
 
 export interface PackageParams {
@@ -223,6 +239,39 @@ export async function addApk(edits: any, packageName: string, apkFile: string): 
         tl.debug(`Failed to upload the APK ${apkFile}`);
         tl.debug(e);
         throw new Error(tl.loc('CannotUploadApk', apkFile, e));
+    }
+}
+
+/**
+ * Adds an obb for an apk to an existing edit
+ * Assumes authorized
+ * @param {string} packageName unique android package name (com.android.etc)
+ * @param {string} obbFile path to obb file
+ * @param {string} obbVersionCode version code of the corresponding apk
+ * @param {string} obbFileType type of obb to be uploaded (main/patch)
+ * @returns {Promise} ObbResponse A promise that will return result from uploading an obb
+ *                          { expansionFile: { referencesVersion: number, fileSize: number } }
+ */
+export async function addObb(edits: any, packageName: string, obbFile: string, obbVersionCode: number, obbFileType: string): Promise<ObbResponse> {
+    const requestParameters: ObbRequest = {
+        packageName: packageName,
+        media: {
+            body: fs.createReadStream(obbFile),
+            mimeType: 'application/octet-stream'
+        },
+        apkVersionCode: obbVersionCode,
+        expansionFileType: obbFileType
+    };
+
+    try {
+        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
+        const res: ObbResponse = ( await edits.expansionfiles.upload(requestParameters)).data;
+        tl.debug('returned: ' + JSON.stringify(res));
+        return res;
+    } catch (e) {
+        tl.debug(`Failed to upload the Obb ${obbFile}`);
+        tl.debug(e);
+        throw new Error(e);
     }
 }
 
