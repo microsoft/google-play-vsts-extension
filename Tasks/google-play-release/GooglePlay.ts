@@ -116,10 +116,10 @@ async function run() {
                 tl.debug(`Uploading APK ${apkFile}`);
                 const apk: googleutil.Apk = await googleutil.addApk(edits, packageName, apkFile);
                 tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}`);
-                if ((shouldPickObbForApk(apkFile, mainApkFile, shouldPickObbFile, shouldPickObbFileForAdditonalApks)) && (getObbFromParentDirectroy(apkFile) !== null)) {
-                    const obb: googleutil.ObbResponse = await googleutil.addObb(edits, packageName, getObbFromParentDirectroy(apkFile), apk.versionCode, 'main');
+                if ((shouldPickObbForApk(apkFile, mainApkFile, shouldPickObbFile, shouldPickObbFileForAdditonalApks)) && (getObbFromParentDirectory(apkFile) !== null)) {
+                    const obb: googleutil.ObbResponse = await googleutil.addObb(edits, packageName, getObbFromParentDirectory(apkFile), apk.versionCode, 'main');
                     if (obb.expansionFile.fileSize !== 0) {
-                        tl.debug(`Uploaded ${getObbFromParentDirectroy(apkFile)} with size ${obb.expansionFile.fileSize}`);
+                        tl.debug(`Uploaded ${getObbFromParentDirectory(apkFile)} with size ${obb.expansionFile.fileSize}`);
                     }
                 }
                 apkVersionCodes.push(apk.versionCode);
@@ -780,7 +780,7 @@ function resolveGlobPaths(path: string): string[] {
  * Get obb file for the apk from the parent directory.
  * @returns {string[]} path of the obb file if present else null
  */
-function getObbFromParentDirectroy(apkPath: string): string {
+function getObbFromParentDirectory(apkPath: string): string {
     const apkDirectory = path.dirname(apkPath);
     const parentDirectory = path.dirname(apkDirectory);
     const filenames = fs.readdirSync(parentDirectory);
