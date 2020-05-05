@@ -52,13 +52,20 @@ async function run() {
         let track = await googleutil.getTrack(edits, packageName, sourceTrack);
         tl.debug(`Current track: ${JSON.stringify(track)}`);
 
+        const sourceTrackUserFraction: number = track.releases[0].userFraction;
+
         console.log(tl.loc('PromoteTrack', destinationTrack));
         track = await googleutil.updateTrack(edits, packageName, destinationTrack, track.releases[0].versionCodes, userFraction, track.releases[0].releaseNotes);
         tl.debug(`Update track: ${JSON.stringify(track)}`);
 
         console.log(tl.loc('CleanTrack', sourceTrack));
-        track = await googleutil.updateTrack(edits, packageName, sourceTrack, [], userFraction);
-        tl.debug(`Update clean track: ${JSON.stringify(track)}`);
+        if (userFraction >= sourceTrackUserFraction) {
+            track = await googleutil.updateTrack(edits, packageName, sourceTrack, [], userFraction);
+            tl.debug(`Update clean track: ${JSON.stringify(track)}`);
+            console.log(`Track ${sourceTrack} was cleaned`);
+        } else {
+            console.log(`Can\'t set userFraction as ${userFraction} for ${sourceTrack} since it's lower than current value: ${track.releases[0].userFraction}`);
+        }
 
         await edits.commit();
 
