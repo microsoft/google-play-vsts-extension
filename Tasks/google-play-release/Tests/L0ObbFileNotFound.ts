@@ -40,13 +40,13 @@ tr.registerMock('./googleutil', {
     getTrack: () => Promise.resolve({ releases: [{ versionCodes: [1, 2, 3 ]}]}),
     updateTrack: () => Promise.resolve({}),
     updateGlobalParams: () => Promise.resolve({}),
-    addApk: () => Promise.resolve({}),
+    addApk: () => Promise.resolve({versionCode: 1}),
     addObb: () => Promise.resolve({ expansionFile: { fileSize: '1000' } })
 });
 
 tr.registerMock('adbkit-apkreader', {
     open: () => Promise.resolve({
-        readManifest: () => Promise.resolve({ versionCode: 1.0 })
+        readManifest: () => Promise.resolve({ versionCode: 1.0, package: 'package'})
     })
 });
 
