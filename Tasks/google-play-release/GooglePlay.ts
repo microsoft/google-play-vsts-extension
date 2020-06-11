@@ -787,7 +787,7 @@ function getObbFromParentDirectory(apkPath: string, packageName: string, version
 
     const obbPathfile: string | undefined = filenames.find(file => file.toString() === expectedMainObbFile);
 
-    if (obbPathfile === null) {
+    if (obbPathfile === undefined) {
         tl.debug(`No Obb found for ${apkPath}, skipping upload`);
     } else {
         tl.debug(`Found Obb file for upload: ${obbPathfile}`);

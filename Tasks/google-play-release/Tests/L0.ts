@@ -76,7 +76,7 @@ describe('L0 Suite google-play-release', function () {
 
         testRunner.run();
 
-        assert(testRunner.stdOutContained('Found Obb file for upload: /path/to/obbfolder/filename.obb'), 'Did not print the expected message');
+        assert(testRunner.stdOutContained('Found Obb file for upload: main.1.package.obb'), 'Did not print the expected message');
         assert(testRunner.succeeded, 'task should have succeeded');
         done();
     });
