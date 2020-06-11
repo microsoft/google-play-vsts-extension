@@ -777,8 +777,11 @@ function resolveGlobPaths(path: string): string[] {
 }
 
 /**
- * Get obb file for the apk from the parent directory.
- * @returns {string} path of the obb file if present else null
+ * Get obb file for the apk from the same directory as apk.
+ * @param {string} apkPath apk file path 
+ * @param {string} packageName package name of the apk 
+ * @param {string} versionCode version code of the apk
+ * @returns {string} ObbPathFile of the obb file if present else null
  */
 function getObbFromParentDirectory(apkPath: string, packageName: string, versionCode: number): string {
     const apkDirectory: string = path.dirname(apkPath);
