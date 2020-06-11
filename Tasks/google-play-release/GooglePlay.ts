@@ -784,17 +784,14 @@ function getObbFromParentDirectory(apkPath: string, packageName: string, version
     const apkDirectory = path.dirname(apkPath);
     const filenames = fs.readdirSync(apkDirectory);
     const expectedMainObbFile: string = 'main.' + versionCode + '.' + packageName + '.obb';
-    let obbPathfile = null;
 
-    filenames.forEach(file => {
-        if (file.toString() === expectedMainObbFile) {
-            tl.debug(`Found Obb file for upload: ${file}`);
-            obbPathfile = path.join(apkDirectory, file);
-        }
-    });
+    const obbPathfile: string | undefined = filenames.find(file => file.toString() === expectedMainObbFile);
 
     if (obbPathfile === null) {
         tl.debug(`No Obb found for ${apkPath}, skipping upload`);
+    } else {
+        tl.debug(`Found Obb file for upload: ${obbPathfile}`);
+        return path.join(apkDirectory, obbPathfile);
     }
 
     return obbPathfile;
