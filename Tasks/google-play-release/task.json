@@ -230,8 +230,17 @@
             "required": true,
             "helpMarkDown": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
             "visibleRule": "versionCodeFilterType = expression"
+        },
+        {
+            "name": "mainfestPackageName",
+            "type": "string",
+            "label": "Manifest Package",
+            "defaultValue": "",
+            "groupName": "advanced",
+            "required": false,
+            "helpMarkDown": "Overide the package name automatically used from the AndroidManifest.xml file."
         }
-    ],
+	],
     "execution": {
         "Node": {
             "target": "GooglePlay.js",

@@ -38,6 +38,8 @@
   "loc.input.help.additionalApks": "Paths to additional APK files you want to publish to the specified track (e.g. an x86 build). Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match all APK files, in any directory.",
   "loc.input.label.shouldPickObbFileForAdditonalApks": "Upload Obbs",
   "loc.input.help.shouldPickObbFileForAdditonalApks": "Select this option to pick obb file for the apk. If present in the parent directory, it will pick the first file with .obb extension, else it will pick from apk directory with expected format as main.<version code>.<package name>.obb",
+  "loc.input.label.mainfestPackageName": "Manifest Package",
+  "loc.input.help.mainfestPackageName": "Overide the package name automatically used from the AndroidManifest.xml file.",
   "loc.input.label.versionCodeFilterType": "Replace version codes",
   "loc.input.help.versionCodeFilterType": "Specify version codes to replace in the selected track with the new APKs: all, the comma separated list, or a regular expression pattern.",
   "loc.input.label.replaceList": "Version code list",

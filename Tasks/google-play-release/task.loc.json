@@ -230,7 +230,16 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.replaceExpression",
       "visibleRule": "versionCodeFilterType = expression"
-    }
+    },
+    {
+      "name": "mainfestPackageName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.mainfestPackageName",
+      "defaultValue": "",
+      "groupName": "advanced",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.mainfestPackageName"
+    },
   ],
   "execution": {
     "Node": {

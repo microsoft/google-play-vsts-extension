@@ -92,7 +92,8 @@ async function run() {
         // #7) Commit the edit transaction
 
         tl.debug(`Getting a package name from ${mainApkFile}`);
-        const packageName: string = manifest.package;
+        const mainfestPackageName: string = tl.getInput('mainfestPackageName', true);
+        const packageName: string = mainfestPackageName ||  manifest.package;
         googleutil.updateGlobalParams(globalParams, 'packageName', packageName);
 
         tl.debug('Initializing JWT.');
