@@ -784,20 +784,29 @@ function resolveGlobPaths(path: string): string[] {
  * @returns {string} ObbPathFile of the obb file if present else null
  */
 function getObbFromParentDirectory(apkPath: string, packageName: string, versionCode: number): string {
-    const apkDirectory: string = path.dirname(apkPath);
-    const filenames: string[] = fs.readdirSync(apkDirectory);
-    const expectedMainObbFile: string = `main.${versionCode}.${packageName}.obb`;
+    const currentDirectory: string = path.dirname(apkPath);
+    const parentDirectory = path.dirname(currentDirectory);
 
-    const obbPathfile: string | undefined = filenames.find(file => file.toString() === expectedMainObbFile);
+    const fileNamesInParentDirectory = fs.readdirSync(parentDirectory);
+    const obbPathFileInParent: string | undefined = fileNamesInParentDirectory.find(file => path.extname(file) === '.obb');
 
-    if (obbPathfile === undefined) {
-        tl.debug(`No Obb found for ${apkPath}, skipping upload`);
-    } else {
-        tl.debug(`Found Obb file for upload: ${obbPathfile}`);
-        return path.join(apkDirectory, obbPathfile);
+    if (obbPathFileInParent !== undefined) {
+        tl.debug(`Found Obb file for upload in parent directory: ${obbPathFileInParent}`);
+        return path.join(parentDirectory, obbPathFileInParent);
     }
 
-    return obbPathfile;
+    const fileNamesInApkDirectory: string[] = fs.readdirSync(currentDirectory);
+    const expectedMainObbFile: string = `main.${versionCode}.${packageName}.obb`;
+    const obbPathFileInCurrent: string | undefined = fileNamesInApkDirectory.find(file => file.toString() === expectedMainObbFile);
+
+    if (obbPathFileInCurrent !== undefined) {
+        tl.debug(`Found Obb file for upload in current directory: ${obbPathFileInCurrent}`);
+        return path.join(currentDirectory, obbPathFileInCurrent);
+    } else {
+        tl.debug(`No Obb found for ${apkPath}, skipping upload`);
+    }
+
+    return obbPathFileInCurrent;
 }
 
 /**
