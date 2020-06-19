@@ -116,8 +116,8 @@ async function run() {
                 tl.debug(`Uploading APK ${apkFile}`);
                 const apk: googleutil.Apk = await googleutil.addApk(edits, packageName, apkFile);
                 tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}`);
-                if ((shouldPickObbForApk(apkFile, mainApkFile, shouldPickObbFile, shouldPickObbFileForAdditonalApks)) && (getObbFromParentDirectory(apkFile, packageName, apk.versionCode) !== null)) {
-                    const obb: googleutil.ObbResponse = await googleutil.addObb(edits, packageName, getObbFromParentDirectory(apkFile, packageName, apk.versionCode), apk.versionCode, 'main');
+                if ((shouldPickObbForApk(apkFile, mainApkFile, shouldPickObbFile, shouldPickObbFileForAdditonalApks)) && (getObbFile(apkFile, packageName, apk.versionCode) !== null)) {
+                    const obb: googleutil.ObbResponse = await googleutil.addObb(edits, packageName, getObbFile(apkFile, packageName, apk.versionCode), apk.versionCode, 'main');
                     if (obb.expansionFile.fileSize !== 0) {
                         console.log(`Uploaded Obb file with version code ${apk.versionCode} and size ${obb.expansionFile.fileSize}`);
                     }
@@ -777,13 +777,14 @@ function resolveGlobPaths(path: string): string[] {
 }
 
 /**
- * Get obb file for the apk from the same directory as apk.
+ * Get obb file. Returns any file with .obb extension if present in parent directory else returns
+ * from apk directory with pattern: main.<versionCode>.<packageName>.obb
  * @param {string} apkPath apk file path 
  * @param {string} packageName package name of the apk 
  * @param {string} versionCode version code of the apk
  * @returns {string} ObbPathFile of the obb file if present else null
  */
-function getObbFromParentDirectory(apkPath: string, packageName: string, versionCode: number): string {
+function getObbFile(apkPath: string, packageName: string, versionCode: number): string {
     const currentDirectory: string = path.dirname(apkPath);
     const parentDirectory = path.dirname(currentDirectory);
 

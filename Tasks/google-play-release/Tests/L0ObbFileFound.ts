@@ -56,7 +56,7 @@ tr.registerMock('glob', {
 
 tr.registerMock('fs', {
 
-    readdirSync: () => ['main.1.package.obb', '/path/to/obbfolder/filename.txt'],
+    readdirSync: () => ['/path/to/obbfolder/file.obb', '/path/to/obbfolder/filename.txt'],
     readFileSync: () => {
         return {
             toString: () => 'file contents'
