@@ -180,6 +180,9 @@ export async function updateTrack(edits: any, packageName: string, track: string
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
     const updatedTrack = await edits.tracks.update(requestParameters);
+    if (updatedTrack.status !== 200) {
+        tl.debug(`Update track response: ${updatedTrack.status} ${updatedTrack.statusText}`);
+    }
     return updatedTrack.data;
 }
 
