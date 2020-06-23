@@ -70,13 +70,24 @@ describe('L0 Suite google-play-release', function () {
         done();
     });
 
-    it('test found obb file', (done) => {
-        const testFile = path.join(__dirname, 'L0ObbFileFound.js');
+    it('test found obb file in parent directory', (done) => {
+        const testFile = path.join(__dirname, 'L0ObbFoundInParentDirectory.js');
         const testRunner = new ttm.MockTestRunner(testFile);
 
         testRunner.run();
 
-        assert(testRunner.stdOutContained('Found Obb file for upload in parent directory: /path/to/obbfolder/file.obb'), 'Did not print the expected message' + JSON.stringify(testRunner));
+        assert(testRunner.stdOutContained('Found Obb file for upload in parent directory: /path/to/obbfolder/file.obb'), 'Did not print the expected message');
+        assert(testRunner.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('test found obb file in apk directory', (done) => {
+        const testFile = path.join(__dirname, 'L0ObbFoundInApkDirectory.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(testRunner.stdOutContained('Found Obb file for upload in current directory: main.1.package.obb'), 'Did not print the expected message');
         assert(testRunner.succeeded, 'task should have succeeded');
         done();
     });
