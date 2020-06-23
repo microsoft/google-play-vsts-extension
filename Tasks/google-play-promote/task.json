@@ -14,8 +14,8 @@
     ],
     "version": {
         "Major": "3",
-        "Minor": "170",
-        "Patch": "1"
+        "Minor": "172",
+        "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
     "instanceNameFormat": "Promote $(packageName) from $(sourceTrack) to $(destinationTrack)",
@@ -143,6 +143,7 @@
         "SourceTrack": "Source track: %s",
         "DestTrack": "Destination track: %s",
         "Success": "Successfully promote APK.",
-        "Failure": "Failed to promote APK."
+        "Failure": "Failed to promote APK.",
+        "ReturnedNullEdit": "Returned null edit"
     }
 }
