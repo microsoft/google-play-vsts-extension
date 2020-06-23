@@ -111,12 +111,12 @@
             "visibleRule": "rolloutToUserFraction = true"
         },
         {
-            "name": "dontCleanTheSourceTrack",
+            "name": "сleanTheSourceTrack",
             "type": "boolean",
-            "label": "Don't clean the source track",
-            "defaultValue": false,
+            "label": "Сlean the source track",
+            "defaultValue": true,
             "required": false,
-            "helpMarkDown": "Source track will not be cleared"
+            "helpMarkDown": "Source track will be cleared"
         }
     ],
     "execution": {
