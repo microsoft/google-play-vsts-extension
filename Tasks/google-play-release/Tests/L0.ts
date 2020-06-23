@@ -98,7 +98,7 @@ describe('L0 Suite google-play-release', function () {
 
         testRunner.run();
 
-        assert(testRunner.stdOutContained('No Obb found for /path/to/apk, skipping upload'), 'Did not print the expected message' + JSON.stringify(testRunner));
+        assert(testRunner.stdOutContained('No Obb found for /path/to/apk, skipping upload'), 'Did not print the expected message');
         assert(testRunner.succeeded, 'task should have succeeded');
         done();
     });
