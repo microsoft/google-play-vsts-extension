@@ -109,6 +109,14 @@
             "required": false,
             "helpMarkDown": "The percentage of users the specified APK will be released to for the specified 'Destination track'. It can be increased later with the 'Google Play - Increase Rollout' task.",
             "visibleRule": "rolloutToUserFraction = true"
+        },
+        {
+            "name": "dontCleanTheSourceTrack",
+            "type": "boolean",
+            "label": "Don't clean the source track",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Source track will not be cleared"
         }
     ],
     "execution": {
