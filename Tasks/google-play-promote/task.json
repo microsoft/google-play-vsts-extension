@@ -144,6 +144,6 @@
         "DestTrack": "Destination track: %s",
         "Success": "Successfully promote APK.",
         "Failure": "Failed to promote APK.",
-        "ReturnedNullEdit": "Returned null edit"
+        "ReturnedNullEdit": "Failed to promote apk: promote operation returned null"
     }
 }
