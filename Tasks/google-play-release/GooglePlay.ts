@@ -786,12 +786,12 @@ function resolveGlobPaths(path: string): string[] {
  */
 function getObbFile(apkPath: string, packageName: string, versionCode: number): string {
     const currentDirectory: string = path.dirname(apkPath);
-    const parentDirectory = path.dirname(currentDirectory);
+    const parentDirectory: string = path.dirname(currentDirectory);
 
-    const fileNamesInParentDirectory = fs.readdirSync(parentDirectory);
+    const fileNamesInParentDirectory: string[] = fs.readdirSync(parentDirectory);
     const obbPathFileInParent: string | undefined = fileNamesInParentDirectory.find(file => path.extname(file) === '.obb');
 
-    if (obbPathFileInParent !== undefined) {
+    if (obbPathFileInParent) {
         tl.debug(`Found Obb file for upload in parent directory: ${obbPathFileInParent}`);
         return path.join(parentDirectory, obbPathFileInParent);
     }
@@ -800,7 +800,7 @@ function getObbFile(apkPath: string, packageName: string, versionCode: number): 
     const expectedMainObbFile: string = `main.${versionCode}.${packageName}.obb`;
     const obbPathFileInCurrent: string | undefined = fileNamesInApkDirectory.find(file => file.toString() === expectedMainObbFile);
 
-    if (obbPathFileInCurrent !== undefined) {
+    if (obbPathFileInCurrent) {
         tl.debug(`Found Obb file for upload in current directory: ${obbPathFileInCurrent}`);
         return path.join(currentDirectory, obbPathFileInCurrent);
     } else {
