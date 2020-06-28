@@ -14,8 +14,8 @@
     ],
     "version": {
         "Major": "3",
-        "Minor": "168",
-        "Patch": "0"
+        "Minor": "170",
+        "Patch": "1"
     },
     "minimumAgentVersion": "1.83.0",
     "instanceNameFormat": "Promote $(packageName) from $(sourceTrack) to $(destinationTrack)",
