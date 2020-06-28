@@ -14,8 +14,8 @@
     ],
     "version": {
         "Major": "3",
-        "Minor": "170",
-        "Patch": "1"
+        "Minor": "172",
+        "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
     "groups": [
@@ -73,7 +73,7 @@
             "label": "Upload Obb",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Select this option to pick obb file for the apk. This should be present in the parent folder of the apk."
+            "helpMarkDown": "Select this option to pick obb file for the apk. If present in the parent directory, it will pick the first file with .obb extension, else it will pick from apk directory with expected format as main.<version code>.<package name>.obb"
         },
         {
             "name": "track",
@@ -185,7 +185,7 @@
             "defaultValue": false,
             "groupName": "advanced",
             "required": false,
-            "helpMarkDown": "Select this option to pick obb file for the apk. This should be present in the parent folder of the apk."
+            "helpMarkDown": "Select this option to pick obb file for the apk. If present in the parent directory, it will pick the first file with .obb extension, else it will pick from apk directory with expected format as main.<version code>.<package name>.obb"
         },
         {
             "name": "versionCodeFilterType",

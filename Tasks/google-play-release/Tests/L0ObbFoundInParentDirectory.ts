@@ -46,7 +46,7 @@ tr.registerMock('./googleutil', {
 
 tr.registerMock('adbkit-apkreader', {
     open: () => Promise.resolve({
-        readManifest: () => Promise.resolve({ versionCode: 1.0, package: 'package'})
+        readManifest: () => Promise.resolve({ versionCode: 1.0, package: 'package' })
     })
 });
 
@@ -56,7 +56,7 @@ tr.registerMock('glob', {
 
 tr.registerMock('fs', {
 
-    readdirSync: () => ['/path/to/obbfolder/filename1.txt', '/path/to/obbfolder/filename2.txt'],
+    readdirSync: () => ['/path/to/obbfolder/file.obb', '/path/to/obbfolder/filename.txt'],
     readFileSync: () => {
         return {
             toString: () => 'file contents'
