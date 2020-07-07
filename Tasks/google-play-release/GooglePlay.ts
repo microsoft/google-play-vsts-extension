@@ -4,6 +4,8 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as glob from 'glob';
 import * as apkReader from 'adbkit-apkreader';
 import * as googleutil from './googleutil';
+import { androidpublisher_v3 as pub3 } from 'googleapis';
+import { JWT } from 'google-auth-library';
 
 async function run() {
     try {
@@ -28,7 +30,7 @@ async function run() {
             key.client_email = serviceEndpoint.parameters['username'];
             key.private_key = serviceEndpoint.parameters['password'].replace(/\\n/g, '\n');
         }
-        const mainApkPattern = tl.getPathInput('apkFile', true);
+        const mainApkPattern:string = tl.getPathInput('apkFile', true);
         tl.debug(`Main APK pattern: ${mainApkPattern}`);
 
         const mainApkFile: string = resolveGlobPath(mainApkPattern);
@@ -60,8 +62,8 @@ async function run() {
         const shouldAttachMetadata: boolean = tl.getBoolInput('shouldAttachMetadata', false);
         const shouldUploadApks: boolean = tl.getBoolInput('shouldUploadApks', false);
 
-        const shouldPickObbFile = tl.getBoolInput('shouldPickObbFile', false);
-        const shouldPickObbFileForAdditonalApks = tl.getBoolInput('shouldPickObbFileForAdditonalApks', false);
+        const shouldPickObbFile: boolean = tl.getBoolInput('shouldPickObbFile', false);
+        const shouldPickObbFileForAdditonalApks: boolean = tl.getBoolInput('shouldPickObbFileForAdditonalApks', false);
 
         let changelogFile: string = null;
         let languageCode: string = null;
@@ -78,10 +80,10 @@ async function run() {
         const apkVersionCodes: number[] = [];
 
         // The submission process is composed
-        // of a transction with the following steps:
+        // of a transaction with the following steps:
         // -----------------------------------------
         // #1) Extract the package name from the specified APK file
-        // #2) Get an OAuth token by authentincating the service account
+        // #2) Get an OAuth token by authenticating the service account
         // #3) Create a new editing transaction
         // #4) Upload the new APK(s)
         // #5) Specify the track that should be used for the new APK (e.g. alpha, beta)
@@ -93,11 +95,11 @@ async function run() {
         googleutil.updateGlobalParams(globalParams, 'packageName', packageName);
 
         tl.debug('Initializing JWT.');
-        const jwtClient: any = googleutil.getJWT(key);
+        const jwtClient: JWT = googleutil.getJWT(key);
         globalParams.auth = jwtClient;
 
         tl.debug('Initializing Google Play publisher API.');
-        const edits: any = googleutil.publisher.edits;
+        const edits: pub3.Resource$Edits = googleutil.publisher.edits;
 
         tl.debug('Authorize JWT.');
         await jwtClient.authorize();
@@ -165,7 +167,7 @@ async function run() {
         if (requireTrackUpdate) {
             console.log(tl.loc('UpdateTrack'));
             tl.debug(`Updating the track ${track}.`);
-            const updatedTrack: googleutil.Track = await updateTrack(edits, packageName, track, apkVersionCodes, versionCodeFilterType, versionCodeFilter, userFraction, releaseNotes);
+            const updatedTrack: googleutil.Track = await updateTrack(edits, packageName, track, apkVersionCodes, versionCodeFilterType, versionCodeFilter, userFraction, releaseNotes, shouldUploadApks);
             tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
         }
 
@@ -194,18 +196,21 @@ async function run() {
  * @param {string} versionCodeListType type of version code replacement filter, i.e. 'all', 'list', or 'expression'
  * @param {string | string[]} versionCodeFilter version code filter, i.e. either a list of version code or a regular expression string.
  * @param {double} userFraction the fraction of users to get update
+ * @param {googleutil.ReleaseNotes[]} releaseNotes optional release notes to be attached as part of the update
+ * @param {boolean} isTrackUpdate flag for patch or update track
  * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
 async function updateTrack(
-    edits: any,
+    edits: pub3.Resource$Edits,
     packageName: string,
     track: string,
     apkVersionCodes: number[],
     versionCodeListType: string,
     versionCodeFilter: string | number[],
     userFraction: number,
-    releaseNotes?: googleutil.ReleaseNotes[]): Promise<googleutil.Track> {
+    releaseNotes?: googleutil.ReleaseNotes[],
+    isTrackUpdate: boolean = true): Promise<googleutil.Track> {
 
     let newTrackVersionCodes: number[] = [];
     let res: googleutil.Track;
@@ -254,7 +259,7 @@ async function updateTrack(
 
     tl.debug(`New ${track} track version codes: ` + JSON.stringify(newTrackVersionCodes));
     try {
-        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction, releaseNotes);
+        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction, releaseNotes, isTrackUpdate);
     } catch (e) {
         tl.debug(`Failed to update track ${track}.`);
         tl.debug(e);
@@ -310,7 +315,7 @@ function getChangelog(changelogFile: string): string {
  * @param {string} directory Directory with a changesogs folder where release notes can be found.
  * @returns nothing
  */
-async function addAllReleaseNotes(apkVersionCodes: any, languageCode: string, directory: string): Promise<googleutil.ReleaseNotes[]> {
+async function addAllReleaseNotes(apkVersionCodes: number[], languageCode: string, directory: string): Promise<googleutil.ReleaseNotes[]> {
     const changelogDir: string = path.join(directory, 'changelogs');
 
     const changelogs: string[] = filterDirectoryContents(changelogDir, stat => stat.isFile());
@@ -394,7 +399,7 @@ function filterDirectoryContents(directory: string, filter: (stats: tl.FsStats) 
  * @param {string} metadataRootDirectory Path to the folder where the Fastlane metadata structure is found. eg the folders under this directory should be the language codes
  * @returns nothing
  */
-async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDirectory: string): Promise<googleutil.ReleaseNotes[]> {
+async function addMetadata(edits: pub3.Resource$Edits, apkVersionCodes: number[], metadataRootDirectory: string): Promise<googleutil.ReleaseNotes[]> {
     const metadataLanguageCodes: string[] = filterDirectoryContents(metadataRootDirectory, stat => stat.isDirectory());
     tl.debug(`Found language codes: ${metadataLanguageCodes}`);
 
@@ -418,7 +423,7 @@ async function addMetadata(edits: any, apkVersionCodes: number[], metadataRootDi
  * @param {string} directory Directory where updated listing details can be found.
  * @returns nothing
  */
-async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: number[], languageCode: string, directory: string): Promise<googleutil.ReleaseNotes[]> {
+async function uploadMetadataWithLanguageCode(edits: pub3.Resource$Edits, apkVersionCodes: number[], languageCode: string, directory: string): Promise<googleutil.ReleaseNotes[]> {
     console.log(tl.loc('UploadingMetadataForLanguage', directory, languageCode));
 
     tl.debug(`Adding localized store listing for language code ${languageCode} from ${directory}`);
@@ -440,7 +445,7 @@ async function uploadMetadataWithLanguageCode(edits: any, apkVersionCodes: numbe
  * @param {string} directory Directory where updated listing details can be found.
  * @returns nothing
  */
-async function addLanguageListing(edits: any, languageCode: string, directory: string) {
+async function addLanguageListing(edits: pub3.Resource$Edits, languageCode: string, directory: string) {
     const listingResource: googleutil.AndroidListingResource = createListingResource(languageCode, directory);
 
     const isPatch:boolean = (!listingResource.fullDescription) ||
@@ -527,7 +532,7 @@ function createListingResource(languageCode: string, directory: string): googleu
  * @param {string} directory Directory where updated listing details can be found.
  * @returns nothing
  */
-async function attachImages(edits: any, languageCode: string, directory: string) {
+async function attachImages(edits: pub3.Resource$Edits, languageCode: string, directory: string) {
     const imageList: { [key: string]: string[] } = getImageList(directory);
     tl.debug(`Found ${languageCode} images: ${JSON.stringify(imageList)}`);
 
@@ -558,7 +563,7 @@ async function attachImages(edits: any, languageCode: string, directory: string)
  * @param {string} imageType type of images.
  * @returns nothing
  */
-async function removeOldImages(edits: any, languageCode: string, imageType: string) {
+async function removeOldImages(edits: pub3.Resource$Edits, languageCode: string, imageType: string) {
     try {
         let imageRequest: googleutil.PackageParams = {
             language: languageCode,
@@ -690,7 +695,7 @@ function getImageList(directory: string): { [key: string]: string[] } {
  * @param {string} imagePath Path to image to attempt upload with
  * @returns nothing
  */
-async function uploadImage(edits: any, languageCode: string, imageType: string, imagePath: string) {
+async function uploadImage(edits: pub3.Resource$Edits, languageCode: string, imageType: string, imagePath: string) {
     const imageRequest: googleutil.PackageParams = {
         language: languageCode,
         imageType: imageType

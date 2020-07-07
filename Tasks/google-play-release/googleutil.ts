@@ -163,10 +163,11 @@ export async function getTrack(edits: any, packageName: string, track: string): 
  * @param {integer or [integers]} versionCode - version code returned from an apk call. will take either a number or a [number]
  * @param {double} userFraction - for rollouting out a release to a track, it's the fraction of users to get update 1.0 is all users
  * @param {releaseNotes} releaseNotes - optional release notes to be attached as part of the update
+ * @param {boolean} isTrackUpdate - flag for patch or update track
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-export async function updateTrack(edits: any, packageName: string, track: string, versionCode: any, userFraction: number, releaseNotes?: ReleaseNotes[]): Promise<Track> {
+export async function updateTrack(edits: any, packageName: string, track: string, versionCode: any, userFraction: number, releaseNotes?: ReleaseNotes[], isTrackUpdate: boolean = true): Promise<Track> {
     tl.debug('Updating track');
     const release: AndroidRelease = {
         versionCodes: (typeof versionCode === 'number' ? [versionCode] : versionCode)
@@ -195,7 +196,14 @@ export async function updateTrack(edits: any, packageName: string, track: string
     };
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
-    const updatedTrack = await edits.tracks.update(requestParameters);
+    let updatedTrack;
+    if (isTrackUpdate) {
+        tl.debug('Update Track');
+        updatedTrack = await edits.tracks.update(requestParameters);
+    } else {
+        tl.debug('Patch Track');
+        updatedTrack = await edits.tracks.patch(requestParameters);
+    }
     return updatedTrack.data;
 }
 
