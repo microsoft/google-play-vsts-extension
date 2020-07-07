@@ -109,6 +109,14 @@
             "required": false,
             "helpMarkDown": "The percentage of users the specified APK will be released to for the specified 'Destination track'. It can be increased later with the 'Google Play - Increase Rollout' task.",
             "visibleRule": "rolloutToUserFraction = true"
+        },
+        {
+            "name": "сleanTheSourceTrack",
+            "type": "boolean",
+            "label": "Сlean the source track",
+            "defaultValue": true,
+            "required": false,
+            "helpMarkDown": "Source track will be cleared"
         }
     ],
     "execution": {
@@ -135,6 +143,7 @@
         "SourceTrack": "Source track: %s",
         "DestTrack": "Destination track: %s",
         "Success": "Successfully promote APK.",
-        "Failure": "Failed to promote APK."
+        "Failure": "Failed to promote APK.",
+        "ReturnedNullEdit": "Failed to promote apk: promote operation returned null"
     }
 }

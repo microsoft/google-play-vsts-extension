@@ -109,6 +109,14 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.userFraction",
       "visibleRule": "rolloutToUserFraction = true"
+    },
+    {
+      "name": "сleanTheSourceTrack",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.сleanTheSourceTrack",
+      "defaultValue": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.сleanTheSourceTrack"
     }
   ],
   "execution": {
@@ -135,7 +143,8 @@
     "SourceTrack": "ms-resource:loc.messages.SourceTrack",
     "DestTrack": "ms-resource:loc.messages.DestTrack",
     "Success": "ms-resource:loc.messages.Success",
-    "Failure": "ms-resource:loc.messages.Failure"
+    "Failure": "ms-resource:loc.messages.Failure",
+    "ReturnedNullEdit": "ms-resource:loc.messages.ReturnedNullEdit"
   },
   "helpMarkDown": "ms-resource:loc.helpMarkDown"
 }
