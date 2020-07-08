@@ -30,7 +30,7 @@ async function run() {
             key.client_email = serviceEndpoint.parameters['username'];
             key.private_key = serviceEndpoint.parameters['password'].replace(/\\n/g, '\n');
         }
-        const mainApkPattern:string = tl.getPathInput('apkFile', true);
+        const mainApkPattern: string = tl.getPathInput('apkFile', true);
         tl.debug(`Main APK pattern: ${mainApkPattern}`);
 
         const mainApkFile: string = resolveGlobPath(mainApkPattern);

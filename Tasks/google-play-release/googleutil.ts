@@ -168,7 +168,6 @@ export async function getTrack(edits: any, packageName: string, track: string): 
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
 export async function updateTrack(edits: any, packageName: string, track: string, versionCode: any, userFraction: number, releaseNotes?: ReleaseNotes[], isTrackUpdate: boolean = true): Promise<Track> {
-    tl.debug('Updating track');
     const release: AndroidRelease = {
         versionCodes: (typeof versionCode === 'number' ? [versionCode] : versionCode)
     };
@@ -196,14 +195,17 @@ export async function updateTrack(edits: any, packageName: string, track: string
     };
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
+
     let updatedTrack;
+
     if (isTrackUpdate) {
-        tl.debug('Update Track');
+        tl.debug('Updating track');
         updatedTrack = await edits.tracks.update(requestParameters);
     } else {
-        tl.debug('Patch Track');
+        tl.debug('Patching track');
         updatedTrack = await edits.tracks.patch(requestParameters);
     }
+
     return updatedTrack.data;
 }
 
