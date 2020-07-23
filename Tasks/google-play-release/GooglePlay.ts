@@ -60,6 +60,7 @@ async function run() {
         const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
 
         const shouldAttachMetadata: boolean = tl.getBoolInput('shouldAttachMetadata', false);
+        const updateStoreListing: boolean = tl.getBoolInput('updateStoreListing', false);
         const shouldUploadApks: boolean = tl.getBoolInput('shouldUploadApks', false);
 
         const shouldPickObbFile: boolean = tl.getBoolInput('shouldPickObbFile', false);
@@ -110,7 +111,10 @@ async function run() {
         googleutil.updateGlobalParams(globalParams, 'editId', edit.id);
 
         let requireTrackUpdate = false;
-        if (shouldUploadApks) {
+
+        if (updateStoreListing) {
+            tl.debug('Selected store listing update -> skip APK reading');
+        } else if (shouldUploadApks) {
             tl.debug(`Uploading ${apkFileList.length} APK(s).`);
             requireTrackUpdate = true;
 
@@ -156,7 +160,10 @@ async function run() {
             console.log(tl.loc('AttachingMetadataToRelease'));
             tl.debug(`Uploading metadata from ${metadataRootPath}`);
             releaseNotes = await addMetadata(edits, apkVersionCodes, metadataRootPath);
-            requireTrackUpdate = true;
+            if (updateStoreListing) {
+                tl.debug('Selected store listing update -> skip update track');
+            }
+            requireTrackUpdate = !updateStoreListing;
         } else if (changelogFile) {
             tl.debug(`Uploading the common change log ${changelogFile} to all versions`);
             const commonNotes = await getCommonReleaseNotes(languageCode, changelogFile);
@@ -167,15 +174,20 @@ async function run() {
         if (requireTrackUpdate) {
             console.log(tl.loc('UpdateTrack'));
             tl.debug(`Updating the track ${track}.`);
-            const updatedTrack: googleutil.Track = await updateTrack(edits, packageName, track, apkVersionCodes, versionCodeFilterType, versionCodeFilter, userFraction, releaseNotes, shouldUploadApks);
+            const updatedTrack: googleutil.Track = await updateTrack(edits, packageName, track, apkVersionCodes, versionCodeFilterType, versionCodeFilter, userFraction, releaseNotes);
             tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
         }
 
         tl.debug('Committing the edit transaction in Google Play.');
         await edits.commit();
 
-        console.log(tl.loc('AptPublishSucceed'));
-        console.log(tl.loc('TrackInfo', track));
+        if (updateStoreListing) {
+            console.log(tl.loc('StoreListUpdateSucceed'));
+        } else {
+            console.log(tl.loc('AptPublishSucceed'));
+            console.log(tl.loc('TrackInfo', track));
+        }
+
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));
     } catch (e) {
         if (e) {
@@ -197,7 +209,6 @@ async function run() {
  * @param {string | string[]} versionCodeFilter version code filter, i.e. either a list of version code or a regular expression string.
  * @param {double} userFraction the fraction of users to get update
  * @param {googleutil.ReleaseNotes[]} releaseNotes optional release notes to be attached as part of the update
- * @param {boolean} isTrackUpdate flag for patch or update track
  * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
@@ -209,8 +220,7 @@ async function updateTrack(
     versionCodeListType: string,
     versionCodeFilter: string | number[],
     userFraction: number,
-    releaseNotes?: googleutil.ReleaseNotes[],
-    isTrackUpdate: boolean = true): Promise<googleutil.Track> {
+    releaseNotes?: googleutil.ReleaseNotes[]): Promise<googleutil.Track> {
 
     let newTrackVersionCodes: number[] = [];
     let res: googleutil.Track;
@@ -259,7 +269,7 @@ async function updateTrack(
 
     tl.debug(`New ${track} track version codes: ` + JSON.stringify(newTrackVersionCodes));
     try {
-        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction, releaseNotes, isTrackUpdate);
+        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction, releaseNotes);
     } catch (e) {
         tl.debug(`Failed to update track ${track}.`);
         tl.debug(e);

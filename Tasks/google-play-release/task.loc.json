@@ -145,11 +145,21 @@
       "visibleRule": "shouldAttachMetadata = true"
     },
     {
+      "name": "updateStoreListing",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.updateStoreListing",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.updateStoreListing",
+      "visibleRule": "shouldAttachMetadata = true"
+    },
+    {
       "name": "shouldUploadApks",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.shouldUploadApks",
       "defaultValue": true,
       "required": false,
+      "visibleRule": "updateStoreListing = false",
       "helpMarkDown": "ms-resource:loc.input.help.shouldUploadApks"
     },
     {
@@ -262,7 +272,8 @@
     "CannotUpdateTrack": "ms-resource:loc.messages.CannotUpdateTrack",
     "CannotReadChangeLog": "ms-resource:loc.messages.CannotReadChangeLog",
     "CannotCreateListing": "ms-resource:loc.messages.CannotCreateListing",
-    "IncorrectVersionCodeFilter": "ms-resource:loc.messages.IncorrectVersionCodeFilter"
+    "IncorrectVersionCodeFilter": "ms-resource:loc.messages.IncorrectVersionCodeFilter",
+    "StoreListUpdateSucceed": "ms-resource:loc.messages.StoreListUpdateSucceed"
   },
   "helpMarkDown": "ms-resource:loc.helpMarkDown"
 }

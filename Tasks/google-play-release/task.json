@@ -145,11 +145,21 @@
             "visibleRule": "shouldAttachMetadata = true"
         },
         {
+            "name": "updateStoreListing",
+            "type": "boolean",
+            "label": "Update only store listing",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": " By default, the task will update the specified track and selected APK file(s) will be assign to related track. By selecting this option you can update only store listing.",
+            "visibleRule": "shouldAttachMetadata = true"
+        },
+        {
             "name": "shouldUploadApks",
             "type": "boolean",
             "label": "Update APK(s)",
             "defaultValue": true,
             "required": false,
+            "visibleRule": "updateStoreListing = false",
             "helpMarkDown": "By default, the task will update the specified binary APK file(s) on your app release. By unselecting this option you can update metadata keeping the APKs untouched."
         },
         {
@@ -262,6 +272,7 @@
         "CannotUpdateTrack": "Failed to update track %s information. Failed with message: %s.",
         "CannotReadChangeLog": "Failed to read change log %s. Failed with message: %s.",
         "CannotCreateListing": "Failed to create the localized %s store listing. Failed with message: %s.",
-        "IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s"
+        "IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s",
+        "StoreListUpdateSucceed": "Store list metadata successfully updated"
     }
 }
