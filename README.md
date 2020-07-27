@@ -166,7 +166,7 @@ $(Specified Directory)
        └ $(versioncodes).txt
 ```
 
-9. **Update only store listing**  *(Boolean, Optional)* - By default, the task will update the specified track and selected APK file(s) will be assign to related track. By selecting this option you can update only store listing. Default value is _false_. 
+9. **Update only store listing**  *(Boolean, Optional)* - By default, the task will update the specified track and selected APK file(s) will be assigned to the related track. By selecting this option you can update only store listing. Default value is _false_. 
 
     ![Advanced Options](images//update-store-listing.png)
 

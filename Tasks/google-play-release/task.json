@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "3",
-        "Minor": "173",
+        "Minor": "174",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
@@ -150,7 +150,7 @@
             "label": "Update only store listing",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": " By default, the task will update the specified track and selected APK file(s) will be assign to related track. By selecting this option you can update only store listing.",
+            "helpMarkDown": " By default, the task will update the specified track and selected APK file(s) will be assigned to the related track. By selecting this option you can update only store listing.",
             "visibleRule": "shouldAttachMetadata = true"
         },
         {
