@@ -26,6 +26,8 @@
   "loc.input.help.languageCode": "An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_",
   "loc.input.label.metadataRootPath": "Metadata root directory",
   "loc.input.help.metadataRootPath": "The path to the metadata folder with the fastlane metadata structure.",
+  "loc.input.label.updateStoreListing": "Update only store listing",
+  "loc.input.help.updateStoreListing": " By default, the task will update the specified track and selected APK file(s) will be assigned to the related track. By selecting this option you can update only store listing.",
   "loc.input.label.shouldUploadApks": "Update APK(s)",
   "loc.input.help.shouldUploadApks": "By default, the task will update the specified binary APK file(s) on your app release. By unselecting this option you can update metadata keeping the APKs untouched.",
   "loc.input.label.shouldUploadMappingFile": "Upload deobfuscation file (mapping.txt)",
@@ -70,5 +72,6 @@
   "loc.messages.CannotUpdateTrack": "Failed to update track %s information. Failed with message: %s.",
   "loc.messages.CannotReadChangeLog": "Failed to read change log %s. Failed with message: %s.",
   "loc.messages.CannotCreateListing": "Failed to create the localized %s store listing. Failed with message: %s.",
-  "loc.messages.IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s"
+  "loc.messages.IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s",
+  "loc.messages.StoreListUpdateSucceed": "Store list metadata successfully updated"
 }
