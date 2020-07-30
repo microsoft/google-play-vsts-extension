@@ -167,7 +167,11 @@ $(Specified Directory)
        └ $(versioncodes).txt
 ```
 
-9. **Update APK(s)** *(Boolean, Optional)* - By default, the task will update the specified binary APK file(s) on your app release. By unselecting this option you can update metadata keeping the APKs untouched. Default value is _true_.
+9. **Update only store listing**  *(Boolean, Optional)* - By default, the task will update the specified track and selected APK file(s) will be assigned to the related track. By selecting this option you can update only store listing. Default value is _false_. 
+
+    ![Advanced Options](images//update-store-listing.png)
+
+10. **Update APK(s)** *(Boolean, Optional)* - By default, the task will update the specified binary APK file(s) on your app release. By unselecting this option you can update metadata keeping the APKs untouched. Default value is _true_.
 
     ![Update APKs](images/update-apks.png)
 
