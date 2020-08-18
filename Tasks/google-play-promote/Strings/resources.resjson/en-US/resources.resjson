@@ -17,6 +17,8 @@
   "loc.input.help.rolloutToUserFraction": "Promote the release to a percentage of users. Use the 'Google Play - Increase Rollout' task to increase the rollout within a track.",
   "loc.input.label.userFraction": "Rollout fraction",
   "loc.input.help.userFraction": "The percentage of users the specified APK will be released to for the specified 'Destination track'. It can be increased later with the 'Google Play - Increase Rollout' task.",
+  "loc.input.label.сleanTheSourceTrack": "Сlean the source track",
+  "loc.input.help.сleanTheSourceTrack": "Source track will be cleared",
   "loc.messages.InvalidAuthFile": "Specified auth file was invalid",
   "loc.messages.InvalidAuthFilewithName": "%s was not a valid auth file",
   "loc.messages.JsonKeyFileNotFound": "The service account JSON key file could not be found.",
@@ -29,5 +31,6 @@
   "loc.messages.SourceTrack": "Source track: %s",
   "loc.messages.DestTrack": "Destination track: %s",
   "loc.messages.Success": "Successfully promote APK.",
-  "loc.messages.Failure": "Failed to promote APK."
+  "loc.messages.Failure": "Failed to promote APK.",
+  "loc.messages.ReturnedNullEdit": "Failed to promote apk: promote operation returned null"
 }
