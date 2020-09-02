@@ -11,7 +11,7 @@
   "dependencies": {
     "azure-pipelines-task-lib": "2.8.0",
     "gaxios": "1.8.0",
-    "googleapis": "^34.0.0",
+    "googleapis": "^39.1.0",
     "google-auth-library": "^2.0.0"
   }
 }
