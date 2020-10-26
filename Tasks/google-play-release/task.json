@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "3",
-        "Minor": "174",
+        "Minor": "178",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
@@ -238,7 +238,7 @@
             "defaultValue": "",
             "groupName": "advanced",
             "required": false,
-            "helpMarkDown": "Overide the package name automatically used from the AndroidManifest.xml file."
+            "helpMarkDown": "Override the package name automatically used from the AndroidManifest.xml file."
         }
 	],
     "execution": {
