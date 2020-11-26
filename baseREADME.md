@@ -96,7 +96,7 @@ Allows you to release an update to your app on Google Play, and includes the fol
     ![Service Endpoint](images/auth-with-endpoint.png)
 
     Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo.
-    Please also note that from the point of security it's preferrable to store it as ![Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using ![Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
+    Please also note that from the point of security it's preferrable to store it as [Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using [Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
 
 2. **APK Path** *(File path, Required)* - Path to the APK file you want to publish to the specified track.
 
@@ -166,7 +166,7 @@ Allows you to promote a previously released APK from one track to another (e.g. 
 
 ![Promote task](images/promote-task.png)
 
-1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo. Please note that from the point of security it's preferrable to store it as ![Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using ![Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
+1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo. Please note that from the point of security it's preferrable to store it as [Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using [Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
 
 2. **Package Name** *(String, Required)* - The unique package identifier (e.g. `com.foo.myapp`) that you wish to promote.
 
@@ -182,7 +182,7 @@ Allows you to increase the rollout percentage of an app that was previously rele
 
 ![Increase task](images/increase-task.png)
 
-1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo. Please note that from the point of security it's preferrable to store it as ![Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using ![Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
+1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo. Please note that from the point of security it's preferrable to store it as [Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using [Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
 
 2. **Package Name** *(String, Required)* - The unique package identifier (e.g. com.foo.myapp) of the app you wish to increase the rollout percentage for.
 
@@ -205,7 +205,7 @@ Allows you to release an app bundle to Google Play, and includes the following o
     ![Service Endpoint](images/auth-with-endpoint.png)
 
     Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo.
-    Please note that from the point of security it's preferrable to store it as ![Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using ![Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
+    Please note that from the point of security it's preferrable to store it as [Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using [Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
 
 
 2. **Application id** *(String, Required)* - The application id of the bundle you want to release, e.g. com.company.MyApp.
