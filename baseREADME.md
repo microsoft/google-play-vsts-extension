@@ -188,10 +188,6 @@ Allows you to increase the rollout percentage of an app that was previously rele
 
 3. **Rollout Fraction** *(String, Required)* - The new user fraction to increase the rollout to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users)
 
-## Contact Us
-
-* [Report an issue](https://github.com/Microsoft/google-play-vsts-extension/issues)
-
 ### Google Play - Release Bundle
 
 Allows you to release an app bundle to Google Play, and includes the following options:
@@ -243,3 +239,7 @@ Allows you to release an app bundle to Google Play, and includes the following o
 2. **Version code list** *(String, Required if visible)* - The comma separated list of APK version codes to be removed from the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
 
 3. **Version code pattern** *(String, Required if visible)* - The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. .*12?(3|4)?5
+
+## Contact Us
+
+* [Report an issue](https://github.com/Microsoft/google-play-vsts-extension/issues)
