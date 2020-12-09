@@ -222,7 +222,7 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 
 ### Google Play - Release Bundle
 
-Allows you to release an android bundle, and includes the following options:
+Allows you to release an app bundle to Google Play, and includes the following options:
 
 1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), 
 
@@ -233,31 +233,32 @@ Allows you to release an android bundle, and includes the following options:
     ![Service Endpoint](images/auth-with-endpoint.png)
 
     Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo.
+    Please note that from the point of security it's preferrable to store it as [Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using [Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
 
 
-2. **Application id** *(String, Required)* - The application id of the bundle you want to release, e.g. com.company.MyApp
+2. **Application Id** *(String, Required)* - The application id of the bundle you want to release, e.g. com.company.MyApp.
 
-3. **Bundle path** *(String, Required)* - Path to the bundle (.aab) file you want to publish to the specified track. Wildcards can be used. For example, **/*.aab to match the first APK file, in any directory.
+    ![Application id](images/bundle-app-id.png)
 
-4. **Track** *(String, Required)* - Release track to publish the APK to.
+3. **Bundle Path** *(File path, Required)* - Path to the bundle (.aab) file you want to publish to the specified track. Wildcards can be used. For example, **/*.aab to match the first APK file, in any directory.
 
-    ![Track](images/track.png)
+4. **Track** *(String, Required)* - Track you want to publish the bundle to.
 
-5. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the specified APK out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). This option is only available when the **Track** input is set to **Rollout**.
+5. **Roll out Release** *(Boolean, Optional)* - Roll out the release to a percentage of users.
 
-    ![Rollout Fraction](images/rollout-fraction.png)
+6. **Update Metadata** *(Boolean, Optional)* - Allows automating metadata updates to the Google Play store by leveraging the contents of the `Metadata Root Directory`.
 
-6. **Release Notes** *(File path)* - Path to the file specifying the release notes for the APK you are publishing.
+7. **Release Notes (file)** *(File path, Required if visible)* - Path to the file specifying the release notes (change log) for the APK you are publishing.
 
-    ![Release Notes](images/release-notes.png)
+    ![Release Notes](images/bundle-release-notes.png)
 
-7. **Language Code** *(String, Optional)* - An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_.
+8. **Language Code** *(String, Required if visible)* - An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_.
 
-8. **Update Metadata** *(Boolean, Optional)* - Allows automating metadata updates to the Google Play store by leveraging the contents of the `Metadata Root Directory`.
+9. **Deobfuscation Path** *(String, Optional)* - The path to the proguard mapping.txt file to upload.
 
-    ![Update Metadata](images/update-metadata.png)
+10. **Rollout Fraction** *(String, Optional)* - The percentage of users the specified APK will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.
 
-9. **Metadata Root Directory** *(String, Required if visible)* - Root directory for metadata related files. Becomes available after enabling the `Update Metadata` option. Expects a format similar to fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) which is summarized below:
+11. **Metadata Root Directory** *(String, Required)* - Root directory for metadata related files. Becomes available after enabling the `Update Metadata` option. Expects a format similar to fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) which is summarized below:
  
 ```
 $(Specified Directory)
@@ -284,6 +285,19 @@ $(Specified Directory)
      └ changelogs
        └ $(versioncodes).txt
 ```
+
+12. **Upload Deobfuscation File (mapping.txt)** *(Boolean, Optional)* - Select this option to attach your proguard mapping.txt file to the primary APK.
+
+#### Advanced Options
+
+1. **Replace Version Codes** *(String, Optional)* - Specify version codes to replace in the selected track with the new APKs: all, the comma separated list, or a regular expression pattern.
+
+    ![Advanced Options](images/bundle-advanced-options.png)
+
+2. **Version Code List** *(String, Required if visible)* - The comma separated list of APK version codes to be removed from the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
+
+3. **Version Code Pattern** *(String, Required if visible)* - The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. .*12?(3|4)?5
+
 
 #### Advanced Options
 

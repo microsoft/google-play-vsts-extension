@@ -204,41 +204,67 @@ Allows you to release an app bundle to Google Play, and includes the following o
     Please note that from the point of security it's preferrable to store it as [Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using [Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
 
 
-2. **Application id** *(String, Required)* - The application id of the bundle you want to release, e.g. com.company.MyApp.
+2. **Application Id** *(String, Required)* - The application id of the bundle you want to release, e.g. com.company.MyApp.
 
     ![Application id](images/bundle-app-id.png)
 
-3. **Bundle path** *(File path, Required)* - Path to the bundle (.aab) file you want to publish to the specified track. Wildcards can be used. For example, **/*.aab to match the first APK file, in any directory.
+3. **Bundle Path** *(File path, Required)* - Path to the bundle (.aab) file you want to publish to the specified track. Wildcards can be used. For example, **/*.aab to match the first APK file, in any directory.
 
 4. **Track** *(String, Required)* - Track you want to publish the bundle to.
 
-5. **Roll out release** *(Boolean, Optional)* - Roll out the release to a percentage of users.
+5. **Roll out Release** *(Boolean, Optional)* - Roll out the release to a percentage of users.
 
-6. **Update metadata** *(Boolean, Optional)* - An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_.
+6. **Update Metadata** *(Boolean, Optional)* - Allows automating metadata updates to the Google Play store by leveraging the contents of the `Metadata Root Directory`.
 
-7. **Release notes (file)** *(File path, Required if visible)* - Path to the file specifying the release notes (change log) for the APK you are publishing.
+7. **Release Notes (file)** *(File path, Required if visible)* - Path to the file specifying the release notes (change log) for the APK you are publishing.
 
     ![Release Notes](images/bundle-release-notes.png)
 
-8. **Language code** *(String, Required if visible)* - An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_.
+8. **Language Code** *(String, Required if visible)* - An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_.
 
-9. **Deobfuscation path** *(String, Optional)* - The path to the proguard mapping.txt file to upload.
+9. **Deobfuscation Path** *(String, Optional)* - The path to the proguard mapping.txt file to upload.
 
-10. **Rollout fraction** *(String, Optional)* - The percentage of users the specified APK will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.
+10. **Rollout Fraction** *(String, Optional)* - The percentage of users the specified APK will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.
 
-11. **Metadata root directory** *(String, Required)* - The path to the metadata folder with the fastlane metadata structure.
+11. **Metadata Root Directory** *(String, Required)* - Root directory for metadata related files. Becomes available after enabling the `Update Metadata` option. Expects a format similar to fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) which is summarized below:
+ 
+```
+$(Specified Directory)
+   └ $(languageCodes)
+     ├ full_description.txt
+     ├ short_description.txt
+     ├ title.txt
+     ├ video.txt
+     ├ images
+     |  ├ featureGraphic.png    || featureGraphic.jpg   || featureGraphic.jpeg
+     |  ├ icon.png              || icon.jpg             || icon.jpeg
+     |  ├ promoGraphic.png      || promoGraphic.jpg     || promoGraphic.jpeg
+     |  ├ tvBanner.png          || tvBanner.jpg         || tvBanner.jpeg
+     |  ├ phoneScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  ├ sevenInchScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  ├ tenInchScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  ├ tvScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  └ wearScreenshots
+     |     └ *.png || *.jpg || *.jpeg
+     └ changelogs
+       └ $(versioncodes).txt
+```
 
-12. **Upload deobfuscation file (mapping.txt)** *(Boolean, Optional)* - Select this option to attach your proguard mapping.txt file to the primary APK.
+12. **Upload Deobfuscation File (mapping.txt)** *(Boolean, Optional)* - Select this option to attach your proguard mapping.txt file to the primary APK.
 
 #### Advanced Options
 
-1. **Replace version codes** *(String, Optional)* - Specify version codes to replace in the selected track with the new APKs: all, the comma separated list, or a regular expression pattern.
+1. **Replace Version Codes** *(String, Optional)* - Specify version codes to replace in the selected track with the new APKs: all, the comma separated list, or a regular expression pattern.
 
     ![Advanced Options](images/bundle-advanced-options.png)
 
-2. **Version code list** *(String, Required if visible)* - The comma separated list of APK version codes to be removed from the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
+2. **Version Code List** *(String, Required if visible)* - The comma separated list of APK version codes to be removed from the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
 
-3. **Version code pattern** *(String, Required if visible)* - The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. .*12?(3|4)?5
+3. **Version Code Pattern** *(String, Required if visible)* - The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. .*12?(3|4)?5
 
 ## Contact Us
 
