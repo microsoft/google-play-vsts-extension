@@ -211,15 +211,6 @@ Allows you to increase the rollout percentage of an app that was previously rele
 
 3. **Rollout Fraction** *(String, Required)* - The new user fraction to increase the rollout to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users)
 
-## Contact Us
-
-* [Report an issue](https://github.com/Microsoft/google-play-vsts-extension/issues)
-
-Google Play and the Google Play logo are trademarks of Google Inc.
-
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-
 ### Google Play - Release Bundle
 
 Allows you to release an app bundle to Google Play, and includes the following options:
@@ -302,3 +293,12 @@ $(Specified Directory)
 #### Advanced Options
 
 1. **Replace version codes** *(String, Required)* - You may specify which APK version codes should be replaced in the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
+
+## Contact Us
+
+* [Report an issue](https://github.com/Microsoft/google-play-vsts-extension/issues)
+
+Google Play and the Google Play logo are trademarks of Google Inc.
+
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
