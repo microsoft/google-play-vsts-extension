@@ -1,0 +1,32 @@
+{
+    "Projects": [
+      {
+        "LocItems": [
+        {
+          "Languages": "de-de;en-US;es-es;fr-fr;it-IT;ja-jp;ko-KR;ru-RU;zh-CN;zh-TW",
+          "SourceFile": "Tasks\\google-play-promote\\Strings\\resources.resjson\\en-US\\resources.resjson",
+          "CopyOption": "LangIDOnPath",
+          "OutputPath": "Tasks\\google-play-promote\\Strings\\resources.resjson"
+        },
+        {
+          "Languages": "de-de;en-US;es-es;fr-fr;it-IT;ja-jp;ko-KR;ru-RU;zh-CN;zh-TW",
+          "SourceFile": "Tasks\\google-play-release\\Strings\\resources.resjson\\en-US\\resources.resjson",
+          "CopyOption": "LangIDOnPath",
+          "OutputPath": "Tasks\\google-play-release\\Strings\\resources.resjson"
+        },
+        {
+          "Languages": "de-de;en-US;es-es;fr-fr;it-IT;ja-jp;ko-KR;ru-RU;zh-CN;zh-TW",
+          "SourceFile": "Tasks\\google-play-release-bundle\\Strings\\resources.resjson\\en-US\\resources.resjson",
+          "CopyOption": "LangIDOnPath",
+          "OutputPath": "Tasks\\google-play-release-bundle\\Strings\\resources.resjson"
+        },
+        {
+          "Languages": "de-de;en-US;es-es;fr-fr;it-IT;ja-jp;ko-KR;ru-RU;zh-CN;zh-TW",
+          "SourceFile": "Tasks\\google-play-rollout-update\\Strings\\resources.resjson\\en-US\\resources.resjson",
+          "CopyOption": "LangIDOnPath",
+          "OutputPath": "Tasks\\google-play-rollout-update\\Strings\\resources.resjson"
+        }
+      ]
+    }
+  ]
+}
