@@ -45,7 +45,7 @@
             "path": "_build/Tasks/GooglePlayPromote"
         },
         {
-            "path": "_build/Tasks/GooglePlayIncreaseRollout"
+            "path": "_build/Tasks/GooglePlayRolloutUpdate"
         },
         {
             "path": "images",
