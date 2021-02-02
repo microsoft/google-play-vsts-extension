@@ -45,7 +45,7 @@
             "path": "_build/Tasks/GooglePlayPromote"
         },
         {
-            "path": "_build/Tasks/GooglePlayIncreaseRollout"
+            "path": "_build/Tasks/GooglePlayRolloutUpdate"
         },
         {
             "path": "images",
@@ -108,7 +108,7 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "_build/Tasks/GooglePlayIncreaseRollout"
+                "name": "_build/Tasks/GooglePlayRolloutUpdate"
             }
         },
         {
