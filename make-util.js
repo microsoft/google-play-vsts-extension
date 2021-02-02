@@ -165,7 +165,14 @@ var buildNodeTask = function (taskPath, outDir) {
     if (overrideTscPath) {
         var tscExec = path.join(overrideTscPath, "bin", "tsc");
         run("node " + tscExec + ' --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
-        // Don't include typescript in node_modules
+
+        // Don't include typescript in node_modules:
+        // remove tsc and tsserver symbolic links
+        if (os.platform !== 'win32') {
+            rm('-f', path.join(taskPath, 'node_modules', '.bin', 'tsc'));
+            rm('-f', path.join(taskPath, 'node_modules', '.bin', 'tsserver'));
+        }
+        // remove typescript from node_modules
         rm("-rf", overrideTscPath);
     } else {
         run('tsc --outDir "' + outDir + '" --rootDir "' + taskPath + '"');
