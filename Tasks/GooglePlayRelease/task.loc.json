@@ -150,8 +150,7 @@
       "label": "ms-resource:loc.input.label.updateStoreListing",
       "defaultValue": false,
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.updateStoreListing",
-      "visibleRule": "shouldAttachMetadata = true"
+      "helpMarkDown": "ms-resource:loc.input.help.updateStoreListing"
     },
     {
       "name": "shouldUploadApks",
