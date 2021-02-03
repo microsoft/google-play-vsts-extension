@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "2",
-        "Minor": "174",
+        "Minor": "183",
         "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
@@ -87,7 +87,7 @@
         }
     ],
     "execution": {
-        "Node": {
+        "Node10": {
             "target": "google-play-rollout-update.js",
             "argumentFormat": ""
         },
