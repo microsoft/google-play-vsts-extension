@@ -113,6 +113,9 @@
   "restrictions": {
     "commands": {
       "mode": "restricted"
+    },
+    "settableVariables": {
+        "allowed": []
     }
   },
   "helpMarkDown": "ms-resource:loc.helpMarkDown"
