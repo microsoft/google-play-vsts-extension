@@ -161,7 +161,7 @@ export async function updateTrack(edits: any, packageName: string, track: string
         release.releaseNotes = releaseNotes;
     }
 
-    if (userFraction < 1.0) {
+    if (userFraction < 1.0 && userFraction > 0) {
         release.userFraction = userFraction;
         release.status = 'inProgress';
     } else if (userFraction <= 0) {
