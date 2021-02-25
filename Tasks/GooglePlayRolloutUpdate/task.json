@@ -109,5 +109,10 @@
         "InProgressNotFound": "Production rollout was not found.",
         "Success": "Successfully update rollout fraction.",
         "Failure": "Failed to update rollout fraction."
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        }
     }
 }

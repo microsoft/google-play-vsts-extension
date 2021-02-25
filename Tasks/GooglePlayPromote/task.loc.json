@@ -146,5 +146,10 @@
     "Failure": "ms-resource:loc.messages.Failure",
     "ReturnedNullEdit": "ms-resource:loc.messages.ReturnedNullEdit"
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    }
+  },
   "helpMarkDown": "ms-resource:loc.helpMarkDown"
 }

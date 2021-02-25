@@ -237,5 +237,10 @@
     "CannotCreateListing": "ms-resource:loc.messages.CannotCreateListing",
     "IncorrectVersionCodeFilter": "ms-resource:loc.messages.IncorrectVersionCodeFilter"
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    }
+  },
   "helpMarkDown": "ms-resource:loc.helpMarkDown"
 }

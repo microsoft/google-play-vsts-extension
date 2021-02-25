@@ -274,5 +274,10 @@
     "IncorrectVersionCodeFilter": "ms-resource:loc.messages.IncorrectVersionCodeFilter",
     "StoreListUpdateSucceed": "ms-resource:loc.messages.StoreListUpdateSucceed"
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    }
+  },
   "helpMarkDown": "ms-resource:loc.helpMarkDown"
 }

@@ -110,5 +110,10 @@
     "Success": "ms-resource:loc.messages.Success",
     "Failure": "ms-resource:loc.messages.Failure"
   },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    }
+  },
   "helpMarkDown": "ms-resource:loc.helpMarkDown"
 }

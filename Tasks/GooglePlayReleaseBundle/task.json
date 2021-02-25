@@ -236,5 +236,10 @@
         "CannotReadChangeLog": "Failed to read change log %s. Failed with message: %s.",
         "CannotCreateListing": "Failed to create the localized %s store listing. Failed with message: %s.",
         "IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s"
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        }
     }
 }
