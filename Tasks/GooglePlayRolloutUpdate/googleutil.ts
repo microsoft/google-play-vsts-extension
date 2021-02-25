@@ -164,6 +164,8 @@ export async function updateTrack(edits: any, packageName: string, track: string
     if (userFraction < 1.0) {
         release.userFraction = userFraction;
         release.status = 'inProgress';
+    } else if (userFraction <= 0) {
+        release.status = 'halted';
     } else {
         tl.debug('User fraction is more than 100% marking rollout "completed"');
         release.status = 'completed';
