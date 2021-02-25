@@ -165,6 +165,12 @@ export async function updateTrack(edits: any, packageName: string, track: string
         release.userFraction = userFraction;
         release.status = 'inProgress';
     } else if (userFraction <= 0) {
+        // If userFraction is less than 0, consider it as a halting signal
+        // set this to 0.1 to avoid following errors:
+        // - Error: HALTED release must have fraction
+        // - Error: Rollout fraction must be greater than 0 and less than 1
+        // As the rollout is halted, so no actual impact of fraction will be introduced.
+        release.userFraction = 0.1;
         release.status = 'halted';
     } else {
         tl.debug('User fraction is more than 100% marking rollout "completed"');
