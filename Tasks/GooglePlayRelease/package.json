@@ -9,14 +9,14 @@
   "author": "Jonathan Carter",
   "license": "ISC",
   "dependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10.17.0",
     "adbkit-apkreader": "3.1.0",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
     "gaxios": "1.8.0",
     "glob": "^7.0.3",
-    "googleapis": "^34.0.0",
     "google-auth-library": "^2.0.0",
-    "@types/node": "^10.17.0",
-    "@types/mocha": "^5.2.7"
+    "googleapis": "^48.0.0"
   },
   "devDependencies": {
     "typescript": "4.0.2"
