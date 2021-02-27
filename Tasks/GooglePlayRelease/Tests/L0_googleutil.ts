@@ -84,7 +84,7 @@ it('updateTrack tests', async function () {
     const track = 'myFakeTrack';
 
     stub.returns({ data: {}});
-    await googleutil.updateTrack(edits, packname, track, 123, 1.0);
+    await googleutil.updateTrack(edits, packname, track, 123, 0, 1.0);
     assert(stub.called);
     let response = stub.args[0][0];
     assert.equal(packname, response.packageName);
@@ -95,7 +95,7 @@ it('updateTrack tests', async function () {
     stub.reset();
 
     stub.returns({ data: {}});
-    await googleutil.updateTrack(edits, packname, track, [234], 1.0);
+    await googleutil.updateTrack(edits, packname, track, [234], 0, 1.0);
     assert(stub.called);
     response = stub.args[0][0];
     assert.equal(234, response.resource.releases[0].versionCodes);
@@ -104,7 +104,7 @@ it('updateTrack tests', async function () {
     stub.reset();
 
     stub.returns({ data: {}});
-    await googleutil.updateTrack(edits, packname, track, [345], 0.9);
+    await googleutil.updateTrack(edits, packname, track, [345], 0, 0.9);
     assert(stub.called);
     response = stub.args[0][0];
     assert.equal(345, response.resource.releases[0].versionCodes);

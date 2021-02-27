@@ -211,6 +211,7 @@ async function run() {
  * @param {string} versionCodeListType type of version code replacement filter, i.e. 'all', 'list', or 'expression'
  * @param {string | string[]} versionCodeFilter version code filter, i.e. either a list of version code or a regular expression string.
  * @param {double} userFraction the fraction of users to get update
+ * @param {priority} updatePriority - In-app update priority value of the release. All newly added APKs in the release will be considered at this priority. Can take values in the range [0, 5], with 5 the highest priority. Defaults to 0.
  * @param {googleutil.ReleaseNotes[]} releaseNotes optional release notes to be attached as part of the update
  * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
@@ -223,7 +224,7 @@ async function updateTrack(
     versionCodeListType: string,
     versionCodeFilter: string | number[],
     userFraction: number,
-    updatePriority: number = 0,
+    updatePriority: number,
     releaseNotes?: googleutil.ReleaseNotes[]): Promise<googleutil.Track> {
 
     let newTrackVersionCodes: number[] = [];
