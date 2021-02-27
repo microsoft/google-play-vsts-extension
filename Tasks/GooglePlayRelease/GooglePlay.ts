@@ -799,8 +799,8 @@ function resolveGlobPaths(path: string): string[] {
 /**
  * Get obb file. Returns any file with .obb extension if present in parent directory else returns
  * from apk directory with pattern: main.<versionCode>.<packageName>.obb
- * @param {string} apkPath apk file path 
- * @param {string} packageName package name of the apk 
+ * @param {string} apkPath apk file path
+ * @param {string} packageName package name of the apk
  * @param {string} versionCode version code of the apk
  * @returns {string} ObbPathFile of the obb file if present else null
  */
