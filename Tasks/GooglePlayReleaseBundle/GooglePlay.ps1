@@ -4,6 +4,7 @@ param (
     [string]$applicationId,
     [string]$bundleFile,
     [string]$track,
+    [string]$updatePriority,
     [string]$userFraction,
     [string]$changeLogFile
 ) 
@@ -13,6 +14,7 @@ $env:INPUT_serviceEndpoint = $serviceEndpoint
 $env:INPUT_applicationId = $applicationId
 $env:INPUT_bundleFile = $bundleFile
 $env:INPUT_track = $track
+$env:INPUT_updatePriority = $updatePriority
 $env:INPUT_userFraction = $userFraction
 $env:INPUT_changeLogFile = $changeLogFile
 

@@ -92,6 +92,31 @@
       }
     },
     {
+      "name": "changeUpdatePriority",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.changeUpdatePriority",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.changeUpdatePriority"
+    },
+    {
+      "name": "updatePriority",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.updatePriority",
+      "defaultValue": "0",
+      "required": false,
+      "options": {
+        "0": "0",
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.updatePriority",
+      "visibleRule": "changeUpdatePriority = true"
+    },
+    {
       "name": "rolloutToUserFraction",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.rolloutToUserFraction",
