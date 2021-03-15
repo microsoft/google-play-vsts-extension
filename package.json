@@ -32,7 +32,6 @@
     "tfx-cli": "^0.7.8",
     "tslint": "^3.15.1",
     "typescript": "3.6.3",
-    "typings": "2.1.1",
     "validator": "3.33.0",
     "yargs": "^6.4.0"
   }
