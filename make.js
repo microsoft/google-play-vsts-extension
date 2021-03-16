@@ -108,7 +108,6 @@ target.build = function() {
     target.clean();
 
     ensureTool('tsc', '--version', 'Version 3.6.3');
-    ensureTool('typings', '--version', '2.1.1');
     ensureTool('npm', '--version', function (output) {
         if (semver.lt(output, '3.10.8')) {
             fail('expected 3.10.8 or higher');
@@ -202,7 +201,6 @@ target.build = function() {
                     var originalDir = pwd();
                     cd(taskPath);
                     run('npm install ' + modOutDir);
-                    // run('typings install ' + modOutDir);
                     cd(originalDir);
                 }
                 // copy module resources to the task output dir
