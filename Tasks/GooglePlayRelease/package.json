@@ -13,7 +13,6 @@
     "@types/node": "^10.17.0",
     "adbkit-apkreader": "3.1.0",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
-    "gaxios": "1.8.0",
     "glob": "^7.0.3",
     "google-auth-library": "^2.0.0",
     "googleapis": "^48.0.0"
