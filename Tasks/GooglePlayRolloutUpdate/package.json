@@ -12,8 +12,8 @@
     "@types/node": "^10.17.0",
     "@types/mocha": "^5.2.7",
     "azure-pipelines-task-lib": "^3.0.6-preview.1",
-    "googleapis": "^34.0.0",
-    "google-auth-library": "^2.0.0"
+    "googleapis": "^67.1.0",
+    "google-auth-library": "^7.0.2"
   },
   "devDependencies": {
     "typescript": "4.0.2"
