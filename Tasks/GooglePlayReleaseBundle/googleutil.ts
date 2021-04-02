@@ -2,6 +2,7 @@
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib';
 import { google, androidpublisher_v3 as pub3 } from 'googleapis';
+import { JWT } from 'google-auth-library';
 
 export const publisher = google.androidpublisher('v3');
 
@@ -65,9 +66,9 @@ export interface GlobalParams {
     params?: PackageParams;
 }
 
-export function getJWT(key: ClientKey): any {
+export function getJWT(key: ClientKey): JWT {
     const GOOGLE_PLAY_SCOPES: string[] = ['https://www.googleapis.com/auth/androidpublisher'];
-    return new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
+    return new JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
 }
 
 /**
