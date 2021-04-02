@@ -65,11 +65,11 @@ In addition to specifying your publisher credentials file directly within each b
 
 1. Setup a publishing manager (https://play.google.com/apps/publish/) and get the JSON key file from the [Google Developer API console](https://console.developers.google.com/apis)
 
-2. Go into your Visual Studio Team Services or TFS project and click on the gear icon in the upper right corner
+2. Go into your Visual Studio Team Services or TFS project and click on the gear icon in the lower left corner
 
-3. Click on the **Services** tab
+3. Click on the **Service Connections** tab
 
-4. Click on **New Service Endpoint** and select **Google Play**
+4. Click on **New service connection** and select **Google Play**
 
 5. Give the new endpoint a name and enter the credentials for the publishing manager you generated in step#1. The credentials you need can be found in the JSON file and are the Email and the private key.
 
