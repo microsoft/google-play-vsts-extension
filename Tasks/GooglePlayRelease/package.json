@@ -14,7 +14,7 @@
     "adbkit-apkreader": "3.1.0",
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
     "glob": "^7.0.3",
-    "google-auth-library": "^2.0.0",
+    "google-auth-library": "^5.6.1",
     "googleapis": "^48.0.0"
   },
   "devDependencies": {
