@@ -14,10 +14,10 @@
   ],
   "version": {
     "Major": "2",
-    "Minor": "185",
-    "Patch": "1"
+    "Minor": "186",
+    "Patch": "0"
   },
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -109,6 +109,14 @@
     "InProgressNotFound": "ms-resource:loc.messages.InProgressNotFound",
     "Success": "ms-resource:loc.messages.Success",
     "Failure": "ms-resource:loc.messages.Failure"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+        "allowed": []
+    }
   },
   "helpMarkDown": "ms-resource:loc.helpMarkDown"
 }

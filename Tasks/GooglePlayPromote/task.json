@@ -14,10 +14,10 @@
     ],
     "version": {
         "Major": "3",
-        "Minor": "185",
-        "Patch": "1"
+        "Minor": "186",
+        "Patch": "0"
     },
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Promote $(packageName) from $(sourceTrack) to $(destinationTrack)",
     "inputs": [
         {
@@ -145,5 +145,13 @@
         "Success": "Successfully promote APK.",
         "Failure": "Failed to promote APK.",
         "ReturnedNullEdit": "Failed to promote apk: promote operation returned null"
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
+        }
     }
 }
