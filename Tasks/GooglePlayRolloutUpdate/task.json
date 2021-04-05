@@ -14,8 +14,8 @@
     ],
     "version": {
         "Major": "2",
-        "Minor": "185",
-        "Patch": "1"
+        "Minor": "186",
+        "Patch": "0"
     },
     "minimumAgentVersion": "1.83.0",
     "instanceNameFormat": "Increase $(packageName) rollout fraction to $(userFraction)",
