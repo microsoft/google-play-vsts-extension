@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "azure-pipelines-task-lib": "^3.0.6-preview.0",
-    "googleapis": "^34.0.0",
+    "googleapis": "^39.1.0",
     "google-auth-library": "^2.0.0",
     "@types/node": "^10.17.0",
     "@types/mocha": "^5.2.7"
