@@ -66,7 +66,7 @@
             "label": "Version Code",
             "defaultValue": "",
             "required": false,
-            "helpMarkDown": "The version code of unique package identifier that you wish to promote."
+            "helpMarkDown": "The version code of unique package identifier that you wish to promote. If none is provided, the latest version on the source track will be promoted."
         },
         {
             "name": "sourceTrack",

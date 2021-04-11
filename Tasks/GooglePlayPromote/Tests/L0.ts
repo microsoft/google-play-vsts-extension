@@ -67,15 +67,4 @@ describe('L0 Suite google-play-promote', function () {
         done();
     });
 
-    it('test release not found with version code selected', (done) => {
-        const testFile = path.join(__dirname, 'L0PromoteWithVersionCodeNotFound.js');
-        const testRunner = new ttm.MockTestRunner(testFile);
-
-        testRunner.run();
-
-        assert(testRunner.createdErrorIssue('Error: loc_mock_VersionCodeToPromoteNotFound 124'), 'Did not print the expected message');
-        assert(testRunner.failed, 'task should have failed');
-        done();
-    });
-
 });

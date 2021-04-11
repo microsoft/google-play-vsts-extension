@@ -10,7 +10,7 @@
   "loc.input.label.packageName": "Package name",
   "loc.input.help.packageName": "The unique package identifier (e.g. com.foo.myapp) that you wish to promote.",
   "loc.input.label.versionCode": "Version Code",
-  "loc.input.help.versionCode": "The version code of unique package identifier that you wish to promote. If none is provided, the latest version on the source track will be promoted",
+  "loc.input.help.versionCode": "The version code of unique package identifier that you wish to promote. If none is provided, the latest version on the source track will be promoted.",
   "loc.input.label.sourceTrack": "Source track",
   "loc.input.help.sourceTrack": "The track you wish to promote from.",
   "loc.input.label.destinationTrack": "Destination track",

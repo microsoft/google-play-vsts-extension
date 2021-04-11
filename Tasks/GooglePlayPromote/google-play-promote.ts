@@ -54,17 +54,12 @@ async function run() {
         let track = await googleutil.getTrack(edits, packageName, sourceTrack);
         tl.debug(`Current track: ${JSON.stringify(track)}`);
 
-        const toPromote = track.releases.find(release => release.versionCodes.includes(Number(versionCode)));
-
-        if (versionCode !== undefined && toPromote === undefined) {
-            throw new Error(tl.loc('VersionCodeToPromoteNotFound', versionCode));
+        let versionNumber = track.releases[0].versionCodes;
+        if (versionCode !== undefined) {
+            versionNumber = [Number(versionCode)];
         }
 
-        const releaseToPromote = toPromote !== undefined ? toPromote : track.releases[0];
-        tl.debug(`Promoting release: ${JSON.stringify(releaseToPromote)}`);
-
-        console.log(tl.loc('PromoteTrack', destinationTrack));
-        track = await googleutil.updateTrack(edits, packageName, destinationTrack, releaseToPromote.versionCodes, userFraction, releaseToPromote.releaseNotes);
+        track = await googleutil.updateTrack(edits, packageName, destinationTrack, versionNumber, userFraction, track.releases[0].releaseNotes);
         tl.debug(`Update track: ${JSON.stringify(track)}`);
 
         if (сleanSourceTrack) {
