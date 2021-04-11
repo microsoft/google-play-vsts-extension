@@ -59,6 +59,7 @@ async function run() {
             versionNumber = [Number(versionCode)];
         }
 
+        console.log(tl.loc('PromoteTrack', destinationTrack));
         track = await googleutil.updateTrack(edits, packageName, destinationTrack, versionNumber, userFraction, track.releases[0].releaseNotes);
         tl.debug(`Update track: ${JSON.stringify(track)}`);
 
