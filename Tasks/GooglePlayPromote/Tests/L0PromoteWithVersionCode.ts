@@ -12,7 +12,7 @@ tr.setInput('packageName', 'myPackageName');
 tr.setInput('destinationTrack', 'alpha');
 tr.setInput('sourceTrack', 'production');
 tr.setInput('userFraction', '1.0');
-tr.setInput('versionCode', '123');
+tr.setInput('versionCode', '120');
 
 tr.registerMock('./googleutil', {
     publisher: {
@@ -23,21 +23,24 @@ tr.registerMock('./googleutil', {
     getJWT: () => ({ authorize: () => sinon.stub() }),
     updateGlobalParams: () => ({}),
     getNewEdit: () => Promise.resolve({}),
-    updateTrack: (_edits, _packageName, _track, _versionCode, _userFraction, releaseNotes?) => Promise.resolve(releaseNotes),
+    updateTrack: (_edits, _packageName, _track, _versionCode, _userFraction, releaseNotes?) => Promise.resolve({
+        releases: [
+            {
+                status: 'inProgress',
+                versionCodes: [120],
+                releaseNotes: [
+                    { text: 'Updated Release', language: 'en-US' }
+                ]
+            }
+        ]
+    }),
     getTrack: () => Promise.resolve({
         releases: [
             {
                 status: 'inProgress',
                 versionCodes: [123],
                 releaseNotes: [
-                    { text: 'release contents 123', language: 'en-US' }
-                ]
-            },
-            {
-                status: 'inProgress',
-                versionCodes: [124],
-                releaseNotes: [
-                    { text: 'release contents 124', language: 'en-US' }
+                    { text: 'release contents', language: 'en-US' }
                 ]
             }
         ]

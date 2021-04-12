@@ -62,7 +62,18 @@ describe('L0 Suite google-play-promote', function () {
 
         testRunner.run();
 
-        assert(testRunner.stdOutContained('Update track: [{"text":"release contents 123","language":"en-US"}]'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.stdOutContained('Update track: {"releases":[{"status":"inProgress","versionCodes":[120],"releaseNotes":[{"text":"Updated Release","language":"en-US"}]}]}'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.succeeded, 'task should have succeeded');
+        done();
+    });
+
+    it('test correct release with no version code selected', (done) => {
+        const testFile = path.join(__dirname, 'L0PromoteNoVersionCode.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        testRunner.run();
+
+        assert(testRunner.stdOutContained('Update track: {"releases":[{"status":"inProgress","versionCodes":[123],"releaseNotes":[{"text":"release contents","language":"en-US"}]}]}'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
         assert(testRunner.succeeded, 'task should have succeeded');
         done();
     });

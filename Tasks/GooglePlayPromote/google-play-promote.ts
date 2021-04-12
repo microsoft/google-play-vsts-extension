@@ -55,12 +55,16 @@ async function run() {
         tl.debug(`Current track: ${JSON.stringify(track)}`);
 
         let versionNumber = track.releases[0].versionCodes;
+        let releaseNotes = track.releases[0].releaseNotes;
+
         if (versionCode !== undefined) {
             versionNumber = [Number(versionCode)];
+            // don't override the release notes with latest release notes, potentially dangerous
+            releaseNotes = undefined;
         }
 
         console.log(tl.loc('PromoteTrack', destinationTrack));
-        track = await googleutil.updateTrack(edits, packageName, destinationTrack, versionNumber, userFraction, track.releases[0].releaseNotes);
+        track = await googleutil.updateTrack(edits, packageName, destinationTrack, versionNumber, userFraction, releaseNotes);
         tl.debug(`Update track: ${JSON.stringify(track)}`);
 
         if (сleanSourceTrack) {
