@@ -15,7 +15,7 @@
     "version": {
         "Major": "3",
         "Minor": "186",
-        "Patch": "0"
+        "Patch": "1"
     },
     "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Promote $(packageName) from $(sourceTrack) to $(destinationTrack)",
@@ -59,6 +59,14 @@
             "defaultValue": "",
             "required": true,
             "helpMarkDown": "The unique package identifier (e.g. com.foo.myapp) that you wish to promote."
+        },
+        {
+            "name": "versionCode",
+            "type": "string",
+            "label": "Version Code",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The version code of unique package identifier that you wish to promote. If none is provided, the latest version on the source track will be promoted."
         },
         {
             "name": "sourceTrack",

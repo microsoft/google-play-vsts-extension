@@ -242,7 +242,7 @@
       "mode": "restricted"
     },
     "settableVariables": {
-        "allowed": []
+      "allowed": []
     }
   },
   "helpMarkDown": "ms-resource:loc.helpMarkDown"
