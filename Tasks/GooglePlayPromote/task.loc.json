@@ -145,6 +145,7 @@
     "EndpointNotFound": "ms-resource:loc.messages.EndpointNotFound",
     "Authenticating": "ms-resource:loc.messages.Authenticating",
     "GetTrackInfo": "ms-resource:loc.messages.GetTrackInfo",
+    "InvalidVersionCode": "ms-resource:loc.messages.InvalidVersionCode",
     "PromoteTrack": "ms-resource:loc.messages.PromoteTrack",
     "CleanTrack": "ms-resource:loc.messages.CleanTrack",
     "PromoteSucceed": "ms-resource:loc.messages.PromoteSucceed",

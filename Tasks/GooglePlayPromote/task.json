@@ -145,6 +145,7 @@
         "EndpointNotFound": "The service connection could not be found.",
         "Authenticating": "Authenticating with Google Play",
         "GetTrackInfo": "Getting information for track %s",
+        "InvalidVersionCode": "Version code should be a positive integer",
         "PromoteTrack": "Promoting to track %s",
         "CleanTrack": "Cleaning up track %s",
         "PromoteSucceed": "APK successfully promoted!",
