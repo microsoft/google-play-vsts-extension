@@ -34,6 +34,7 @@ async function run() {
         const userFractionSupplied: boolean = tl.getBoolInput('rolloutToUserFraction');
         const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
         const сleanSourceTrack: boolean = tl.getBoolInput('сleanTheSourceTrack');
+        const versionCode: string = tl.getInput('versionCode', false);
 
         // Constants
         const globalParams: googleutil.GlobalParams = { auth: null, params: {} };
@@ -53,8 +54,17 @@ async function run() {
         let track = await googleutil.getTrack(edits, packageName, sourceTrack);
         tl.debug(`Current track: ${JSON.stringify(track)}`);
 
+        let versionNumber = track.releases[0].versionCodes;
+        let releaseNotes = track.releases[0].releaseNotes;
+
+        if (versionCode !== undefined) {
+            versionNumber = [Number(versionCode)];
+            // don't override the release notes with latest release notes, potentially dangerous
+            releaseNotes = undefined;
+        }
+
         console.log(tl.loc('PromoteTrack', destinationTrack));
-        track = await googleutil.updateTrack(edits, packageName, destinationTrack, track.releases[0].versionCodes, userFraction, track.releases[0].releaseNotes);
+        track = await googleutil.updateTrack(edits, packageName, destinationTrack, versionNumber, userFraction, releaseNotes);
         tl.debug(`Update track: ${JSON.stringify(track)}`);
 
         if (сleanSourceTrack) {

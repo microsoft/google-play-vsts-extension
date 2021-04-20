@@ -170,6 +170,8 @@ Allows you to promote a previously released APK from one track to another (e.g. 
 
 2. **Package Name** *(String, Required)* - The unique package identifier (e.g. `com.foo.myapp`) that you wish to promote.
 
+3. **Version Code** *(String, Optional)* - The version code of the apk (e.g. 123) that you whish to promote. If no version code is given, the latest version on the specified track will be promoted.
+
 3. **Source Track** *(Required, Required)* - The track you wish to promote your app from (e.g. `alpha`). This assumes that you previously released an update to this track, potentially using the [`Google Play - Release`](#google-play---release) task.
 
 4. **Destination Track** *(Required, Required)* - The track you wish to promote your app to (e.g. `production`).

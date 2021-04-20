@@ -14,10 +14,10 @@
   ],
   "version": {
     "Major": "3",
-    "Minor": "185",
-    "Patch": "1"
+    "Minor": "186",
+    "Patch": "0"
   },
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "2.182.1",
   "groups": [
     {
       "name": "advanced",
@@ -298,6 +298,14 @@
     "CannotCreateListing": "ms-resource:loc.messages.CannotCreateListing",
     "IncorrectVersionCodeFilter": "ms-resource:loc.messages.IncorrectVersionCodeFilter",
     "StoreListUpdateSucceed": "ms-resource:loc.messages.StoreListUpdateSucceed"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
   },
   "helpMarkDown": "ms-resource:loc.helpMarkDown"
 }

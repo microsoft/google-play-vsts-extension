@@ -14,10 +14,10 @@
   ],
   "version": {
     "Major": "3",
-    "Minor": "185",
+    "Minor": "186",
     "Patch": "1"
   },
-  "minimumAgentVersion": "1.83.0",
+  "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
   "inputs": [
     {
@@ -59,6 +59,14 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.packageName"
+    },
+    {
+      "name": "versionCode",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.versionCode",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.versionCode"
     },
     {
       "name": "sourceTrack",
@@ -145,6 +153,14 @@
     "Success": "ms-resource:loc.messages.Success",
     "Failure": "ms-resource:loc.messages.Failure",
     "ReturnedNullEdit": "ms-resource:loc.messages.ReturnedNullEdit"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
   },
   "helpMarkDown": "ms-resource:loc.helpMarkDown"
 }

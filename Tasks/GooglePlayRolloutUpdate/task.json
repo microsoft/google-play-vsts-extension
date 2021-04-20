@@ -14,10 +14,10 @@
     ],
     "version": {
         "Major": "2",
-        "Minor": "185",
-        "Patch": "1"
+        "Minor": "186",
+        "Patch": "0"
     },
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Increase $(packageName) rollout fraction to $(userFraction)",
     "inputs": [
         {
@@ -109,5 +109,13 @@
         "InProgressNotFound": "Production rollout was not found.",
         "Success": "Successfully update rollout fraction.",
         "Failure": "Failed to update rollout fraction."
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
+        }
     }
 }
