@@ -61,7 +61,7 @@ async function run() {
             const versionCodeNumber = Number(versionCode);
 
             if (!Number.isInteger(versionCodeNumber) || versionCodeNumber <= 0) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc('InvalidVersionCode'));
+                throw new Error(tl.loc('InvalidVersionCode'));
             }
 
             versionNumber = [versionCodeNumber];
