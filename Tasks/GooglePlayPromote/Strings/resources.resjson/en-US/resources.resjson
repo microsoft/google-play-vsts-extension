@@ -27,6 +27,7 @@
   "loc.messages.EndpointNotFound": "The service connection could not be found.",
   "loc.messages.Authenticating": "Authenticating with Google Play",
   "loc.messages.GetTrackInfo": "Getting information for track %s",
+  "loc.messages.InvalidVersionCode": "Version code should be a positive integer",
   "loc.messages.PromoteTrack": "Promoting to track %s",
   "loc.messages.CleanTrack": "Cleaning up track %s",
   "loc.messages.PromoteSucceed": "APK successfully promoted!",

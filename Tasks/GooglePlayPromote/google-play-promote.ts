@@ -58,7 +58,13 @@ async function run() {
         let releaseNotes = track.releases[0].releaseNotes;
 
         if (versionCode !== undefined) {
-            versionNumber = [Number(versionCode)];
+            const versionCodeNumber = Number(versionCode);
+
+            if (!Number.isInteger(versionCodeNumber) || versionCodeNumber <= 0) {
+                throw new Error(tl.loc('InvalidVersionCode'));
+            }
+
+            versionNumber = [versionCodeNumber];
             // don't override the release notes with latest release notes, potentially dangerous
             releaseNotes = undefined;
         }
