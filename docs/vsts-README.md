@@ -226,7 +226,7 @@ Allows you to release an app bundle to Google Play, and includes the following o
 
 9. **Deobfuscation Path** *(String, Optional)* - The path to the proguard mapping.txt file to upload.
 
-10. **Rollout Fraction** *(String, Optional)* - The percentage of users the specified APK will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.
+10. **Rollout Fraction** *(String, Optional)* - The percentage of users the specified APK will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task. To publish as a draft set value to -1.
 
 11. **Metadata Root Directory** *(String, Required)* - Root directory for metadata related files. Becomes available after enabling the `Update Metadata` option. Expects a format similar to fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) which is summarized below:
  

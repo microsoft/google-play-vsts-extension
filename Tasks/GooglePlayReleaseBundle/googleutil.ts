@@ -131,7 +131,10 @@ export async function updateTrack(edits: pub3.Resource$Edits, packageName: strin
         release.releaseNotes = releaseNotes;
     }
 
-    if (userFraction < 1.0) {
+    if (userFraction === -1) {
+        tl.debug('User fraction is -1, marking rollout "draft"');
+        release.status = 'draft';
+    } else if (userFraction < 1.0) {
         release.userFraction = userFraction;
         release.status = 'inProgress';
     } else {
