@@ -89,7 +89,7 @@ function toOverrideString(object) {
 }
 
 gulp.task('cleanpackagefiles', gulp.series(function (done) {
-    return del(['_build/Tasks/**/Tests', '_build/Tasks/**/*.js.map'], done);
+    return del(['_build/Tasks/**/Tests', '_build/Tasks/**/*.js.map', '_build/Tasks/**/*.d.ts'], done);
 }));
 
 gulp.task('create', gulp.series('installtaskdeps', 'cleanpackagefiles', function (cb) {
