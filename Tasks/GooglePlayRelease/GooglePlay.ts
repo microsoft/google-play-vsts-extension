@@ -59,6 +59,9 @@ async function run() {
         const userFractionSupplied: boolean = tl.getBoolInput('rolloutToUserFraction');
         const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
 
+        const updatePrioritySupplied: boolean = tl.getBoolInput('changeUpdatePriority');
+        const updatePriority: number = Number(updatePrioritySupplied ? tl.getInput('updatePriority', false) : 0);
+
         const shouldAttachMetadata: boolean = tl.getBoolInput('shouldAttachMetadata', false);
         const updateStoreListing: boolean = tl.getBoolInput('updateStoreListing', false);
         const shouldUploadApks: boolean = tl.getBoolInput('shouldUploadApks', false);
@@ -174,7 +177,7 @@ async function run() {
         if (requireTrackUpdate) {
             console.log(tl.loc('UpdateTrack'));
             tl.debug(`Updating the track ${track}.`);
-            const updatedTrack: googleutil.Track = await updateTrack(edits, packageName, track, apkVersionCodes, versionCodeFilterType, versionCodeFilter, userFraction, releaseNotes);
+            const updatedTrack: googleutil.Track = await updateTrack(edits, packageName, track, apkVersionCodes, versionCodeFilterType, versionCodeFilter, userFraction, updatePriority, releaseNotes);
             tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
         }
 
@@ -208,6 +211,7 @@ async function run() {
  * @param {string} versionCodeListType type of version code replacement filter, i.e. 'all', 'list', or 'expression'
  * @param {string | string[]} versionCodeFilter version code filter, i.e. either a list of version code or a regular expression string.
  * @param {double} userFraction the fraction of users to get update
+ * @param {priority} updatePriority - In-app update priority value of the release. All newly added APKs in the release will be considered at this priority. Can take values in the range [0, 5], with 5 the highest priority. Defaults to 0.
  * @param {googleutil.ReleaseNotes[]} releaseNotes optional release notes to be attached as part of the update
  * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
@@ -220,6 +224,7 @@ async function updateTrack(
     versionCodeListType: string,
     versionCodeFilter: string | number[],
     userFraction: number,
+    updatePriority: number,
     releaseNotes?: googleutil.ReleaseNotes[]): Promise<googleutil.Track> {
 
     let newTrackVersionCodes: number[] = [];
@@ -269,7 +274,7 @@ async function updateTrack(
 
     tl.debug(`New ${track} track version codes: ` + JSON.stringify(newTrackVersionCodes));
     try {
-        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction, releaseNotes);
+        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction, updatePriority, releaseNotes);
     } catch (e) {
         tl.debug(`Failed to update track ${track}.`);
         tl.debug(e);
@@ -794,8 +799,8 @@ function resolveGlobPaths(path: string): string[] {
 /**
  * Get obb file. Returns any file with .obb extension if present in parent directory else returns
  * from apk directory with pattern: main.<versionCode>.<packageName>.obb
- * @param {string} apkPath apk file path 
- * @param {string} packageName package name of the apk 
+ * @param {string} apkPath apk file path
+ * @param {string} packageName package name of the apk
  * @param {string} versionCode version code of the apk
  * @returns {string} ObbPathFile of the obb file if present else null
  */

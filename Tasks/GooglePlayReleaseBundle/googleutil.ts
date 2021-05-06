@@ -68,7 +68,7 @@ export interface GlobalParams {
 
 export function getJWT(key: ClientKey): JWT {
     const GOOGLE_PLAY_SCOPES: string[] = ['https://www.googleapis.com/auth/androidpublisher'];
-    return new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
+    return new JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
 }
 
 /**
@@ -116,14 +116,16 @@ export async function getTrack(edits: pub3.Resource$Edits, packageName: string, 
  * @param {string} track - one of the values {"internal", "alpha", "beta", "production"}
  * @param {string | [string]} versionCode - version codes that will be exposed to the users of this track when this release is rolled out
  * @param {double} userFraction - for rollouting out a release to a track, it's the fraction of users to get update 1.0 is all users
+ * @param {number} updatePriority - In-app update priority value of the release. All newly added APKs in the release will be considered at this priority. Can take values in the range [0, 5], with 5 the highest priority. Defaults to 0.
  * @param {releaseNotes} releaseNotes - optional release notes to be attached as part of the update
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-export async function updateTrack(edits: pub3.Resource$Edits, packageName: string, track: string, versionCode: string | string[], userFraction: number, releaseNotes?: pub3.Schema$LocalizedText[]): Promise<pub3.Schema$Track> {
+export async function updateTrack(edits: pub3.Resource$Edits, packageName: string, track: string, versionCode: string | string[], userFraction: number, updatePriority: number, releaseNotes?: pub3.Schema$LocalizedText[]): Promise<pub3.Schema$Track> {
     tl.debug('Updating track');
     const release: pub3.Schema$TrackRelease = {
-        versionCodes: (Array.isArray(versionCode) ? versionCode : [versionCode])
+        versionCodes: (Array.isArray(versionCode) ? versionCode : [versionCode]),
+        inAppUpdatePriority: updatePriority
     };
 
     if (releaseNotes && releaseNotes.length > 0) {

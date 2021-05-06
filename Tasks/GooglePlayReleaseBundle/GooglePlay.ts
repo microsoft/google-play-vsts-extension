@@ -53,6 +53,9 @@ async function run() {
         const userFractionSupplied: boolean = tl.getBoolInput('rolloutToUserFraction');
         const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
 
+        const updatePrioritySupplied: boolean = tl.getBoolInput('changeUpdatePriority');
+        const updatePriority: number = Number(updatePrioritySupplied ? tl.getInput('updatePriority', false) : 0);
+
         const shouldAttachMetadata: boolean = tl.getBoolInput('shouldAttachMetadata', false);
 
         let changelogFile: string = null;
@@ -128,7 +131,7 @@ async function run() {
 
         console.log(tl.loc('UpdateTrack'));
         tl.debug(`Updating the track ${track}.`);
-        const updatedTrack: pub3.Schema$Track = await updateTrack(edits, packageName, track, '' + bundleVersionCode, versionCodeFilterType, versionCodeFilter, userFraction, releaseNotes);
+        const updatedTrack: pub3.Schema$Track = await updateTrack(edits, packageName, track, '' + bundleVersionCode, versionCodeFilterType, versionCodeFilter, userFraction, updatePriority, releaseNotes);
         tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
 
         tl.debug('Committing the edit transaction in Google Play.');
@@ -151,6 +154,7 @@ async function run() {
  * @param {string} versionCodeFilterType type of version code replacement filter, i.e. 'all', 'list', or 'expression'
  * @param {string | string[]} versionCodeFilter version code filter, i.e. either a list of version code or a regular expression string.
  * @param {double} userFraction the fraction of users to get update
+ * @param {priority} updatePriority - In-app update priority value of the release. All newly added APKs in the release will be considered at this priority. Can take values in the range [0, 5], with 5 the highest priority. Defaults to 0.
  * @returns {Promise} track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
@@ -162,6 +166,7 @@ async function updateTrack(
     versionCodeFilterType: string,
     versionCodeFilter: string | string[],
     userFraction: number,
+    updatePriority: number,
     releaseNotes?: pub3.Schema$LocalizedText[]): Promise<pub3.Schema$Track> {
 
     let newTrackVersionCodes: string[] = [];
@@ -209,7 +214,7 @@ async function updateTrack(
 
     tl.debug(`New ${track} track version codes: ` + JSON.stringify(newTrackVersionCodes));
     try {
-        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction, releaseNotes);
+        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction, updatePriority, releaseNotes);
     } catch (e) {
         tl.debug(`Failed to update track ${track}.`);
         tl.debug(e);

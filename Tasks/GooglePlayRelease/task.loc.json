@@ -14,7 +14,7 @@
   ],
   "version": {
     "Major": "3",
-    "Minor": "186",
+    "Minor": "187",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -91,6 +91,31 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "changeUpdatePriority",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.changeUpdatePriority",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.changeUpdatePriority"
+    },
+    {
+      "name": "updatePriority",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.updatePriority",
+      "defaultValue": "0",
+      "required": false,
+      "options": {
+        "0": "0",
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5"
+      },
+      "helpMarkDown": "ms-resource:loc.input.help.updatePriority",
+      "visibleRule": "changeUpdatePriority = true"
     },
     {
       "name": "rolloutToUserFraction",

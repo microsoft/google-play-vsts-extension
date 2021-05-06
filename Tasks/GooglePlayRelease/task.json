@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "3",
-        "Minor": "186",
+        "Minor": "187",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
@@ -91,6 +91,31 @@
             "properties": {
                 "EditableOptions": "True"
             }
+        },
+        {
+            "name": "changeUpdatePriority",
+            "type": "boolean",
+            "label": "Set in-app update priority",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Change the in-app update priority value."
+        },
+        {
+            "name": "updatePriority",
+            "type": "pickList",
+            "label": "In-app Update Priority",
+            "defaultValue": "0",
+            "required": false,
+            "options": {
+                "0": "0",
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4",
+                "5": "5"
+            },
+            "helpMarkDown": "Set a custom in-app update priority value to help keep your app up-to-date on your users’ devices. To determine priority, Google Play uses an integer value between 0 and 5, with 0 being the default, and 5 being the highest priority. Priority can only be set when rolling out a new release, and cannot be changed later.",
+            "visibleRule": "changeUpdatePriority = true"
         },
         {
             "name": "rolloutToUserFraction",
