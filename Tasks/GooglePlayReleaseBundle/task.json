@@ -218,6 +218,15 @@
             "required": true,
             "helpMarkDown": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
             "visibleRule": "versionCodeFilterType = expression"
+        },
+        {
+            "name": "changesNotSentForReview",
+            "type": "boolean",
+            "label": "Sent changes to review",
+            "groupName": "advanced",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Select this option to sent changes for review in GooglePlay Console. If changes already send for review automatically, you mustn't selecet this. [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters)."
         }
     ],
     "execution": {
