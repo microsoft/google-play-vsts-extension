@@ -12,6 +12,7 @@ async function run() {
 
         tl.debug('Prepare task inputs.');
 
+        const sendChangesToReview: boolean = tl.getBoolInput('changesNotSentForReview');
         const authType: string = tl.getInput('authType', true);
         let key: googleutil.ClientKey = {};
         if (authType === 'JsonFile') {
@@ -135,7 +136,8 @@ async function run() {
         tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
 
         tl.debug('Committing the edit transaction in Google Play.');
-        await edits.commit();
+        //@ts-ignore
+        await edits.commit({ changesNotSentForReview: sendChangesToReview });
 
         console.log(tl.loc('AptPublishSucceed'));
         console.log(tl.loc('TrackInfo', track));

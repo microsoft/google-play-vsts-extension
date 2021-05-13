@@ -40,6 +40,8 @@
   "loc.input.help.replaceList": "The comma separated list of APK version codes to be removed from the track with this deployment.",
   "loc.input.label.replaceExpression": "Version code pattern",
   "loc.input.help.replaceExpression": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
+  "loc.input.label.changesNotSentForReview": "Sent changes to review",
+  "loc.input.help.changesNotSentForReview": "Select this option to sent changes for review in GooglePlay Console. If changes're already send for review automatically, you mustn't select this option. [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters).",
   "loc.messages.InvalidAuthFile": "%s is not a valid auth file",
   "loc.messages.FoundMainBundle": "Found main bundle to upload: %s (version code %s)",
   "loc.messages.FoundDeobfuscationFile": "Found deobfuscation (mapping) file: %s",

@@ -218,6 +218,15 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.replaceExpression",
       "visibleRule": "versionCodeFilterType = expression"
+    },
+    {
+      "name": "changesNotSentForReview",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.changesNotSentForReview",
+      "groupName": "advanced",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.changesNotSentForReview"
     }
   ],
   "execution": {
