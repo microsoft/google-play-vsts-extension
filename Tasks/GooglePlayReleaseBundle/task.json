@@ -226,7 +226,7 @@
             "groupName": "advanced",
             "defaultValue": false,
             "required": false,
-            "helpMarkDown": "Select this option to sent changes for review in GooglePlay Console. If changes already send for review automatically, you mustn't selecet this. [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters)."
+            "helpMarkDown": "Select this option to sent changes for review in GooglePlay Console. If changes're already send for review automatically, you mustn't selecet this option. [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters)."
         }
     ],
     "execution": {
