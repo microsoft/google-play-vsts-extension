@@ -192,7 +192,7 @@ async function updateTrack(
         const oldTrackVersionCodes: string[] = res.releases[0].versionCodes.map((v) => `${v}`);
         tl.debug('Current version codes: ' + JSON.stringify(oldTrackVersionCodes));
 
-        if (typeof (versionCodeFilter) === 'string') {
+        if (typeof(versionCodeFilter) === 'string') {
             tl.debug(`Removing version codes matching the regular expression: ^${versionCodeFilter as string}$`);
             const versionCodesToRemove: RegExp = new RegExp(`^${versionCodeFilter as string}$`);
 
@@ -409,14 +409,14 @@ async function uploadMetadataWithLanguageCode(edits: pub3.Resource$Edits, apkVer
 async function addLanguageListing(edits: pub3.Resource$Edits, languageCode: string, directory: string) {
     const listingResource: googleutil.AndroidListingResource = createListingResource(languageCode, directory);
 
-    const isPatch: boolean = (!listingResource.fullDescription) ||
-        (!listingResource.shortDescription) ||
-        (!listingResource.title);
+    const isPatch:boolean = (!listingResource.fullDescription) ||
+                          (!listingResource.shortDescription) ||
+                          (!listingResource.title);
 
-    const isEmpty: boolean = (!listingResource.fullDescription) &&
-        (!listingResource.shortDescription) &&
-        (!listingResource.video) &&
-        (!listingResource.title);
+    const isEmpty:boolean = (!listingResource.fullDescription) &&
+                          (!listingResource.shortDescription) &&
+                          (!listingResource.video) &&
+                          (!listingResource.title);
 
     const listingRequestParameters: googleutil.PackageListingParams = {
         language: languageCode,
@@ -569,7 +569,7 @@ function getImageList(directory: string): { [key: string]: string[] } {
     const acceptedExtensions: string[] = ['.png', '.jpg', '.jpeg'];
 
     const imageDirectory: string = path.join(directory, 'images');
-    const imageList: { [key: string]: string[] } = {};
+    const imageList: { [key: string]: string[] }  = {};
 
     for (const imageType of imageTypes) {
         let shouldAttemptUpload: boolean = false;
