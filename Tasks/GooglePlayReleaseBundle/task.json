@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "3",
-        "Minor": "187",
+        "Minor": "188",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
@@ -218,6 +218,15 @@
             "required": true,
             "helpMarkDown": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
             "visibleRule": "versionCodeFilterType = expression"
+        },
+        {
+            "name": "changesNotSentForReview",
+            "type": "boolean",
+            "label": "Send changes to review",
+            "groupName": "advanced",
+            "defaultValue": false,
+            "required": false,
+            "helpMarkDown": "Select this option to send changes for review in GooglePlay Console. If changes're already sent for review automatically, you shouldn't select this option. [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters)."
         }
     ],
     "execution": {

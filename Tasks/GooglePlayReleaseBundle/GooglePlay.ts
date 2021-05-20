@@ -12,6 +12,7 @@ async function run() {
 
         tl.debug('Prepare task inputs.');
 
+        const sendChangesToReview: boolean = tl.getBoolInput('changesNotSentForReview');
         const authType: string = tl.getInput('authType', true);
         let key: googleutil.ClientKey = {};
         if (authType === 'JsonFile') {
@@ -135,7 +136,12 @@ async function run() {
         tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
 
         tl.debug('Committing the edit transaction in Google Play.');
-        await edits.commit();
+        // Need to use "@ts-ignore" because there is no changesNotSentForReview option 
+        // in this version of googleapis package but it still works as expected.
+        // It should be available in the next release 
+        // and we will update package version and remove this comment
+        //@ts-ignore
+        await edits.commit({ changesNotSentForReview: sendChangesToReview });
 
         console.log(tl.loc('AptPublishSucceed'));
         console.log(tl.loc('TrackInfo', track));
