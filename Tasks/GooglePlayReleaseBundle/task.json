@@ -222,7 +222,7 @@
         {
             "name": "changesNotSentForReview",
             "type": "boolean",
-            "label": "Sent changes to review",
+            "label": "Send changes to review",
             "groupName": "advanced",
             "defaultValue": false,
             "required": false,
