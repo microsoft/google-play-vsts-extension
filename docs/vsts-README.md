@@ -272,7 +272,7 @@ $(Specified Directory)
 
      If you are getting the next error `Changes cannot be sent for review automatically. Please set the query parameter changesNotSentForReview to true`, select this option.
 
-     But if this option is selected and the app is sent for review automatically, you will get the error `Changes are sent for review automatically. The query parameter changesNotSentForReview must not be set`.
+     Please be cautious when selecting this option, if the app is already sent for review automatically, you can get the error `Changes are sent for review automatically. The query parameter changesNotSentForReview must not be set`.
 
 ## Contact Us
 
