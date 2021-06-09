@@ -268,6 +268,12 @@ $(Specified Directory)
 
 3. **Version Code Pattern** *(String, Required if visible)* - The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. .*12?(3|4)?5
 
+4. **Send changes to review** *(Boolean, Optional)* - Select this option to add `changesNotSentForReview=true` query parameter and send changes for review in GooglePlay Console.  [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters).
+
+     If you are getting  the following error `Changes cannot be sent for review automatically. Please set the query parameter changesNotSentForReview to true`, select this option.
+
+     Please be cautious when selecting this option, if the app is already sent for review automatically, you can get the error `Changes are sent for review automatically. The query parameter changesNotSentForReview must not be set`.
+
 ## Contact Us
 
 * [Report an issue](https://github.com/Microsoft/google-play-vsts-extension/issues)
