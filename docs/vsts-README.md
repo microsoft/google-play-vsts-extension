@@ -270,7 +270,7 @@ $(Specified Directory)
 
 4. **Send changes to review** *(Boolean, Optional)* - Select this option to add `changesNotSentForReview=true` query parameter and send changes for review in GooglePlay Console.  [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters).
 
-     If you are getting the next error `Changes cannot be sent for review automatically. Please set the query parameter changesNotSentForReview to true`, select this option.
+     If you are getting  the following error `Changes cannot be sent for review automatically. Please set the query parameter changesNotSentForReview to true`, select this option.
 
      Please be cautious when selecting this option, if the app is already sent for review automatically, you can get the error `Changes are sent for review automatically. The query parameter changesNotSentForReview must not be set`.
 
