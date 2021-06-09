@@ -294,7 +294,7 @@ $(Specified Directory)
 
 1. **Replace version codes** *(String, Required)* - You may specify which APK version codes should be replaced in the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
 
-2. **Sent changes to review** *(Boolean, Optional)* - Select this option to add `changesNotSentForReview=true` query parameter and send changes for review in GooglePlay Console.  [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters).
+2. **Send changes to review** *(Boolean, Optional)* - Select this option to add `changesNotSentForReview=true` query parameter and send changes for review in GooglePlay Console.  [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters).
 
      If you are getting the next error `Changes cannot be sent for review automatically. Please set the query parameter changesNotSentForReview to true`, select this option.
 
