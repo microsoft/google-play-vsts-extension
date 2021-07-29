@@ -1,5 +1,5 @@
 {
-    "id": "10dada0e-569d-4354-b1c1-7152e6bcdb72",
+    "id": "5bc43cb5-dcbb-4d54-b752-b34147e7ce34",
     "name": "GooglePlayHalt",
     "friendlyName": "Google Play - Halt",
     "description": "Halt an app previously deployed to the Google Play Store",
@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "2",
-        "Minor": "190",
+        "Minor": "191",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
