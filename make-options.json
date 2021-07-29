@@ -3,7 +3,8 @@
         "GooglePlayRelease",
         "GooglePlayReleaseBundle",
         "GooglePlayPromote",
-        "GooglePlayRolloutUpdate"
+        "GooglePlayRolloutUpdate",
+        "GooglePlayHalt"
     ],
     "taskResources": [
         "*.ps1",
