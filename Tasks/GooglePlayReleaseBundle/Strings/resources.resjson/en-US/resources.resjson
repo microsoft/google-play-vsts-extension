@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Google Play - Release Bundle",
+  "loc.friendlyName": "DSs Google Play - Release Bundle",
   "loc.description": "Release an app bundle to the Google Play Store",
   "loc.instanceNameFormat": "Release $(bundleFile) to $(track)",
   "loc.group.displayName.advanced": "Advanced Options",
@@ -12,6 +12,8 @@
   "loc.input.help.applicationId": "The application id of the bundle you want to release, e.g. com.company.MyApp",
   "loc.input.label.bundleFile": "Bundle path",
   "loc.input.help.bundleFile": "Path to the bundle (.aab) file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.aab_ to match the first APK file, in any directory.",
+  "loc.input.label.apkFile": "APK path",
+  "loc.input.help.apkFile": "Path to the apk file you want to add to the release. Wildcards can be used. For example, _\\*\\*/\\*.aab_ to match the first APK file, in any directory.",
   "loc.input.label.track": "Track",
   "loc.input.help.track": "Track you want to publish the bundle to.",
   "loc.input.label.changeUpdatePriority": "Set in-app update priority",

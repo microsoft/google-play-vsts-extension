@@ -1,6 +1,6 @@
 {
-  "id": "64f05ee7-e81b-4fdb-85a0-ad518819e0d4",
-  "name": "GooglePlayReleaseBundle",
+  "id": "53f28c78-8e73-4c85-b370-cbe06d50b81e",
+  "name": "DSGooglePlayReleaseBundle",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -14,8 +14,8 @@
   ],
   "version": {
     "Major": "3",
-    "Minor": "189",
-    "Patch": "0"
+    "Minor": "190",
+    "Patch": "10"
   },
   "minimumAgentVersion": "2.182.1",
   "groups": [
@@ -73,6 +73,14 @@
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.bundleFile"
+    },
+    {
+      "name": "apkFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.apkFile",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.apkFile"
     },
     {
       "name": "track",

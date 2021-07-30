@@ -42,6 +42,12 @@ async function run() {
         console.log(tl.loc('FoundMainBundle', bundleFile));
         tl.debug(`Found the main bundle file: ${bundleFile}.`);
 
+        const apkFilePattern = tl.getPathInput('apkFile', true);
+        tl.debug(`APK pattern: ${mainBundlePattern}`);
+
+        const apkFile: string = resolveGlobPath(apkFilePattern);
+        tl.debug(`Found the apk: ${apkFile}.`);
+
         const versionCodeFilterType: string = tl.getInput('versionCodeFilterType', false) || 'all';
         let versionCodeFilter: string | string[] = null;
         if (versionCodeFilterType === 'list') {
@@ -106,6 +112,10 @@ async function run() {
         const bundleRes = await googleutil.addBundle(edits, packageName, bundleFile);
         tl.debug(`Uploaded ${bundleFile} with the version code ${bundleRes.versionCode}`);
         bundleVersionCode = bundleRes.versionCode;
+
+        tl.debug(`Uploading apk ${apkFile}`);
+        const apkRes = await googleutil.addApk(edits, packageName, apkFile);
+        tl.debug(`Uploaded ${apkFile} with the version code ${apkRes.versionCode}`);
 
         if (bundleVersionCode && tl.getBoolInput('shouldUploadMappingFile', false)) {
             const mappingFilePattern = tl.getPathInput('mappingFilePath', false);

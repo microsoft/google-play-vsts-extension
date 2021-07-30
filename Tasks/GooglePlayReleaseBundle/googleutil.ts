@@ -66,6 +66,13 @@ export interface GlobalParams {
     params?: PackageParams;
 }
 
+export interface Apk {
+    versionCode: number;
+    binary: {
+        sha1: string;
+    };
+}
+
 export function getJWT(key: ClientKey): JWT {
     const GOOGLE_PLAY_SCOPES: string[] = ['https://www.googleapis.com/auth/androidpublisher'];
     return new JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
@@ -202,6 +209,34 @@ export async function addBundle(edits: pub3.Resource$Edits, packageName: string,
     }
 }
 
+/**
+ * Adds an apk to an existing edit
+ * Assumes authorized
+ * @param {string} packageName unique android package name (com.android.etc)
+ * @param {string} apkFile path to apk file
+ * @returns {Promise} apk A promise that will return result from uploading an apk
+ *                          { versionCode: integer, binary: { sha1: string } }
+ */
+export async function addApk(edits: any, packageName: string, apkFile: string): Promise<Apk> {
+    let requestParameters: PackageParams = {
+        packageName: packageName,
+        media: {
+            body: fs.createReadStream(apkFile),
+            mimeType: 'application/vnd.android.package-archive'
+        }
+    };
+
+    try {
+        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
+        const res: Apk = (await edits.apks.upload(requestParameters)).data;
+        tl.debug('returned: ' + JSON.stringify(res));
+        return res;
+    } catch (e) {
+        tl.debug(`Failed to upload the APK ${apkFile}`);
+        tl.debug(e);
+        throw new Error(tl.loc('CannotUploadApk', apkFile, e));
+    }
+}
 /**
  * Uploads a deobfuscation file (mapping.txt) for a given package
  * Assumes authorized
