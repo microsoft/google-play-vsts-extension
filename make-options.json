@@ -1,9 +1,9 @@
 {
     "tasks": [
-        "GooglePlayRelease",
-        "GooglePlayReleaseBundle",
-        "GooglePlayPromote",
-        "GooglePlayRolloutUpdate"
+        "GooglePlayReleaseV3",
+        "GooglePlayReleaseBundleV3",
+        "GooglePlayPromoteV3",
+        "GooglePlayRolloutUpdateV2"
     ],
     "taskResources": [
         "*.ps1",
