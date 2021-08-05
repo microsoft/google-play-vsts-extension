@@ -76,17 +76,44 @@
             "properties": {
                 "EditableOptions": "True"
             }
+        },
+        {
+            "name": "status",
+            "type": "pickList",
+            "label": "The status of the release you want to update to",
+            "defaultValue": "halted",
+            "required": true,
+            "helpMarkDown": "https://developers.google.com/android-publisher/api-ref/rest/v3/edits.tracks#status",
+            "options": {
+                "draft": "draft",
+                "inProgress": "inProgress",
+                "halted": "halted",
+                "completed": "completed"
+            }
+        },
+        {
+            "name": "keepUserFraction",
+            "type": "boolean",
+            "label": "keep UserFraction unchange",
+            "defaultValue": true,
+            "required": false,
+            "helpMarkDown": "Roll out the release to a percentage of users.",
+            "visibleRule": "status = inProgress || status = halted"
+        },
+        {
+            "name": "userFraction",
+            "type": "string",
+            "label": "Rollout fraction",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The fraction of the app's users who will receive the update. 0 < fraction < 1. A value of `1.0` will release the app to all users.",
+            "visibleRule": "keepUserFraction = false"
         }
     ],
     "execution": {
         "Node10": {
             "target": "google-play-halt.js",
             "argumentFormat": ""
-        },
-        "PowerShell": {
-            "target": "$(currentDirectory)\\google-play-halt.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
         }
     },
     "messages": {
@@ -96,8 +123,10 @@
         "EndpointNotFound": "The service connection could not be found.",
         "Authenticating": "Authenticating with Google Play",
         "GetTrackInfo": "Getting information for track %s",
+        "CurrentUserFrac": "Current user fraction: %s",
         "StatusUpdate": "The status has been updated to halted!",
         "InProgressNotFound": "Production rollout was not found.",
+        "userFractionInvalid": "userFraction Invalid, 0 < userFraction < 1",
         "Success": "Successfully halt APKs.",
         "Failure": "Failed to halt APKs."
     },

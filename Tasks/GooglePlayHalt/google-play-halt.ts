@@ -30,7 +30,9 @@ async function run() {
         }
 
         const packageName: string = tl.getPathInput('packageName', true);
-        const userFraction: number = 0;
+        const status: string = tl.getInput('status', true);
+        const keepUserFraction: boolean = tl.getBoolInput('keepUserFraction', true);
+        let userFraction: number;
         const haltTrack: string = tl.getInput('track', true);
 
         // Constants
@@ -55,7 +57,16 @@ async function run() {
             throw new Error(tl.loc('InProgressNotFound'));
         }
 
-        const updatedTrack: googleutil.Track = await googleutil.updateTrack(edits, packageName, haltTrack, inProgressTrack.versionCodes, userFraction, inProgressTrack.releaseNotes);
+        console.log(tl.loc('CurrentUserFrac', inProgressTrack.userFraction));
+        if (!keepUserFraction) {
+            userFraction = Number(tl.getInput('userFraction', false));
+        } else {
+            userFraction = inProgressTrack.userFraction;
+        }
+        if (userFraction >= 1 || userFraction <= 0) {
+            throw new Error(tl.loc('userFractionInvalid'));
+        }
+        const updatedTrack: googleutil.Track = await googleutil.updateTrack(edits, packageName, haltTrack, inProgressTrack.versionCodes, status, userFraction, inProgressTrack.releaseNotes);
         tl.debug('Update Track: ' + JSON.stringify(updatedTrack));
 
         console.log(tl.loc('StatusUpdate'));

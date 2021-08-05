@@ -145,13 +145,14 @@ export async function getTrack(edits: any, packageName: string, track: string): 
  * @param {string} packageName - unique android package name (com.android.etc)
  * @param {string} track - one of the values {"internal", "alpha", "beta", "production"}
  * @param {integer or [integers]} versionCode - version code returned from an apk call. will take either a number or a [number]
+ * @param {string} status - one of the values {"draft", "inProgress", "halted", "completed"}
  * @param {double} userFraction - for rollouting out a release to a track, it's the fraction of users to get update 1.0 is all users. 
  *                                0 means the release's APKs will no longer be served to users, users who already have these APKs are unaffected.
  * @param {releaseNotes} releaseNotes - optional release notes to be attached as part of the update
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-export async function updateTrack(edits: any, packageName: string, track: string, versionCode: any, userFraction: number, releaseNotes?: ReleaseNotes[]): Promise<Track> {
+export async function updateTrack(edits: any, packageName: string, track: string, versionCode: any, status: string, userFraction: number, releaseNotes?: ReleaseNotes[]): Promise<Track> {
     tl.debug('Updating track');
     const release: AndroidRelease = {
         versionCodes: (typeof versionCode === 'number' ? [versionCode] : versionCode)
@@ -162,22 +163,8 @@ export async function updateTrack(edits: any, packageName: string, track: string
         release.releaseNotes = releaseNotes;
     }
 
-    if (userFraction < 1.0 && userFraction > 0) {
-        release.userFraction = userFraction;
-        release.status = 'inProgress';
-    } else if (userFraction <= 0) {
-        // If userFraction is less than 0, consider it as a halting signal
-        // set this to 0.1 to avoid following errors:
-        // - Error: HALTED release must have fraction
-        // - Error: Rollout fraction must be greater than 0 and less than 1
-        // As the rollout is halted, so no actual impact of fraction will be introduced.
-        tl.debug('User fraction is less than 0% marking rollout "halted"');
-        release.userFraction = 0.1;
-        release.status = 'halted';
-    } else {
-        tl.debug('User fraction is more than 100% marking rollout "completed"');
-        release.status = 'completed';
-    }
+    release.userFraction = userFraction;
+    release.status = status;
 
     const requestParameters: PackageParams = {
         packageName: packageName,
