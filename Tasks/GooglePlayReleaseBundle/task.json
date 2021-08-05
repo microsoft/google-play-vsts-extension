@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "3",
-        "Minor": "189",
+        "Minor": "191",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
@@ -184,6 +184,14 @@
             "required": false,
             "helpMarkDown": "The path to the proguard mapping.txt file to upload.",
             "visibleRule": "shouldUploadMappingFile = true"
+        },
+        {
+            "name": "releaseName",
+            "type": "string",
+            "label": "Release name",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The release name is only for use in Play Console and won't be visible to users. To make your release easier to identify, add a release name that's meaningful to you."
         },
         {
             "name": "versionCodeFilterType",

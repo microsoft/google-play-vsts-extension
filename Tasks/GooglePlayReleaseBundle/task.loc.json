@@ -14,7 +14,7 @@
   ],
   "version": {
     "Major": "3",
-    "Minor": "189",
+    "Minor": "191",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -184,6 +184,14 @@
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.mappingFilePath",
       "visibleRule": "shouldUploadMappingFile = true"
+    },
+    {
+      "name": "releaseName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.releaseName",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.releaseName"
     },
     {
       "name": "versionCodeFilterType",

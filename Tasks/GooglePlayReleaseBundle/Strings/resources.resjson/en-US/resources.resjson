@@ -34,6 +34,8 @@
   "loc.input.help.shouldUploadMappingFile": "Select this option to attach your proguard mapping.txt file to the primary APK.",
   "loc.input.label.mappingFilePath": "Deobfuscation path",
   "loc.input.help.mappingFilePath": "The path to the proguard mapping.txt file to upload.",
+  "loc.input.label.releaseName": "Release name",
+  "loc.input.help.releaseName": "The release name is only for use in Play Console and won't be visible to users. To make your release easier to identify, add a release name that's meaningful to you.",
   "loc.input.label.versionCodeFilterType": "Replace version codes",
   "loc.input.help.versionCodeFilterType": "Specify version codes to replace in the selected track with the new APKs: all, the comma separated list, or a regular expression pattern.",
   "loc.input.label.replaceList": "Version code list",
