@@ -85,10 +85,10 @@
             "required": true,
             "helpMarkDown": "https://developers.google.com/android-publisher/api-ref/rest/v3/edits.tracks#status",
             "options": {
-                "draft": "draft",
-                "inProgress": "inProgress",
-                "halted": "halted",
-                "completed": "completed"
+                "draft": "Draft",
+                "inProgress": "In progress",
+                "halted": "Halted",
+                "completed": "Completed"
             }
         },
         {
