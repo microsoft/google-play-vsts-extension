@@ -1,8 +1,8 @@
 {
     "id": "5bc43cb5-dcbb-4d54-b752-b34147e7ce34",
-    "name": "GooglePlayHalt",
-    "friendlyName": "Google Play - Halt",
-    "description": "Halt an app previously deployed to the Google Play Store",
+    "name": "GooglePlayStatusUpdate",
+    "friendlyName": "Google Play - Status Update",
+    "description": "Update status of an app previously deployed to the Google Play Store",
     "author": "Microsoft Corporation",
     "category": "Deploy",
     "visibility": [
@@ -18,7 +18,7 @@
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
-    "instanceNameFormat": "Halt $(packageName)",
+    "instanceNameFormat": "Update $(packageName) status to $(status)",
     "inputs": [
         {
             "name": "authType",
@@ -58,7 +58,7 @@
             "label": "Package name",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The unique package identifier (e.g. com.foo.myapp) that you wish to halt."
+            "helpMarkDown": "The unique package identifier (e.g. com.foo.myapp) that you wish to update the status."
         },
         {
             "name": "track",
@@ -66,7 +66,7 @@
             "label": "Track",
             "defaultValue": "production",
             "required": true,
-            "helpMarkDown": "Track you want to halt the APK from.",
+            "helpMarkDown": "Track you want to update the status of the APK from.",
             "options": {
                 "internal": "Internal test",
                 "alpha": "Alpha",
@@ -106,13 +106,13 @@
             "label": "Rollout fraction",
             "defaultValue": "",
             "required": true,
-            "helpMarkDown": "The fraction of the app's users who will receive the update. 0 < fraction < 1. A value of `1.0` will release the app to all users.",
+            "helpMarkDown": "The fraction of the app's users who will receive the update. 0 < fraction < 1.",
             "visibleRule": "keepUserFraction = false"
         }
     ],
     "execution": {
         "Node10": {
-            "target": "google-play-halt.js",
+            "target": "google-play-status-update.js",
             "argumentFormat": ""
         }
     },
@@ -123,10 +123,11 @@
         "EndpointNotFound": "The service connection could not be found.",
         "Authenticating": "Authenticating with Google Play",
         "GetTrackInfo": "Getting information for track %s",
+        "EmptyReleases": "This track has no release",
         "CurrentUserFrac": "Current user fraction: %s",
-        "StatusUpdate": "The status has been updated to halted!",
-        "InProgressNotFound": "Production rollout was not found.",
+        "UserFracNotFound": "No user fraction in the current status .",
         "userFractionInvalid": "userFraction Invalid, 0 < userFraction < 1",
+        "StatusUpdating": "The status is updating to %s!",
         "Success": "Successfully halt APKs.",
         "Failure": "Failed to halt APKs."
     },
