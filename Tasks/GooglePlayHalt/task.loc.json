@@ -1,5 +1,5 @@
 {
-  "id": "10dada0e-569d-4354-b1c1-7152e6bcdb72",
+  "id": "5bc43cb5-dcbb-4d54-b752-b34147e7ce34",
   "name": "GooglePlayHalt",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -14,7 +14,7 @@
   ],
   "version": {
     "Major": "2",
-    "Minor": "190",
+    "Minor": "191",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -76,17 +76,44 @@
       "properties": {
         "EditableOptions": "True"
       }
+    },
+    {
+      "name": "status",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.status",
+      "defaultValue": "halted",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.status",
+      "options": {
+        "draft": "draft",
+        "inProgress": "inProgress",
+        "halted": "halted",
+        "completed": "completed"
+      }
+    },
+    {
+      "name": "keepUserFraction",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.keepUserFraction",
+      "defaultValue": true,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.keepUserFraction",
+      "visibleRule": "status = inProgress || status = halted"
+    },
+    {
+      "name": "userFraction",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.userFraction",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.userFraction",
+      "visibleRule": "keepUserFraction = false"
     }
   ],
   "execution": {
     "Node10": {
       "target": "google-play-halt.js",
       "argumentFormat": ""
-    },
-    "PowerShell": {
-      "target": "$(currentDirectory)\\google-play-halt.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
     }
   },
   "messages": {
@@ -96,8 +123,10 @@
     "EndpointNotFound": "ms-resource:loc.messages.EndpointNotFound",
     "Authenticating": "ms-resource:loc.messages.Authenticating",
     "GetTrackInfo": "ms-resource:loc.messages.GetTrackInfo",
+    "CurrentUserFrac": "ms-resource:loc.messages.CurrentUserFrac",
     "StatusUpdate": "ms-resource:loc.messages.StatusUpdate",
     "InProgressNotFound": "ms-resource:loc.messages.InProgressNotFound",
+    "userFractionInvalid": "ms-resource:loc.messages.userFractionInvalid",
     "Success": "ms-resource:loc.messages.Success",
     "Failure": "ms-resource:loc.messages.Failure"
   },
