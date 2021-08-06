@@ -52,24 +52,31 @@ async function run() {
         console.log(tl.loc('GetTrackInfo', haltTrack));
         const track: googleutil.Track = await googleutil.getTrack(edits, packageName, haltTrack);
         tl.debug('Track: ' + JSON.stringify(track));
-        const inProgressTrack = track.releases.find(x => x.status === 'inProgress');
-        if (!inProgressTrack) {
-            throw new Error(tl.loc('InProgressNotFound'));
-        }
 
-        console.log(tl.loc('CurrentUserFrac', inProgressTrack.userFraction));
+        if (track.releases.length <= 0) {
+            throw new Error(tl.loc('EmptyReleases'));
+        }
+        const firstRelease = track.releases[0];
+
         if (!keepUserFraction) {
             userFraction = Number(tl.getInput('userFraction', false));
         } else {
-            userFraction = inProgressTrack.userFraction;
+            if (firstRelease.status === 'inProgress' || firstRelease.status === 'halted') {
+                console.log(tl.loc('CurrentUserFrac', firstRelease.userFraction));
+                userFraction = firstRelease.userFraction;
+            } else {
+                throw new Error(tl.loc('UserFracNotFound'));
+            }
         }
+
         if (userFraction >= 1 || userFraction <= 0) {
             throw new Error(tl.loc('userFractionInvalid'));
         }
-        const updatedTrack: googleutil.Track = await googleutil.updateTrack(edits, packageName, haltTrack, inProgressTrack.versionCodes, status, userFraction, inProgressTrack.releaseNotes);
+
+        const updatedTrack: googleutil.Track = await googleutil.updateTrack(edits, packageName, haltTrack, firstRelease.versionCodes, status, userFraction, firstRelease.releaseNotes);
         tl.debug('Update Track: ' + JSON.stringify(updatedTrack));
 
-        console.log(tl.loc('StatusUpdate'));
+        console.log(tl.loc('StatusUpdating', status));
         const commit = await edits.commit();
         tl.debug('Commit: ' + JSON.stringify(commit.data));
 

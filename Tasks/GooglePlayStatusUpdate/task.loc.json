@@ -1,6 +1,6 @@
 {
   "id": "5bc43cb5-dcbb-4d54-b752-b34147e7ce34",
-  "name": "GooglePlayHalt",
+  "name": "GooglePlayStatusUpdate",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -85,10 +85,10 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.status",
       "options": {
-        "draft": "draft",
-        "inProgress": "inProgress",
-        "halted": "halted",
-        "completed": "completed"
+        "draft": "Draft",
+        "inProgress": "In progress",
+        "halted": "Halted",
+        "completed": "Completed"
       }
     },
     {
@@ -112,7 +112,7 @@
   ],
   "execution": {
     "Node10": {
-      "target": "google-play-halt.js",
+      "target": "google-play-status-update.js",
       "argumentFormat": ""
     }
   },
@@ -123,10 +123,11 @@
     "EndpointNotFound": "ms-resource:loc.messages.EndpointNotFound",
     "Authenticating": "ms-resource:loc.messages.Authenticating",
     "GetTrackInfo": "ms-resource:loc.messages.GetTrackInfo",
+    "EmptyReleases": "ms-resource:loc.messages.EmptyReleases",
     "CurrentUserFrac": "ms-resource:loc.messages.CurrentUserFrac",
-    "StatusUpdate": "ms-resource:loc.messages.StatusUpdate",
-    "InProgressNotFound": "ms-resource:loc.messages.InProgressNotFound",
+    "UserFracNotFound": "ms-resource:loc.messages.UserFracNotFound",
     "userFractionInvalid": "ms-resource:loc.messages.userFractionInvalid",
+    "StatusUpdating": "ms-resource:loc.messages.StatusUpdating",
     "Success": "ms-resource:loc.messages.Success",
     "Failure": "ms-resource:loc.messages.Failure"
   },
