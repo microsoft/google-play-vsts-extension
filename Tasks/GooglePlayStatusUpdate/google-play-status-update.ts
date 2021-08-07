@@ -31,9 +31,8 @@ async function run() {
 
         const packageName: string = tl.getPathInput('packageName', true);
         const status: string = tl.getInput('status', true);
-        const keepUserFraction: boolean = tl.getBoolInput('keepUserFraction', true);
-        let userFraction: number;
-        const haltTrack: string = tl.getInput('track', true);
+        let userFraction: number = Number(tl.getInput('userFraction', false));
+        const trackName: string = tl.getInput('track', true);
 
         // Constants
         const globalParams: googleutil.GlobalParams = { auth: null, params: {} };
@@ -49,8 +48,8 @@ async function run() {
         const edit = await googleutil.getNewEdit(edits, globalParams, packageName);
         googleutil.updateGlobalParams(globalParams, 'editId', edit.id);
 
-        console.log(tl.loc('GetTrackInfo', haltTrack));
-        const track: googleutil.Track = await googleutil.getTrack(edits, packageName, haltTrack);
+        console.log(tl.loc('GetTrackInfo', trackName));
+        const track: googleutil.Track = await googleutil.getTrack(edits, packageName, trackName);
         tl.debug('Track: ' + JSON.stringify(track));
 
         if (track.releases.length <= 0) {
@@ -58,22 +57,19 @@ async function run() {
         }
         const firstRelease = track.releases[0];
 
-        if (!keepUserFraction) {
-            userFraction = Number(tl.getInput('userFraction', false));
-        } else {
+        if (Number.isNaN(userFraction)) {
+            console.log(tl.loc('keepUserFrac'));
             if (firstRelease.status === 'inProgress' || firstRelease.status === 'halted') {
                 console.log(tl.loc('CurrentUserFrac', firstRelease.userFraction));
                 userFraction = firstRelease.userFraction;
-            } else {
-                throw new Error(tl.loc('UserFracNotFound'));
+            }
+        } else {
+            if (userFraction >= 1 || userFraction <= 0) {
+                throw new Error(tl.loc('userFractionInvalid'));
             }
         }
 
-        if (userFraction >= 1 || userFraction <= 0) {
-            throw new Error(tl.loc('userFractionInvalid'));
-        }
-
-        const updatedTrack: googleutil.Track = await googleutil.updateTrack(edits, packageName, haltTrack, firstRelease.versionCodes, status, userFraction, firstRelease.releaseNotes);
+        const updatedTrack: googleutil.Track = await googleutil.updateTrack(edits, packageName, trackName, firstRelease.versionCodes, status, userFraction, firstRelease.releaseNotes);
         tl.debug('Update Track: ' + JSON.stringify(updatedTrack));
 
         console.log(tl.loc('StatusUpdating', status));

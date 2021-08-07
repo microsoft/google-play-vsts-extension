@@ -92,22 +92,13 @@
       }
     },
     {
-      "name": "keepUserFraction",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.keepUserFraction",
-      "defaultValue": true,
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.keepUserFraction",
-      "visibleRule": "status = inProgress || status = halted"
-    },
-    {
       "name": "userFraction",
       "type": "string",
       "label": "ms-resource:loc.input.label.userFraction",
       "defaultValue": "",
-      "required": true,
+      "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.userFraction",
-      "visibleRule": "keepUserFraction = false"
+      "visibleRule": "status = inProgress || status = halted"
     }
   ],
   "execution": {
@@ -125,8 +116,8 @@
     "GetTrackInfo": "ms-resource:loc.messages.GetTrackInfo",
     "EmptyReleases": "ms-resource:loc.messages.EmptyReleases",
     "CurrentUserFrac": "ms-resource:loc.messages.CurrentUserFrac",
-    "UserFracNotFound": "ms-resource:loc.messages.UserFracNotFound",
     "userFractionInvalid": "ms-resource:loc.messages.userFractionInvalid",
+    "keepUserFrac": "ms-resource:loc.messages.keepUserFrac",
     "StatusUpdating": "ms-resource:loc.messages.StatusUpdating",
     "Success": "ms-resource:loc.messages.Success",
     "Failure": "ms-resource:loc.messages.Failure"

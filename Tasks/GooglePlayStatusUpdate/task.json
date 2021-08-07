@@ -92,22 +92,13 @@
             }
         },
         {
-            "name": "keepUserFraction",
-            "type": "boolean",
-            "label": "keep UserFraction unchange",
-            "defaultValue": true,
-            "required": false,
-            "helpMarkDown": "Roll out the release to a percentage of users.",
-            "visibleRule": "status = inProgress || status = halted"
-        },
-        {
             "name": "userFraction",
             "type": "string",
             "label": "Rollout fraction",
             "defaultValue": "",
-            "required": true,
-            "helpMarkDown": "The fraction of the app's users who will receive the update. 0 < fraction < 1.",
-            "visibleRule": "keepUserFraction = false"
+            "required": false,
+            "helpMarkDown": "The fraction of the app's users who will receive the update. 0 < fraction < 1. Blank input means keeping userfraction unchanged.",
+            "visibleRule": "status = inProgress || status = halted"
         }
     ],
     "execution": {
@@ -125,8 +116,8 @@
         "GetTrackInfo": "Getting information for track %s",
         "EmptyReleases": "This track has no release",
         "CurrentUserFrac": "Current user fraction: %s",
-        "UserFracNotFound": "No user fraction in the current status .",
-        "userFractionInvalid": "userFraction Invalid, 0 < userFraction < 1",
+        "userFractionInvalid": "UserFraction Invalid, 0 < userFraction < 1",
+        "keepUserFrac": "Blank userFraction, maintain the current userFraction",
         "StatusUpdating": "The status is updating to %s!",
         "Success": "Successfully halt APKs.",
         "Failure": "Failed to halt APKs."

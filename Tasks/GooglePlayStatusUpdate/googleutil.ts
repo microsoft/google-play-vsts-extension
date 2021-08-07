@@ -146,8 +146,7 @@ export async function getTrack(edits: any, packageName: string, track: string): 
  * @param {string} track - one of the values {"internal", "alpha", "beta", "production"}
  * @param {integer or [integers]} versionCode - version code returned from an apk call. will take either a number or a [number]
  * @param {string} status - one of the values {"draft", "inProgress", "halted", "completed"}
- * @param {double} userFraction - for rollouting out a release to a track, it's the fraction of users to get update 1.0 is all users. 
- *                                0 means the release's APKs will no longer be served to users, users who already have these APKs are unaffected.
+ * @param {double} userFraction - for rollouting out a release to a track.
  * @param {releaseNotes} releaseNotes - optional release notes to be attached as part of the update
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
@@ -163,7 +162,9 @@ export async function updateTrack(edits: any, packageName: string, track: string
         release.releaseNotes = releaseNotes;
     }
 
-    release.userFraction = userFraction;
+    if (!Number.isNaN(userFraction)) {
+        release.userFraction = userFraction;
+    }
     release.status = status;
 
     const requestParameters: PackageParams = {
