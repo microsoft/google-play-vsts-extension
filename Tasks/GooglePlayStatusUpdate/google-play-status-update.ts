@@ -31,7 +31,7 @@ async function run() {
 
         const packageName: string = tl.getPathInput('packageName', true);
         const status: string = tl.getInput('status', true);
-        const userFrac: string = tl.getInput('userFraction', false);
+        const userFractionInput: string = tl.getInput('userFraction', false);
         let userFraction: number = Number.NaN;
         const trackName: string = tl.getInput('track', true);
 
@@ -58,14 +58,14 @@ async function run() {
         }
         const firstRelease = track.releases[0];
 
-        if (userFrac === undefined || userFrac.replace(/(^s*)|(s*$)/g, '').length === 0) {
+        if (userFractionInput === undefined || userFractionInput.replace(/(^s*)|(s*$)/g, '').length === 0) {
             console.log(tl.loc('keepUserFrac'));
             if (firstRelease.status === 'inProgress' || firstRelease.status === 'halted') {
                 console.log(tl.loc('CurrentUserFrac', firstRelease.userFraction));
                 userFraction = firstRelease.userFraction;
             }
         } else {
-            userFraction = Number(userFrac);
+            userFraction = Number(userFractionInput);
             if (Number.isNaN(userFraction) || userFraction >= 1 || userFraction <= 0) {
                 throw new Error(tl.loc('userFractionInvalid'));
             }

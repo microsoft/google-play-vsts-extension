@@ -80,10 +80,10 @@
         {
             "name": "status",
             "type": "pickList",
-            "label": "The status of the release you want to update to",
+            "label": "Status",
             "defaultValue": "halted",
             "required": true,
-            "helpMarkDown": "https://developers.google.com/android-publisher/api-ref/rest/v3/edits.tracks#status",
+            "helpMarkDown": "The status of the release you want to update to, for details of statuses: https://developers.google.com/android-publisher/api-ref/rest/v3/edits.tracks#status.",
             "options": {
                 "draft": "Draft",
                 "inProgress": "In progress",
@@ -94,7 +94,7 @@
         {
             "name": "userFraction",
             "type": "string",
-            "label": "Rollout fraction",
+            "label": "User fraction",
             "defaultValue": "",
             "required": false,
             "helpMarkDown": "The fraction of the app's users who will receive the update. 0 < fraction < 1. Blank input means keeping userfraction unchanged.",

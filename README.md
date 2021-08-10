@@ -213,14 +213,23 @@ Allows you to increase the rollout percentage of an app that was previously rele
 
 3. **Rollout Fraction** *(String, Required)* - The new user fraction to increase the rollout to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users)
 
-### Google Play - Halt
+### Google Play - Status Update
 
-Allows you to halt an app that was previously released to the **Rollout** track, and includes the following options:
+Allows you to update the status of an app that was previously released to the selected track (e.g. `inProgress` -> `halted`), and includes the following options:
 
-![Increase task](images/halt-task.png)
+![Status Update task](images/status-update-task.png)
 
-1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo.
-2. **Package Name** *(String, Required)* - The unique package identifier (e.g. com.foo.myapp) of the app you wish to halt for.
+1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo. Please note that from the point of security it's preferrable to store it as [Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using [Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
+
+2. **Package Name** *(String, Required)* - The unique package identifier (e.g. com.foo.myapp) of the app you wish to update the status for.
+
+3. **Track** *(String, Required)* - The track you wish to update the status of your app from (e.g. `alpha`). This assumes that you previously released an update to this track, potentially using the [`Google Play - Release`](#google-play---release) task.
+
+4. **Status** *(String, Required)* - The status of the release you want to update to.
+
+    ![Status](images/status.png)
+
+5. **User Fraction** *(String, Optional)* - The new user fraction to update the rollout to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users, does not contain 0 and 1). If the input User Fraction is not specified, will maintain the current user fraction without updating (**Notice**: if you want to update the status to `inProgress` or `halted`, make sure current user fraction or the input User Fraction is specified).
 
 ### Google Play - Release Bundle
 
