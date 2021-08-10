@@ -102,7 +102,7 @@ In addition to the custom service endpoint, this extension also contributes the 
 
 * [Google Play - Release Bundle](#google-play---release-bundle) - Allows automating the release of a new Android bundle to the Google Play store.
 
-* [Google Play - Halt](#google-play---halt) - Allows automating the halt of a previously released Android app.
+* [Google Play - Status Update](#google-play---status-update) - Allows you to update the status of an app that was previously released to the selected track.
 
 ### Google Play - Release
 
