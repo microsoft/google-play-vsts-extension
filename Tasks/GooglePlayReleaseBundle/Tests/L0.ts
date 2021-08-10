@@ -11,6 +11,10 @@ describe('L0 Suite google-play-release-bundle', function () {
         done();
     });
 
+    describe('googleutil updateTrack tests', function() {
+        require('./L0GoogleUtil');
+    });
+
     it('test no service endpoint fails', (done) => {
         const testFile = path.join(__dirname, 'L0NoServiceEndpoint.js');
         const testRunner = new ttm.MockTestRunner(testFile);
