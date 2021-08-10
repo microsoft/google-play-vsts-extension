@@ -31,7 +31,8 @@ async function run() {
 
         const packageName: string = tl.getPathInput('packageName', true);
         const status: string = tl.getInput('status', true);
-        let userFraction: number = Number(tl.getInput('userFraction', false));
+        const userFrac: string = tl.getInput('userFraction', false);
+        let userFraction: number = Number.NaN;
         const trackName: string = tl.getInput('track', true);
 
         // Constants
@@ -57,16 +58,18 @@ async function run() {
         }
         const firstRelease = track.releases[0];
 
-        if (Number.isNaN(userFraction)) {
+        if (typeof(userFrac) === 'undefined' || userFrac == null || userFrac.replace(/(^s*)|(s*$)/g, '').length === 0) {
             console.log(tl.loc('keepUserFrac'));
             if (firstRelease.status === 'inProgress' || firstRelease.status === 'halted') {
                 console.log(tl.loc('CurrentUserFrac', firstRelease.userFraction));
                 userFraction = firstRelease.userFraction;
             }
         } else {
-            if (userFraction >= 1 || userFraction <= 0) {
+            userFraction = Number(userFrac);
+            if (Number.isNaN(userFraction) || userFraction >= 1 || userFraction <= 0) {
                 throw new Error(tl.loc('userFractionInvalid'));
             }
+            console.log(tl.loc('UserFracSpecified', userFraction));
         }
 
         const updatedTrack: googleutil.Track = await googleutil.updateTrack(edits, packageName, trackName, firstRelease.versionCodes, status, userFraction, firstRelease.releaseNotes);

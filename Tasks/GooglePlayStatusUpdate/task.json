@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "2",
-        "Minor": "191",
+        "Minor": "192",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
@@ -115,9 +115,10 @@
         "Authenticating": "Authenticating with Google Play",
         "GetTrackInfo": "Getting information for track %s",
         "EmptyReleases": "This track has no release",
+        "keepUserFrac": "Blank userFraction, maintain the current userFraction.",
         "CurrentUserFrac": "Current user fraction: %s",
-        "userFractionInvalid": "UserFraction Invalid, 0 < userFraction < 1",
-        "keepUserFrac": "Blank userFraction, maintain the current userFraction",
+        "UserFracSpecified": "UserFraction is specified to %s.",
+        "userFractionInvalid": "UserFraction Invalid, userFraction should be a number between 0 - 1.",
         "StatusUpdating": "The status is updating to %s!",
         "Success": "Successfully halt APKs.",
         "Failure": "Failed to halt APKs."

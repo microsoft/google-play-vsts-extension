@@ -22,9 +22,10 @@
   "loc.messages.Authenticating": "Authenticating with Google Play",
   "loc.messages.GetTrackInfo": "Getting information for track %s",
   "loc.messages.EmptyReleases": "This track has no release",
+  "loc.messages.keepUserFrac": "Blank userFraction, maintain the current userFraction.",
   "loc.messages.CurrentUserFrac": "Current user fraction: %s",
-  "loc.messages.userFractionInvalid": "UserFraction Invalid, 0 < userFraction < 1",
-  "loc.messages.keepUserFrac": "Blank userFraction, maintain the current userFraction",
+  "loc.messages.UserFracSpecified": "UserFraction is specified to %s.",
+  "loc.messages.userFractionInvalid": "UserFraction Invalid, userFraction should be a number between 0 - 1.",
   "loc.messages.StatusUpdating": "The status is updating to %s!",
   "loc.messages.Success": "Successfully halt APKs.",
   "loc.messages.Failure": "Failed to halt APKs."
