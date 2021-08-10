@@ -11,13 +11,6 @@ export interface ClientKey {
     private_key?: string;
 }
 
-export interface Apk {
-    versionCode: number;
-    binary: {
-        sha1: string;
-    };
-}
-
 export interface AndroidRelease {
     name?: string;
     userFraction?: number;
@@ -36,14 +29,6 @@ export interface AndroidResource {
     releases?: AndroidRelease[];
 }
 
-export interface AndroidListingResource {
-    language?: string;
-    title?: string;
-    fullDescription?: string;
-    shortDescription?: string;
-    video?: string;
-}
-
 export interface Edit {
     id: string;
     expiryTimeSeconds: string;
@@ -54,18 +39,6 @@ export interface PackageParams {
     editId?: any;
     track?: string;
     resource?: AndroidResource; // 'resource' goes into the 'body' of the http request
-    media?: AndroidMedia;
-    apkVersionCode?: number;
-    language?: string;
-    imageType?: string;
-    uploadType?: string;
-}
-
-export interface PackageListingParams {
-    packageName?: string;
-    editId?: any;
-    track?: string;
-    resource?: AndroidListingResource; // 'resource' goes into the 'body' of the http request
     media?: AndroidMedia;
     apkVersionCode?: number;
     language?: string;
@@ -193,64 +166,4 @@ export function updateGlobalParams(globalParams: GlobalParams, paramName: string
     globalParams.params[paramName] = value;
     google.options(globalParams);
     tl.debug('Global Params set to ' + JSON.stringify(globalParams));
-}
-
-/**
- * Adds an apk to an existing edit
- * Assumes authorized
- * @param {string} packageName unique android package name (com.android.etc)
- * @param {string} apkFile path to apk file
- * @returns {Promise} apk A promise that will return result from uploading an apk
- *                          { versionCode: integer, binary: { sha1: string } }
- */
-export async function addApk(edits: any, packageName: string, apkFile: string): Promise<Apk> {
-    let requestParameters: PackageParams = {
-        packageName: packageName,
-        media: {
-            body: fs.createReadStream(apkFile),
-            mimeType: 'application/vnd.android.package-archive'
-        }
-    };
-
-    try {
-        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        const res: Apk = (await edits.apks.upload(requestParameters)).data;
-        tl.debug('returned: ' + JSON.stringify(res));
-        return res;
-    } catch (e) {
-        tl.debug(`Failed to upload the APK ${apkFile}`);
-        tl.debug(e);
-        throw new Error(tl.loc('CannotUploadApk', apkFile, e));
-    }
-}
-
-/**
- * Uploads a deobfuscation file (mapping.txt) for a given package
- * Assumes authorized
- * @param {string} mappingFilePath the path to the file to upload
- * @param {string} packageName unique android package name (com.android.etc)
- * @param apkVersionCode version code of uploaded APK
- * @returns {Promise} deobfuscationFiles A promise that will return result from uploading a deobfuscation file
- *                          { deobfuscationFile: { symbolType: string } }
- */
-export async function uploadDeobfuscation(edits: any, mappingFilePath: string, packageName: string, apkVersionCode: number): Promise<void> {
-    const requestParameters = {
-        deobfuscationFileType: 'proguard',
-        packageName: packageName,
-        apkVersionCode: apkVersionCode,
-        media: {
-            body: fs.createReadStream(mappingFilePath),
-            mimeType: ''
-        }
-    };
-
-    try {
-        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        const res = (await edits.deobfuscationfiles.upload(requestParameters)).data;
-        tl.debug('returned: ' + JSON.stringify(res));
-    } catch (e) {
-        tl.debug(`Failed to upload deobfuscation file ${mappingFilePath}`);
-        tl.debug(e);
-        throw new Error(tl.loc('CannotUploadDeobfuscationFile', mappingFilePath, e));
-    }
 }
