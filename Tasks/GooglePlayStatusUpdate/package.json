@@ -1,5 +1,5 @@
 {
-    "name": "vso-task-google-play-halt",
+    "name": "vso-task-google-status-update",
     "version": "1.0.0",
     "description": "A VSO build task for halting an app previously deployed to the Google Play Store",
     "main": "google-play-halt.js",
