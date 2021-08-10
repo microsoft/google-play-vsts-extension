@@ -50,6 +50,7 @@ async function run() {
             versionCodeFilter = tl.getInput('replaceExpression', true);
         }
 
+        const releaseName: string = tl.getInput('releaseName', false);
         const track: string = tl.getInput('track', true);
         const userFractionSupplied: boolean = tl.getBoolInput('rolloutToUserFraction');
         const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
@@ -132,7 +133,7 @@ async function run() {
 
         console.log(tl.loc('UpdateTrack'));
         tl.debug(`Updating the track ${track}.`);
-        const updatedTrack: pub3.Schema$Track = await updateTrack(edits, packageName, track, '' + bundleVersionCode, versionCodeFilterType, versionCodeFilter, userFraction, updatePriority, releaseNotes);
+        const updatedTrack: pub3.Schema$Track = await updateTrack(edits, packageName, track, '' + bundleVersionCode, versionCodeFilterType, versionCodeFilter, userFraction, updatePriority, releaseNotes, releaseName);
         tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
 
         tl.debug('Committing the edit transaction in Google Play.');
@@ -173,7 +174,8 @@ async function updateTrack(
     versionCodeFilter: string | string[],
     userFraction: number,
     updatePriority: number,
-    releaseNotes?: pub3.Schema$LocalizedText[]): Promise<pub3.Schema$Track> {
+    releaseNotes?: pub3.Schema$LocalizedText[],
+    releaseName?: string): Promise<pub3.Schema$Track> {
 
     let newTrackVersionCodes: string[] = [];
     let res: pub3.Schema$Track;
@@ -220,7 +222,7 @@ async function updateTrack(
 
     tl.debug(`New ${track} track version codes: ` + JSON.stringify(newTrackVersionCodes));
     try {
-        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction, updatePriority, releaseNotes);
+        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction, updatePriority, releaseNotes, releaseName);
     } catch (e) {
         tl.debug(`Failed to update track ${track}.`);
         tl.debug(e);

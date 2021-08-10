@@ -121,12 +121,17 @@ export async function getTrack(edits: pub3.Resource$Edits, packageName: string, 
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-export async function updateTrack(edits: pub3.Resource$Edits, packageName: string, track: string, versionCode: string | string[], userFraction: number, updatePriority: number, releaseNotes?: pub3.Schema$LocalizedText[]): Promise<pub3.Schema$Track> {
+export async function updateTrack(edits: pub3.Resource$Edits, packageName: string, track: string, versionCode: string | string[], userFraction: number, updatePriority: number, releaseNotes?: pub3.Schema$LocalizedText[], releaseName?: string): Promise<pub3.Schema$Track> {
     tl.debug('Updating track');
     const release: pub3.Schema$TrackRelease = {
         versionCodes: (Array.isArray(versionCode) ? versionCode : [versionCode]),
         inAppUpdatePriority: updatePriority
     };
+
+    if (releaseName && releaseName.length > 0) {
+        tl.debug('Add release name: ' + releaseName);
+        release.name = releaseName;
+    }
 
     if (releaseNotes && releaseNotes.length > 0) {
         tl.debug('Attaching release notes to the update');
