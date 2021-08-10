@@ -58,7 +58,7 @@ async function run() {
         }
         const firstRelease = track.releases[0];
 
-        if (typeof(userFrac) === 'undefined' || userFrac == null || userFrac.replace(/(^s*)|(s*$)/g, '').length === 0) {
+        if (userFrac === undefined || userFrac.replace(/(^s*)|(s*$)/g, '').length === 0) {
             console.log(tl.loc('keepUserFrac'));
             if (firstRelease.status === 'inProgress' || firstRelease.status === 'halted') {
                 console.log(tl.loc('CurrentUserFrac', firstRelease.userFraction));
