@@ -1,6 +1,9 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as googleutil from './googleutil';
+import { androidpublisher_v3 } from 'googleapis';
+import { JWT } from 'google-auth-library';
+import { GaxiosResponse } from 'gaxios/build/src/common';
 
 async function run() {
     try {
@@ -38,15 +41,15 @@ async function run() {
         // Constants
         const globalParams: googleutil.GlobalParams = { auth: null, params: {} };
 
-        const jwtClient = googleutil.getJWT(key);
-        const edits: any = googleutil.publisher.edits;
+        const jwtClient: JWT = googleutil.getJWT(key);
+        const edits: androidpublisher_v3.Resource$Edits = googleutil.publisher.edits;
 
         globalParams.auth = jwtClient;
         googleutil.updateGlobalParams(globalParams, 'packageName', packageName);
 
         console.log(tl.loc('Authenticating'));
         await jwtClient.authorize();
-        const edit = await googleutil.getNewEdit(edits, globalParams, packageName);
+        const edit: googleutil.Edit = await googleutil.getNewEdit(edits, globalParams, packageName);
         googleutil.updateGlobalParams(globalParams, 'editId', edit.id);
 
         console.log(tl.loc('GetTrackInfo', trackName));
@@ -56,7 +59,7 @@ async function run() {
         if (track.releases.length <= 0) {
             throw new Error(tl.loc('EmptyReleases'));
         }
-        const firstRelease = track.releases[0];
+        const firstRelease: googleutil.Release = track.releases[0];
 
         if (userFractionInput === undefined) {
             console.log(tl.loc('keepUserFrac'));
@@ -76,7 +79,7 @@ async function run() {
         tl.debug('Update Track: ' + JSON.stringify(updatedTrack));
 
         console.log(tl.loc('StatusUpdating', status));
-        const commit = await edits.commit();
+        const commit: GaxiosResponse<androidpublisher_v3.Schema$AppEdit> = await edits.commit();
         tl.debug('Commit: ' + JSON.stringify(commit.data));
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));

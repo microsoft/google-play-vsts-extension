@@ -1,10 +1,10 @@
 // common code shared by all tasks
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
-import { google } from 'googleapis';
+import { google, androidpublisher_v3 } from 'googleapis';
 import { JWT } from 'google-auth-library';
 
-export const publisher = google.androidpublisher('v3');
+export const publisher: androidpublisher_v3.Androidpublisher = google.androidpublisher('v3');
 
 export interface ClientKey {
     client_email?: string;
@@ -36,7 +36,7 @@ export interface Edit {
 
 export interface PackageParams {
     packageName?: string;
-    editId?: any;
+    editId?: string;
     track?: string;
     resource?: AndroidResource; // 'resource' goes into the 'body' of the http request
     media?: AndroidMedia;
@@ -65,7 +65,7 @@ export interface Track {
 }
 
 export interface GlobalParams {
-    auth?: any;
+    auth?: JWT;
     params?: PackageParams;
 }
 
