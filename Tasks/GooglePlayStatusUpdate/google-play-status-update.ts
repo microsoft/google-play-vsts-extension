@@ -49,17 +49,17 @@ async function run() {
 
         console.log(tl.loc('Authenticating'));
         await jwtClient.authorize();
-        const edit: googleutil.Edit = await googleutil.getNewEdit(edits, globalParams, packageName);
+        const edit: androidpublisher_v3.Schema$AppEdit = await googleutil.getNewEdit(edits, globalParams, packageName);
         googleutil.updateGlobalParams(globalParams, 'editId', edit.id);
 
         console.log(tl.loc('GetTrackInfo', trackName));
-        const track: googleutil.Track = await googleutil.getTrack(edits, packageName, trackName);
+        const track: androidpublisher_v3.Schema$Track = await googleutil.getTrack(edits, packageName, trackName);
         tl.debug('Track: ' + JSON.stringify(track));
 
         if (track.releases.length <= 0) {
             throw new Error(tl.loc('EmptyReleases'));
         }
-        const firstRelease: googleutil.Release = track.releases[0];
+        const firstRelease: androidpublisher_v3.Schema$TrackRelease = track.releases[0];
 
         if (userFractionInput === undefined) {
             console.log(tl.loc('keepUserFrac'));
@@ -75,7 +75,7 @@ async function run() {
             console.log(tl.loc('UserFracSpecified', userFraction));
         }
 
-        const updatedTrack: googleutil.Track = await googleutil.updateTrack(edits, packageName, trackName, firstRelease.versionCodes, status, userFraction, firstRelease.releaseNotes);
+        const updatedTrack: androidpublisher_v3.Schema$Track = await googleutil.updateTrack(edits, packageName, trackName, firstRelease.versionCodes, status, userFraction, firstRelease.releaseNotes);
         tl.debug('Update Track: ' + JSON.stringify(updatedTrack));
 
         console.log(tl.loc('StatusUpdating', status));

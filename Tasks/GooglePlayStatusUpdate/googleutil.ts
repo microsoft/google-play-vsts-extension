@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import { google, androidpublisher_v3 } from 'googleapis';
 import { JWT } from 'google-auth-library';
+import { GaxiosResponse } from 'gaxios/build/src/common';
 
 export const publisher: androidpublisher_v3.Androidpublisher = google.androidpublisher('v3');
 
@@ -29,11 +30,6 @@ export interface AndroidResource {
     releases?: AndroidRelease[];
 }
 
-export interface Edit {
-    id: string;
-    expiryTimeSeconds: string;
-}
-
 export interface PackageParams {
     packageName?: string;
     editId?: string;
@@ -49,19 +45,6 @@ export interface PackageParams {
 export interface ReleaseNotes {
     language?: string;
     text?: string;
-}
-
-export interface Release {
-    name?: string;
-    versionCodes?: number[];
-    userFraction?: number;
-    releaseNotes: ReleaseNotes[];
-    status?: string;
-}
-
-export interface Track {
-    track: string;
-    releases: Release[];
 }
 
 export interface GlobalParams {
@@ -81,14 +64,14 @@ export function getJWT(key: ClientKey): JWT {
  * @return {Promise} edit - A promise that will return result from inserting a new edit
  *                          { id: string, expiryTimeSeconds: string }
  */
-export async function getNewEdit(edits: any, globalParams: GlobalParams, packageName: string): Promise<Edit> {
+export async function getNewEdit(edits: androidpublisher_v3.Resource$Edits, globalParams: GlobalParams, packageName: string): Promise<androidpublisher_v3.Schema$AppEdit> {
     tl.debug('Creating a new edit');
     const requestParameters: PackageParams = {
         packageName: packageName
     };
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
-    const res = await edits.insert(requestParameters);
+    const res: GaxiosResponse<androidpublisher_v3.Schema$AppEdit> = await edits.insert(requestParameters);
     return res.data;
 }
 
@@ -100,7 +83,7 @@ export async function getNewEdit(edits: any, globalParams: GlobalParams, package
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-export async function getTrack(edits: any, packageName: string, track: string): Promise<Track> {
+export async function getTrack(edits: androidpublisher_v3.Resource$Edits, packageName: string, track: string): Promise<androidpublisher_v3.Schema$Track> {
     tl.debug('Getting Track information');
     const requestParameters: PackageParams = {
         packageName: packageName,
@@ -108,7 +91,7 @@ export async function getTrack(edits: any, packageName: string, track: string): 
     };
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
-    const getTrack = await edits.tracks.get(requestParameters);
+    const getTrack: GaxiosResponse<androidpublisher_v3.Schema$Track> = await edits.tracks.get(requestParameters);
     return getTrack.data;
 }
 
@@ -124,7 +107,7 @@ export async function getTrack(edits: any, packageName: string, track: string): 
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-export async function updateTrack(edits: any, packageName: string, track: string, versionCode: any, status: string, userFraction: number, releaseNotes?: ReleaseNotes[]): Promise<Track> {
+export async function updateTrack(edits: androidpublisher_v3.Resource$Edits, packageName: string, track: string, versionCode: any, status: string, userFraction: number, releaseNotes?: ReleaseNotes[]): Promise<androidpublisher_v3.Schema$Track> {
     tl.debug('Updating track');
     const release: AndroidRelease = {
         versionCodes: (typeof versionCode === 'number' ? [versionCode] : versionCode)
@@ -150,7 +133,7 @@ export async function updateTrack(edits: any, packageName: string, track: string
     };
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
-    const updatedTrack = await edits.tracks.update(requestParameters);
+    const updatedTrack: GaxiosResponse<androidpublisher_v3.Schema$Track> = await edits.tracks.update(requestParameters);
     return updatedTrack.data;
 }
 
