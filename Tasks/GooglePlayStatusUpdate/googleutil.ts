@@ -12,14 +12,6 @@ export interface ClientKey {
     private_key?: string;
 }
 
-export interface AndroidRelease {
-    name?: string;
-    userFraction?: number;
-    releaseNotes?: ReleaseNotes[];
-    versionCodes?: [number];
-    status?: string;
-}
-
 export interface AndroidMedia {
     body: fs.ReadStream;
     mimeType: string;
@@ -27,7 +19,7 @@ export interface AndroidMedia {
 
 export interface AndroidResource {
     track?: string;
-    releases?: AndroidRelease[];
+    releases?: androidpublisher_v3.Schema$TrackRelease[];
 }
 
 export interface PackageParams {
@@ -107,10 +99,10 @@ export async function getTrack(edits: androidpublisher_v3.Resource$Edits, packag
  * @returns {Promise} track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-export async function updateTrack(edits: androidpublisher_v3.Resource$Edits, packageName: string, track: string, versionCode: any, status: string, userFraction: number, releaseNotes?: ReleaseNotes[]): Promise<androidpublisher_v3.Schema$Track> {
+export async function updateTrack(edits: androidpublisher_v3.Resource$Edits, packageName: string, track: string, versionCode: string[] | null, status: string, userFraction: number, releaseNotes?: ReleaseNotes[]): Promise<androidpublisher_v3.Schema$Track> {
     tl.debug('Updating track');
-    const release: AndroidRelease = {
-        versionCodes: (typeof versionCode === 'number' ? [versionCode] : versionCode)
+    const release: androidpublisher_v3.Schema$TrackRelease = {
+        versionCodes: versionCode
     };
 
     if (releaseNotes && releaseNotes.length > 0) {
