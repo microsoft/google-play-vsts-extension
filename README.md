@@ -38,7 +38,7 @@ In order to automate the release of app updates to the Google Play store, you ne
 9. Back in the **Google Play Developer Console**, click the **Done** button to close the modal
 
 10. Click the **Grant access** button in the row associated with the service account you just created.
- 
+
 11. Ensure that the **Role** is set to **Release Manager** and then click the **Add user** button
 
 To take advantage of the metadata updating capabilities, files need to be organized using fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) format:
@@ -102,6 +102,8 @@ In addition to the custom service endpoint, this extension also contributes the 
 
 * [Google Play - Release Bundle](#google-play---release-bundle) - Allows automating the release of a new Android bundle to the Google Play store.
 
+* [Google Play - Status Update](#google-play---status-update) - Allows you to update the status of an app that was previously released to the selected track.
+
 ### Google Play - Release
 
 Allows you to release an update to your app on Google Play, and includes the following options:
@@ -140,7 +142,7 @@ Allows you to release an update to your app on Google Play, and includes the fol
     ![Update Metadata](images/update-metadata.png)
 
 8. **Metadata Root Directory** *(String, Required if visible)* - Root directory for metadata related files. Becomes available after enabling the `Update Metadata` option. Expects a format similar to fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) which is summarized below:
- 
+
 ```
 $(Specified Directory)
    └ $(languageCodes)
@@ -211,6 +213,24 @@ Allows you to increase the rollout percentage of an app that was previously rele
 
 3. **Rollout Fraction** *(String, Required)* - The new user fraction to increase the rollout to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users)
 
+### Google Play - Status Update
+
+Allows you to update the status of an app that was previously released to the selected track (e.g. `inProgress` -> `halted`), and includes the following options:
+
+![Status Update task](images/status-update-task.png)
+
+1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo. Please note that from the point of security it's preferrable to store it as [Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using [Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
+
+2. **Package Name** *(String, Required)* - The unique package identifier (e.g. com.foo.myapp) of the app you wish to update the status for.
+
+3. **Track** *(String, Required)* - The track you wish to update the status of your app from (e.g. `alpha`). This assumes that you previously released an update to this track, potentially using the [`Google Play - Release`](#google-play---release) task.
+
+4. **Status** *(String, Required)* - The status of the release you want to update to.
+
+    ![Status](images/status.png)
+
+5. **User Fraction** *(String, Optional)* - The new user fraction to update the rollout to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users, does not contain 0 and 1). If the input User Fraction is not specified, will maintain the current user fraction without updating (**Notice**: if you want to update the status to `inProgress` or `halted`, make sure current user fraction or the input User Fraction is specified).
+
 ### Google Play - Release Bundle
 
 Allows you to release an app bundle to Google Play, and includes the following options:
@@ -250,7 +270,7 @@ Allows you to release an app bundle to Google Play, and includes the following o
 10. **Rollout Fraction** *(String, Optional)* - The percentage of users the specified APK will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.
 
 11. **Metadata Root Directory** *(String, Required)* - Root directory for metadata related files. Becomes available after enabling the `Update Metadata` option. Expects a format similar to fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) which is summarized below:
- 
+
 ```
 $(Specified Directory)
    └ $(languageCodes)

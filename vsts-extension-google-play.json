@@ -6,7 +6,7 @@
     "publisher": "ms-vsclient",
     "description": "Provides tasks for continuous delivery to the Google Play Store from TFS/Team Services build or release definitions",
     "categories": [
-        "Build and release"
+        "Azure Pipelines"
     ],
     "targets": [
         {
@@ -46,6 +46,9 @@
         },
         {
             "path": "_build/Tasks/GooglePlayRolloutUpdate"
+        },
+        {
+            "path": "_build/Tasks/GooglePlayStatusUpdate"
         },
         {
             "path": "images",
@@ -109,6 +112,16 @@
             ],
             "properties": {
                 "name": "_build/Tasks/GooglePlayRolloutUpdate"
+            }
+        },
+        {
+            "id": "google-play-status-update",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "_build/Tasks/GooglePlayStatusUpdate"
             }
         },
         {
