@@ -131,7 +131,7 @@
             "label": "Rollout fraction",
             "defaultValue": "1.0",
             "required": false,
-            "helpMarkDown": "The percentage of users the specified APK will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.",
+            "helpMarkDown": "The percentage of users the specified APK will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task. To publish as a draft set value to -1.",
             "visibleRule": "rolloutToUserFraction = true"
         },
         {
