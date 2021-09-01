@@ -1,0 +1,22 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Bash@3
+  displayName: Linter
+  inputs:
+    targetType: inline
+    script: |
+      npm install eslint @typescript-eslint/parser@latest @typescript-eslint/eslint-plugin@latest --silent  --save-dev   
+      $BIN_PATH/eslint --ext .ts .
+  env:
+      BIN_PATH: node_modules/.bin
+  
