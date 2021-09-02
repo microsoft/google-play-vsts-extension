@@ -3,7 +3,7 @@ pool:
 
 steps:
 - task: Bash@3
-  displayName: Lintner
+  displayName: Linter
   inputs:
     targetType: inline
     script: |
