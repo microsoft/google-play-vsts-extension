@@ -1,6 +1,6 @@
 {
-  "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
-  "name": "GooglePlayRelease",
+  "id": "64f05ee7-e81b-4fdb-85a0-ad518819e0d4",
+  "name": "GooglePlayReleaseBundle",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -14,7 +14,7 @@
   ],
   "version": {
     "Major": "3",
-    "Minor": "189",
+    "Minor": "193",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -60,20 +60,19 @@
       "visibleRule": "authType = JsonFile"
     },
     {
-      "name": "apkFile",
-      "type": "filePath",
-      "label": "ms-resource:loc.input.label.apkFile",
-      "defaultValue": "",
+      "name": "applicationId",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.applicationId",
       "required": true,
-      "helpMarkDown": "ms-resource:loc.input.help.apkFile"
+      "helpMarkDown": "ms-resource:loc.input.help.applicationId"
     },
     {
-      "name": "shouldPickObbFile",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.shouldPickObbFile",
-      "defaultValue": false,
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.shouldPickObbFile"
+      "name": "bundleFile",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.bundleFile",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.bundleFile"
     },
     {
       "name": "track",
@@ -170,23 +169,6 @@
       "visibleRule": "shouldAttachMetadata = true"
     },
     {
-      "name": "updateStoreListing",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.updateStoreListing",
-      "defaultValue": false,
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.updateStoreListing"
-    },
-    {
-      "name": "shouldUploadApks",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.shouldUploadApks",
-      "defaultValue": true,
-      "required": false,
-      "visibleRule": "updateStoreListing = false",
-      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadApks"
-    },
-    {
       "name": "shouldUploadMappingFile",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.shouldUploadMappingFile",
@@ -201,25 +183,15 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.mappingFilePath",
-      "visibleRule": "shouldUploadApks = true && shouldUploadMappingFile = true"
+      "visibleRule": "shouldUploadMappingFile = true"
     },
     {
-      "name": "additionalApks",
-      "type": "multiLine",
-      "label": "ms-resource:loc.input.label.additionalApks",
+      "name": "releaseName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.releaseName",
       "defaultValue": "",
-      "groupName": "advanced",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.additionalApks"
-    },
-    {
-      "name": "shouldPickObbFileForAdditonalApks",
-      "type": "boolean",
-      "label": "ms-resource:loc.input.label.shouldPickObbFileForAdditonalApks",
-      "defaultValue": false,
-      "groupName": "advanced",
-      "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.shouldPickObbFileForAdditonalApks"
+      "helpMarkDown": "ms-resource:loc.input.help.releaseName"
     },
     {
       "name": "versionCodeFilterType",
@@ -254,6 +226,15 @@
       "required": true,
       "helpMarkDown": "ms-resource:loc.input.help.replaceExpression",
       "visibleRule": "versionCodeFilterType = expression"
+    },
+    {
+      "name": "changesNotSentForReview",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.changesNotSentForReview",
+      "groupName": "advanced",
+      "defaultValue": false,
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.changesNotSentForReview"
     }
   ],
   "execution": {
@@ -269,11 +250,10 @@
   },
   "messages": {
     "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
-    "FoundMainApk": "ms-resource:loc.messages.FoundMainApk",
-    "FoundMultiApks": "ms-resource:loc.messages.FoundMultiApks",
+    "FoundMainBundle": "ms-resource:loc.messages.FoundMainBundle",
     "FoundDeobfuscationFile": "ms-resource:loc.messages.FoundDeobfuscationFile",
     "GetNewEditAfterAuth": "ms-resource:loc.messages.GetNewEditAfterAuth",
-    "UploadApk": "ms-resource:loc.messages.UploadApk",
+    "UploadBundle": "ms-resource:loc.messages.UploadBundle",
     "UpdateTrack": "ms-resource:loc.messages.UpdateTrack",
     "AttachingMetadataToRelease": "ms-resource:loc.messages.AttachingMetadataToRelease",
     "AptPublishSucceed": "ms-resource:loc.messages.AptPublishSucceed",
@@ -291,13 +271,13 @@
     "RequestDetails": "ms-resource:loc.messages.RequestDetails",
     "CannotCreateTransaction": "ms-resource:loc.messages.CannotCreateTransaction",
     "CannotUploadApk": "ms-resource:loc.messages.CannotUploadApk",
+    "CannotUploadBundle": "ms-resource:loc.messages.CannotUploadBundle",
     "CannotUploadDeobfuscationFile": "ms-resource:loc.messages.CannotUploadDeobfuscationFile",
     "CannotDownloadTrack": "ms-resource:loc.messages.CannotDownloadTrack",
     "CannotUpdateTrack": "ms-resource:loc.messages.CannotUpdateTrack",
     "CannotReadChangeLog": "ms-resource:loc.messages.CannotReadChangeLog",
     "CannotCreateListing": "ms-resource:loc.messages.CannotCreateListing",
-    "IncorrectVersionCodeFilter": "ms-resource:loc.messages.IncorrectVersionCodeFilter",
-    "StoreListUpdateSucceed": "ms-resource:loc.messages.StoreListUpdateSucceed"
+    "IncorrectVersionCodeFilter": "ms-resource:loc.messages.IncorrectVersionCodeFilter"
   },
   "restrictions": {
     "commands": {
