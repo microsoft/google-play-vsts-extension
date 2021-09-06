@@ -1,6 +1,6 @@
 {
-  "id": "f8c97cf9-4e17-4244-b0fb-f540cea78153",
-  "name": "GooglePlayIncreaseRollout",
+  "id": "92e6c372-4193-44e5-9db7-58d7d253f4d8",
+  "name": "GooglePlayStatusUpdate",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -14,7 +14,7 @@
   ],
   "version": {
     "Major": "2",
-    "Minor": "189",
+    "Minor": "193",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -78,23 +78,33 @@
       }
     },
     {
+      "name": "status",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.status",
+      "defaultValue": "halted",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.status",
+      "options": {
+        "draft": "Draft",
+        "inProgress": "In progress",
+        "halted": "Halted",
+        "completed": "Completed"
+      }
+    },
+    {
       "name": "userFraction",
       "type": "string",
       "label": "ms-resource:loc.input.label.userFraction",
       "defaultValue": "",
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.userFraction"
+      "helpMarkDown": "ms-resource:loc.input.help.userFraction",
+      "visibleRule": "status = inProgress || status = halted"
     }
   ],
   "execution": {
     "Node10": {
-      "target": "google-play-rollout-update.js",
+      "target": "google-play-status-update.js",
       "argumentFormat": ""
-    },
-    "PowerShell": {
-      "target": "$(currentDirectory)\\google-play-rollout-update.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
     }
   },
   "messages": {
@@ -103,10 +113,13 @@
     "JsonKeyFileNotFound": "ms-resource:loc.messages.JsonKeyFileNotFound",
     "EndpointNotFound": "ms-resource:loc.messages.EndpointNotFound",
     "Authenticating": "ms-resource:loc.messages.Authenticating",
-    "GetTrackRolloutInfo": "ms-resource:loc.messages.GetTrackRolloutInfo",
+    "GetTrackInfo": "ms-resource:loc.messages.GetTrackInfo",
+    "EmptyReleases": "ms-resource:loc.messages.EmptyReleases",
+    "keepUserFrac": "ms-resource:loc.messages.keepUserFrac",
     "CurrentUserFrac": "ms-resource:loc.messages.CurrentUserFrac",
-    "RolloutFracUpdate": "ms-resource:loc.messages.RolloutFracUpdate",
-    "InProgressNotFound": "ms-resource:loc.messages.InProgressNotFound",
+    "UserFracSpecified": "ms-resource:loc.messages.UserFracSpecified",
+    "userFractionInvalid": "ms-resource:loc.messages.userFractionInvalid",
+    "StatusUpdating": "ms-resource:loc.messages.StatusUpdating",
     "Success": "ms-resource:loc.messages.Success",
     "Failure": "ms-resource:loc.messages.Failure"
   },

@@ -36,19 +36,19 @@
     },
     "files": [
         {
-            "path": "_build/Tasks/GooglePlayRelease"
+            "path": "_build/Tasks/GooglePlayReleaseV3"
         },
         {
-            "path": "_build/Tasks/GooglePlayReleaseBundle"
+            "path": "_build/Tasks/GooglePlayReleaseBundleV3"
         },
         {
-            "path": "_build/Tasks/GooglePlayPromote"
+            "path": "_build/Tasks/GooglePlayPromoteV2"
         },
         {
-            "path": "_build/Tasks/GooglePlayRolloutUpdate"
+            "path": "_build/Tasks/GooglePlayRolloutUpdateV3"
         },
         {
-            "path": "_build/Tasks/GooglePlayStatusUpdate"
+            "path": "_build/Tasks/GooglePlayStatusUpdateV2"
         },
         {
             "path": "images",
@@ -81,7 +81,7 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "_build/Tasks/GooglePlayRelease"
+                "name": "_build/Tasks/GooglePlayReleaseV3"
             }
         },
         {
@@ -91,7 +91,7 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "_build/Tasks/GooglePlayReleaseBundle"
+                "name": "_build/Tasks/GooglePlayReleaseBundleV3"
             }
         },
         {
@@ -101,7 +101,7 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "_build/Tasks/GooglePlayPromote"
+                "name": "_build/Tasks/GooglePlayPromoteV2"
             }
         },
         {
@@ -111,7 +111,7 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "_build/Tasks/GooglePlayRolloutUpdate"
+                "name": "_build/Tasks/GooglePlayRolloutUpdateV3"
             }
         },
         {
@@ -121,7 +121,7 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "_build/Tasks/GooglePlayStatusUpdate"
+                "name": "_build/Tasks/GooglePlayStatusUpdateV2"
             }
         },
         {
