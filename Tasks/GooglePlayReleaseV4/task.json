@@ -1,0 +1,304 @@
+{
+    "id": "3deb339f-705e-435d-b7d5-3ffcc8bdc542",
+    "name": "DSInputsTest",
+    "friendlyName": "Daniil Shmelevs Inputs Test",
+    "description": "Potential inputs configuration for google play release v4",
+    "author": "Microsoft Corporation",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "demands": [],
+    "version": {
+        "Major": "4",
+        "Minor": "193",
+        "Patch": "0"
+    },
+    "minimumAgentVersion": "2.182.1",
+    "instanceNameFormat": "Release $(apkFile) to $(track)",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced Options",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "authType",
+            "label": "Authentication method",
+            "defaultValue": "ServiceEndpoint",
+            "type": "pickList",
+            "helpMarkDown": "",
+            "options": {
+                "JsonFile": "JSON Auth File",
+                "ServiceEndpoint": "Service connection"
+            }
+        },
+        {
+            "name": "serviceEndpoint",
+            "aliases": [
+                "serviceConnection"
+            ],
+            "label": "Service connection",
+            "defaultValue": "",
+            "required": true,
+            "type": "connectedService:google-play",
+            "helpMarkDown": "Google Play service connection that is configured with your account credentials.",
+            "visibleRule": "authType = ServiceEndpoint"
+        },
+        {
+            "name": "serviceAccountKey",
+            "label": "JSON key path",
+            "defaultValue": "",
+            "required": true,
+            "type": "filePath",
+            "helpMarkDown": "The JSON file provided by Google Play that includes the service account's identity you wish to publish your APKs or AABs under.",
+            "visibleRule": "authType = JsonFile"
+        },
+        {
+            "name": "applicationId",
+            "label": "Application id (com.google.MyApp)",
+            "defaultValue": "",
+            "required": true,
+            "type": "string",
+            "helpMarkDown": "The application id of APK or AAB you want to release, e.g. com.company.MyApp. This is only required if you haven't specified any APKs or AABs associated with the application."
+        },
+        {
+            "name": "updateOnlyStoreListing",
+            "label": "Update only store listing",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "By default, the task will update the specified track and selected APK and AAB file(s) will be assigned to the related track. By selecting this option you can update only store listing."
+        },
+        {
+            "name": "bundleFile",
+            "label": "Main bundle path",
+            "defaultValue": "",
+            "type": "filePath",
+            "helpMarkDown": "Path to the main bundle file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.aab_ to match the first AAB file, in any directory.",
+            "visibleRule": "updateOnlyStoreListing = false"
+        },
+        {
+            "name": "additionalBundles",
+            "label": "Additional bundle path(s)",
+            "defaultValue": "",
+            "type": "multiLine",
+            "helpMarkDown": "Paths to additional bundle files you want to publish to the specified track (e.g. an x86 build). Wildcards can be used. For example, _\\*\\*/\\*.AAB_ to match all APK files, in any directory.",
+            "visibleRule": "updateOnlyStoreListing = false"
+        },
+        {
+            "name": "apkFile",
+            "label": "Main APK path",
+            "defaultValue": "",
+            "type": "filePath",
+            "helpMarkDown": "Path to the main APK file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory.",
+            "visibleRule": "updateOnlyStoreListing = false"
+        },
+        {
+            "name": "shouldPickObbFile",
+            "label": "Upload OBB for main APK",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Select this option to pick obb file for the main apk. If present in the parent directory, it will pick the first file with .obb extension, else it will pick from apk directory with expected format as main.<version code>.<package name>.obb",
+            "visibleRule": "updateOnlyStoreListing = false"
+        },
+        {
+            "name": "additionalApks",
+            "label": "Additional APK path(s)",
+            "defaultValue": "",
+            "type": "multiLine",
+            "helpMarkDown": "Paths to additional APK files you want to publish to the specified track (e.g. an x86 build). Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match all APK files, in any directory.",
+            "visibleRule": "updateOnlyStoreListing = false"
+        },
+        {
+            "name": "shouldPickObbFileForAdditonalApks",
+            "label": "Upload OBBs for additional APKs",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Select this option to pick obb file for the apk. If present in the parent directory, it will pick the first file with .obb extension, else it will pick from apk directory with expected format as main.<version code>.<package name>.obb",
+            "visibleRule": "updateOnlyStoreListing = false"
+        },
+        {
+            "name": "track",
+            "label": "Track",
+            "defaultValue": "internal",
+            "required": true,
+            "type": "pickList",
+            "helpMarkDown": "Track you want to publish the APK to.",
+            "visibleRule": "updateOnlyStoreListing = false",
+            "options": {
+                "internal": "Internal test",
+                "alpha": "Alpha",
+                "beta": "Beta",
+                "production": "Production"
+            },
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "shouldAttachMetadata",
+            "label": "Update metadata",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Select this option to update the metadata on your app release."
+        },
+        {
+            "name": "changeLogFile",
+            "label": "Release notes (file)",
+            "defaultValue": "",
+            "type": "filePath",
+            "helpMarkDown": "Path to the file specifying the release notes (change log) for the APK you are publishing.",
+            "visibleRule": "shouldAttachMetadata = false"
+        },
+        {
+            "name": "languageCode",
+            "label": "Language code",
+            "defaultValue": "en-US",
+            "type": "string",
+            "helpMarkDown": "An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_",
+            "visibleRule": "shouldAttachMetadata = false"
+        },
+        {
+            "name": "metadataRootPath",
+            "label": "Metadata root directory",
+            "defaultValue": "",
+            "required": true,
+            "type": "filePath",
+            "helpMarkDown": "The path to the metadata folder with the fastlane metadata structure.",
+            "visibleRule": "shouldAttachMetadata = true"
+        },
+        {
+            "name": "changeUpdatePriority",
+            "label": "Set in-app update priority",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Change the in-app update priority value.",
+            "visibleRule": "updateOnlyStoreListing = false",
+            "groupName": "advanced"
+        },
+        {
+            "name": "updatePriority",
+            "label": "In-app Update Priority",
+            "defaultValue": "0",
+            "type": "pickList",
+            "helpMarkDown": "Set a custom in-app update priority value to help keep your app up-to-date on your usersΓÇÖ devices. To determine priority, Google Play uses an integer value between 0 and 5, with 0 being the default, and 5 being the highest priority. Priority can only be set when rolling out a new release, and cannot be changed later.",
+            "visibleRule": "updateOnlyStoreListing = false && changeUpdatePriority = true",
+            "groupName": "advanced",
+            "options": {
+                "0": "0",
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4",
+                "5": "5"
+            }
+        },
+        {
+            "name": "rolloutToUserFraction",
+            "label": "Roll out release",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Roll out the release to a percentage of users.",
+            "visibleRule": "updateOnlyStoreListing = false",
+            "groupName": "advanced"
+        },
+        {
+            "name": "userFraction",
+            "label": "Rollout fraction",
+            "defaultValue": "1.0",
+            "type": "string",
+            "helpMarkDown": "The percentage of users the specified APK will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.",
+            "visibleRule": "updateOnlyStoreListing = false && rolloutToUserFraction = true",
+            "groupName": "advanced"
+        },
+        {
+            "name": "shouldUploadMappingFile",
+            "label": "Upload deobfuscation file (mapping.txt)",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Select this option to attach your proguard mapping.txt file to the primary APK.",
+            "visibleRule": "updateOnlyStoreListing = false",
+            "groupName": "advanced"
+        },
+        {
+            "name": "mappingFilePath",
+            "label": "Deobfuscation path",
+            "defaultValue": "",
+            "type": "filePath",
+            "helpMarkDown": "The path to the proguard mapping.txt file to upload.",
+            "visibleRule": "updateOnlyStoreListing = false && shouldUploadMappingFile = true",
+            "groupName": "advanced"
+        },
+        {
+            "name": "releaseName",
+            "type": "string",
+            "label": "Release name",
+            "defaultValue": "",
+            "helpMarkDown": "The release name is only for use in Play Console and won't be visible to users. To make your release easier to identify, add a release name that's meaningful to you."
+        },
+        {
+            "name": "changesNotSentForReview",
+            "type": "boolean",
+            "label": "Send changes to review",
+            "groupName": "advanced",
+            "defaultValue": false,
+            "helpMarkDown": "Select this option to send changes for review in GooglePlay Console. If changes're already sent for review automatically, you shouldn't select this option. [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters)."
+        },
+        {
+            "name": "versionCodeFilterType",
+            "label": "Replace version codes",
+            "defaultValue": "all",
+            "type": "pickList",
+            "helpMarkDown": "Specify version codes to replace in the selected track with the new APKs: all, the comma separated list, or a regular expression pattern.",
+            "visibleRule": "updateOnlyStoreListing = false",
+            "groupName": "advanced",
+            "options": {
+                "all": "All",
+                "list": "List",
+                "expression": "Regular expression"
+            }
+        },
+        {
+            "name": "replaceList",
+            "label": "Version code list",
+            "defaultValue": "",
+            "required": true,
+            "type": "string",
+            "helpMarkDown": "The comma separated list of APK version codes to be removed from the track with this deployment.",
+            "visibleRule": "updateOnlyStoreListing = false && versionCodeFilterType = list",
+            "groupName": "advanced"
+        },
+        {
+            "name": "replaceExpression",
+            "label": "Version code pattern",
+            "defaultValue": "",
+            "required": true,
+            "type": "string",
+            "helpMarkDown": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
+            "visibleRule": "updateOnlyStoreListing = false && versionCodeFilterType = expression",
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "GooglePlay.js",
+            "argumentFormat": ""
+        },
+        "PowerShell": {
+            "target": "$(currentDirectory)\\GooglePlay.ps1",
+            "argumentFormat": "",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
+        }
+    }
+}

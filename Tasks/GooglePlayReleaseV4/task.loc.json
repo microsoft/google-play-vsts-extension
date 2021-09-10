@@ -1,0 +1,305 @@
+{
+  "id": "3deb339f-705e-435d-b7d5-3ffcc8bdc542",
+  "name": "DSInputsTest",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "author": "Microsoft Corporation",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "4",
+    "Minor": "193",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "2.182.1",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "ms-resource:loc.group.displayName.advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "authType",
+      "label": "ms-resource:loc.input.label.authType",
+      "defaultValue": "ServiceEndpoint",
+      "type": "pickList",
+      "helpMarkDown": "",
+      "options": {
+        "JsonFile": "JSON Auth File",
+        "ServiceEndpoint": "Service connection"
+      }
+    },
+    {
+      "name": "serviceEndpoint",
+      "aliases": [
+        "serviceConnection"
+      ],
+      "label": "ms-resource:loc.input.label.serviceEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "type": "connectedService:google-play",
+      "helpMarkDown": "ms-resource:loc.input.help.serviceEndpoint",
+      "visibleRule": "authType = ServiceEndpoint"
+    },
+    {
+      "name": "serviceAccountKey",
+      "label": "ms-resource:loc.input.label.serviceAccountKey",
+      "defaultValue": "",
+      "required": true,
+      "type": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.serviceAccountKey",
+      "visibleRule": "authType = JsonFile"
+    },
+    {
+      "name": "applicationId",
+      "label": "ms-resource:loc.input.label.applicationId",
+      "defaultValue": "",
+      "required": true,
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.applicationId"
+    },
+    {
+      "name": "updateOnlyStoreListing",
+      "label": "ms-resource:loc.input.label.updateOnlyStoreListing",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.updateOnlyStoreListing"
+    },
+    {
+      "name": "bundleFile",
+      "label": "ms-resource:loc.input.label.bundleFile",
+      "defaultValue": "",
+      "type": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.bundleFile",
+      "visibleRule": "updateOnlyStoreListing = false"
+    },
+    {
+      "name": "additionalBundles",
+      "label": "ms-resource:loc.input.label.additionalBundles",
+      "defaultValue": "",
+      "type": "multiLine",
+      "helpMarkDown": "ms-resource:loc.input.help.additionalBundles",
+      "visibleRule": "updateOnlyStoreListing = false"
+    },
+    {
+      "name": "apkFile",
+      "label": "ms-resource:loc.input.label.apkFile",
+      "defaultValue": "",
+      "type": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.apkFile",
+      "visibleRule": "updateOnlyStoreListing = false"
+    },
+    {
+      "name": "shouldPickObbFile",
+      "label": "ms-resource:loc.input.label.shouldPickObbFile",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.shouldPickObbFile",
+      "visibleRule": "updateOnlyStoreListing = false"
+    },
+    {
+      "name": "additionalApks",
+      "label": "ms-resource:loc.input.label.additionalApks",
+      "defaultValue": "",
+      "type": "multiLine",
+      "helpMarkDown": "ms-resource:loc.input.help.additionalApks",
+      "visibleRule": "updateOnlyStoreListing = false"
+    },
+    {
+      "name": "shouldPickObbFileForAdditonalApks",
+      "label": "ms-resource:loc.input.label.shouldPickObbFileForAdditonalApks",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.shouldPickObbFileForAdditonalApks",
+      "visibleRule": "updateOnlyStoreListing = false"
+    },
+    {
+      "name": "track",
+      "label": "ms-resource:loc.input.label.track",
+      "defaultValue": "internal",
+      "required": true,
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.track",
+      "visibleRule": "updateOnlyStoreListing = false",
+      "options": {
+        "internal": "Internal test",
+        "alpha": "Alpha",
+        "beta": "Beta",
+        "production": "Production"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "shouldAttachMetadata",
+      "label": "ms-resource:loc.input.label.shouldAttachMetadata",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.shouldAttachMetadata"
+    },
+    {
+      "name": "changeLogFile",
+      "label": "ms-resource:loc.input.label.changeLogFile",
+      "defaultValue": "",
+      "type": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogFile",
+      "visibleRule": "shouldAttachMetadata = false"
+    },
+    {
+      "name": "languageCode",
+      "label": "ms-resource:loc.input.label.languageCode",
+      "defaultValue": "en-US",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.languageCode",
+      "visibleRule": "shouldAttachMetadata = false"
+    },
+    {
+      "name": "metadataRootPath",
+      "label": "ms-resource:loc.input.label.metadataRootPath",
+      "defaultValue": "",
+      "required": true,
+      "type": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.metadataRootPath",
+      "visibleRule": "shouldAttachMetadata = true"
+    },
+    {
+      "name": "changeUpdatePriority",
+      "label": "ms-resource:loc.input.label.changeUpdatePriority",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.changeUpdatePriority",
+      "visibleRule": "updateOnlyStoreListing = false",
+      "groupName": "advanced"
+    },
+    {
+      "name": "updatePriority",
+      "label": "ms-resource:loc.input.label.updatePriority",
+      "defaultValue": "0",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.updatePriority",
+      "visibleRule": "updateOnlyStoreListing = false && changeUpdatePriority = true",
+      "groupName": "advanced",
+      "options": {
+        "0": "0",
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5"
+      }
+    },
+    {
+      "name": "rolloutToUserFraction",
+      "label": "ms-resource:loc.input.label.rolloutToUserFraction",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.rolloutToUserFraction",
+      "visibleRule": "updateOnlyStoreListing = false",
+      "groupName": "advanced"
+    },
+    {
+      "name": "userFraction",
+      "label": "ms-resource:loc.input.label.userFraction",
+      "defaultValue": "1.0",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.userFraction",
+      "visibleRule": "updateOnlyStoreListing = false && rolloutToUserFraction = true",
+      "groupName": "advanced"
+    },
+    {
+      "name": "shouldUploadMappingFile",
+      "label": "ms-resource:loc.input.label.shouldUploadMappingFile",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadMappingFile",
+      "visibleRule": "updateOnlyStoreListing = false",
+      "groupName": "advanced"
+    },
+    {
+      "name": "mappingFilePath",
+      "label": "ms-resource:loc.input.label.mappingFilePath",
+      "defaultValue": "",
+      "type": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.mappingFilePath",
+      "visibleRule": "updateOnlyStoreListing = false && shouldUploadMappingFile = true",
+      "groupName": "advanced"
+    },
+    {
+      "name": "releaseName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.releaseName",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseName"
+    },
+    {
+      "name": "changesNotSentForReview",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.changesNotSentForReview",
+      "groupName": "advanced",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.changesNotSentForReview"
+    },
+    {
+      "name": "versionCodeFilterType",
+      "label": "ms-resource:loc.input.label.versionCodeFilterType",
+      "defaultValue": "all",
+      "type": "pickList",
+      "helpMarkDown": "ms-resource:loc.input.help.versionCodeFilterType",
+      "visibleRule": "updateOnlyStoreListing = false",
+      "groupName": "advanced",
+      "options": {
+        "all": "All",
+        "list": "List",
+        "expression": "Regular expression"
+      }
+    },
+    {
+      "name": "replaceList",
+      "label": "ms-resource:loc.input.label.replaceList",
+      "defaultValue": "",
+      "required": true,
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.replaceList",
+      "visibleRule": "updateOnlyStoreListing = false && versionCodeFilterType = list",
+      "groupName": "advanced"
+    },
+    {
+      "name": "replaceExpression",
+      "label": "ms-resource:loc.input.label.replaceExpression",
+      "defaultValue": "",
+      "required": true,
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.replaceExpression",
+      "visibleRule": "updateOnlyStoreListing = false && versionCodeFilterType = expression",
+      "groupName": "advanced"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "GooglePlay.js",
+      "argumentFormat": ""
+    },
+    "PowerShell": {
+      "target": "$(currentDirectory)\\GooglePlay.ps1",
+      "argumentFormat": "",
+      "workingDirectory": "$(currentDirectory)"
+    }
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  },
+  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+}
