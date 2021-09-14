@@ -68,9 +68,9 @@ async function run(): Promise<void> {
             throw new Error(tl.loc('MustProvideAdditionalApkIfAdditionalObb'));
         }
 
-        const bundleFileList: string[] = Array.from(new Set([mainBundleFile, ...additionalBundleFiles]));
+        const bundleFileList: string[] = getUniquePaths([mainBundleFile, ...additionalBundleFiles]);
         tl.debug(`Bundles: ${bundleFileList}`);
-        const apkFileList: string[] = Array.from(new Set([mainApkFile, ...additionalApkFiles]));
+        const apkFileList: string[] = getUniquePaths([mainApkFile, ...additionalApkFiles]);
         tl.debug(`APKs: ${apkFileList}`);
 
         const track: string = tl.getInput('track', true);
@@ -146,7 +146,7 @@ async function run(): Promise<void> {
         if (updateOnlyStoreListing) {
             tl.debug('Selected store listing update only -> skip APK/AAB reading');
         } else {
-            tl.debug(`Uploading ${apkFileList.length} APK(s) and ${bundleFileList} AAB(s).`);
+            tl.debug(`Uploading ${apkFileList.length} APK(s) and ${bundleFileList.length} AAB(s).`);
             requireTrackUpdate = true;
 
             for (const apkFile of apkFileList) {
@@ -378,6 +378,10 @@ function resolveGlobPath(path: string): string {
     }
 
     return [];
+}
+
+function getUniquePaths(paths: string[]): string[] {
+    return Array.from(new Set(paths)).filter((item) => item !== null);
 }
 
 function getVersionCodeListInput(): number[] {
