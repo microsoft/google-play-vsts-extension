@@ -1,8 +1,8 @@
 {
-    "id": "92e6c372-4193-44e5-9db7-58d7d253f4d8",
-    "name": "GooglePlayStatusUpdate",
-    "friendlyName": "Google Play - Status Update",
-    "description": "Update status of an app previously deployed to the Google Play Store",
+    "id": "cac019e6-e7da-4d7d-9c7b-90d0a647f951",
+    "name": "DSGooglePlayStatusUpdate",
+    "friendlyName": "DSs Google Play - Status Update",
+    "description": "DANIIL SHMELEVS TASK DON'T TOUCH",
     "author": "Microsoft Corporation",
     "category": "Deploy",
     "visibility": [
@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "2",
-        "Minor": "193",
+        "Minor": "1193",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",

@@ -1,8 +1,8 @@
 {
-    "id": "f8c97cf9-4e17-4244-b0fb-f540cea78153",
-    "name": "GooglePlayIncreaseRollout",
-    "friendlyName": "Google Play - Increase Rollout",
-    "description": "Increase the rollout fraction of an app previously deployed to the Google Play Store",
+    "id": "7f8b4f6d-8bb4-4701-a002-b1f1347415ac",
+    "name": "DSGooglePlayIncreaseRollout",
+    "friendlyName": "DSs Google Play - Increase Rollout",
+    "description": "DANIIL SHMELEVS TASK DON'T TOUCH",
     "author": "Microsoft Corporation",
     "category": "Deploy",
     "visibility": [
@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "2",
-        "Minor": "193",
+        "Minor": "1193",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",

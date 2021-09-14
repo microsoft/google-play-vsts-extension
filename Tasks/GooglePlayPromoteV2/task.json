@@ -1,8 +1,8 @@
 {
-    "id": "4dae1f76-29d3-482f-97d5-e3189a8347c2",
-    "name": "GooglePlayPromote",
-    "friendlyName": "Google Play - Promote",
-    "description": "Promote an app from one release track to another",
+    "id": "f35c1807-e4e5-4e38-8dfb-a826b0d4e326",
+    "name": "DSGooglePlayPromote",
+    "friendlyName": "DSs Google Play - Promote",
+    "description": "DANIIL SHMELEVS TASK DON'T TOUCH",
     "author": "Microsoft Corporation",
     "category": "Deploy",
     "visibility": [
@@ -14,7 +14,7 @@
     ],
     "version": {
         "Major": "3",
-        "Minor": "193",
+        "Minor": "1193",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",

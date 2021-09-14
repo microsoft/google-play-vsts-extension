@@ -1,6 +1,6 @@
 {
-  "loc.friendlyName": "Daniil Shmelevs Inputs Test",
-  "loc.description": "Potential inputs configuration for google play release v4",
+  "loc.friendlyName": "DSs Daniil Shmelevs Inputs Test",
+  "loc.description": "DANIIL SHMELEVS TASK DON'T TOUCH",
   "loc.instanceNameFormat": "Release $(apkFile) to $(track)",
   "loc.group.displayName.advanced": "Advanced Options",
   "loc.input.label.authType": "Authentication method",

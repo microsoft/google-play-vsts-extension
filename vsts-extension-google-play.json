@@ -1,9 +1,9 @@
 {
-    "manifestVersion": 1.0,
-    "id": "google-play",
-    "name": "Google Play",
+    "manifestVersion": 1,
+    "id": "ds-google-play",
+    "name": "Daniil Shmelevs Google Play",
     "version": "3.192.1",
-    "publisher": "ms-vsclient",
+    "publisher": "v-dshmelev",
     "description": "Provides tasks for continuous delivery to the Google Play Store from TFS/Team Services build or release definitions",
     "categories": [
         "Azure Pipelines"
