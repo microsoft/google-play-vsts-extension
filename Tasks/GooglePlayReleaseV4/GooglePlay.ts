@@ -341,27 +341,6 @@ function getAdditionalFilesPaths(additionalPatterns: string[]): string[] {
 }
 
 /**
- * @param mainPattern main file pattern; picks up a single file
- * @param additionalFilesPatterns additional files patterns; may pick up multiple files for each pattern
- * @returns All resolved file paths
- */
-function getPaths(mainPattern: string, additionalFilesPatterns: string[]): string[] {
-    const paths = new Set<string>();
-
-    if (mainPattern) {
-        paths.add(resolveGlobPath(mainPattern));
-    }
-
-    if (additionalFilesPatterns && additionalFilesPatterns.length > 0) {
-        for (const additionalPattern of additionalFilesPatterns) {
-            resolveGlobPaths(additionalPattern).forEach((path) => paths.add(path));
-        }
-    }
-
-    return Array.from(paths);
-}
-
-/**
  * Get the appropriate file from the provided pattern
  * @param path The minimatch pattern of glob to be resolved to file path
  * @returns path path of the file resolved by glob. Returns null if not found or if `path` argument was not provided
