@@ -4,7 +4,7 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import * as glob from 'glob';
 
 import * as googleutil from './googleutil';
-import * as metadataHelper from './metedataHelper';
+import * as metadataHelper from './metadataHelper';
 
 import * as googleapis from 'googleapis';
 import { androidpublisher_v3 as pub3 } from 'googleapis';
