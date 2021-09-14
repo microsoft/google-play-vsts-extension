@@ -233,19 +233,20 @@
             "groupName": "advanced"
         },
         {
-            "name": "releaseName",
-            "type": "string",
-            "label": "Release name",
-            "defaultValue": "",
-            "helpMarkDown": "The release name is only for use in Play Console and won't be visible to users. To make your release easier to identify, add a release name that's meaningful to you."
-        },
-        {
             "name": "changesNotSentForReview",
             "type": "boolean",
             "label": "Send changes to review",
             "groupName": "advanced",
             "defaultValue": false,
             "helpMarkDown": "Select this option to send changes for review in GooglePlay Console. If changes're already sent for review automatically, you shouldn't select this option. [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters)."
+        },
+        {
+            "name": "releaseName",
+            "type": "string",
+            "label": "Release name",
+            "groupName": "advanced",
+            "defaultValue": "",
+            "helpMarkDown": "The release name is only for use in Play Console and won't be visible to users. To make your release easier to identify, add a release name that's meaningful to you."
         },
         {
             "name": "versionCodeFilterType",
