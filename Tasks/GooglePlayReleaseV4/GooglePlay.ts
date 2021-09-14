@@ -68,12 +68,10 @@ async function run(): Promise<void> {
             throw new Error(tl.loc('MustProvideAdditionalApkIfAdditionalObb'));
         }
 
-        // TODO
-        // const bundleFileList: string[] = getPaths(mainBundlePattern, additionalBundlePatterns);
-        // const apkFileList: string[] = getPaths(mainApkPattern, additionalApkPatterns);
-
-        const bundleFileList: string[] = [mainBundleFile, ...additionalBundleFiles];
-        const apkFileList: string[] = getPaths(mainApkPattern, additionalApkPatterns);
+        const bundleFileList: string[] = Array.from(new Set([mainBundleFile, ...additionalBundleFiles]));
+        tl.debug(`Bundles: ${bundleFileList}`);
+        const apkFileList: string[] = Array.from(new Set([mainApkFile, ...additionalApkFiles]));
+        tl.debug(`APKs: ${apkFileList}`);
 
         const track: string = tl.getInput('track', true);
 
