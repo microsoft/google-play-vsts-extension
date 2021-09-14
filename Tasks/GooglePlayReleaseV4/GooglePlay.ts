@@ -73,6 +73,10 @@ async function run(): Promise<void> {
         const apkFileList: string[] = getUniquePaths([mainApkFile, ...additionalApkFiles]);
         tl.debug(`APKs: ${apkFileList}`);
 
+        if (!updateOnlyStoreListing && bundleFileList.length === 0 && apkFileList.length === 0) {
+            throw new Error(tl.loc('MustProvideApkOrAab'));
+        }
+
         const track: string = tl.getInput('track', true);
 
         const shouldAttachMetadata: boolean = tl.getBoolInput('shouldAttachMetadata', false);
