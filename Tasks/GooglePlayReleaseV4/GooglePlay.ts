@@ -157,20 +157,29 @@ async function run(): Promise<void> {
                 tl.debug(`Uploading APK ${apkFile}`);
                 const apk: pub3.Schema$Apk = await googleutil.addApk(edits, packageName, apkFile);
                 tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}`);
-                if (
-                    shouldPickObbForApk(apkFile, mainApkFile, shouldPickObbForMainApk, shouldPickObbForAdditionalApks)
-                    && getObbFile(apkFile, packageName, apk.versionCode) !== null
-                ) {
-                    const obb: pub3.Schema$ExpansionFilesUploadResponse = await googleutil.addObb(
-                        edits,
-                        packageName,
-                        getObbFile(apkFile, packageName, apk.versionCode),
-                        apk.versionCode,
-                        'main'
-                    );
 
-                    if (obb.expansionFile.fileSize !== null && Number(obb.expansionFile.fileSize) !== 0) {
-                        console.log(`Uploaded Obb file with version code ${apk.versionCode} and size ${obb.expansionFile.fileSize}`);
+                const shouldPickObbForThisApk: boolean = shouldPickObbForApk(
+                    apkFile,
+                    mainApkFile,
+                    shouldPickObbForMainApk,
+                    shouldPickObbForAdditionalApks
+                );
+
+                if (shouldPickObbForThisApk) {
+                    const obbFile: string | null = getObbFile(apkFile, packageName, apk.versionCode);
+
+                    if (obbFile !== null) {
+                        const obb: pub3.Schema$ExpansionFilesUploadResponse | null = await googleutil.addObb(
+                            edits,
+                            packageName,
+                            obbFile,
+                            apk.versionCode,
+                            'main'
+                        );
+
+                        if (obb.expansionFile.fileSize !== null && Number(obb.expansionFile.fileSize) !== 0) {
+                            console.log(`Uploaded Obb file with version code ${apk.versionCode} and size ${obb.expansionFile.fileSize}`);
+                        }
                     }
                 }
                 versionCodes.push(apk.versionCode);
@@ -448,9 +457,8 @@ function getObbFile(apkPath: string, packageName: string, versionCode: number): 
         return path.join(currentDirectory, obbPathFileInCurrent);
     } else {
         tl.debug(`No Obb found for ${apkPath}, skipping upload`);
+        return null;
     }
-
-    return obbPathFileInCurrent;
 }
 
 run();
