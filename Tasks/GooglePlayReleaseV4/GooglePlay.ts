@@ -59,7 +59,7 @@ async function run(): Promise<void> {
         const additionalApkFiles: string[] = getAdditionalFilesPaths(additionalApkPatterns);
 
         const shouldPickObbForMainApk: boolean = tl.getBoolInput('shouldPickObbFile', false);
-        const shouldPickObbForAdditionalApks: boolean = tl.getBoolInput('shouldPickObbFile', false);
+        const shouldPickObbForAdditionalApks: boolean = tl.getBoolInput('shouldPickObbFileForAdditonalApks', false);
 
         if (shouldPickObbForMainApk && !mainApkFile) {
             throw new Error(tl.loc('MustProvideMainApkIfMainObb'));
