@@ -103,7 +103,7 @@ async function run(): Promise<void> {
         const uploadMappingFile: boolean = tl.getBoolInput('shouldUploadMappingFile', false);
         const mappingFilePattern: string = tl.getPathInput('mappingFilePath', false);
 
-        const sendChangesToReview: boolean = tl.getBoolInput('changesNotSentForReview');
+        const changesNotSentForReview: boolean = tl.getBoolInput('changesNotSentForReview');
 
         const releaseName: string = tl.getInput('releaseName', false);
 
@@ -242,7 +242,7 @@ async function run(): Promise<void> {
         }
 
         tl.debug('Committing the edit transaction in Google Play.');
-        await edits.commit({ changesNotSentForReview: sendChangesToReview });
+        await edits.commit({ changesNotSentForReview });
 
         console.log(tl.loc('AptPublishSucceed'));
         console.log(tl.loc('TrackInfo', track));
