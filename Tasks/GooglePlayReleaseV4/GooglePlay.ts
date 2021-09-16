@@ -150,8 +150,18 @@ async function run(): Promise<void> {
         if (updateOnlyStoreListing) {
             tl.debug('Selected store listing update only -> skip APK/AAB reading');
         } else {
-            tl.debug(`Uploading ${apkFileList.length} APK(s) and ${bundleFileList.length} AAB(s).`);
             requireTrackUpdate = true;
+
+            tl.debug(`Uploading ${bundleFileList.length} AAB(s).`);
+
+            for (const bundleFile of bundleFileList) {
+                tl.debug(`Uploading bundle ${bundleFile}`);
+                const bundle: pub3.Schema$Bundle = await googleutil.addBundle(edits, packageName, bundleFile);
+                tl.debug(`Uploaded ${bundleFile} with the version code ${bundle.versionCode}`);
+                versionCodes.push(bundle.versionCode);
+            }
+
+            tl.debug(`Uploading ${apkFileList.length} APK(s).`);
 
             for (const apkFile of apkFileList) {
                 tl.debug(`Uploading APK ${apkFile}`);
@@ -183,13 +193,6 @@ async function run(): Promise<void> {
                     }
                 }
                 versionCodes.push(apk.versionCode);
-            }
-
-            for (const bundleFile of bundleFileList) {
-                tl.debug(`Uploading bundle ${bundleFile}`);
-                const bundle: pub3.Schema$Bundle = await googleutil.addBundle(edits, packageName, bundleFile);
-                tl.debug(`Uploaded ${bundleFile} with the version code ${bundle.versionCode}`);
-                versionCodes.push(bundle.versionCode);
             }
 
             if (versionCodes.length > 0 && uploadMappingFile) {
