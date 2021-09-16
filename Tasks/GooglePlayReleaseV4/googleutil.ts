@@ -194,7 +194,7 @@ export async function addBundle(edits: pub3.Resource$Edits, packageName: string,
  * Assumes authorized
  * @param packageName unique android package name (com.android.etc)
  * @param obbFile path to obb file
- * @param obbVersionCode version code of the corresponding apk
+ * @param apkVersionCode version code of the corresponding apk
  * @param obbFileType type of obb to be uploaded (main/patch)
  * @returns ObbResponse A promise that will return result from uploading an obb
  *                          { expansionFile: { referencesVersion: number, fileSize: number } }
@@ -203,7 +203,7 @@ export async function addObb(
     edits: pub3.Resource$Edits,
     packageName: string,
     obbFile: string,
-    obbVersionCode: number,
+    apkVersionCode: number,
     obbFileType: string
 ): Promise<pub3.Schema$ExpansionFilesUploadResponse> {
     const requestParameters: pub3.Params$Resource$Edits$Expansionfiles$Upload = {
@@ -212,7 +212,7 @@ export async function addObb(
             body: fs.createReadStream(obbFile),
             mimeType: 'application/octet-stream'
         },
-        apkVersionCode: obbVersionCode,
+        apkVersionCode: apkVersionCode,
         expansionFileType: obbFileType
     };
 
@@ -233,7 +233,7 @@ export async function addObb(
  * Assumes authorized
  * @param mappingFilePath the path to the file to upload
  * @param packageName unique android package name (com.android.etc)
- * @param apkVersionCode version code of uploaded APK
+ * @param versionCode version code of uploaded APK or AAB
  * @returns deobfuscationFiles A promise that will return result from uploading a deobfuscation file
  *                          { deobfuscationFile: { symbolType: string } }
  */
@@ -241,12 +241,12 @@ export async function uploadDeobfuscation(
     edits: pub3.Resource$Edits,
     mappingFilePath: string,
     packageName: string,
-    apkVersionCode: number
+    versionCode: number
 ): Promise<pub3.Schema$DeobfuscationFilesUploadResponse> {
     const requestParameters: pub3.Params$Resource$Edits$Deobfuscationfiles$Upload = {
         deobfuscationFileType: 'proguard',
         packageName: packageName,
-        apkVersionCode: apkVersionCode,
+        apkVersionCode: versionCode,
         media: {
             body: fs.createReadStream(mappingFilePath),
             mimeType: ''

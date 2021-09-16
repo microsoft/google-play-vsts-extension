@@ -5,9 +5,9 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { androidpublisher_v3 as pub3 } from 'googleapis';
 
 /**
- * Uploads change log files if specified for all the apk version codes in the update
+ * Uploads change log files if specified for all the version codes in the update
  * @param changelogFile
- * @param apkVersionCodes
+ * @param versionCodes
  * @returns nothing
  */
 export async function getCommonReleaseNotes(languageCode: string, changelogFile: string): Promise<pub3.Schema$LocalizedText | null> {
@@ -45,13 +45,13 @@ function getChangelog(changelogFile: string): string {
 }
 
 /**
- * Adds all release notes found in directory to an edit. Pulls version code from file name. Failing this, assumes the global version code inferred from apk
+ * Adds all release notes found in directory to an edit. Pulls version code from file name.
  * Assumes authorized
  * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
  * @param {string} directory Directory with a changesogs folder where release notes can be found.
  * @returns nothing
  */
-async function addAllReleaseNotes(apkVersionCodes: number[], languageCode: string, directory: string): Promise<pub3.Schema$LocalizedText[]> {
+async function addAllReleaseNotes(versionCodes: number[], languageCode: string, directory: string): Promise<pub3.Schema$LocalizedText[]> {
     const changelogDir: string = path.join(directory, 'changelogs');
 
     const changelogs: string[] = filterDirectoryContents(changelogDir, stat => stat.isFile());
@@ -64,7 +64,7 @@ async function addAllReleaseNotes(apkVersionCodes: number[], languageCode: strin
     for (const changelogFile of changelogs) {
         const changelogName: string = path.basename(changelogFile, path.extname(changelogFile));
         const changelogVersion: number = parseInt(changelogName, 10);
-        if (!isNaN(changelogVersion) && (apkVersionCodes.indexOf(changelogVersion) !== -1)) {
+        if (!isNaN(changelogVersion) && (versionCodes.indexOf(changelogVersion) !== -1)) {
             const fullChangelogPath: string = path.join(changelogDir, changelogFile);
 
             console.log(tl.loc('AppendChangelog', fullChangelogPath));
@@ -135,7 +135,7 @@ function filterDirectoryContents(directory: string, filter: (stats: tl.FsStats) 
  * @param {string} metadataRootDirectory Path to the folder where the Fastlane metadata structure is found. eg the folders under this directory should be the language codes
  * @returns nothing
  */
-export async function addMetadata(edits: pub3.Resource$Edits, apkVersionCodes: number[], metadataRootDirectory: string): Promise<pub3.Schema$LocalizedText[]> {
+export async function addMetadata(edits: pub3.Resource$Edits, versionCodes: number[], metadataRootDirectory: string): Promise<pub3.Schema$LocalizedText[]> {
     const metadataLanguageCodes: string[] = filterDirectoryContents(metadataRootDirectory, stat => stat.isDirectory());
     tl.debug(`Found language codes: ${metadataLanguageCodes}`);
 
@@ -143,8 +143,8 @@ export async function addMetadata(edits: pub3.Resource$Edits, apkVersionCodes: n
     for (const languageCode of metadataLanguageCodes) {
         const metadataDirectory: string = path.join(metadataRootDirectory, languageCode);
 
-        tl.debug(`Uploading metadata from ${metadataDirectory} for language code ${languageCode} and version codes ${apkVersionCodes}`);
-        const releaseNotesForLanguage = await uploadMetadataWithLanguageCode(edits, apkVersionCodes, languageCode, metadataDirectory);
+        tl.debug(`Uploading metadata from ${metadataDirectory} for language code ${languageCode} and version codes ${versionCodes}`);
+        const releaseNotesForLanguage = await uploadMetadataWithLanguageCode(edits, versionCodes, languageCode, metadataDirectory);
         allReleaseNotes = allReleaseNotes.concat(releaseNotesForLanguage);
     }
 
@@ -159,14 +159,14 @@ export async function addMetadata(edits: pub3.Resource$Edits, apkVersionCodes: n
  * @param {string} directory Directory where updated listing details can be found.
  * @returns nothing
  */
-async function uploadMetadataWithLanguageCode(edits: pub3.Resource$Edits, apkVersionCodes: number[], languageCode: string, directory: string): Promise<pub3.Schema$LocalizedText[]> {
+async function uploadMetadataWithLanguageCode(edits: pub3.Resource$Edits, versionCodes: number[], languageCode: string, directory: string): Promise<pub3.Schema$LocalizedText[]> {
     console.log(tl.loc('UploadingMetadataForLanguage', directory, languageCode));
 
     tl.debug(`Adding localized store listing for language code ${languageCode} from ${directory}`);
     await addLanguageListing(edits, languageCode, directory);
 
     tl.debug(`Uploading change logs for language code ${languageCode} from ${directory}`);
-    const releaseNotes: pub3.Schema$LocalizedText[] = await addAllReleaseNotes(apkVersionCodes, languageCode, directory);
+    const releaseNotes: pub3.Schema$LocalizedText[] = await addAllReleaseNotes(versionCodes, languageCode, directory);
 
     tl.debug(`Uploading images for language code ${languageCode} from ${directory}`);
     await attachImages(edits, languageCode, directory);
