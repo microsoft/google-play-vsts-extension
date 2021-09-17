@@ -183,9 +183,9 @@ export async function addBundle(edits: pub3.Resource$Edits, packageName: string,
         tl.debug('Returned: ' + JSON.stringify(res));
         return res.data;
     } catch (e) {
-        tl.debug(`Failed to upload Bundle ${apkFile}`);
+        tl.debug(`Failed to upload APK ${apkFile}`);
         tl.debug(e);
-        throw new Error(tl.loc('CannotUploadBundle', apkFile, e));
+        throw new Error(tl.loc('CannotUploadAPK', apkFile, e));
     }
 }
 
