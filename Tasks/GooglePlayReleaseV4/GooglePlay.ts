@@ -101,7 +101,7 @@ async function run(): Promise<void> {
         const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
 
         const uploadMappingFile: boolean = tl.getBoolInput('shouldUploadMappingFile', false);
-        const mappingFilePattern: string = tl.getPathInput('mappingFilePath', false);
+        const mappingFilePatterns: string[] = tl.getDelimitedInput('mappingFilePaths', '\n');
 
         const changesNotSentForReview: boolean = tl.getBoolInput('changesNotSentForReview');
 
@@ -146,6 +146,8 @@ async function run(): Promise<void> {
 
         let requireTrackUpdate = false;
         const versionCodes: number[] = [];
+        let mainBundleVersionCode;
+        let mainApkVersionCode;
 
         if (updateOnlyStoreListing) {
             tl.debug('Selected store listing update only -> skip APK/AAB reading');
@@ -159,6 +161,10 @@ async function run(): Promise<void> {
                 const bundle: pub3.Schema$Bundle = await googleutil.addBundle(edits, packageName, bundleFile);
                 tl.debug(`Uploaded ${bundleFile} with the version code ${bundle.versionCode}`);
                 versionCodes.push(bundle.versionCode);
+
+                if (bundleFile === mainBundleFile) {
+                    mainBundleVersionCode = bundle.versionCode;
+                }
             }
 
             tl.debug(`Uploading ${apkFileList.length} APK(s).`);
@@ -193,17 +199,29 @@ async function run(): Promise<void> {
                     }
                 }
                 versionCodes.push(apk.versionCode);
+
+                if (apkFile === mainApkFile) {
+                    mainApkVersionCode = apk.versionCode;
+                }
             }
 
             if (versionCodes.length > 0 && uploadMappingFile) {
-                tl.debug(`Mapping file pattern: ${mappingFilePattern}`);
+                tl.debug(`Mapping file patterns: ${mappingFilePatterns}`);
 
-                const mappingFilePath = resolveGlobPath(mappingFilePattern);
-                tl.checkPath(mappingFilePath, 'mappingFilePath');
-                console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
-                tl.debug(`Uploading mapping file ${mappingFilePath}`);
-                await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, versionCodes[0]);
-                tl.debug(`Uploaded ${mappingFilePath} for APK ${mainApkFile}`);
+                const mappingFilesAndVersionCodes: Map<number, string> = getMappingFilesAndVersionCodes(
+                    mappingFilePatterns,
+                    versionCodes,
+                    mainBundleVersionCode,
+                    mainApkVersionCode
+                );
+
+                for (const [versionCode, mappingFilePath] of mappingFilesAndVersionCodes) {
+                    tl.checkPath(mappingFilePath, 'Mapping file path');
+                    console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
+                    tl.debug(`Uploading mapping file ${mappingFilePath}`);
+                    await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, versionCode);
+                    tl.debug(`Uploaded ${mappingFilePath} for version code ${versionCode}`);
+                }
             }
         }
 
@@ -462,6 +480,81 @@ function getObbFile(apkPath: string, packageName: string, versionCode: number): 
         tl.debug(`No Obb found for ${apkPath}, skipping upload`);
         return null;
     }
+}
+
+/**
+ * Extracts version codes and mapping file paths from mappingFilePaths input.
+ * There are two ways to specify mapping file path in this input:
+ * 
+ * 1. Specific version code.
+ * 
+ * Syntax: `$(versionCode): $(mappingPath)`.
+ * Examples:
+ * 
+ * `5674: /path/to/mapping.txt` - this will pick up mapping.txt for apk/aab with version code 5674
+ * 
+ * `5675: /glob/path/to/*.txt` - this will pick up a single .txt file with glob pattern
+ * 
+ * 2. Any version codes. These will be matched with aabs/apks in this order:
+ *    main bundle, main apk, additional bundles, additional apks.
+ * 
+ * Syntax: `$(mappingPath)`
+ * Examples:
+ * 
+ * `/path/to/mapping.txt` - this will associate mapping.txt with the main bundle, unless another mapping.txt was already associated with it using option #1
+ * 
+ * `/path/to/*.txt` - this will associed all .txt files in this folder with the aabs/apks
+ * 
+ * @param mappingFilePatterns `mappingFilePaths` input value
+ * @param versionCodes version codes of aabs/apks that have been uploaded
+ * @returns one-to-one mapping from aab/apk version code to the mapping file path corresponding to this version code
+ */
+function getMappingFilesAndVersionCodes(
+    mappingFilePatterns: string[],
+    versionCodes: number[],
+    mainBundleVersionCode: number,
+    mainApkVersionCode: number
+): Map<number, string> {
+    const result = new Map<number, string>();
+
+    // Handle mapping files for specific version codes (option #1)
+
+    const specificVersionCodePatterns: string[] = mappingFilePatterns.filter((pattern) => pattern.includes(':'));
+
+    for (const specificPattern of specificVersionCodePatterns) {
+        const [versionCodeString, mappingFilePattern] = specificPattern.split(':');
+        const versionCode = Number(versionCodeString.trim());
+        const mappingFilePath = resolveGlobPath(mappingFilePattern.trim());
+        result.set(versionCode, mappingFilePath);
+    }
+
+    // Handle the rest of the mapping files (option #2)
+    
+    const additionalVersionCodes: number[] = versionCodes.filter(
+        (versionCode) => versionCode !== mainBundleVersionCode && versionCode !== mainApkVersionCode
+    );
+    const versionCodesInCorrectOrder: number[] = [
+        mainBundleVersionCode,
+        mainApkVersionCode,
+        ...additionalVersionCodes
+    ];
+    const remainingVersionCodesInCorrectOrder: number[] = versionCodesInCorrectOrder.filter(
+        (versionCode) => !result.has(versionCode)
+    );
+
+    const restOfThePatterns: string[] = mappingFilePatterns.filter((pattern) => !pattern.includes(':'));
+
+    const mappingFilePaths: string[] = [];
+    for (const mappingFilePattern in restOfThePatterns) {
+        mappingFilePaths.push(...resolveGlobPaths(mappingFilePattern));
+    }
+
+    for (const mappingFilePath of mappingFilePaths) {
+        const correspondingVersionCode: number = remainingVersionCodesInCorrectOrder.shift();
+        result.set(correspondingVersionCode, mappingFilePath);
+    }
+
+    return result;
 }
 
 run();

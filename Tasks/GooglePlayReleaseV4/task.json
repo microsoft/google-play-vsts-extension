@@ -224,11 +224,11 @@
             "groupName": "advanced"
         },
         {
-            "name": "mappingFilePath",
-            "label": "Deobfuscation path",
+            "name": "mappingFilePaths",
+            "label": "Deobfuscation paths",
             "defaultValue": "",
-            "type": "filePath",
-            "helpMarkDown": "The path to the proguard mapping.txt file to upload.",
+            "type": "multiLine",
+            "helpMarkDown": "The paths to the proguard mapping.txt files to upload. Glob patterns are supported. If you want to specify mapping file for a specific version code, use this syntax: `$(VersionCode): /path/to/mapping.txt`. If you specify a path without version code, the corresponding version code will be picked up from aab/apk in this order: main aab, main apk, additional aabs, additional apks.",
             "visibleRule": "updateOnlyStoreListing = false && shouldUploadMappingFile = true",
             "groupName": "advanced"
         },
