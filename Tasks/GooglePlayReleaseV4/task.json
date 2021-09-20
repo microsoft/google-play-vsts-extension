@@ -215,11 +215,11 @@
             "groupName": "advanced"
         },
         {
-            "name": "shouldUploadMappingFile",
-            "label": "Upload deobfuscation file (mapping.txt)",
+            "name": "shouldUploadMappingFiles",
+            "label": "Upload deobfuscation files (mapping.txt)",
             "defaultValue": false,
             "type": "boolean",
-            "helpMarkDown": "Select this option to attach your proguard mapping.txt file to the primary APK.",
+            "helpMarkDown": "Select this option to attach your proguard mapping.txt files to your AABs/APKs.",
             "visibleRule": "updateOnlyStoreListing = false",
             "groupName": "advanced"
         },

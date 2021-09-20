@@ -100,7 +100,7 @@ async function run(): Promise<void> {
         const userFractionSupplied: boolean = tl.getBoolInput('rolloutToUserFraction');
         const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
 
-        const uploadMappingFile: boolean = tl.getBoolInput('shouldUploadMappingFile', false);
+        const uploadMappingFiles: boolean = tl.getBoolInput('shouldUploadMappingFiles', false);
         const mappingFilePatterns: string[] = tl.getDelimitedInput('mappingFilePaths', '\n');
 
         const changesNotSentForReview: boolean = tl.getBoolInput('changesNotSentForReview');
@@ -205,7 +205,7 @@ async function run(): Promise<void> {
                 }
             }
 
-            if (versionCodes.length > 0 && uploadMappingFile) {
+            if (versionCodes.length > 0 && uploadMappingFiles) {
                 tl.debug(`Mapping file patterns: ${mappingFilePatterns}`);
 
                 const mappingFilesAndVersionCodes: Map<number, string> = getMappingFilesAndVersionCodes(
