@@ -164,6 +164,7 @@ async function run(): Promise<void> {
 
                 if (bundleFile === mainBundleFile) {
                     mainBundleVersionCode = bundle.versionCode;
+                    tl.debug(`Found main bundle version code: ${mainBundleVersionCode}`);
                 }
             }
 
@@ -202,6 +203,7 @@ async function run(): Promise<void> {
 
                 if (apkFile === mainApkFile) {
                     mainApkVersionCode = apk.versionCode;
+                    tl.debug(`Found main apk version code: ${mainApkVersionCode}`);
                 }
             }
 
@@ -214,8 +216,6 @@ async function run(): Promise<void> {
                     mainBundleVersionCode,
                     mainApkVersionCode
                 );
-
-                tl.debug(`Mapping files and version codes: ${mappingFilesAndVersionCodes}`);
 
                 for (const [versionCode, mappingFilePath] of mappingFilesAndVersionCodes) {
                     tl.checkPath(mappingFilePath, 'Mapping file path');
@@ -552,6 +552,11 @@ function getMappingFilesAndVersionCodes(
     }
 
     for (const mappingFilePath of mappingFilePaths) {
+        // Number of matching mapping file paths may be greater than the number of version codes provided
+        if (remainingVersionCodesInCorrectOrder.length === 0) {
+            break;
+        }
+
         const correspondingVersionCode: number = remainingVersionCodesInCorrectOrder.shift();
         result.set(correspondingVersionCode, mappingFilePath);
     }
