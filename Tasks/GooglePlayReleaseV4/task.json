@@ -63,7 +63,7 @@
             "defaultValue": "",
             "required": true,
             "type": "string",
-            "helpMarkDown": "The application id of APK or AAB you want to release, e.g. com.company.MyApp. This is only required if you haven't specified any APKs or AABs associated with the application."
+            "helpMarkDown": "The application id of APK or AAB you want to release, e.g. com.company.MyApp."
         },
         {
             "name": "updateOnlyStoreListing",
@@ -85,7 +85,7 @@
             "label": "Additional bundle path(s)",
             "defaultValue": "",
             "type": "multiLine",
-            "helpMarkDown": "Paths to additional bundle files you want to publish to the specified track (e.g. an x86 build). Wildcards can be used. For example, _\\*\\*/\\*.AAB_ to match all APK files, in any directory.",
+            "helpMarkDown": "Paths to additional bundle files you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.AAB_ to match all AAB files, in any directory.",
             "visibleRule": "updateOnlyStoreListing = false"
         },
         {
@@ -101,7 +101,7 @@
             "label": "Upload OBB for main APK",
             "defaultValue": false,
             "type": "boolean",
-            "helpMarkDown": "Select this option to pick obb file for the main apk. If present in the parent directory, it will pick the first file with .obb extension, else it will pick from apk directory with expected format as main.<version code>.<package name>.obb",
+            "helpMarkDown": "Select this option to pick expansion file for the main apk. If present in the parent directory, it will pick the first file with .obb extension, else it will pick from apk directory with expected format as main.<version code>.<package name>.obb",
             "visibleRule": "updateOnlyStoreListing = false"
         },
         {
@@ -117,7 +117,7 @@
             "label": "Upload OBBs for additional APKs",
             "defaultValue": false,
             "type": "boolean",
-            "helpMarkDown": "Select this option to pick obb file for the apk. If present in the parent directory, it will pick the first file with .obb extension, else it will pick from apk directory with expected format as main.<version code>.<package name>.obb",
+            "helpMarkDown": "Select this option to pick expansion files for the additional apks. For each apk, if present in the parent directory, it will pick the first file with .obb extension, else it will pick from apk directory with expected format as main.<version code>.<package name>.obb",
             "visibleRule": "updateOnlyStoreListing = false"
         },
         {
@@ -126,7 +126,7 @@
             "defaultValue": "internal",
             "required": true,
             "type": "pickList",
-            "helpMarkDown": "Track you want to publish the APK to.",
+            "helpMarkDown": "Track you want to publish the application to.",
             "visibleRule": "updateOnlyStoreListing = false",
             "options": {
                 "internal": "Internal test",
@@ -150,7 +150,7 @@
             "label": "Release notes (file)",
             "defaultValue": "",
             "type": "filePath",
-            "helpMarkDown": "Path to the file specifying the release notes (change log) for the APK you are publishing.",
+            "helpMarkDown": "Path to the file specifying the release notes (change log) for the application you are publishing.",
             "visibleRule": "shouldAttachMetadata = false"
         },
         {
@@ -184,7 +184,7 @@
             "label": "In-app Update Priority",
             "defaultValue": "0",
             "type": "pickList",
-            "helpMarkDown": "Set a custom in-app update priority value to help keep your app up-to-date on your usersΓÇÖ devices. To determine priority, Google Play uses an integer value between 0 and 5, with 0 being the default, and 5 being the highest priority. Priority can only be set when rolling out a new release, and cannot be changed later.",
+            "helpMarkDown": "Set a custom in-app update priority value to help keep your app up-to-date on your users' devices. To determine priority, Google Play uses an integer value between 0 and 5, with 0 being the default, and 5 being the highest priority. Priority can only be set when rolling out a new release, and cannot be changed later.",
             "visibleRule": "updateOnlyStoreListing = false && changeUpdatePriority = true",
             "groupName": "advanced",
             "options": {
@@ -210,7 +210,7 @@
             "label": "Rollout fraction",
             "defaultValue": "1.0",
             "type": "string",
-            "helpMarkDown": "The percentage of users the specified APK will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.",
+            "helpMarkDown": "The percentage of users the specified application will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.",
             "visibleRule": "updateOnlyStoreListing = false && rolloutToUserFraction = true",
             "groupName": "advanced"
         },
@@ -228,7 +228,7 @@
             "label": "Deobfuscation paths",
             "defaultValue": "",
             "type": "multiLine",
-            "helpMarkDown": "The paths to the proguard mapping.txt files to upload. Glob patterns are supported. If you want to specify mapping file for a specific version code, use this syntax: `$(VersionCode): /path/to/mapping.txt`. If you specify a path without version code, the corresponding version code will be picked up from aab/apk in this order: main aab, main apk, additional aabs, additional apks.",
+            "helpMarkDown": "The paths to the proguard mapping.txt files to upload. Glob patterns are supported. If you want to specify mapping file for a specific version code, use this syntax: `$(VersionCode): /path/to/mapping.txt`. If you specify a path without version code, the corresponding version code will be picked up from aab/apk in this order: main aab, main apk, additional aabs, additional apks. Apk/aab files for which mapping.txt was already specified will be skipped.",
             "visibleRule": "updateOnlyStoreListing = false && shouldUploadMappingFile = true",
             "groupName": "advanced"
         },
@@ -253,7 +253,7 @@
             "label": "Replace version codes",
             "defaultValue": "all",
             "type": "pickList",
-            "helpMarkDown": "Specify version codes to replace in the selected track with the new APKs: all, the comma separated list, or a regular expression pattern.",
+            "helpMarkDown": "Specify version codes to replace in the selected track with the new AABs/APKs: all, the comma separated list, or a regular expression pattern.",
             "visibleRule": "updateOnlyStoreListing = false",
             "groupName": "advanced",
             "options": {
@@ -268,7 +268,7 @@
             "defaultValue": "",
             "required": true,
             "type": "string",
-            "helpMarkDown": "The comma separated list of APK version codes to be removed from the track with this deployment.",
+            "helpMarkDown": "The comma separated list of version codes to be removed from the track with this deployment.",
             "visibleRule": "updateOnlyStoreListing = false && versionCodeFilterType = list",
             "groupName": "advanced"
         },
@@ -278,7 +278,7 @@
             "defaultValue": "",
             "required": true,
             "type": "string",
-            "helpMarkDown": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
+            "helpMarkDown": "The regular expression pattern to select a list of version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
             "visibleRule": "updateOnlyStoreListing = false && versionCodeFilterType = expression",
             "groupName": "advanced"
         }
