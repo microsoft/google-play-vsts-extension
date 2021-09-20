@@ -1,8 +1,8 @@
 {
-    "id": "3deb339f-705e-435d-b7d5-3ffcc8bdc542",
-    "name": "DSInputsTest",
-    "friendlyName": "Daniil Shmelevs Inputs Test",
-    "description": "Potential inputs configuration for google play release v4",
+    "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
+    "name": "GooglePlayRelease",
+    "friendlyName": "Google Play - Release",
+    "description": "Release an app to the Google Play Store",
     "author": "Microsoft Corporation",
     "category": "Deploy",
     "visibility": [
@@ -16,7 +16,7 @@
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
-    "instanceNameFormat": "Release $(apkFile) to $(track)",
+    "instanceNameFormat": "Release $(applicationId) to $(track)",
     "groups": [
         {
             "name": "advanced",
@@ -287,12 +287,35 @@
         "Node10": {
             "target": "GooglePlay.js",
             "argumentFormat": ""
-        },
-        "PowerShell": {
-            "target": "$(currentDirectory)\\GooglePlay.ps1",
-            "argumentFormat": "",
-            "workingDirectory": "$(currentDirectory)"
         }
+    },
+    "messages": {
+        "AppendChangelog": "Appending changelog %s",
+        "AttachingMetadataToRelease": "Attempting to attach metadata to release...",
+        "CannotCreateListing": "Failed to create the localized %s store listing. Failed with message: %s.",
+        "CannotDownloadTrack": "Failed to download track %s information. Failed with message: %s.",
+        "CannotReadChangeLog": "Failed to read change log %s. Failed with message: %s.",
+        "CannotUpdateTrack": "Failed to update track %s information. Failed with message: %s.",
+        "CannotUploadApk": "Failed to upload the APK %s. Failed with message: %s.",
+        "CannotUploadBundle": "Failed to upload the bundle %s. Failed with message: %s.",
+        "CannotUploadDeobfuscationFile": "Failed to upload the deobfuscation file %s. Failed with message: %s.",
+        "CannotUploadExpansionFile": "Failed to upload the expansion file %s. Failed with message: %s.",
+        "FoundDeobfuscationFile": "Found deobfuscation (mapping) file: %s",
+        "FoundImageAtPath": "Found image for type %s at %s",
+        "GetNewEditAfterAuth": "Authenticated with Google Play and getting new edit",
+        "ImageDirNotFound": "Image directory for %s was not found. Skipping...",
+        "ImageTypeNotFound": "Image for %s was not found. Skipping...",
+        "IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s",
+        "InvalidAuthFile": "%s is not a valid auth file",
+        "MustProvideAdditionalApkIfAdditionalObb": "shouldPickObbFile input is enabled, but no additional apk files were found",
+        "MustProvideApkOrAab": "You must provide either apk or aab file(s). Neither were found.",
+        "MustProvideMainApkIfMainObb": "shouldPickObbFile input is enabled, but main apk file couldn't be found",
+        "PublishSucceed": "App was successfully published!",
+        "StatNotDirectory": "Stat returned that %s was not a directory. Is there a file that shares this name?",
+        "TrackInfo": "Track: %s",
+        "UpdateTrack": "Updating track information...",
+        "UploadImageFail": "Failed to upload image.",
+        "UploadingMetadataForLanguage": "Attempting to upload metadata in %s for language code %s"
     },
     "restrictions": {
         "commands": {

@@ -224,7 +224,7 @@ export async function addObb(
     } catch (e) {
         tl.debug(`Failed to upload the Obb ${obbFile}`);
         tl.debug(e);
-        throw new Error(e);
+        throw new Error(tl.loc('CannotUploadExpansionFile', obbFile, e));
     }
 }
 

@@ -264,9 +264,8 @@ async function run(): Promise<void> {
         tl.debug('Committing the edit transaction in Google Play.');
         await edits.commit({ changesNotSentForReview });
 
-        console.log(tl.loc('AptPublishSucceed'));
         console.log(tl.loc('TrackInfo', track));
-        tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));
+        tl.setResult(tl.TaskResult.Succeeded, tl.loc('PublishSucceed'));
     } catch (e) {
         tl.setResult(tl.TaskResult.Failed, e);
     }

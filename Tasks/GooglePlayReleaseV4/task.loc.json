@@ -1,6 +1,6 @@
 {
-  "id": "3deb339f-705e-435d-b7d5-3ffcc8bdc542",
-  "name": "DSInputsTest",
+  "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
+  "name": "GooglePlayRelease",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "author": "Microsoft Corporation",
@@ -76,7 +76,7 @@
       "name": "bundleFile",
       "label": "ms-resource:loc.input.label.bundleFile",
       "defaultValue": "",
-      "type": "filePath",
+      "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.bundleFile",
       "visibleRule": "updateOnlyStoreListing = false"
     },
@@ -92,7 +92,7 @@
       "name": "apkFile",
       "label": "ms-resource:loc.input.label.apkFile",
       "defaultValue": "",
-      "type": "filePath",
+      "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.apkFile",
       "visibleRule": "updateOnlyStoreListing = false"
     },
@@ -215,29 +215,22 @@
       "groupName": "advanced"
     },
     {
-      "name": "shouldUploadMappingFile",
-      "label": "ms-resource:loc.input.label.shouldUploadMappingFile",
+      "name": "shouldUploadMappingFiles",
+      "label": "ms-resource:loc.input.label.shouldUploadMappingFiles",
       "defaultValue": false,
       "type": "boolean",
-      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadMappingFile",
+      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadMappingFiles",
       "visibleRule": "updateOnlyStoreListing = false",
       "groupName": "advanced"
     },
     {
-      "name": "mappingFilePath",
-      "label": "ms-resource:loc.input.label.mappingFilePath",
+      "name": "mappingFilePaths",
+      "label": "ms-resource:loc.input.label.mappingFilePaths",
       "defaultValue": "",
-      "type": "filePath",
-      "helpMarkDown": "ms-resource:loc.input.help.mappingFilePath",
+      "type": "multiLine",
+      "helpMarkDown": "ms-resource:loc.input.help.mappingFilePaths",
       "visibleRule": "updateOnlyStoreListing = false && shouldUploadMappingFile = true",
       "groupName": "advanced"
-    },
-    {
-      "name": "releaseName",
-      "type": "string",
-      "label": "ms-resource:loc.input.label.releaseName",
-      "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.releaseName"
     },
     {
       "name": "changesNotSentForReview",
@@ -246,6 +239,14 @@
       "groupName": "advanced",
       "defaultValue": false,
       "helpMarkDown": "ms-resource:loc.input.help.changesNotSentForReview"
+    },
+    {
+      "name": "releaseName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.releaseName",
+      "groupName": "advanced",
+      "defaultValue": "",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseName"
     },
     {
       "name": "versionCodeFilterType",
@@ -286,12 +287,35 @@
     "Node10": {
       "target": "GooglePlay.js",
       "argumentFormat": ""
-    },
-    "PowerShell": {
-      "target": "$(currentDirectory)\\GooglePlay.ps1",
-      "argumentFormat": "",
-      "workingDirectory": "$(currentDirectory)"
     }
+  },
+  "messages": {
+    "AppendChangelog": "ms-resource:loc.messages.AppendChangelog",
+    "AttachingMetadataToRelease": "ms-resource:loc.messages.AttachingMetadataToRelease",
+    "CannotCreateListing": "ms-resource:loc.messages.CannotCreateListing",
+    "CannotDownloadTrack": "ms-resource:loc.messages.CannotDownloadTrack",
+    "CannotReadChangeLog": "ms-resource:loc.messages.CannotReadChangeLog",
+    "CannotUpdateTrack": "ms-resource:loc.messages.CannotUpdateTrack",
+    "CannotUploadApk": "ms-resource:loc.messages.CannotUploadApk",
+    "CannotUploadBundle": "ms-resource:loc.messages.CannotUploadBundle",
+    "CannotUploadDeobfuscationFile": "ms-resource:loc.messages.CannotUploadDeobfuscationFile",
+    "CannotUploadExpansionFile": "ms-resource:loc.messages.CannotUploadExpansionFile",
+    "FoundDeobfuscationFile": "ms-resource:loc.messages.FoundDeobfuscationFile",
+    "FoundImageAtPath": "ms-resource:loc.messages.FoundImageAtPath",
+    "GetNewEditAfterAuth": "ms-resource:loc.messages.GetNewEditAfterAuth",
+    "ImageDirNotFound": "ms-resource:loc.messages.ImageDirNotFound",
+    "ImageTypeNotFound": "ms-resource:loc.messages.ImageTypeNotFound",
+    "IncorrectVersionCodeFilter": "ms-resource:loc.messages.IncorrectVersionCodeFilter",
+    "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
+    "MustProvideAdditionalApkIfAdditionalObb": "ms-resource:loc.messages.MustProvideAdditionalApkIfAdditionalObb",
+    "MustProvideApkOrAab": "ms-resource:loc.messages.MustProvideApkOrAab",
+    "MustProvideMainApkIfMainObb": "ms-resource:loc.messages.MustProvideMainApkIfMainObb",
+    "PublishSucceed": "ms-resource:loc.messages.PublishSucceed",
+    "StatNotDirectory": "ms-resource:loc.messages.StatNotDirectory",
+    "TrackInfo": "ms-resource:loc.messages.TrackInfo",
+    "UpdateTrack": "ms-resource:loc.messages.UpdateTrack",
+    "UploadImageFail": "ms-resource:loc.messages.UploadImageFail",
+    "UploadingMetadataForLanguage": "ms-resource:loc.messages.UploadingMetadataForLanguage"
   },
   "restrictions": {
     "commands": {
