@@ -485,26 +485,26 @@ function getObbFile(apkPath: string, packageName: string, versionCode: number): 
 /**
  * Extracts version codes and mapping file paths from mappingFilePaths input.
  * There are two ways to specify mapping file path in this input:
- * 
+ *
  * 1. Specific version code.
- * 
+ *
  * Syntax: `$(versionCode): $(mappingPath)`.
  * Examples:
- * 
+ *
  * `5674: /path/to/mapping.txt` - this will pick up mapping.txt for apk/aab with version code 5674
- * 
+ *
  * `5675: /glob/path/to/*.txt` - this will pick up a single .txt file with glob pattern
- * 
+ *
  * 2. Any version codes. These will be matched with aabs/apks in this order:
  *    main bundle, main apk, additional bundles, additional apks.
- * 
+ *
  * Syntax: `$(mappingPath)`
  * Examples:
- * 
+ *
  * `/path/to/mapping.txt` - this will associate mapping.txt with the main bundle, unless another mapping.txt was already associated with it using option #1
- * 
+ *
  * `/path/to/*.txt` - this will associed all .txt files in this folder with the aabs/apks
- * 
+ *
  * @param mappingFilePatterns `mappingFilePaths` input value
  * @param versionCodes version codes of aabs/apks that have been uploaded
  * @returns one-to-one mapping from aab/apk version code to the mapping file path corresponding to this version code
@@ -529,7 +529,7 @@ function getMappingFilesAndVersionCodes(
     }
 
     // Handle the rest of the mapping files (option #2)
-    
+
     const additionalVersionCodes: number[] = versionCodes.filter(
         (versionCode) => versionCode !== mainBundleVersionCode && versionCode !== mainApkVersionCode
     );
@@ -545,7 +545,7 @@ function getMappingFilesAndVersionCodes(
     const restOfThePatterns: string[] = mappingFilePatterns.filter((pattern) => !pattern.includes(':'));
 
     const mappingFilePaths: string[] = [];
-    for (const mappingFilePattern in restOfThePatterns) {
+    for (const mappingFilePattern of restOfThePatterns) {
         mappingFilePaths.push(...resolveGlobPaths(mappingFilePattern));
     }
 
