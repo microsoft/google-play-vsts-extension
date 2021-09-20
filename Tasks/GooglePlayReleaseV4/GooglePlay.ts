@@ -215,10 +215,12 @@ async function run(): Promise<void> {
                     mainApkVersionCode
                 );
 
+                tl.debug(`Mapping files and version codes: ${mappingFilesAndVersionCodes}`);
+
                 for (const [versionCode, mappingFilePath] of mappingFilesAndVersionCodes) {
                     tl.checkPath(mappingFilePath, 'Mapping file path');
                     console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
-                    tl.debug(`Uploading mapping file ${mappingFilePath}`);
+                    tl.debug(`Uploading ${mappingFilePath} for version code ${versionCode}`);
                     await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, versionCode);
                     tl.debug(`Uploaded ${mappingFilePath} for version code ${versionCode}`);
                 }
