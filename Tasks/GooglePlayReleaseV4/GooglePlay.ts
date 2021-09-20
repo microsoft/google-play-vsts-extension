@@ -539,7 +539,7 @@ function getMappingFilesAndVersionCodes(
         mainBundleVersionCode,
         mainApkVersionCode,
         ...additionalVersionCodes
-    ];
+    ].filter((versionCode) => versionCode !== undefined);
     const remainingVersionCodesInCorrectOrder: number[] = versionCodesInCorrectOrder.filter(
         (versionCode) => !result.has(versionCode)
     );
