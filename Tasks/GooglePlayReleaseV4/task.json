@@ -66,59 +66,57 @@
             "helpMarkDown": "The application id of APK or AAB you want to release, e.g. com.company.MyApp."
         },
         {
-            "name": "updateOnlyStoreListing",
-            "label": "Update only store listing",
-            "defaultValue": false,
-            "type": "boolean",
-            "helpMarkDown": "By default, the task will update the specified track and selected APK and AAB file(s) will be assigned to the related track. By selecting this option you can update only store listing."
+            "name": "action",
+            "label": "Action",
+            "defaultValue": "SingleBundle",
+            "type": "pickList",
+            "helpMarkDown": "",
+            "options": {
+                "OnlyStoreListing": "Only update store listing",
+                "SingleBundle": "Upload single bundle",
+                "SingleApk": "Upload single apk",
+                "MultiApkAab": "Upload multiple apk/aab files"
+            }
         },
         {
             "name": "bundleFile",
-            "label": "Main bundle path",
+            "label": "Bundle path",
             "defaultValue": "",
             "type": "string",
             "helpMarkDown": "Path to the main bundle file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.aab_ to match the first AAB file, in any directory.",
-            "visibleRule": "updateOnlyStoreListing = false"
-        },
-        {
-            "name": "additionalBundles",
-            "label": "Additional bundle path(s)",
-            "defaultValue": "",
-            "type": "multiLine",
-            "helpMarkDown": "Paths to additional bundle files you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.AAB_ to match all AAB files, in any directory.",
-            "visibleRule": "updateOnlyStoreListing = false"
+            "visibleRule": "action = SingleBundle"
         },
         {
             "name": "apkFile",
-            "label": "Main APK path",
+            "label": "APK path",
             "defaultValue": "",
             "type": "string",
             "helpMarkDown": "Path to the main APK file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory.",
-            "visibleRule": "updateOnlyStoreListing = false"
+            "visibleRule": "action = SingleApk"
         },
         {
             "name": "shouldPickObbFile",
-            "label": "Upload OBB for main APK",
+            "label": "Upload OBB for APK",
             "defaultValue": false,
             "type": "boolean",
             "helpMarkDown": "Select this option to pick expansion file for the main apk. If present in the parent directory, it will pick the first file with .obb extension, else it will pick from apk directory with expected format as main.<version code>.<package name>.obb",
-            "visibleRule": "updateOnlyStoreListing = false"
+            "visibleRule": "action = SingleApk"
         },
         {
-            "name": "additionalApks",
-            "label": "Additional APK path(s)",
+            "name": "obbPath",
+            "label": "OBB path",
             "defaultValue": "",
-            "type": "multiLine",
-            "helpMarkDown": "Paths to additional APK files you want to publish to the specified track (e.g. an x86 build). Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match all APK files, in any directory.",
-            "visibleRule": "updateOnlyStoreListing = false"
+            "type": "string",
+            "helpMarkDown": "Path to the main APK file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory.",
+            "visibleRule": "action = SingleApk && shouldPickObbFile"
         },
         {
-            "name": "shouldPickObbFileForAdditonalApks",
-            "label": "Upload OBBs for additional APKs",
-            "defaultValue": false,
-            "type": "boolean",
-            "helpMarkDown": "Select this option to pick expansion files for the additional apks. For each apk, if present in the parent directory, it will pick the first file with .obb extension, else it will pick from apk directory with expected format as main.<version code>.<package name>.obb",
-            "visibleRule": "updateOnlyStoreListing = false"
+            "name": "apkAabJson",
+            "label": "Path to apk/aab description JSON file",
+            "defaultValue": "",
+            "type": "string",
+            "helpMarkDown": "Path to the main bundle file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.aab_ to match the first AAB file, in any directory.",
+            "visibleRule": "action = MultiApkAab"
         },
         {
             "name": "track",
@@ -127,7 +125,7 @@
             "required": true,
             "type": "pickList",
             "helpMarkDown": "Track you want to publish the application to.",
-            "visibleRule": "updateOnlyStoreListing = false",
+            "visibleRule": "action != OnlyStoreListing",
             "options": {
                 "internal": "Internal test",
                 "alpha": "Alpha",
@@ -176,7 +174,7 @@
             "defaultValue": false,
             "type": "boolean",
             "helpMarkDown": "Change the in-app update priority value.",
-            "visibleRule": "updateOnlyStoreListing = false",
+            "visibleRule": "action != OnlyStoreListing",
             "groupName": "advanced"
         },
         {
@@ -185,7 +183,7 @@
             "defaultValue": "0",
             "type": "pickList",
             "helpMarkDown": "Set a custom in-app update priority value to help keep your app up-to-date on your users' devices. To determine priority, Google Play uses an integer value between 0 and 5, with 0 being the default, and 5 being the highest priority. Priority can only be set when rolling out a new release, and cannot be changed later.",
-            "visibleRule": "updateOnlyStoreListing = false && changeUpdatePriority = true",
+            "visibleRule": "action != OnlyStoreListing && changeUpdatePriority = true",
             "groupName": "advanced",
             "options": {
                 "0": "0",
@@ -202,7 +200,7 @@
             "defaultValue": false,
             "type": "boolean",
             "helpMarkDown": "Roll out the release to a percentage of users.",
-            "visibleRule": "updateOnlyStoreListing = false",
+            "visibleRule": "action != OnlyStoreListing",
             "groupName": "advanced"
         },
         {
@@ -211,42 +209,43 @@
             "defaultValue": "1.0",
             "type": "string",
             "helpMarkDown": "The percentage of users the specified application will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.",
-            "visibleRule": "updateOnlyStoreListing = false && rolloutToUserFraction = true",
+            "visibleRule": "action != OnlyStoreListing && rolloutToUserFraction = true",
             "groupName": "advanced"
         },
         {
-            "name": "shouldUploadMappingFiles",
-            "label": "Upload deobfuscation files (mapping.txt)",
+            "name": "shouldUploadMappingFile",
+            "label": "Upload deobfuscation file (mapping.txt)",
             "defaultValue": false,
             "type": "boolean",
-            "helpMarkDown": "Select this option to attach your proguard mapping.txt files to your AABs/APKs.",
-            "visibleRule": "updateOnlyStoreListing = false",
+            "helpMarkDown": "Select this option to attach your proguard mapping.txt file to your AABs/APKs.",
+            "visibleRule": "action != OnlyStoreListing",
             "groupName": "advanced"
         },
         {
-            "name": "mappingFilePaths",
-            "label": "Deobfuscation paths",
+            "name": "mappingFilePath",
+            "label": "Deobfuscation path",
             "defaultValue": "",
-            "type": "multiLine",
-            "helpMarkDown": "The paths to the proguard mapping.txt files to upload. Glob patterns are supported. If you want to specify mapping file for a specific version code, use this syntax: `$(VersionCode): /path/to/mapping.txt`. If you specify a path without version code, the corresponding version code will be picked up from aab/apk in this order: main aab, main apk, additional aabs, additional apks. Apk/aab files for which mapping.txt was already specified will be skipped.",
-            "visibleRule": "updateOnlyStoreListing = false && shouldUploadMappingFiles = true",
+            "type": "string",
+            "helpMarkDown": "The path to the proguard mapping.txt file to upload. Glob patterns are supported.",
+            "visibleRule": "action != OnlyStoreListing && shouldUploadMappingFiles = true",
             "groupName": "advanced"
         },
         {
             "name": "changesNotSentForReview",
             "type": "boolean",
             "label": "Send changes to review",
-            "groupName": "advanced",
             "defaultValue": false,
-            "helpMarkDown": "Select this option to send changes for review in GooglePlay Console. If changes're already sent for review automatically, you shouldn't select this option. [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters)."
+            "helpMarkDown": "Select this option to send changes for review in GooglePlay Console. If changes're already sent for review automatically, you shouldn't select this option. [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters).",
+            "groupName": "advanced"
         },
         {
             "name": "releaseName",
             "type": "string",
             "label": "Release name",
-            "groupName": "advanced",
             "defaultValue": "",
-            "helpMarkDown": "The release name is only for use in Play Console and won't be visible to users. To make your release easier to identify, add a release name that's meaningful to you."
+            "helpMarkDown": "The release name is only for use in Play Console and won't be visible to users. To make your release easier to identify, add a release name that's meaningful to you.",
+            "visibleRule": "action != OnlyStoreListing",
+            "groupName": "advanced"
         },
         {
             "name": "versionCodeFilterType",
@@ -254,7 +253,7 @@
             "defaultValue": "all",
             "type": "pickList",
             "helpMarkDown": "Specify version codes to replace in the selected track with the new AABs/APKs: all, the comma separated list, or a regular expression pattern.",
-            "visibleRule": "updateOnlyStoreListing = false",
+            "visibleRule": "action != OnlyStoreListing",
             "groupName": "advanced",
             "options": {
                 "all": "All",
@@ -269,7 +268,7 @@
             "required": true,
             "type": "string",
             "helpMarkDown": "The comma separated list of version codes to be removed from the track with this deployment.",
-            "visibleRule": "updateOnlyStoreListing = false && versionCodeFilterType = list",
+            "visibleRule": "action != OnlyStoreListing && versionCodeFilterType = list",
             "groupName": "advanced"
         },
         {
@@ -279,7 +278,7 @@
             "required": true,
             "type": "string",
             "helpMarkDown": "The regular expression pattern to select a list of version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
-            "visibleRule": "updateOnlyStoreListing = false && versionCodeFilterType = expression",
+            "visibleRule": "action != OnlyStoreListing && versionCodeFilterType = expression",
             "groupName": "advanced"
         }
     ],
