@@ -227,7 +227,7 @@
             "defaultValue": "",
             "type": "string",
             "helpMarkDown": "The path to the proguard mapping.txt file to upload. Glob patterns are supported.",
-            "visibleRule": "action != OnlyStoreListing && shouldUploadMappingFiles = true",
+            "visibleRule": "action != OnlyStoreListing && shouldUploadMappingFile = true",
             "groupName": "advanced"
         },
         {
