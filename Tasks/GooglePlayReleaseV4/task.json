@@ -218,7 +218,7 @@
             "defaultValue": false,
             "type": "boolean",
             "helpMarkDown": "Select this option to attach your proguard mapping.txt file to your AABs/APKs.",
-            "visibleRule": "action = SingleApk || action = SingleBundle",
+            "visibleRule": "action != OnlyStoreListing && action != MultiApkAab",
             "groupName": "advanced"
         },
         {
@@ -227,7 +227,7 @@
             "defaultValue": "",
             "type": "string",
             "helpMarkDown": "The path to the proguard mapping.txt file to upload. Glob patterns are supported.",
-            "visibleRule": "(action = SingleApk || action = SingleBundle) && shouldUploadMappingFile = true",
+            "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadMappingFile = true",
             "groupName": "advanced"
         },
         {
