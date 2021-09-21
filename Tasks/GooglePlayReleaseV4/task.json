@@ -108,7 +108,7 @@
             "defaultValue": "",
             "type": "string",
             "helpMarkDown": "Path to the main APK file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory.",
-            "visibleRule": "action = SingleApk && shouldPickObbFile"
+            "visibleRule": "action = SingleApk && shouldPickObbFile = true"
         },
         {
             "name": "apkAabJson",
