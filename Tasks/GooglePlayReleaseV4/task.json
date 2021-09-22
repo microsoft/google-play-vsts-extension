@@ -85,7 +85,7 @@
             "defaultValue": "",
             "required": true,
             "type": "string",
-            "helpMarkDown": "Path to the main bundle file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.aab_ to match the first AAB file, in any directory.",
+            "helpMarkDown": "Path to the bundle file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.aab_ to match the first AAB file, in any directory.",
             "visibleRule": "action = SingleBundle"
         },
         {
@@ -94,7 +94,7 @@
             "defaultValue": "",
             "required": true,
             "type": "string",
-            "helpMarkDown": "Path to the main APK file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory.",
+            "helpMarkDown": "Path to the APK file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory.",
             "visibleRule": "action = SingleApk"
         },
         {
@@ -127,7 +127,7 @@
             "defaultValue": "internal",
             "required": true,
             "type": "pickList",
-            "helpMarkDown": "Track you want to publish the application to.",
+            "helpMarkDown": "Track you want to publish the apk(s)/aab(s) to.",
             "visibleRule": "action != OnlyStoreListing",
             "options": {
                 "internal": "Internal test",
@@ -144,7 +144,7 @@
             "label": "Update metadata",
             "defaultValue": false,
             "type": "boolean",
-            "helpMarkDown": "Select this option to update the metadata on your app release."
+            "helpMarkDown": "Select this option to update the metadata in fastlane format on your app release."
         },
         {
             "name": "changeLogFile",
@@ -220,7 +220,7 @@
             "label": "Upload deobfuscation file (mapping.txt)",
             "defaultValue": false,
             "type": "boolean",
-            "helpMarkDown": "Select this option to attach your proguard mapping.txt file to your AAB/APK.",
+            "helpMarkDown": "Select this option to attach your proguard mapping.txt file to your aab/apk.",
             "visibleRule": "action != OnlyStoreListing && action != MultiApkAab",
             "groupName": "advanced"
         },
@@ -238,7 +238,7 @@
             "type": "boolean",
             "label": "Send changes to review",
             "defaultValue": false,
-            "helpMarkDown": "Select this option to send changes for review in GooglePlay Console. If changes're already sent for review automatically, you shouldn't select this option. [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters).",
+            "helpMarkDown": "Select this option to send changes for review in GooglePlay Console. If changes are already sent for review automatically, you shouldn't select this option. [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters).",
             "groupName": "advanced"
         },
         {
@@ -255,7 +255,7 @@
             "label": "Replace version codes",
             "defaultValue": "all",
             "type": "pickList",
-            "helpMarkDown": "Specify version codes to replace in the selected track with the new AABs/APKs: all, the comma separated list, or a regular expression pattern.",
+            "helpMarkDown": "Specify version codes to replace in the selected track with the new aab(s)/apk(s): all, the comma separated list, or a regular expression pattern.",
             "visibleRule": "action != OnlyStoreListing",
             "groupName": "advanced",
             "options": {
