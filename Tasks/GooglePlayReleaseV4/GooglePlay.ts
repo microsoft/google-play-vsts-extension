@@ -401,7 +401,7 @@ function resolveGlobPath(path: string): string {
  * @param path The minimatch pattern of glob to be resolved to file path
  * @returns paths of the files resolved by glob
  */
- function resolveGlobPaths(path: string): string[] {
+function resolveGlobPaths(path: string): string[] {
     if (path) {
         // Convert the path pattern to a rooted one. We do this to mimic for string inputs the behaviour of filePath inputs provided by Build Agent.
         path = tl.resolve(tl.getVariable('System.DefaultWorkingDirectory'), path);
