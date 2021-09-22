@@ -254,7 +254,7 @@ function getBundles(action: Action): string[] {
         const bundlePattern: string = tl.getInput('bundleFile', true);
         const bundlePath: string = resolveGlobPath(bundlePattern);
         tl.checkPath(bundlePath, 'bundlePath');
-        return [];
+        return [bundlePath];
     } else if (action === 'MultiApkAab') {
         const bundlePatterns: string[] = tl.getDelimitedInput('bundleFiles', '\n');
         const allBundlePaths = new Set<string>();
@@ -278,7 +278,7 @@ function getApks(action: Action): string[] {
         const apkPattern: string = tl.getInput('apkFile', true);
         const apkPath: string = resolveGlobPath(apkPattern);
         tl.checkPath(apkPath, 'apkPath');
-        return [];
+        return [apkPath];
     } else if (action === 'MultiApkAab') {
         const apkPatterns: string[] = tl.getDelimitedInput('apkFiles', '\n');
         const allApkPaths = new Set<string>();
