@@ -113,7 +113,7 @@ async function run(): Promise<void> {
             case 'MultiApkAab': warnIfUnusedInputsSet('bundleFile', 'apkFile'); break;
             case 'SingleBundle': warnIfUnusedInputsSet('apkFile', 'bundleFiles', 'apkFiles'); break;
             case 'SingleApk': warnIfUnusedInputsSet('bundleFile', 'bundleFiles', 'apkFiles'); break;
-            case 'OnlyStoreListing': warnIfUnusedInputsSet('bundleFile', 'apkFile', 'bundleFiles', 'apkFiles'); break;
+            case 'OnlyStoreListing': warnIfUnusedInputsSet('bundleFile', 'apkFile', 'bundleFiles', 'apkFiles', 'track'); break;
         }
 
         // The regular submission process is composed
