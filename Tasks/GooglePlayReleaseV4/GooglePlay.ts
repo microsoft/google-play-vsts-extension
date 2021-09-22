@@ -107,6 +107,15 @@ async function run(): Promise<void> {
             versionCodeFilter = tl.getInput('replaceExpression', true);
         }
 
+        // Warn about unused inputs
+
+        switch (action) {
+            case 'MultiApkAab': warnIfUnusedInputsSet('bundleFile', 'apkFile'); break;
+            case 'SingleBundle': warnIfUnusedInputsSet('apkFile', 'bundleFiles', 'apkFiles'); break;
+            case 'SingleApk': warnIfUnusedInputsSet('bundleFile', 'bundleFiles', 'apkFiles'); break;
+            case 'OnlyStoreListing': warnIfUnusedInputsSet('bundleFile', 'apkFile', 'bundleFiles', 'apkFiles'); break;
+        }
+
         // The regular submission process is composed
         // of a transction with the following steps:
         // -----------------------------------------
@@ -424,6 +433,20 @@ function getVersionCodeListInput(): number[] {
         throw new Error(tl.loc('IncorrectVersionCodeFilter', JSON.stringify(incorrectCodes)));
     } else {
         return versionCodeFilter;
+    }
+}
+
+/**
+ * If any of the provided inputs are set, it will show a warning
+ * @param inputs inputs to check
+ */
+function warnIfUnusedInputsSet(...inputs: string[]): void {
+    for (const input of inputs) {
+        tl.debug(`Checking if unused input ${input} is set...`);
+        const inputValue: string | undefined = tl.getInput(input);
+        if (inputValue !== undefined && inputValue.length !== 0) {
+            tl.warning(tl.loc('SetUnusedInput', input));
+        }
     }
 }
 
