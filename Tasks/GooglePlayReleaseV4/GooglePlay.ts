@@ -110,7 +110,7 @@ async function run(): Promise<void> {
         // Warn about unused inputs
 
         switch (action) {
-            case 'MultiApkAab': warnIfUnusedInputsSet('bundleFile', 'apkFile'); break;
+            case 'MultiApkAab': warnIfUnusedInputsSet('bundleFile', 'apkFile', 'shouldUploadMappingFile', 'mappingFilePath'); break;
             case 'SingleBundle': warnIfUnusedInputsSet('apkFile', 'bundleFiles', 'apkFiles'); break;
             case 'SingleApk': warnIfUnusedInputsSet('bundleFile', 'bundleFiles', 'apkFiles'); break;
             case 'OnlyStoreListing': warnIfUnusedInputsSet('bundleFile', 'apkFile', 'bundleFiles', 'apkFiles', 'track'); break;
