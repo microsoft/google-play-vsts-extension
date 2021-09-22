@@ -83,6 +83,7 @@
             "name": "bundleFile",
             "label": "Bundle path",
             "defaultValue": "",
+            "required": true,
             "type": "string",
             "helpMarkDown": "Path to the main bundle file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.aab_ to match the first AAB file, in any directory.",
             "visibleRule": "action = SingleBundle"
@@ -91,33 +92,34 @@
             "name": "apkFile",
             "label": "APK path",
             "defaultValue": "",
+            "required": true,
             "type": "string",
             "helpMarkDown": "Path to the main APK file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory.",
             "visibleRule": "action = SingleApk"
+        },
+        {
+            "name": "bundleFiles",
+            "label": "Bundle paths",
+            "defaultValue": "",
+            "type": "multiLine",
+            "helpMarkDown": "Paths to the bundle files you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.aab_ to match all AAB files, in any directory.",
+            "visibleRule": "action = MultiApkAab"
+        },
+        {
+            "name": "apkFiles",
+            "label": "APK paths",
+            "defaultValue": "",
+            "type": "string",
+            "helpMarkDown": "Paths to the APK files you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match all APK files, in any directory.",
+            "visibleRule": "action = MultiApkAab"
         },
         {
             "name": "shouldPickObbFile",
             "label": "Upload OBB for APK",
             "defaultValue": false,
             "type": "boolean",
-            "helpMarkDown": "Select this option to pick expansion file for the main apk. If present in the parent directory, it will pick the first file with .obb extension, else it will pick from apk directory with expected format as main.<version code>.<package name>.obb",
-            "visibleRule": "action = SingleApk"
-        },
-        {
-            "name": "obbPath",
-            "label": "OBB path",
-            "defaultValue": "",
-            "type": "string",
-            "helpMarkDown": "Path to the main APK file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory.",
-            "visibleRule": "action = SingleApk && shouldPickObbFile = true"
-        },
-        {
-            "name": "apkAabJson",
-            "label": "Path to apk/aab description JSON file",
-            "defaultValue": "",
-            "type": "string",
-            "helpMarkDown": "Path to the main bundle file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.aab_ to match the first AAB file, in any directory.",
-            "visibleRule": "action = MultiApkAab"
+            "helpMarkDown": "Select this option to pick expansion file for the apk(s). If present in the parent directory, it will pick the first file with .obb extension, else it will pick from apk directory with expected format as main.<version code>.<package name>.obb",
+            "visibleRule": "action = SingleApk || action = MultiApkAab"
         },
         {
             "name": "track",
@@ -218,7 +220,7 @@
             "label": "Upload deobfuscation file (mapping.txt)",
             "defaultValue": false,
             "type": "boolean",
-            "helpMarkDown": "Select this option to attach your proguard mapping.txt file to your AABs/APKs.",
+            "helpMarkDown": "Select this option to attach your proguard mapping.txt file to your AAB/APK.",
             "visibleRule": "action != OnlyStoreListing && action != MultiApkAab",
             "groupName": "advanced"
         },

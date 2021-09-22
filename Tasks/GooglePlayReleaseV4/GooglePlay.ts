@@ -9,6 +9,8 @@ import * as metadataHelper from './metadataHelper';
 import * as googleapis from 'googleapis';
 import { androidpublisher_v3 as pub3 } from 'googleapis';
 
+type Action = 'OnlyStoreListing' | 'SingleBundle' | 'SingleApk' | 'MultiApkAab';
+
 async function run(): Promise<void> {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -36,44 +38,23 @@ async function run(): Promise<void> {
         }
 
         // General inputs
-
-        const updateOnlyStoreListing: boolean = tl.getBoolInput('updateOnlyStoreListing', false);
+        const action = tl.getInput('action', false) as Action;
 
         const packageName: string = tl.getInput('applicationId', true);
         tl.debug(`Application identifier: ${packageName}`);
 
-        const mainBundlePattern: string = tl.getPathInput('bundleFile');
-        tl.debug(`Main bundle pattern: ${mainBundlePattern}`);
-        const additionalBundlePatterns: string[] = tl.getDelimitedInput('additionalBundles', '\n');
-        tl.debug(`Additional bundle patterns: ${additionalBundlePatterns}`);
-
-        const mainApkPattern: string = tl.getPathInput('apkFile');
-        tl.debug(`Main apk pattern: ${mainApkPattern}`);
-        const additionalApkPatterns: string[] = tl.getDelimitedInput('additionalApks', '\n');
-        tl.debug(`Additional apk patterns: ${additionalApkPatterns}`);
-
-        const mainBundleFile: string = getMainFilePath(mainBundlePattern);
-        const additionalBundleFiles: string[] = getAdditionalFilesPaths(additionalBundlePatterns);
-
-        const mainApkFile: string = getMainFilePath(mainApkPattern);
-        const additionalApkFiles: string[] = getAdditionalFilesPaths(additionalApkPatterns);
-
-        const shouldPickObbForMainApk: boolean = tl.getBoolInput('shouldPickObbFile', false);
-        const shouldPickObbForAdditionalApks: boolean = tl.getBoolInput('shouldPickObbFileForAdditonalApks', false);
-
-        if (shouldPickObbForMainApk && !mainApkFile) {
-            throw new Error(tl.loc('MustProvideMainApkIfMainObb'));
-        }
-        if (shouldPickObbForAdditionalApks && additionalApkFiles.length === 0) {
-            throw new Error(tl.loc('MustProvideAdditionalApkIfAdditionalObb'));
-        }
-
-        const bundleFileList: string[] = getUniquePaths([mainBundleFile, ...additionalBundleFiles]);
+        const bundleFileList: string[] = getBundles(action);
         tl.debug(`Bundles: ${bundleFileList}`);
-        const apkFileList: string[] = getUniquePaths([mainApkFile, ...additionalApkFiles]);
+        const apkFileList: string[] = getApks(action);
         tl.debug(`APKs: ${apkFileList}`);
 
-        if (!updateOnlyStoreListing && bundleFileList.length === 0 && apkFileList.length === 0) {
+        const shouldPickObb: boolean = tl.getBoolInput('shouldPickObbFile', false);
+
+        if (shouldPickObb && apkFileList.length === 0) {
+            throw new Error(tl.loc('MustProvideApkIfObb'));
+        }
+
+        if (action !== 'OnlyStoreListing' && bundleFileList.length === 0 && apkFileList.length === 0) {
             throw new Error(tl.loc('MustProvideApkOrAab'));
         }
 
@@ -92,7 +73,7 @@ async function run(): Promise<void> {
             languageCode = tl.getInput('languageCode', false) || 'en-US';
         }
 
-        // Advanced inputs section
+        // Advanced inputs
 
         const updatePrioritySupplied: boolean = tl.getBoolInput('changeUpdatePriority');
         const updatePriority: number = Number(updatePrioritySupplied ? tl.getInput('updatePriority', false) : 0);
@@ -100,8 +81,8 @@ async function run(): Promise<void> {
         const userFractionSupplied: boolean = tl.getBoolInput('rolloutToUserFraction');
         const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
 
-        const uploadMappingFiles: boolean = tl.getBoolInput('shouldUploadMappingFiles', false);
-        const mappingFilePatterns: string[] = tl.getDelimitedInput('mappingFilePaths', '\n');
+        const uploadMappingFile: boolean = tl.getBoolInput('shouldUploadMappingFile', false);
+        const mappingFilePattern: string = tl.getInput('mappingFilePath');
 
         const changesNotSentForReview: boolean = tl.getBoolInput('changesNotSentForReview');
 
@@ -146,10 +127,8 @@ async function run(): Promise<void> {
 
         let requireTrackUpdate = false;
         const versionCodes: number[] = [];
-        let mainBundleVersionCode;
-        let mainApkVersionCode;
 
-        if (updateOnlyStoreListing) {
+        if (action === 'OnlyStoreListing') {
             tl.debug('Selected store listing update only -> skip APK/AAB reading');
         } else {
             requireTrackUpdate = true;
@@ -161,11 +140,6 @@ async function run(): Promise<void> {
                 const bundle: pub3.Schema$Bundle = await googleutil.addBundle(edits, packageName, bundleFile);
                 tl.debug(`Uploaded ${bundleFile} with the version code ${bundle.versionCode}`);
                 versionCodes.push(bundle.versionCode);
-
-                if (bundleFile === mainBundleFile) {
-                    mainBundleVersionCode = bundle.versionCode;
-                    tl.debug(`Found main bundle version code: ${mainBundleVersionCode}`);
-                }
             }
 
             tl.debug(`Uploading ${apkFileList.length} APK(s).`);
@@ -175,14 +149,7 @@ async function run(): Promise<void> {
                 const apk: pub3.Schema$Apk = await googleutil.addApk(edits, packageName, apkFile);
                 tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}`);
 
-                const shouldPickObbForThisApk: boolean = shouldPickObbForApk(
-                    apkFile,
-                    mainApkFile,
-                    shouldPickObbForMainApk,
-                    shouldPickObbForAdditionalApks
-                );
-
-                if (shouldPickObbForThisApk) {
+                if (shouldPickObb) {
                     const obbFile: string | null = getObbFile(apkFile, packageName, apk.versionCode);
 
                     if (obbFile !== null) {
@@ -200,30 +167,16 @@ async function run(): Promise<void> {
                     }
                 }
                 versionCodes.push(apk.versionCode);
-
-                if (apkFile === mainApkFile) {
-                    mainApkVersionCode = apk.versionCode;
-                    tl.debug(`Found main apk version code: ${mainApkVersionCode}`);
-                }
             }
 
-            if (versionCodes.length > 0 && uploadMappingFiles) {
-                tl.debug(`Mapping file patterns: ${mappingFilePatterns}`);
-
-                const mappingFilesAndVersionCodes: Map<number, string> = getMappingFilesAndVersionCodes(
-                    mappingFilePatterns,
-                    versionCodes,
-                    mainBundleVersionCode,
-                    mainApkVersionCode
-                );
-
-                for (const [versionCode, mappingFilePath] of mappingFilesAndVersionCodes) {
-                    tl.checkPath(mappingFilePath, 'Mapping file path');
-                    console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
-                    tl.debug(`Uploading ${mappingFilePath} for version code ${versionCode}`);
-                    await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, versionCode);
-                    tl.debug(`Uploaded ${mappingFilePath} for version code ${versionCode}`);
-                }
+            if (uploadMappingFile) {
+                tl.debug(`Mapping file pattern: ${mappingFilePattern}`);
+                
+                const mappingFilePath = resolveGlobPath(mappingFilePattern);
+                tl.checkPath(mappingFilePath, 'Mapping file path');
+                console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
+                tl.debug(`Uploading ${mappingFilePath} for version code ${versionCodes[0]}`);
+                await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, versionCodes[0]);
             }
         }
 
@@ -232,10 +185,10 @@ async function run(): Promise<void> {
             console.log(tl.loc('AttachingMetadataToRelease'));
             tl.debug(`Uploading metadata from ${metadataRootPath}`);
             releaseNotes = await metadataHelper.addMetadata(edits, versionCodes.map((versionCode) => Number(versionCode)), metadataRootPath);
-            if (updateOnlyStoreListing) {
+            if (action === 'OnlyStoreListing') {
                 tl.debug('Selected store listing update -> skip update track');
             }
-            requireTrackUpdate = !updateOnlyStoreListing;
+            requireTrackUpdate = action !== 'OnlyStoreListing';
         } else if (changelogFile) {
             tl.debug(`Uploading the common change log ${changelogFile} to all versions`);
             const commonNotes = await metadataHelper.getCommonReleaseNotes(languageCode, changelogFile);
@@ -269,6 +222,54 @@ async function run(): Promise<void> {
     } catch (e) {
         tl.setResult(tl.TaskResult.Failed, e);
     }
+}
+
+/**
+ * Gets the right bundle(s) depending on the action
+ * @param action user's action
+ * @returns a list of bundles
+ */
+function getBundles(action: Action): string[] {
+    if (action === 'SingleBundle') {
+        const bundlePattern: string = tl.getInput('bundleFile', true);
+        const bundlePath: string = resolveGlobPath(bundlePattern);
+        tl.checkPath(bundlePath, 'bundlePath');
+        return [];
+    } else if (action === 'MultiApkAab') {
+        const bundlePatterns: string[] = tl.getDelimitedInput('bundleFiles', '\n');
+        const allBundlePaths = new Set<string>();
+        for (const bundlePattern of bundlePatterns) {
+            const bundlePaths: string[] = resolveGlobPaths(bundlePattern);
+            bundlePaths.forEach((bundlePath) => allBundlePaths.add(bundlePath));
+        }
+        return Array.from(allBundlePaths);
+    }
+    
+    return [];
+}
+
+/**
+ * Gets the right apk(s) depending on the action
+ * @param action user's action
+ * @returns a list of apks
+ */
+function getApks(action: Action): string[] {
+    if (action === 'SingleApk') {
+        const apkPattern: string = tl.getInput('apkFile', true);
+        const apkPath: string = resolveGlobPath(apkPattern);
+        tl.checkPath(apkPath, 'apkPath');
+        return [];
+    } else if (action === 'MultiApkAab') {
+        const apkPatterns: string[] = tl.getDelimitedInput('apkFiles', '\n');
+        const allApkPaths = new Set<string>();
+        for (const apkPattern of apkPatterns) {
+            const apkPaths: string[] = resolveGlobPaths(apkPattern);
+            apkPaths.forEach((apkPath) => allApkPaths.add(apkPath));
+        }
+        return Array.from(allApkPaths);
+    }
+    
+    return [];
 }
 
 /**
@@ -353,28 +354,6 @@ async function updateTrack(
     return res;
 }
 
-function getMainFilePath(mainPattern: string): string {
-    if (!mainPattern) {
-        return null;
-    }
-
-    return resolveGlobPath(mainPattern);
-}
-
-function getAdditionalFilesPaths(additionalPatterns: string[]): string[] {
-    if (!additionalPatterns || additionalPatterns.length === 0) {
-        return [];
-    }
-
-    const paths = new Set<string>();
-
-    for (const additionalPattern of additionalPatterns) {
-        resolveGlobPaths(additionalPattern).forEach((path) => paths.add(path));
-    }
-
-    return Array.from(paths);
-}
-
 /**
  * Get the appropriate file from the provided pattern
  * @param path The minimatch pattern of glob to be resolved to file path
@@ -415,10 +394,6 @@ function resolveGlobPaths(path: string): string[] {
     return [];
 }
 
-function getUniquePaths(paths: string[]): string[] {
-    return Array.from(new Set(paths)).filter((item) => item !== null);
-}
-
 function getVersionCodeListInput(): number[] {
     const versionCodeFilterInput: string[] = tl.getDelimitedInput('replaceList', ',', false);
     const versionCodeFilter: number[] = [];
@@ -441,24 +416,15 @@ function getVersionCodeListInput(): number[] {
     }
 }
 
-function shouldPickObbForApk(apk: string, mainApk: string, shouldPickObbFile: boolean, shouldPickObbFileForAdditonalApks: boolean): boolean {
-    if ((apk === mainApk) && shouldPickObbFile) {
-        return true;
-    } else if ((apk !== mainApk) && shouldPickObbFileForAdditonalApks) {
-        return true;
-    }
-    return false;
-}
-
 /**
  * Get obb file. Returns any file with .obb extension if present in parent directory else returns
  * from apk directory with pattern: main.<versionCode>.<packageName>.obb
  * @param apkPath apk file path
  * @param packageName package name of the apk
  * @param versionCode version code of the apk
- * @returns ObbPathFile of the obb file if present else null
+ * @returns ObbPathFile of the obb file is present else null
  */
-function getObbFile(apkPath: string, packageName: string, versionCode: number): string {
+function getObbFile(apkPath: string, packageName: string, versionCode: number): string | null {
     const currentDirectory: string = path.dirname(apkPath);
     const parentDirectory: string = path.dirname(currentDirectory);
 
@@ -481,86 +447,6 @@ function getObbFile(apkPath: string, packageName: string, versionCode: number): 
         tl.debug(`No Obb found for ${apkPath}, skipping upload`);
         return null;
     }
-}
-
-/**
- * Extracts version codes and mapping file paths from mappingFilePaths input.
- * There are two ways to specify mapping file path in this input:
- *
- * 1. Specific version code.
- *
- * Syntax: `$(versionCode): $(mappingPath)`.
- * Examples:
- *
- * `5674: /path/to/mapping.txt` - this will pick up mapping.txt for apk/aab with version code 5674
- *
- * `5675: /glob/path/to/*.txt` - this will pick up a single .txt file with glob pattern
- *
- * 2. Any version codes. These will be matched with aabs/apks in this order:
- *    main bundle, main apk, additional bundles, additional apks.
- *
- * Syntax: `$(mappingPath)`
- * Examples:
- *
- * `/path/to/mapping.txt` - this will associate mapping.txt with the main bundle, unless another mapping.txt was already associated with it using option #1
- *
- * `/path/to/*.txt` - this will associed all .txt files in this folder with the aabs/apks
- *
- * @param mappingFilePatterns `mappingFilePaths` input value
- * @param versionCodes version codes of aabs/apks that have been uploaded
- * @returns one-to-one mapping from aab/apk version code to the mapping file path corresponding to this version code
- */
-function getMappingFilesAndVersionCodes(
-    mappingFilePatterns: string[],
-    versionCodes: number[],
-    mainBundleVersionCode: number,
-    mainApkVersionCode: number
-): Map<number, string> {
-    const result = new Map<number, string>();
-
-    // Handle mapping files for specific version codes (option #1)
-
-    const specificVersionCodePatterns: string[] = mappingFilePatterns.filter((pattern) => pattern.includes(':'));
-
-    for (const specificPattern of specificVersionCodePatterns) {
-        const [versionCodeString, mappingFilePattern] = specificPattern.split(':');
-        const versionCode = Number(versionCodeString.trim());
-        const mappingFilePath = resolveGlobPath(mappingFilePattern.trim());
-        result.set(versionCode, mappingFilePath);
-    }
-
-    // Handle the rest of the mapping files (option #2)
-
-    const additionalVersionCodes: number[] = versionCodes.filter(
-        (versionCode) => versionCode !== mainBundleVersionCode && versionCode !== mainApkVersionCode
-    );
-    const versionCodesInCorrectOrder: number[] = [
-        mainBundleVersionCode,
-        mainApkVersionCode,
-        ...additionalVersionCodes
-    ].filter((versionCode) => versionCode !== undefined);
-    const remainingVersionCodesInCorrectOrder: number[] = versionCodesInCorrectOrder.filter(
-        (versionCode) => !result.has(versionCode)
-    );
-
-    const restOfThePatterns: string[] = mappingFilePatterns.filter((pattern) => !pattern.includes(':'));
-
-    const mappingFilePaths: string[] = [];
-    for (const mappingFilePattern of restOfThePatterns) {
-        mappingFilePaths.push(...resolveGlobPaths(mappingFilePattern));
-    }
-
-    for (const mappingFilePath of mappingFilePaths) {
-        // Number of matching mapping file paths may be greater than the number of version codes provided
-        if (remainingVersionCodesInCorrectOrder.length === 0) {
-            break;
-        }
-
-        const correspondingVersionCode: number = remainingVersionCodesInCorrectOrder.shift();
-        result.set(correspondingVersionCode, mappingFilePath);
-    }
-
-    return result;
 }
 
 run();
