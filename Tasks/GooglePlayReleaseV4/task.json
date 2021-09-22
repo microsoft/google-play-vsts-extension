@@ -69,6 +69,7 @@
             "name": "action",
             "label": "Action",
             "defaultValue": "SingleBundle",
+            "required": true,
             "type": "pickList",
             "helpMarkDown": "",
             "options": {
