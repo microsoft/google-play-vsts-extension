@@ -38,7 +38,18 @@ async function run(): Promise<void> {
         }
 
         // General inputs
-        const action = tl.getInput('action', false) as Action;
+
+        const actionString: string = tl.getInput('action', false);
+        if (
+            actionString !== 'MultiApkAab'
+            && actionString !== 'SingleBundle'
+            && actionString !== 'SingleApk'
+            && actionString !== 'OnlyStoreListing'
+        ) {
+            throw new Error(`Action input value is invalid: ${actionString}`);
+        }
+        const action: Action = actionString;
+        tl.debug(`Action: ${action}`);
 
         const packageName: string = tl.getInput('applicationId', true);
         tl.debug(`Application identifier: ${packageName}`);
