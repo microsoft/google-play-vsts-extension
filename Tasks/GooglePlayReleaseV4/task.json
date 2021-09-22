@@ -109,7 +109,7 @@
             "name": "apkFiles",
             "label": "APK paths",
             "defaultValue": "",
-            "type": "string",
+            "type": "multiLine",
             "helpMarkDown": "Paths to the APK files you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match all APK files, in any directory.",
             "visibleRule": "action = MultiApkAab"
         },
