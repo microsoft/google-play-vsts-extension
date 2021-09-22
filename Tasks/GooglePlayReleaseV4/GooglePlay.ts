@@ -171,7 +171,7 @@ async function run(): Promise<void> {
 
             if (uploadMappingFile) {
                 tl.debug(`Mapping file pattern: ${mappingFilePattern}`);
-                
+
                 const mappingFilePath = resolveGlobPath(mappingFilePattern);
                 tl.checkPath(mappingFilePath, 'Mapping file path');
                 console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
@@ -244,7 +244,7 @@ function getBundles(action: Action): string[] {
         }
         return Array.from(allBundlePaths);
     }
-    
+
     return [];
 }
 
@@ -268,7 +268,7 @@ function getApks(action: Action): string[] {
         }
         return Array.from(allApkPaths);
     }
-    
+
     return [];
 }
 
