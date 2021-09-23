@@ -26,7 +26,7 @@ export function getJWT(key: ClientKey): googleapis.Auth.JWT {
  * @return edit - A promise that will return result from inserting a new edit
  *                          { id: string, expiryTimeSeconds: string }
  */
- export async function getNewEdit(edits: pub3.Resource$Edits, packageName: string): Promise<pub3.Schema$AppEdit> {
+export async function getNewEdit(edits: pub3.Resource$Edits, packageName: string): Promise<pub3.Schema$AppEdit> {
     tl.debug('Creating a new edit');
     const requestParameters: pub3.Params$Resource$Edits$Insert = {
         packageName: packageName
@@ -168,7 +168,7 @@ export async function addBundle(edits: pub3.Resource$Edits, packageName: string,
  * @returns A promise that will return result from uploading an apk
  *                          { versionCode: integer, binary: { sha1: string } }
  */
- export async function addApk(edits: pub3.Resource$Edits, packageName: string, apkFile: string): Promise<pub3.Schema$Apk> {
+export async function addApk(edits: pub3.Resource$Edits, packageName: string, apkFile: string): Promise<pub3.Schema$Apk> {
     let requestParameters: pub3.Params$Resource$Edits$Apks$Upload = {
         packageName: packageName,
         media: {

@@ -336,8 +336,8 @@ async function updateTrack(
         tl.debug('Current version codes: ' + JSON.stringify(oldTrackVersionCodes));
 
         if (typeof(versionCodeFilter) === 'string') {
-            tl.debug(`Removing version codes matching the regular expression: ^${versionCodeFilter as string}$`);
-            const versionCodesToRemove: RegExp = new RegExp(`^${versionCodeFilter as string}$`);
+            tl.debug(`Removing version codes matching the regular expression: ^${versionCodeFilter}$`);
+            const versionCodesToRemove: RegExp = new RegExp(`^${versionCodeFilter}$`);
 
             oldTrackVersionCodes.forEach((versionCode) => {
                 if (!versionCode.toString().match(versionCodesToRemove)) {
@@ -345,7 +345,7 @@ async function updateTrack(
                 }
             });
         } else {
-            const versionCodesToRemove = versionCodeFilter as number[];
+            const versionCodesToRemove = versionCodeFilter;
             tl.debug('Removing version codes: ' + JSON.stringify(versionCodesToRemove));
 
             oldTrackVersionCodes.forEach((versionCode) => {
