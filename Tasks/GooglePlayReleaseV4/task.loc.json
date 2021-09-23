@@ -66,35 +66,52 @@
       "helpMarkDown": "ms-resource:loc.input.help.applicationId"
     },
     {
-      "name": "updateOnlyStoreListing",
-      "label": "ms-resource:loc.input.label.updateOnlyStoreListing",
-      "defaultValue": false,
-      "type": "boolean",
-      "helpMarkDown": "ms-resource:loc.input.help.updateOnlyStoreListing"
+      "name": "action",
+      "label": "ms-resource:loc.input.label.action",
+      "defaultValue": "SingleBundle",
+      "required": true,
+      "type": "pickList",
+      "helpMarkDown": "",
+      "options": {
+        "OnlyStoreListing": "Only update store listing",
+        "SingleBundle": "Upload single bundle",
+        "SingleApk": "Upload single apk",
+        "MultiApkAab": "Upload multiple apk/aab files"
+      }
     },
     {
       "name": "bundleFile",
       "label": "ms-resource:loc.input.label.bundleFile",
       "defaultValue": "",
+      "required": true,
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.bundleFile",
-      "visibleRule": "updateOnlyStoreListing = false"
-    },
-    {
-      "name": "additionalBundles",
-      "label": "ms-resource:loc.input.label.additionalBundles",
-      "defaultValue": "",
-      "type": "multiLine",
-      "helpMarkDown": "ms-resource:loc.input.help.additionalBundles",
-      "visibleRule": "updateOnlyStoreListing = false"
+      "visibleRule": "action = SingleBundle"
     },
     {
       "name": "apkFile",
       "label": "ms-resource:loc.input.label.apkFile",
       "defaultValue": "",
+      "required": true,
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.apkFile",
-      "visibleRule": "updateOnlyStoreListing = false"
+      "visibleRule": "action = SingleApk"
+    },
+    {
+      "name": "bundleFiles",
+      "label": "ms-resource:loc.input.label.bundleFiles",
+      "defaultValue": "",
+      "type": "multiLine",
+      "helpMarkDown": "ms-resource:loc.input.help.bundleFiles",
+      "visibleRule": "action = MultiApkAab"
+    },
+    {
+      "name": "apkFiles",
+      "label": "ms-resource:loc.input.label.apkFiles",
+      "defaultValue": "",
+      "type": "multiLine",
+      "helpMarkDown": "ms-resource:loc.input.help.apkFiles",
+      "visibleRule": "action = MultiApkAab"
     },
     {
       "name": "shouldPickObbFile",
@@ -102,23 +119,7 @@
       "defaultValue": false,
       "type": "boolean",
       "helpMarkDown": "ms-resource:loc.input.help.shouldPickObbFile",
-      "visibleRule": "updateOnlyStoreListing = false"
-    },
-    {
-      "name": "additionalApks",
-      "label": "ms-resource:loc.input.label.additionalApks",
-      "defaultValue": "",
-      "type": "multiLine",
-      "helpMarkDown": "ms-resource:loc.input.help.additionalApks",
-      "visibleRule": "updateOnlyStoreListing = false"
-    },
-    {
-      "name": "shouldPickObbFileForAdditonalApks",
-      "label": "ms-resource:loc.input.label.shouldPickObbFileForAdditonalApks",
-      "defaultValue": false,
-      "type": "boolean",
-      "helpMarkDown": "ms-resource:loc.input.help.shouldPickObbFileForAdditonalApks",
-      "visibleRule": "updateOnlyStoreListing = false"
+      "visibleRule": "action = SingleApk || action = MultiApkAab"
     },
     {
       "name": "track",
@@ -127,7 +128,7 @@
       "required": true,
       "type": "pickList",
       "helpMarkDown": "ms-resource:loc.input.help.track",
-      "visibleRule": "updateOnlyStoreListing = false",
+      "visibleRule": "action != OnlyStoreListing",
       "options": {
         "internal": "Internal test",
         "alpha": "Alpha",
@@ -176,7 +177,7 @@
       "defaultValue": false,
       "type": "boolean",
       "helpMarkDown": "ms-resource:loc.input.help.changeUpdatePriority",
-      "visibleRule": "updateOnlyStoreListing = false",
+      "visibleRule": "action != OnlyStoreListing",
       "groupName": "advanced"
     },
     {
@@ -185,7 +186,7 @@
       "defaultValue": "0",
       "type": "pickList",
       "helpMarkDown": "ms-resource:loc.input.help.updatePriority",
-      "visibleRule": "updateOnlyStoreListing = false && changeUpdatePriority = true",
+      "visibleRule": "action != OnlyStoreListing && changeUpdatePriority = true",
       "groupName": "advanced",
       "options": {
         "0": "0",
@@ -202,7 +203,7 @@
       "defaultValue": false,
       "type": "boolean",
       "helpMarkDown": "ms-resource:loc.input.help.rolloutToUserFraction",
-      "visibleRule": "updateOnlyStoreListing = false",
+      "visibleRule": "action != OnlyStoreListing",
       "groupName": "advanced"
     },
     {
@@ -211,42 +212,43 @@
       "defaultValue": "1.0",
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.userFraction",
-      "visibleRule": "updateOnlyStoreListing = false && rolloutToUserFraction = true",
+      "visibleRule": "action != OnlyStoreListing && rolloutToUserFraction = true",
       "groupName": "advanced"
     },
     {
-      "name": "shouldUploadMappingFiles",
-      "label": "ms-resource:loc.input.label.shouldUploadMappingFiles",
+      "name": "shouldUploadMappingFile",
+      "label": "ms-resource:loc.input.label.shouldUploadMappingFile",
       "defaultValue": false,
       "type": "boolean",
-      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadMappingFiles",
-      "visibleRule": "updateOnlyStoreListing = false",
+      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadMappingFile",
+      "visibleRule": "action != OnlyStoreListing && action != MultiApkAab",
       "groupName": "advanced"
     },
     {
-      "name": "mappingFilePaths",
-      "label": "ms-resource:loc.input.label.mappingFilePaths",
+      "name": "mappingFilePath",
+      "label": "ms-resource:loc.input.label.mappingFilePath",
       "defaultValue": "",
-      "type": "multiLine",
-      "helpMarkDown": "ms-resource:loc.input.help.mappingFilePaths",
-      "visibleRule": "updateOnlyStoreListing = false && shouldUploadMappingFile = true",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.mappingFilePath",
+      "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadMappingFile = true",
       "groupName": "advanced"
     },
     {
       "name": "changesNotSentForReview",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.changesNotSentForReview",
-      "groupName": "advanced",
       "defaultValue": false,
-      "helpMarkDown": "ms-resource:loc.input.help.changesNotSentForReview"
+      "helpMarkDown": "ms-resource:loc.input.help.changesNotSentForReview",
+      "groupName": "advanced"
     },
     {
       "name": "releaseName",
       "type": "string",
       "label": "ms-resource:loc.input.label.releaseName",
-      "groupName": "advanced",
       "defaultValue": "",
-      "helpMarkDown": "ms-resource:loc.input.help.releaseName"
+      "helpMarkDown": "ms-resource:loc.input.help.releaseName",
+      "visibleRule": "action != OnlyStoreListing",
+      "groupName": "advanced"
     },
     {
       "name": "versionCodeFilterType",
@@ -254,7 +256,7 @@
       "defaultValue": "all",
       "type": "pickList",
       "helpMarkDown": "ms-resource:loc.input.help.versionCodeFilterType",
-      "visibleRule": "updateOnlyStoreListing = false",
+      "visibleRule": "action != OnlyStoreListing",
       "groupName": "advanced",
       "options": {
         "all": "All",
@@ -269,7 +271,7 @@
       "required": true,
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.replaceList",
-      "visibleRule": "updateOnlyStoreListing = false && versionCodeFilterType = list",
+      "visibleRule": "action != OnlyStoreListing && versionCodeFilterType = list",
       "groupName": "advanced"
     },
     {
@@ -279,7 +281,7 @@
       "required": true,
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.replaceExpression",
-      "visibleRule": "updateOnlyStoreListing = false && versionCodeFilterType = expression",
+      "visibleRule": "action != OnlyStoreListing && versionCodeFilterType = expression",
       "groupName": "advanced"
     }
   ],
@@ -307,10 +309,10 @@
     "ImageTypeNotFound": "ms-resource:loc.messages.ImageTypeNotFound",
     "IncorrectVersionCodeFilter": "ms-resource:loc.messages.IncorrectVersionCodeFilter",
     "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
-    "MustProvideAdditionalApkIfAdditionalObb": "ms-resource:loc.messages.MustProvideAdditionalApkIfAdditionalObb",
+    "MustProvideApkIfObb": "ms-resource:loc.messages.MustProvideApkIfObb",
     "MustProvideApkOrAab": "ms-resource:loc.messages.MustProvideApkOrAab",
-    "MustProvideMainApkIfMainObb": "ms-resource:loc.messages.MustProvideMainApkIfMainObb",
     "PublishSucceed": "ms-resource:loc.messages.PublishSucceed",
+    "SetUnusedInput": "ms-resource:loc.messages.SetUnusedInput",
     "StatNotDirectory": "ms-resource:loc.messages.StatNotDirectory",
     "TrackInfo": "ms-resource:loc.messages.TrackInfo",
     "UpdateTrack": "ms-resource:loc.messages.UpdateTrack",
