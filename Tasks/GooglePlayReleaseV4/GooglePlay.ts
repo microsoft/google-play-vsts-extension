@@ -245,48 +245,50 @@ async function run(): Promise<void> {
 }
 
 /**
- * Gets the right bundle(s) depending on the action
+ * Gets the right bundles(s) depending on the action. Uses `getApksOrAabs()`
  * @param action user's action
  * @returns a list of bundles
  */
-function getBundles(action: Action): string[] {
-    if (action === 'SingleBundle') {
-        const bundlePattern: string = tl.getInput('bundleFile', true);
-        const bundlePath: string = resolveGlobPath(bundlePattern);
-        tl.checkPath(bundlePath, 'bundlePath');
-        return [bundlePath];
-    } else if (action === 'MultiApkAab') {
-        const bundlePatterns: string[] = tl.getDelimitedInput('bundleFiles', '\n');
-        const allBundlePaths = new Set<string>();
-        for (const bundlePattern of bundlePatterns) {
-            const bundlePaths: string[] = resolveGlobPaths(bundlePattern);
-            bundlePaths.forEach((bundlePath) => allBundlePaths.add(bundlePath));
-        }
-        return Array.from(allBundlePaths);
-    }
+ function getBundles(action: Action): string[] {
+    return getApksOrAabs(action, 'SingleBundle', 'bundleFile', 'bundleFiles');
+}
 
-    return [];
+/**
+ * Gets the right apk(s) depending on the action. Uses `getApksOrAabs()`
+ * @param action user's action
+ * @returns a list of apks
+ */
+function getApks(action: Action): string[] {
+    return getApksOrAabs(action, 'SingleApk', 'apkFile', 'apkFiles');
 }
 
 /**
  * Gets the right apk(s) depending on the action
  * @param action user's action
- * @returns a list of apks
+ * @param singleAction which action would be considered a single file upload
+ * @param singleInput input containing single file patterb. Used if `action == singleAction`
+ * @param multiInput input containing multiple files patterns. Used if `action == 'MultiApkAab'`
+ * @returns a list of apks/aabs
  */
-function getApks(action: Action): string[] {
-    if (action === 'SingleApk') {
-        const apkPattern: string = tl.getInput('apkFile', true);
-        const apkPath: string = resolveGlobPath(apkPattern);
-        tl.checkPath(apkPath, 'apkPath');
-        return [apkPath];
+function getApksOrAabs(
+    action: Action,
+    singleAction: 'SingleApk' | 'SingleBundle',
+    singleInput: 'apkFile' | 'bundleFile',
+    multiInput: 'apkFiles' | 'bundleFiles',
+): string[] {
+    if (action === singleAction) {
+        const pattern: string = tl.getInput(singleInput, true);
+        const path: string = resolveGlobPath(pattern);
+        tl.checkPath(path, singleInput);
+        return [path];
     } else if (action === 'MultiApkAab') {
-        const apkPatterns: string[] = tl.getDelimitedInput('apkFiles', '\n');
-        const allApkPaths = new Set<string>();
-        for (const apkPattern of apkPatterns) {
-            const apkPaths: string[] = resolveGlobPaths(apkPattern);
-            apkPaths.forEach((apkPath) => allApkPaths.add(apkPath));
+        const patterns: string[] = tl.getDelimitedInput(multiInput, '\n');
+        const allPaths = new Set<string>();
+        for (const pattern of patterns) {
+            const paths: string[] = resolveGlobPaths(pattern);
+            paths.forEach((path) => allPaths.add(path));
         }
-        return Array.from(allApkPaths);
+        return Array.from(allPaths);
     }
 
     return [];
