@@ -92,7 +92,7 @@ async function run(): Promise<void> {
         const userFractionSupplied: boolean = tl.getBoolInput('rolloutToUserFraction');
         const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
 
-        const uploadMappingFile: boolean = tl.getBoolInput('shouldUploadMappingFile', false);
+        const uploadMappingFile: boolean = tl.getBoolInput('shouldUploadMappingFile', false) && (action === 'SingleApk' || action === 'SingleBundle');
         const mappingFilePattern: string = tl.getInput('mappingFilePath');
 
         const changesNotSentForReview: boolean = tl.getBoolInput('changesNotSentForReview');
