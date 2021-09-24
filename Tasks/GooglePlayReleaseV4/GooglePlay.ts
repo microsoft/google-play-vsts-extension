@@ -119,7 +119,7 @@ async function run(): Promise<void> {
         // The regular submission process is composed
         // of a transction with the following steps:
         // -----------------------------------------
-        // #1) Get an OAuth token by authentincating the service account
+        // #1) Get an OAuth token by authenticating the service account
         // #2) Create a new editing transaction
         // #3) Upload the new APK(s) or AAB(s)
         // #4) Specify the track that should be used for the new APK/AAB (e.g. alpha, beta)
