@@ -173,7 +173,7 @@ export async function addApk(edits: pub3.Resource$Edits, packageName: string, ap
         packageName: packageName,
         media: {
             body: fs.createReadStream(apkFile),
-            mimeType: 'application/octet-stream'
+            mimeType: 'application/vnd.android.package-archive'
         }
     };
 
