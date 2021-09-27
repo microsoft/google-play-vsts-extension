@@ -263,10 +263,11 @@ function getApks(action: Action): string[] {
 }
 
 /**
- * Gets the right apk(s) depending on the action
+ * Gets the right apk(s)/aab(s) depending on the action.
+ * This function exists to avoid code duplication: the process of getting APKs and AABs is very similar.
  * @param action user's action
  * @param singleAction which action would be considered a single file upload
- * @param singleInput input containing single file patterb. Used if `action == singleAction`
+ * @param singleInput input containing single file pattern. Used if `action == singleAction`
  * @param multiInput input containing multiple files patterns. Used if `action == 'MultiApkAab'`
  * @returns a list of apks/aabs
  */
