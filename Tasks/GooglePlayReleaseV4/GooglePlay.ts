@@ -3,8 +3,8 @@ import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as glob from 'glob';
 
-import * as googleutil from './googleutil';
-import * as metadataHelper from './metadataHelper';
+import * as googleutil from './modules/googleutil';
+import * as metadataHelper from './modules/metadataHelper';
 
 import * as googleapis from 'googleapis';
 import { androidpublisher_v3 as pub3 } from 'googleapis';
