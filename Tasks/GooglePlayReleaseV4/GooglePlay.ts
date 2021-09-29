@@ -46,7 +46,7 @@ async function run(): Promise<void> {
             && actionString !== 'SingleApk'
             && actionString !== 'OnlyStoreListing'
         ) {
-            throw new Error(`Action input value is invalid: ${actionString}`);
+            throw new Error(tl.loc('InvalidActionInputValue', actionString));
         }
         const action: Action = actionString;
         tl.debug(`Action: ${action}`);

@@ -308,6 +308,7 @@
     "ImageDirNotFound": "ms-resource:loc.messages.ImageDirNotFound",
     "ImageTypeNotFound": "ms-resource:loc.messages.ImageTypeNotFound",
     "IncorrectVersionCodeFilter": "ms-resource:loc.messages.IncorrectVersionCodeFilter",
+    "InvalidActionInputValue": "ms-resource:loc.messages.InvalidActionInputValue",
     "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
     "MustProvideApkIfObb": "ms-resource:loc.messages.MustProvideApkIfObb",
     "MustProvideApkOrAab": "ms-resource:loc.messages.MustProvideApkOrAab",

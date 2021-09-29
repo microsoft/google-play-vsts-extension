@@ -69,6 +69,7 @@
   "loc.messages.ImageDirNotFound": "Image directory for %s was not found. Skipping...",
   "loc.messages.ImageTypeNotFound": "Image for %s was not found. Skipping...",
   "loc.messages.IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s",
+  "loc.messages.InvalidActionInputValue": "Action input value is invalid: $s. Please recheck pipeline task configuration.",
   "loc.messages.InvalidAuthFile": "%s is not a valid auth file",
   "loc.messages.MustProvideApkIfObb": "shouldPickObbFile input is enabled, but no apk files could be found",
   "loc.messages.MustProvideApkOrAab": "You must provide either apk or aab file(s). Neither were found.",

@@ -308,6 +308,7 @@
         "ImageDirNotFound": "Image directory for %s was not found. Skipping...",
         "ImageTypeNotFound": "Image for %s was not found. Skipping...",
         "IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s",
+        "InvalidActionInputValue": "Action input value is invalid: $s. Please recheck pipeline task configuration.",
         "InvalidAuthFile": "%s is not a valid auth file",
         "MustProvideApkIfObb": "shouldPickObbFile input is enabled, but no apk files could be found",
         "MustProvideApkOrAab": "You must provide either apk or aab file(s). Neither were found.",
