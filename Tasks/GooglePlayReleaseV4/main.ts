@@ -279,8 +279,10 @@ function getApksOrAabs(
 ): string[] {
     if (action === singleAction) {
         const pattern: string = tl.getInput(singleInput, true);
-        const path: string = resolveGlobPath(pattern);
-        tl.checkPath(path, singleInput);
+        const path: string | null = resolveGlobPath(pattern);
+        if (path === null) {
+            throw new Error(tl.loc('ApkOrAabNotFound', singleInput, pattern));
+        }
         return [path];
     } else if (action === 'MultiApkAab') {
         const patterns: string[] = tl.getDelimitedInput(multiInput, '\n');
