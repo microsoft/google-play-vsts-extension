@@ -219,7 +219,7 @@ async function run(): Promise<void> {
         if (requireTrackUpdate) {
             console.log(tl.loc('UpdateTrack'));
             tl.debug(`Updating the track ${track}.`);
-            const updatedTrack: pub3.Schema$Track = await updateTrack(
+            const updatedTrack: pub3.Schema$Track = await prepareTrackUpdate(
                 edits,
                 packageName,
                 track,
@@ -308,7 +308,7 @@ function getApksOrAabs(
  * @returns track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-async function updateTrack(
+async function prepareTrackUpdate(
     edits: pub3.Resource$Edits,
     packageName: string,
     track: string,
