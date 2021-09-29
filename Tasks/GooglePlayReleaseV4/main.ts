@@ -219,7 +219,7 @@ async function run(): Promise<void> {
         if (requireTrackUpdate) {
             console.log(tl.loc('UpdateTrack'));
             tl.debug(`Updating the track ${track}.`);
-            const updatedTrack: pub3.Schema$Track = await prepareTrackUpdate(
+            const updatedTrack: pub3.Schema$Track = await prepareTrackUpdate({
                 edits,
                 packageName,
                 track,
@@ -230,7 +230,7 @@ async function run(): Promise<void> {
                 updatePriority,
                 releaseNotes,
                 releaseName
-            );
+            });
             tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
         }
 
@@ -308,7 +308,18 @@ function getApksOrAabs(
  * @returns track A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
-async function prepareTrackUpdate(
+async function prepareTrackUpdate({
+    edits,
+    packageName,
+    track,
+    versionCodes,
+    versionCodeFilterType,
+    versionCodeFilter,
+    userFraction,
+    updatePriority,
+    releaseNotes,
+    releaseName
+}: {
     edits: pub3.Resource$Edits,
     packageName: string,
     track: string,
@@ -319,8 +330,7 @@ async function prepareTrackUpdate(
     updatePriority: number,
     releaseNotes?: pub3.Schema$LocalizedText[],
     releaseName?: string
-): Promise<pub3.Schema$Track> {
-
+}): Promise<pub3.Schema$Track> {
     let newTrackVersionCodes: number[] = [];
     let res: pub3.Schema$Track;
 
