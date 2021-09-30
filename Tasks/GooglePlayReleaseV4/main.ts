@@ -212,16 +212,16 @@ async function run(): Promise<void> {
 }
 
 interface TrackUpdateParameters {
-    edits: pub3.Resource$Edits,
-    packageName: string,
-    track: string,
-    versionCodes: number[],
-    versionCodeFilterType: string,
-    versionCodeFilter: string | number[],
-    userFraction: number,
-    updatePriority: number,
-    releaseNotes?: pub3.Schema$LocalizedText[],
-    releaseName?: string
+    edits: pub3.Resource$Edits;
+    packageName: string;
+    track: string;
+    versionCodes: number[];
+    versionCodeFilterType: string;
+    versionCodeFilter: string | number[];
+    userFraction: number;
+    updatePriority: number;
+    releaseNotes?: pub3.Schema$LocalizedText[];
+    releaseName?: string;
 }
 
 /**
