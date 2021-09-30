@@ -185,7 +185,7 @@ async function run(): Promise<void> {
         if (requireTrackUpdate) {
             console.log(tl.loc('UpdateTrack'));
             tl.debug(`Updating the track ${track}.`);
-            const updatedTrack: pub3.Schema$Track = await prepareTrackUpdate({
+            const parameters: TrackUpdateParameters = {
                 edits,
                 packageName,
                 track,
@@ -196,7 +196,8 @@ async function run(): Promise<void> {
                 updatePriority,
                 releaseNotes,
                 releaseName
-            });
+            };
+            const updatedTrack: pub3.Schema$Track = await prepareTrackUpdate(parameters);
             tl.debug('Updated track info: ' + JSON.stringify(updatedTrack));
         }
 
@@ -210,8 +211,21 @@ async function run(): Promise<void> {
     }
 }
 
+interface TrackUpdateParameters {
+    edits: pub3.Resource$Edits,
+    packageName: string,
+    track: string,
+    versionCodes: number[],
+    versionCodeFilterType: string,
+    versionCodeFilter: string | number[],
+    userFraction: number,
+    updatePriority: number,
+    releaseNotes?: pub3.Schema$LocalizedText[],
+    releaseName?: string
+}
+
 /**
- * Update a given release track with the given information
+ * Removes old version codes, then updates a given release track with the given information
  * Assumes authorized
  * @param packageName unique android package name (com.android.etc)
  * @param track one of the values {"internal", "alpha", "beta", "production"}
@@ -234,18 +248,7 @@ async function prepareTrackUpdate({
     updatePriority,
     releaseNotes,
     releaseName
-}: {
-    edits: pub3.Resource$Edits,
-    packageName: string,
-    track: string,
-    versionCodes: number[],
-    versionCodeFilterType: string,
-    versionCodeFilter: string | number[],
-    userFraction: number,
-    updatePriority: number,
-    releaseNotes?: pub3.Schema$LocalizedText[],
-    releaseName?: string
-}): Promise<pub3.Schema$Track> {
+}: TrackUpdateParameters): Promise<pub3.Schema$Track> {
     let newTrackVersionCodes: number[] = [];
     let res: pub3.Schema$Track;
 
