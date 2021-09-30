@@ -1,10 +1,10 @@
-import * as fs from 'fs';
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
-import * as glob from 'glob';
 
 import * as googleutil from './modules/googleutil';
 import * as metadataHelper from './modules/metadataHelper';
+import * as inputsHelper from './modules/inputsHelper';
+import * as fileHelper from './modules/fileHelper';
 
 import * as googleapis from 'googleapis';
 import { androidpublisher_v3 as pub3 } from 'googleapis';
@@ -19,44 +19,19 @@ async function run(): Promise<void> {
 
         // Authentication inputs
 
-        const authType: string = tl.getInput('authType', true);
-        let key: googleutil.ClientKey = {};
-        if (authType === 'JsonFile') {
-            const serviceAccountKeyFile: string = tl.getPathInput('serviceAccountKey', true, true);
-
-            const stats: tl.FsStats = tl.stats(serviceAccountKeyFile);
-            if (stats && stats.isFile()) {
-                key = require(serviceAccountKeyFile);
-            } else {
-                tl.debug(`The service account file path ${serviceAccountKeyFile} points to a directory.`);
-                throw new Error(tl.loc('InvalidAuthFile', serviceAccountKeyFile));
-            }
-        } else if (authType === 'ServiceEndpoint') {
-            let serviceEndpoint: tl.EndpointAuthorization = tl.getEndpointAuthorization(tl.getInput('serviceEndpoint', true), false);
-            key.client_email = serviceEndpoint.parameters['username'];
-            key.private_key = serviceEndpoint.parameters['password'].replace(/\\n/g, '\n');
-        }
+        const key: googleutil.ClientKey = inputsHelper.getClientKey();
 
         // General inputs
 
-        const actionString: string = tl.getInput('action', false);
-        if (
-            actionString !== 'MultiApkAab'
-            && actionString !== 'SingleBundle'
-            && actionString !== 'SingleApk'
-            && actionString !== 'OnlyStoreListing'
-        ) {
-            throw new Error(tl.loc('InvalidActionInputValue', actionString));
-        }
-        const action: Action = actionString;
+        const action: Action = inputsHelper.getAction();
         tl.debug(`Action: ${action}`);
 
         const packageName: string = tl.getInput('applicationId', true);
         tl.debug(`Application identifier: ${packageName}`);
 
-        const bundleFileList: string[] = getBundles(action);
+        const bundleFileList: string[] = inputsHelper.getBundles(action);
         tl.debug(`Bundles: ${bundleFileList}`);
-        const apkFileList: string[] = getApks(action);
+        const apkFileList: string[] = inputsHelper.getApks(action);
         tl.debug(`APKs: ${apkFileList}`);
 
         const shouldPickObb: boolean = tl.getBoolInput('shouldPickObbFile', false);
@@ -102,19 +77,12 @@ async function run(): Promise<void> {
         const versionCodeFilterType: string = tl.getInput('versionCodeFilterType', false) || 'all';
         let versionCodeFilter: string | number[] = null;
         if (versionCodeFilterType === 'list') {
-            versionCodeFilter = getVersionCodeListInput();
+            versionCodeFilter = inputsHelper.getVersionCodeListInput();
         } else if (versionCodeFilterType === 'expression') {
             versionCodeFilter = tl.getInput('replaceExpression', true);
         }
 
-        // Warn about unused inputs
-
-        switch (action) {
-            case 'MultiApkAab': warnIfUnusedInputsSet('bundleFile', 'apkFile', 'shouldUploadMappingFile', 'mappingFilePath'); break;
-            case 'SingleBundle': warnIfUnusedInputsSet('apkFile', 'bundleFiles', 'apkFiles'); break;
-            case 'SingleApk': warnIfUnusedInputsSet('bundleFile', 'bundleFiles', 'apkFiles'); break;
-            case 'OnlyStoreListing': warnIfUnusedInputsSet('bundleFile', 'apkFile', 'bundleFiles', 'apkFiles', 'track'); break;
-        }
+        inputsHelper.warnAboutUnusedInputs(action);
 
         // The regular submission process is composed
         // of a transction with the following steps:
@@ -170,7 +138,7 @@ async function run(): Promise<void> {
                 tl.debug(`Uploaded ${apkFile} with the version code ${apk.versionCode}`);
 
                 if (shouldPickObb) {
-                    const obbFile: string | null = getObbFile(apkFile, packageName, apk.versionCode);
+                    const obbFile: string | null = fileHelper.getObbFile(apkFile, packageName, apk.versionCode);
 
                     if (obbFile !== null) {
                         const obb: pub3.Schema$ExpansionFilesUploadResponse | null = await googleutil.addObb(
@@ -192,7 +160,7 @@ async function run(): Promise<void> {
             if (uploadMappingFile) {
                 tl.debug(`Mapping file pattern: ${mappingFilePattern}`);
 
-                const mappingFilePath = resolveGlobPath(mappingFilePattern);
+                const mappingFilePath = fileHelper.resolveGlobPath(mappingFilePattern);
                 tl.checkPath(mappingFilePath, 'Mapping file path');
                 console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
                 tl.debug(`Uploading ${mappingFilePath} for version code ${versionCodes[0]}`);
@@ -242,59 +210,6 @@ async function run(): Promise<void> {
     } catch (e) {
         tl.setResult(tl.TaskResult.Failed, e);
     }
-}
-
-/**
- * Gets the right bundles(s) depending on the action. Uses `getApksOrAabs()`
- * @param action user's action
- * @returns a list of bundles
- */
- function getBundles(action: Action): string[] {
-    return getApksOrAabs(action, 'SingleBundle', 'bundleFile', 'bundleFiles');
-}
-
-/**
- * Gets the right apk(s) depending on the action. Uses `getApksOrAabs()`
- * @param action user's action
- * @returns a list of apks
- */
-function getApks(action: Action): string[] {
-    return getApksOrAabs(action, 'SingleApk', 'apkFile', 'apkFiles');
-}
-
-/**
- * Gets the right apk(s)/aab(s) depending on the action.
- * This function exists to avoid code duplication: the process of getting APKs and AABs is very similar.
- * @param action user's action
- * @param singleAction which action would be considered a single file upload
- * @param singleInput input containing single file pattern. Used if `action == singleAction`
- * @param multiInput input containing multiple files patterns. Used if `action == 'MultiApkAab'`
- * @returns a list of apks/aabs
- */
-function getApksOrAabs(
-    action: Action,
-    singleAction: 'SingleApk' | 'SingleBundle',
-    singleInput: 'apkFile' | 'bundleFile',
-    multiInput: 'apkFiles' | 'bundleFiles',
-): string[] {
-    if (action === singleAction) {
-        const pattern: string = tl.getInput(singleInput, true);
-        const path: string | null = resolveGlobPath(pattern);
-        if (path === null) {
-            throw new Error(tl.loc('ApkOrAabNotFound', singleInput, pattern));
-        }
-        return [path];
-    } else if (action === 'MultiApkAab') {
-        const patterns: string[] = tl.getDelimitedInput(multiInput, '\n');
-        const allPaths = new Set<string>();
-        for (const pattern of patterns) {
-            const paths: string[] = resolveGlobPaths(pattern);
-            paths.forEach((path) => allPaths.add(path));
-        }
-        return Array.from(allPaths);
-    }
-
-    return [];
 }
 
 /**
@@ -387,115 +302,6 @@ async function prepareTrackUpdate({
         throw new Error(tl.loc('CannotUpdateTrack', track, e));
     }
     return res;
-}
-
-/**
- * Get the appropriate file from the provided pattern
- * @param path The minimatch pattern of glob to be resolved to file path
- * @returns path path of the file resolved by glob. Returns null if not found or if `path` argument was not provided
- */
-function resolveGlobPath(path: string): string {
-    if (path) {
-        // VSTS tries to be smart when passing in paths with spaces in them by quoting the whole path. Unfortunately, this actually breaks everything, so remove them here.
-        path = path.replace(/\"/g, '');
-
-        const filesList: string[] = glob.sync(path);
-        if (filesList.length > 0) {
-            return filesList[0];
-        }
-
-        return null;
-    }
-
-    return null;
-}
-
-/**
- * Get the appropriate files from the provided pattern
- * @param path The minimatch pattern of glob to be resolved to file path
- * @returns paths of the files resolved by glob
- */
-function resolveGlobPaths(path: string): string[] {
-    if (path) {
-        // Convert the path pattern to a rooted one. We do this to mimic for string inputs the behaviour of filePath inputs provided by Build Agent.
-        path = tl.resolve(tl.getVariable('System.DefaultWorkingDirectory'), path);
-
-        let filesList: string[] = glob.sync(path);
-        tl.debug(`Additional paths: ${JSON.stringify(filesList)}`);
-
-        return filesList;
-    }
-
-    return [];
-}
-
-function getVersionCodeListInput(): number[] {
-    const versionCodeFilterInput: string[] = tl.getDelimitedInput('replaceList', ',', false);
-    const versionCodeFilter: number[] = [];
-    const incorrectCodes: string[] = [];
-
-    for (const versionCode of versionCodeFilterInput) {
-        const versionCodeNumber: number = parseInt(versionCode.trim(), 10);
-
-        if (versionCodeNumber && (versionCodeNumber > 0)) {
-            versionCodeFilter.push(versionCodeNumber);
-        } else {
-            incorrectCodes.push(versionCode.trim());
-        }
-    }
-
-    if (incorrectCodes.length > 0) {
-        throw new Error(tl.loc('IncorrectVersionCodeFilter', JSON.stringify(incorrectCodes)));
-    } else {
-        return versionCodeFilter;
-    }
-}
-
-/**
- * If any of the provided inputs are set, it will show a warning
- * @param inputs inputs to check
- */
-function warnIfUnusedInputsSet(...inputs: string[]): void {
-    for (const input of inputs) {
-        tl.debug(`Checking if unused input ${input} is set...`);
-        const inputValue: string | undefined = tl.getInput(input);
-        if (inputValue !== undefined && inputValue.length !== 0) {
-            tl.warning(tl.loc('SetUnusedInput', input));
-        }
-    }
-}
-
-/**
- * Get obb file. Returns any file with .obb extension if present in parent directory else returns
- * from apk directory with pattern: main.<versionCode>.<packageName>.obb
- * @param apkPath apk file path
- * @param packageName package name of the apk
- * @param versionCode version code of the apk
- * @returns ObbPathFile of the obb file is present else null
- */
-function getObbFile(apkPath: string, packageName: string, versionCode: number): string | null {
-    const currentDirectory: string = path.dirname(apkPath);
-    const parentDirectory: string = path.dirname(currentDirectory);
-
-    const fileNamesInParentDirectory: string[] = fs.readdirSync(parentDirectory);
-    const obbPathFileInParent: string | undefined = fileNamesInParentDirectory.find(file => path.extname(file) === '.obb');
-
-    if (obbPathFileInParent) {
-        tl.debug(`Found Obb file for upload in parent directory: ${obbPathFileInParent}`);
-        return path.join(parentDirectory, obbPathFileInParent);
-    }
-
-    const fileNamesInApkDirectory: string[] = fs.readdirSync(currentDirectory);
-    const expectedMainObbFile: string = `main.${versionCode}.${packageName}.obb`;
-    const obbPathFileInCurrent: string | undefined = fileNamesInApkDirectory.find(file => file.toString() === expectedMainObbFile);
-
-    if (obbPathFileInCurrent) {
-        tl.debug(`Found Obb file for upload in current directory: ${obbPathFileInCurrent}`);
-        return path.join(currentDirectory, obbPathFileInCurrent);
-    } else {
-        tl.debug(`No Obb found for ${apkPath}, skipping upload`);
-        return null;
-    }
 }
 
 run();
