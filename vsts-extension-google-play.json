@@ -39,6 +39,9 @@
             "path": "_build/Tasks/GooglePlayReleaseV3"
         },
         {
+            "path": "_build/Tasks/GooglePlayReleaseV4"
+        },
+        {
             "path": "_build/Tasks/GooglePlayReleaseBundleV3"
         },
         {
@@ -82,6 +85,16 @@
             ],
             "properties": {
                 "name": "_build/Tasks/GooglePlayReleaseV3"
+            }
+        },
+        {
+            "id": "google-play-release-v4",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "_build/Tasks/GooglePlayReleaseV4"
             }
         },
         {
