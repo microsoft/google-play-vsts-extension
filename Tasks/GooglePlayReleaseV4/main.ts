@@ -9,8 +9,6 @@ import * as fileHelper from './modules/fileHelper';
 import * as googleapis from 'googleapis';
 import { androidpublisher_v3 as pub3 } from 'googleapis';
 
-type Action = 'OnlyStoreListing' | 'SingleBundle' | 'SingleApk' | 'MultiApkAab';
-
 async function run(): Promise<void> {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
@@ -23,7 +21,7 @@ async function run(): Promise<void> {
 
         // General inputs
 
-        const action: Action = inputsHelper.getAction();
+        const action: inputsHelper.Action = inputsHelper.getAction();
         tl.debug(`Action: ${action}`);
 
         const packageName: string = tl.getInput('applicationId', true);
