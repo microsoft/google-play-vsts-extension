@@ -29,7 +29,12 @@ export function getClientKey(): googleutil.ClientKey {
     return key;
 }
 
-export type Action = 'OnlyStoreListing' | 'SingleBundle' | 'SingleApk' | 'MultiApkAab';
+const actions = ['OnlyStoreListing', 'SingleBundle', 'SingleApk', 'MultiApkAab'] as const;
+type Action = (typeof actions)[number];
+
+function isOfTypeAction(userInput: string): userInput is Action {
+  return (actions as readonly string[]).includes(userInput);
+}
 
 /**
  * Checks action value input and verifies it. Throws if non-existing action is specified
@@ -37,12 +42,7 @@ export type Action = 'OnlyStoreListing' | 'SingleBundle' | 'SingleApk' | 'MultiA
  */
 export function getAction(): Action {
     const actionString: string = tl.getInput('action', false);
-    if (
-        actionString !== 'MultiApkAab'
-        && actionString !== 'SingleBundle'
-        && actionString !== 'SingleApk'
-        && actionString !== 'OnlyStoreListing'
-    ) {
+    if (!isOfTypeAction(actionString)) {
         throw new Error(tl.loc('InvalidActionInputValue', actionString));
     }
     return actionString;
