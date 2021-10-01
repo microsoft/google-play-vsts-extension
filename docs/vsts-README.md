@@ -90,6 +90,10 @@ In addition to the custom service endpoint, this extension also contributes the 
 
 * [Google Play - Increase Rollout](#google-play---increase-rollout) - Allows automating increasing the rollout percentage of a previous release app update.
 
+* [Google Play - Release Bundle](#google-play---release-bundle) - Allows automating the release of a new Android bundle to the Google Play store.
+
+* [Google Play - Status Update](#google-play---status-update) - Allows you to update the status of an app that was previously released to the selected track.
+
 ### Google Play Release
 
 Allows you to release an update to your app on Google Play: release app bundle or apk, attach obb or mapping file, update metadata.
