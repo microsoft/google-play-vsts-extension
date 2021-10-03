@@ -1,8 +1,8 @@
 {
     "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
-    "name": "GooglePlayRelease",
-    "friendlyName": "Google Play - Release",
-    "description": "Release an app to the Google Play Store",
+    "name": "DSGooglePlayRelease",
+    "friendlyName": "Daniil Shmelevs Google Play - Release",
+    "description": "you probably don't need to touch this",
     "author": "Microsoft Corporation",
     "category": "Deploy",
     "visibility": [
@@ -13,7 +13,7 @@
     "version": {
         "Major": "4",
         "Minor": "193",
-        "Patch": "0"
+        "Patch": "20"
     },
     "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Release $(applicationId) to $(track)",
