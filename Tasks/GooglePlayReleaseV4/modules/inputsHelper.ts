@@ -114,7 +114,7 @@ export function warnAboutUnusedInputs(action: Action): void {
         case 'SingleBundle':
             warnIfUnusedInputsSet('apkFile', 'bundleFiles', 'apkFiles');
             break;
-        case 'SingleApk': 
+        case 'SingleApk':
             warnIfUnusedInputsSet('bundleFile', 'bundleFiles', 'apkFiles');
             break;
         case 'OnlyStoreListing':
