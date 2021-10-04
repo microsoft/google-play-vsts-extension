@@ -107,10 +107,19 @@ export function getApksOrAabs(
  */
 export function warnAboutUnusedInputs(action: Action): void {
     switch (action) {
-        case 'MultiApkAab': warnIfUnusedInputsSet('bundleFile', 'apkFile', 'shouldUploadMappingFile', 'mappingFilePath'); break;
-        case 'SingleBundle': warnIfUnusedInputsSet('apkFile', 'bundleFiles', 'apkFiles'); break;
-        case 'SingleApk': warnIfUnusedInputsSet('bundleFile', 'bundleFiles', 'apkFiles'); break;
-        case 'OnlyStoreListing': warnIfUnusedInputsSet('bundleFile', 'apkFile', 'bundleFiles', 'apkFiles', 'track'); break;
+        case 'MultiApkAab':
+            warnIfUnusedInputsSet('bundleFile', 'apkFile', 'mappingFilePath');
+            warnIfUnusedBoolInputsSet('shouldUploadMappingFile');
+            break;
+        case 'SingleBundle':
+            warnIfUnusedInputsSet('apkFile', 'bundleFiles', 'apkFiles');
+            break;
+        case 'SingleApk': 
+            warnIfUnusedInputsSet('bundleFile', 'bundleFiles', 'apkFiles');
+            break;
+        case 'OnlyStoreListing':
+            warnIfUnusedInputsSet('bundleFile', 'apkFile', 'bundleFiles', 'apkFiles', 'track');
+            break;
     }
 }
 
@@ -123,6 +132,20 @@ export function warnIfUnusedInputsSet(...inputs: string[]): void {
         tl.debug(`Checking if unused input ${input} is set...`);
         const inputValue: string | undefined = tl.getInput(input);
         if (inputValue !== undefined && inputValue.length !== 0) {
+            tl.warning(tl.loc('SetUnusedInput', input));
+        }
+    }
+}
+
+/**
+ * If any of the provided boolean inputs are set, it will show a warning.
+ * @param inputs inputs to check
+ */
+export function warnIfUnusedBoolInputsSet(...inputs: string[]): void {
+    for (const input of inputs) {
+        tl.debug(`Checking if unused boolean input ${input} is set...`);
+        const inputValue: boolean = tl.getBoolInput(input);
+        if (inputValue) {
             tl.warning(tl.loc('SetUnusedInput', input));
         }
     }
