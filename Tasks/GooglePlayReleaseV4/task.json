@@ -128,7 +128,6 @@
             "required": true,
             "type": "pickList",
             "helpMarkDown": "Track you want to publish the apk(s)/aab(s) to.",
-            "visibleRule": "action != OnlyStoreListing",
             "options": {
                 "internal": "Internal test",
                 "alpha": "Alpha",
