@@ -118,7 +118,7 @@ export function warnAboutUnusedInputs(action: Action): void {
             warnIfUnusedInputsSet('bundleFile', 'bundleFiles', 'apkFiles');
             break;
         case 'OnlyStoreListing':
-            warnIfUnusedInputsSet('bundleFile', 'apkFile', 'bundleFiles', 'apkFiles', 'track', 'mappingFilePath', 'updatePriority', 'userFraction');
+            warnIfUnusedInputsSet('bundleFile', 'apkFile', 'bundleFiles', 'apkFiles', 'mappingFilePath');
             warnIfUnusedBoolInputsSet('changeUpdatePriority', 'rolloutToUserFraction', 'shouldUploadMappingFile');
             break;
     }
