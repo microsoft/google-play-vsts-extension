@@ -104,7 +104,130 @@ In addition to the custom service endpoint, this extension also contributes the 
 
 * [Google Play - Status Update](#google-play---status-update) - Allows you to update the status of an app that was previously released to the selected track.
 
-### Google Play - Release
+### Google Play Release
+
+Allows you to release an update to your app on Google Play: release app bundle or apk, attach obb or mapping file, update metadata.
+Includes the following options:
+
+1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), 
+
+    ![JSON Auth File](images/auth-with-json-file.png)
+
+    or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). 
+
+    ![Service Endpoint](images/auth-with-endpoint.png)
+
+    Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo.
+    Please also note that from the point of security it's preferrable to store it as [Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using [Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
+
+2. **Application ID** *(String, Required)* - The unique package identifier (e.g. com.foo.myapp) of the bundle you want to release.
+
+3. **Action** *(String, Required)* - Action you want to take in the release. Available options are *Only update store listing*, *Upload single bundle*, *Upload single apk*, *Upload multiple apk/aab files*.
+
+    ![Action Input Options](images/action-input.png)
+
+4. **Bundle Path** *(File path, Required if visible)* - Path or glob pattern to the bundle file you want to publish to the specified track. Only visible if `action` is *Upload single bundle*.
+
+    ![Bundle Path](images/bundle-path.png)
+
+5. **APK Path** *(File path, Required if visible)* - Path or glob pattern to the APK file you want to publish to the specified track. Only visible if `action` is *Upload single apk*.
+
+    ![APK Path](images/apk-path.png)
+
+6. **Bundle paths, APK paths** *(Multiline, Optional)* - Paths or glob patterns to the APK/AAB files you want to publish to the specified track. It's required that at least one APK/AAB is picked up from these inputs, otherwise the task will fail. Only visible if `action` is *Upload multiple apk/aab files*.
+
+    ![APK/AAB Paths](images/apk-aab-paths.png)
+
+7. **Upload OBB for APK** *(Boolean, Optional)* - Whether or not to pick up OBB files for each of the specified APKs. Only visible if `action` is *Upload single apk* or *Upload multiple apk/aab files*.
+
+    ![Attach OBB For APK](images/obb-for-apk.png)
+
+8. **Track** *(String, Required)* - Release track to publish the APK to. This input is editable but provides default options: *Internal test*, *Alpha*, *Beta*, *Production*.
+
+    ![Track](images/track.png)
+
+9. **Update Metadata** *(Boolean, Optional)* - Allows automating metadata updates to the Google Play store by reading the contents of the `Metadata Root Directory`.
+
+    ![Update Metadata](images/update-metadata.png)
+
+10. **Metadata Root Directory** *(String, Required if visible)* - Root directory for metadata related files. Becomes available after enabling the `Update Metadata` option. Expects a format similar to fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) which is summarized below:
+
+```
+$(Specified Directory)
+   └ $(languageCodes)
+     ├ full_description.txt
+     ├ short_description.txt
+     ├ title.txt
+     ├ video.txt
+     ├ images
+     |  ├ featureGraphic.png    || featureGraphic.jpg   || featureGraphic.jpeg
+     |  ├ icon.png              || icon.jpg             || icon.jpeg
+     |  ├ promoGraphic.png      || promoGraphic.jpg     || promoGraphic.jpeg
+     |  ├ tvBanner.png          || tvBanner.jpg         || tvBanner.jpeg
+     |  ├ phoneScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  ├ sevenInchScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  ├ tenInchScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  ├ tvScreenshots
+     |  |  └ *.png || *.jpg || *.jpeg
+     |  └ wearScreenshots
+     |     └ *.png || *.jpg || *.jpeg
+     └ changelogs
+       └ $(versioncodes).txt
+```
+
+11. **Release Notes** *(File path)* - Path to the file specifying the release notes for the release you are publishing. Only visible if `Update metadata` option is disabled.
+
+    ![Release Notes](images/release-notes.png)
+
+12. **Language Code** *(String, Optional)* - An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_. Only visible if `Update metadata` option is disabled.
+
+13. **Update Metadata** *(Boolean, Optional)* - Allows automating metadata updates to the Google Play store by leveraging the contents of the `Metadata Root Directory`.
+
+    ![Update Metadata](images/update-metadata.png)
+
+#### Advanced Options
+
+1. **Set in-app update priority** *(Boolean, Optional)* - Enables to set in-app update priority. Not visible if `action` is *Only update store listing*.
+
+    ![Update Priority](images/update-priority.png)
+
+2. **Update priority** *(Number, Required if visible)* - How strongly to recommend an update to the user. An integer value between 0 and 5, with 0 being the default and 5 being the highest priority. Only visible if `Set in-app update priority` is enabled.
+
+3. **Roll out release** *(Boolean, Optional)* - Allows to roll out the release to a percentage of users. Not visible if `action` is *Only update store listing*.
+
+    ![Rollout Fraction](images/rollout-release.png)
+
+4. **User fraction** *(Number, Required if visible)* - The percentage of users to roll the specified APK out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users).
+
+5. **Upload deobfuscation file** *(Boolean, Optional)* - Allows to attach your proguard mapping.txt file to your aab/apk. Only visible if `action` is *Upload single apk* or *Upload single bundle*.
+
+    ![Mapping File](images/mapping-file.png)
+
+6. **Deobfuscation path** *(File path, Required if visible)* - The path to the proguard mapping.txt file to upload. Glob patterns are supported. Only visible if `Upload deobfuscation file` is enabled.
+
+7. **Send changes to review** *(Boolean, Optional)* - Select this option to send changes for review in GooglePlay Console. If changes are already sent for review automatically, you shouldn't select this option.
+
+    ![Send Changes To Review](images/send-changes-to-review.png)
+
+8. **Release name** *(String, Optional)* - Allows to set meaningful release name that can be seen in your Google Play Console. It won't be visible to your users.
+
+    ![Send Changes To Review](images/send-changes-to-review.png)
+
+9.  **Replace version codes** *(String, Required)* - You may specify which APK version codes should be replaced in the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
+
+
+10. **Replace Version Codes** *(String, Optional)* - Specify version codes to replace in the selected track with the new APKs/AABs: all, the comma separated list, or a regular expression pattern. Not visible if `action` is *Only update store listing*.
+
+    ![Advanced Options](images/replace-version-codes.png)
+
+11. **Version Code List** *(String, Required if visible)* - The comma separated list of version codes to be removed from the track with this deployment. Only available if `Replace Version Codes` value is *List*.
+
+12. **Version Code Pattern** *(String, Required if visible)* - The regular expression pattern to select a list of version codes to be removed from the track with this deployment, e.g. .\*12?(3|4)?5. Only available if `Replace Version Codes` value is *Regular expression*.
+
+### Google Play - Release V3 (deprecated in favor of Google Play - Release V4)
 
 Allows you to release an update to your app on Google Play, and includes the following options:
 
@@ -117,7 +240,7 @@ Allows you to release an update to your app on Google Play, and includes the fol
     ![Service Endpoint](images/auth-with-endpoint.png)
 
     Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo.
-
+    Please also note that from the point of security it's preferrable to store it as [Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using [Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
 
 2. **APK Path** *(File path, Required)* - Path to the APK file you want to publish to the specified track.
 
@@ -127,7 +250,7 @@ Allows you to release an update to your app on Google Play, and includes the fol
 
     ![Track](images/track.png)
 
-4. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the specified APK out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). This option is only available when the **Track** input is set to **Rollout**.
+4. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the specified APK out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users).
 
     ![Rollout Fraction](images/rollout-fraction.png)
 
@@ -191,15 +314,17 @@ Allows you to promote a previously released APK from one track to another (e.g. 
 
 ![Promote task](images/promote-task.png)
 
-1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo.
+1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo. Please note that from the point of security it's preferrable to store it as [Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using [Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
 
 2. **Package Name** *(String, Required)* - The unique package identifier (e.g. `com.foo.myapp`) that you wish to promote.
+
+3. **Version Code** *(String, Optional)* - The version code of the apk (e.g. 123) that you whish to promote. If no version code is given, the latest version on the specified track will be promoted.
 
 3. **Source Track** *(Required, Required)* - The track you wish to promote your app from (e.g. `alpha`). This assumes that you previously released an update to this track, potentially using the [`Google Play - Release`](#google-play---release) task.
 
 4. **Destination Track** *(Required, Required)* - The track you wish to promote your app to (e.g. `production`).
 
-5. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the app out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). This option is only available when the **Destination Track** option is set to `Rollout`. If you use rollout, and want to be able to automate the process of increasing the rollout over time, refer to the `Google Play - Increase Rollout` task.
+5. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the app out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). If you use rollout, and want to be able to automate the process of increasing the rollout over time, refer to the `Google Play - Increase Rollout` task.
 
 ### Google Play - Increase Rollout
 
@@ -207,7 +332,7 @@ Allows you to increase the rollout percentage of an app that was previously rele
 
 ![Increase task](images/increase-task.png)
 
-1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo.
+1. **JSON Key Path** *(File path)* or **Service Endpoint** - The credentials used to authenticate with Google Play. This can be acquired from the [Google Developer API console](https://console.developers.google.com/apis) and provided either directly to the task (via the `JSON Auth File` authentication method), or configured within a service endpoint that you reference from the task (via the `Service Endpoint` authentication method). Note that in order to use the JSON Auth File method, the JSON file you get from the developer console needs to be checked into your source repo. Please note that from the point of security it's preferrable to store it as [Secure file](https://docs.microsoft.com/azure/devops/pipelines/library/secure-files) and download using [Download Secure File task](https://docs.microsoft.com/azure/devops/pipelines/tasks/utility/download-secure-file).
 
 2. **Package Name** *(String, Required)* - The unique package identifier (e.g. com.foo.myapp) of the app you wish to increase the rollout percentage for.
 
@@ -231,7 +356,7 @@ Allows you to update the status of an app that was previously released to the se
 
 5. **User Fraction** *(String, Optional)* - The new user fraction to update the rollout to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users, does not contain 0 and 1). If the input User Fraction is not specified, will maintain the current user fraction without updating (**Notice**: if you want to update the status to `inProgress` or `halted`, make sure current user fraction or the input User Fraction is specified).
 
-### Google Play - Release Bundle
+### Google Play - Release Bundle (deprecated in favor of Google Play - Release V4)
 
 Allows you to release an app bundle to Google Play, and includes the following options:
 
@@ -309,22 +434,10 @@ $(Specified Directory)
 
 3. **Version Code Pattern** *(String, Required if visible)* - The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. .*12?(3|4)?5
 
-
-#### Advanced Options
-
-1. **Replace version codes** *(String, Required)* - You may specify which APK version codes should be replaced in the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
-
-2. **Send changes to review** *(Boolean, Optional)* - Select this option to add `changesNotSentForReview=true` query parameter and send changes for review in GooglePlay Console.  [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters).
-
-     If you are getting the following error `Changes cannot be sent for review automatically. Please set the query parameter changesNotSentForReview to true`, select this option.
-
-     Please be cautious when selecting this option, if the app is already sent for review automatically, you can get the error `Changes are sent for review automatically. The query parameter changesNotSentForReview must not be set`.
-
 ## Contact Us
 
 * [Report an issue](https://github.com/Microsoft/google-play-vsts-extension/issues)
 
 Google Play and the Google Play logo are trademarks of Google Inc.
-
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.

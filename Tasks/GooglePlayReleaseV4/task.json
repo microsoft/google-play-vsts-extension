@@ -1,0 +1,334 @@
+{
+    "id": "b0388a05-ace6-4d51-a99b-39356749e634",
+    "name": "GooglePlayRelease",
+    "friendlyName": "Google Play - Release",
+    "description": "Release an app to the Google Play Store",
+    "author": "Microsoft Corporation",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "demands": [],
+    "version": {
+        "Major": "4",
+        "Minor": "194",
+        "Patch": "0"
+    },
+    "minimumAgentVersion": "2.182.1",
+    "instanceNameFormat": "Release $(applicationId) to $(track)",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced Options",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "authType",
+            "label": "Authentication method",
+            "defaultValue": "ServiceEndpoint",
+            "type": "pickList",
+            "helpMarkDown": "",
+            "options": {
+                "JsonFile": "JSON Auth File",
+                "ServiceEndpoint": "Service connection"
+            }
+        },
+        {
+            "name": "serviceEndpoint",
+            "aliases": [
+                "serviceConnection"
+            ],
+            "label": "Service connection",
+            "defaultValue": "",
+            "required": true,
+            "type": "connectedService:google-play",
+            "helpMarkDown": "Google Play service connection that is configured with your account credentials.",
+            "visibleRule": "authType = ServiceEndpoint"
+        },
+        {
+            "name": "serviceAccountKey",
+            "label": "JSON key path",
+            "defaultValue": "",
+            "required": true,
+            "type": "filePath",
+            "helpMarkDown": "The JSON file provided by Google Play that includes the service account's identity you wish to publish your APKs or AABs under.",
+            "visibleRule": "authType = JsonFile"
+        },
+        {
+            "name": "applicationId",
+            "label": "Application id (com.google.MyApp)",
+            "defaultValue": "",
+            "required": true,
+            "type": "string",
+            "helpMarkDown": "The application id of APK or AAB you want to release, e.g. com.company.MyApp."
+        },
+        {
+            "name": "action",
+            "label": "Action",
+            "defaultValue": "SingleBundle",
+            "required": true,
+            "type": "pickList",
+            "helpMarkDown": "",
+            "options": {
+                "OnlyStoreListing": "Only update store listing",
+                "SingleBundle": "Upload single bundle",
+                "SingleApk": "Upload single apk",
+                "MultiApkAab": "Upload multiple apk/aab files"
+            }
+        },
+        {
+            "name": "bundleFile",
+            "label": "Bundle path",
+            "defaultValue": "",
+            "required": true,
+            "type": "string",
+            "helpMarkDown": "Path to the bundle file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.aab_ to match the first AAB file, in any directory.",
+            "visibleRule": "action = SingleBundle"
+        },
+        {
+            "name": "apkFile",
+            "label": "APK path",
+            "defaultValue": "",
+            "required": true,
+            "type": "string",
+            "helpMarkDown": "Path to the APK file you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match the first APK file, in any directory.",
+            "visibleRule": "action = SingleApk"
+        },
+        {
+            "name": "bundleFiles",
+            "label": "Bundle paths",
+            "defaultValue": "",
+            "type": "multiLine",
+            "helpMarkDown": "Paths to the bundle files you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.aab_ to match all AAB files, in any directory.",
+            "visibleRule": "action = MultiApkAab"
+        },
+        {
+            "name": "apkFiles",
+            "label": "APK paths",
+            "defaultValue": "",
+            "type": "multiLine",
+            "helpMarkDown": "Paths to the APK files you want to publish to the specified track. Wildcards can be used. For example, _\\*\\*/\\*.apk_ to match all APK files, in any directory.",
+            "visibleRule": "action = MultiApkAab"
+        },
+        {
+            "name": "shouldPickObbFile",
+            "label": "Upload OBB for APK",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Select this option to pick expansion file for the apk(s). If present in the parent directory, it will pick the first file with .obb extension, else it will pick from apk directory with expected format as main.<version code>.<package name>.obb",
+            "visibleRule": "action = SingleApk || action = MultiApkAab"
+        },
+        {
+            "name": "track",
+            "label": "Track",
+            "defaultValue": "internal",
+            "required": true,
+            "type": "pickList",
+            "helpMarkDown": "Track you want to publish the apk(s)/aab(s) to.",
+            "options": {
+                "internal": "Internal test",
+                "alpha": "Alpha",
+                "beta": "Beta",
+                "production": "Production"
+            },
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "shouldAttachMetadata",
+            "label": "Update metadata",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Select this option to update the metadata in fastlane format on your app release."
+        },
+        {
+            "name": "changeLogFile",
+            "label": "Release notes (file)",
+            "defaultValue": "",
+            "type": "filePath",
+            "helpMarkDown": "Path to the file specifying the release notes (change log) for the application you are publishing.",
+            "visibleRule": "shouldAttachMetadata = false"
+        },
+        {
+            "name": "languageCode",
+            "label": "Language code",
+            "defaultValue": "en-US",
+            "type": "string",
+            "helpMarkDown": "An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_",
+            "visibleRule": "shouldAttachMetadata = false"
+        },
+        {
+            "name": "metadataRootPath",
+            "label": "Metadata root directory",
+            "defaultValue": "",
+            "required": true,
+            "type": "filePath",
+            "helpMarkDown": "The path to the metadata folder with the fastlane metadata structure.",
+            "visibleRule": "shouldAttachMetadata = true"
+        },
+        {
+            "name": "changeUpdatePriority",
+            "label": "Set in-app update priority",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Change the in-app update priority value.",
+            "visibleRule": "action != OnlyStoreListing",
+            "groupName": "advanced"
+        },
+        {
+            "name": "updatePriority",
+            "label": "In-app Update Priority",
+            "defaultValue": "0",
+            "required": true,
+            "type": "pickList",
+            "helpMarkDown": "Set a custom in-app update priority value to help keep your app up-to-date on your users' devices. To determine priority, Google Play uses an integer value between 0 and 5, with 0 being the default, and 5 being the highest priority. Priority can only be set when rolling out a new release, and cannot be changed later.",
+            "visibleRule": "action != OnlyStoreListing && changeUpdatePriority = true",
+            "groupName": "advanced",
+            "options": {
+                "0": "0",
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4",
+                "5": "5"
+            }
+        },
+        {
+            "name": "rolloutToUserFraction",
+            "label": "Roll out release",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Roll out the release to a percentage of users.",
+            "visibleRule": "action != OnlyStoreListing",
+            "groupName": "advanced"
+        },
+        {
+            "name": "userFraction",
+            "label": "Rollout fraction",
+            "defaultValue": "1.0",
+            "required": true,
+            "type": "string",
+            "helpMarkDown": "The percentage of users the specified application will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.",
+            "visibleRule": "action != OnlyStoreListing && rolloutToUserFraction = true",
+            "groupName": "advanced"
+        },
+        {
+            "name": "shouldUploadMappingFile",
+            "label": "Upload deobfuscation file (mapping.txt)",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Select this option to attach your proguard mapping.txt file to your aab/apk.",
+            "visibleRule": "action != OnlyStoreListing && action != MultiApkAab",
+            "groupName": "advanced"
+        },
+        {
+            "name": "mappingFilePath",
+            "label": "Deobfuscation path",
+            "defaultValue": "",
+            "required": true,
+            "type": "string",
+            "helpMarkDown": "The path to the proguard mapping.txt file to upload. Glob patterns are supported.",
+            "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadMappingFile = true",
+            "groupName": "advanced"
+        },
+        {
+            "name": "changesNotSentForReview",
+            "type": "boolean",
+            "label": "Send changes to review",
+            "defaultValue": false,
+            "helpMarkDown": "Select this option to send changes for review in GooglePlay Console. If changes are already sent for review automatically, you shouldn't select this option. [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters).",
+            "groupName": "advanced"
+        },
+        {
+            "name": "releaseName",
+            "type": "string",
+            "label": "Release name",
+            "defaultValue": "",
+            "helpMarkDown": "The release name is only for use in Play Console and won't be visible to users. To make your release easier to identify, add a release name that's meaningful to you.",
+            "visibleRule": "action != OnlyStoreListing",
+            "groupName": "advanced"
+        },
+        {
+            "name": "versionCodeFilterType",
+            "label": "Replace version codes",
+            "defaultValue": "all",
+            "type": "pickList",
+            "helpMarkDown": "Specify version codes to replace in the selected track with the new aab(s)/apk(s): all, the comma separated list, or a regular expression pattern.",
+            "visibleRule": "action != OnlyStoreListing",
+            "groupName": "advanced",
+            "options": {
+                "all": "All",
+                "list": "List",
+                "expression": "Regular expression"
+            }
+        },
+        {
+            "name": "replaceList",
+            "label": "Version code list",
+            "defaultValue": "",
+            "required": true,
+            "type": "string",
+            "helpMarkDown": "The comma separated list of version codes to be removed from the track with this deployment.",
+            "visibleRule": "action != OnlyStoreListing && versionCodeFilterType = list",
+            "groupName": "advanced"
+        },
+        {
+            "name": "replaceExpression",
+            "label": "Version code pattern",
+            "defaultValue": "",
+            "required": true,
+            "type": "string",
+            "helpMarkDown": "The regular expression pattern to select a list of version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
+            "visibleRule": "action != OnlyStoreListing && versionCodeFilterType = expression",
+            "groupName": "advanced"
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "main.js",
+            "argumentFormat": ""
+        }
+    },
+    "messages": {
+        "ApkOrAabNotFound": "Could not find %s using pattern %s",
+        "AppendChangelog": "Appending changelog %s",
+        "AttachingMetadataToRelease": "Attempting to attach metadata to release...",
+        "CannotCreateListing": "Failed to create the localized %s store listing. Failed with message: %s.",
+        "CannotDownloadTrack": "Failed to download track %s information. Failed with message: %s.",
+        "CannotReadChangeLog": "Failed to read change log %s. Failed with message: %s.",
+        "CannotUpdateTrack": "Failed to update track %s information. Failed with message: %s.",
+        "CannotUploadApk": "Failed to upload the APK %s. Failed with message: %s.",
+        "CannotUploadBundle": "Failed to upload the bundle %s. Failed with message: %s.",
+        "CannotUploadDeobfuscationFile": "Failed to upload the deobfuscation file %s. Failed with message: %s.",
+        "CannotUploadExpansionFile": "Failed to upload the expansion file %s. Failed with message: %s.",
+        "FoundDeobfuscationFile": "Found deobfuscation (mapping) file: %s",
+        "FoundImageAtPath": "Found image for type %s at %s",
+        "GetNewEditAfterAuth": "Authenticated with Google Play and getting new edit",
+        "ImageDirNotFound": "Image directory for %s was not found. Skipping...",
+        "ImageTypeNotFound": "Image for %s was not found. Skipping...",
+        "IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s",
+        "InvalidActionInputValue": "Action input value is invalid: $s. Please recheck pipeline task configuration.",
+        "InvalidAuthFile": "%s is not a valid auth file",
+        "MustProvideApkIfObb": "shouldPickObbFile input is enabled, but no apk files could be found",
+        "MustProvideApkOrAab": "You must provide either apk or aab file(s). Neither were found.",
+        "PublishSucceed": "App was successfully published!",
+        "SetUnusedInput": "Input %s was set, but it will not be used in this action",
+        "StatNotDirectory": "Stat returned that %s was not a directory. Is there a file that shares this name?",
+        "TrackInfo": "Track: %s",
+        "UpdateTrack": "Updating track information...",
+        "UploadImageFail": "Failed to upload image.",
+        "UploadingMetadataForLanguage": "Attempting to upload metadata in %s for language code %s"
+    },
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
+        }
+    }
+}
