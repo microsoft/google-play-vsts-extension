@@ -67,11 +67,11 @@ export function getObbFile(apkPath: string, packageName: string, versionCode: nu
     const expectedMainObbFile: string = `main.${versionCode}.${packageName}.obb`;
     const obbPathFileInCurrent: string | undefined = fileNamesInApkDirectory.find(file => file.toString() === expectedMainObbFile);
 
-    if (obbPathFileInCurrent) {
-        tl.debug(`Found Obb file for upload in current directory: ${obbPathFileInCurrent}`);
-        return path.join(currentDirectory, obbPathFileInCurrent);
-    } else {
+    if (!obbPathFileInCurrent) {
         tl.debug(`No Obb found for ${apkPath}, skipping upload`);
         return null;
     }
+
+    tl.debug(`Found Obb file for upload in current directory: ${obbPathFileInCurrent}`);
+    return path.join(currentDirectory, obbPathFileInCurrent);
 }
