@@ -54,7 +54,8 @@ async function run(): Promise<void> {
             metadataRootPath = tl.getPathInput('metadataRootPath', true, true);
         } else {
             changelogFile = tl.getInput('changelogFile', false);
-            languageCode = tl.getInput('languageCode', false) || 'en-US';
+            const defaultLanguageCode = 'en-US';
+            languageCode = tl.getInput('languageCode', false) || defaultLanguageCode;
         }
 
         // Advanced inputs
