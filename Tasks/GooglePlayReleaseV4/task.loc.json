@@ -1,5 +1,5 @@
 {
-  "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
+  "id": "b0388a05-ace6-4d51-a99b-39356749e634",
   "name": "GooglePlayRelease",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
@@ -12,7 +12,7 @@
   "demands": [],
   "version": {
     "Major": "4",
-    "Minor": "193",
+    "Minor": "194",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -128,7 +128,6 @@
       "required": true,
       "type": "pickList",
       "helpMarkDown": "ms-resource:loc.input.help.track",
-      "visibleRule": "action != OnlyStoreListing",
       "options": {
         "internal": "Internal test",
         "alpha": "Alpha",
@@ -184,6 +183,7 @@
       "name": "updatePriority",
       "label": "ms-resource:loc.input.label.updatePriority",
       "defaultValue": "0",
+      "required": true,
       "type": "pickList",
       "helpMarkDown": "ms-resource:loc.input.help.updatePriority",
       "visibleRule": "action != OnlyStoreListing && changeUpdatePriority = true",
@@ -210,6 +210,7 @@
       "name": "userFraction",
       "label": "ms-resource:loc.input.label.userFraction",
       "defaultValue": "1.0",
+      "required": true,
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.userFraction",
       "visibleRule": "action != OnlyStoreListing && rolloutToUserFraction = true",
@@ -228,6 +229,7 @@
       "name": "mappingFilePath",
       "label": "ms-resource:loc.input.label.mappingFilePath",
       "defaultValue": "",
+      "required": true,
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.mappingFilePath",
       "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadMappingFile = true",
