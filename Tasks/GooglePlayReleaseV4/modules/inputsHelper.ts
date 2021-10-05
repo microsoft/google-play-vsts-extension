@@ -21,7 +21,7 @@ export function getClientKey(): googleutil.ClientKey {
             throw new Error(tl.loc('InvalidAuthFile', serviceAccountKeyFile));
         }
     } else if (authType === 'ServiceEndpoint') {
-        let serviceEndpoint: tl.EndpointAuthorization = tl.getEndpointAuthorization(tl.getInput('serviceEndpoint', true), false);
+        const serviceEndpoint: tl.EndpointAuthorization = tl.getEndpointAuthorization(tl.getInput('serviceEndpoint', true), false);
         key.client_email = serviceEndpoint.parameters['username'];
         key.private_key = serviceEndpoint.parameters['password'].replace(/\\n/g, '\n');
     }
