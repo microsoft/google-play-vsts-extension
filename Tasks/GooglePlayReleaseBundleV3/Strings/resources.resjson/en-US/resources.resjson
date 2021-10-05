@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Google Play - Release Bundle (deprecated)",
+  "loc.friendlyName": "Google Play - Release Bundle",
   "loc.description": "Release an app bundle to the Google Play Store",
   "loc.instanceNameFormat": "Release $(bundleFile) to $(track)",
   "loc.group.displayName.advanced": "Advanced Options",
