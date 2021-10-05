@@ -1,7 +1,7 @@
 {
     "id": "64f05ee7-e81b-4fdb-85a0-ad518819e0d4",
     "name": "GooglePlayReleaseBundle",
-    "friendlyName": "Google Play - Release Bundle",
+    "friendlyName": "Google Play - Release Bundle (deprecated)",
     "description": "Release an app bundle to the Google Play Store",
     "author": "Microsoft Corporation",
     "category": "Deploy",

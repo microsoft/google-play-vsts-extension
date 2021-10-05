@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Google Play - Release",
+  "loc.friendlyName": "Google Play - Release (deprecated)",
   "loc.description": "Release an app to the Google Play Store",
   "loc.instanceNameFormat": "Release $(apkFile) to $(track)",
   "loc.group.displayName.advanced": "Advanced Options",
