@@ -32,6 +32,10 @@ export function getClientKey(): googleutil.ClientKey {
 const actions = ['OnlyStoreListing', 'SingleBundle', 'SingleApk', 'MultiApkAab'] as const;
 export type Action = (typeof actions)[number];
 
+/**
+ * @param userInput the value that user provided in the 'action' input
+ * @returns whether the specified input is a valid action
+ */
 function isOfTypeAction(userInput: string): userInput is Action {
   return (actions as readonly string[]).includes(userInput);
 }
