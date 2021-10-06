@@ -36,7 +36,7 @@
     },
     "files": [
         {
-            "path": "_build/Tasks/GooglePlayReleaseV3"
+            "path": "_build/Tasks/GooglePlayReleaseV4"
         },
         {
             "path": "_build/Tasks/GooglePlayReleaseBundleV3"
@@ -81,7 +81,7 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "_build/Tasks/GooglePlayReleaseV3"
+                "name": "_build/Tasks/GooglePlayReleaseV4"
             }
         },
         {
