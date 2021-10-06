@@ -39,9 +39,6 @@
             "path": "_build/Tasks/GooglePlayReleaseV3"
         },
         {
-            "path": "_build/Tasks/GooglePlayReleaseV4"
-        },
-        {
             "path": "_build/Tasks/GooglePlayReleaseBundleV3"
         },
         {
