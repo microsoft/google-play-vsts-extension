@@ -88,16 +88,6 @@
             }
         },
         {
-            "id": "google-play-release-v4",
-            "type": "ms.vss-distributed-task.task",
-            "targets": [
-                "ms.vss-distributed-task.tasks"
-            ],
-            "properties": {
-                "name": "_build/Tasks/GooglePlayReleaseV4"
-            }
-        },
-        {
             "id": "google-play-release-bundle",
             "type": "ms.vss-distributed-task.task",
             "targets": [
