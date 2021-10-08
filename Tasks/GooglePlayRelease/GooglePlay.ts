@@ -11,6 +11,8 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+        tl.warning(tl.loc('DeprecatedTask'));
+
         tl.debug('Prepare task inputs.');
 
         const authType: string = tl.getInput('authType', true);

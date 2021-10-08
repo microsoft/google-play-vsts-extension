@@ -44,6 +44,7 @@
   "loc.input.help.replaceExpression": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
   "loc.input.label.changesNotSentForReview": "Send changes to review",
   "loc.input.help.changesNotSentForReview": "Select this option to send changes for review in GooglePlay Console. If changes're already sent for review automatically, you shouldn't select this option. [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters).",
+  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to GooglePlayRelease@4 that will be released in extension version 3.195.0. You can find a [migration guide here](https://github.com/microsoft/google-play-vsts-extension/blob/master/docs/google-play-release-migration.md).",
   "loc.messages.InvalidAuthFile": "%s is not a valid auth file",
   "loc.messages.FoundMainBundle": "Found main bundle to upload: %s (version code %s)",
   "loc.messages.FoundDeobfuscationFile": "Found deobfuscation (mapping) file: %s",

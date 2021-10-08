@@ -14,9 +14,10 @@
   ],
   "version": {
     "Major": "3",
-    "Minor": "189",
+    "Minor": "194",
     "Patch": "0"
   },
+  "deprecated": true,
   "minimumAgentVersion": "2.182.1",
   "groups": [
     {
@@ -268,6 +269,7 @@
     }
   },
   "messages": {
+    "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask",
     "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
     "FoundMainApk": "ms-resource:loc.messages.FoundMainApk",
     "FoundMultiApks": "ms-resource:loc.messages.FoundMultiApks",

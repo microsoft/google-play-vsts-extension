@@ -14,9 +14,10 @@
   ],
   "version": {
     "Major": "3",
-    "Minor": "192",
+    "Minor": "194",
     "Patch": "0"
   },
+  "deprecated": true,
   "minimumAgentVersion": "2.182.1",
   "groups": [
     {
@@ -249,6 +250,7 @@
     }
   },
   "messages": {
+    "DeprecatedTask": "ms-resource:loc.messages.DeprecatedTask",
     "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
     "FoundMainBundle": "ms-resource:loc.messages.FoundMainBundle",
     "FoundDeobfuscationFile": "ms-resource:loc.messages.FoundDeobfuscationFile",
