@@ -17,6 +17,7 @@
         "Minor": "193",
         "Patch": "0"
     },
+    "deprecated": true,
     "minimumAgentVersion": "2.182.1",
     "groups": [
         {
