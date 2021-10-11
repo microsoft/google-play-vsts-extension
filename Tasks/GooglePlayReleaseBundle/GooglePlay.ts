@@ -10,6 +10,8 @@ async function run() {
     try {
         tl.setResourcePath(path.join(__dirname, 'task.json'));
 
+        tl.warning(tl.loc('DeprecatedTask'));
+
         tl.debug('Prepare task inputs.');
 
         const sendChangesToReview: boolean = tl.getBoolInput('changesNotSentForReview');
