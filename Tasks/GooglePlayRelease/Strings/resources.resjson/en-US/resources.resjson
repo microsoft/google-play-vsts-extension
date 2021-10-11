@@ -48,7 +48,7 @@
   "loc.input.help.replaceList": "The comma separated list of APK version codes to be removed from the track with this deployment.",
   "loc.input.label.replaceExpression": "Version code pattern",
   "loc.input.help.replaceExpression": "The regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
-  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to GooglePlayRelease@4 that will be released in extension version 3.195.0. You can find a migration guide here: https://github.com/microsoft/google-play-vsts-extension/blob/master/docs/google-play-release-migration.md",
+  "loc.messages.DeprecatedTask": "This task is deprecated. Please switch to GooglePlayRelease@4 that will be released in extension version 4.195.0. You can find a migration guide here: https://github.com/microsoft/google-play-vsts-extension/blob/master/docs/google-play-release-migration.md",
   "loc.messages.InvalidAuthFile": "%s is not a valid auth file",
   "loc.messages.FoundMainApk": "Found main APK to upload: %s (version code %s)",
   "loc.messages.FoundMultiApks": "Found multiple APKs to upload:",

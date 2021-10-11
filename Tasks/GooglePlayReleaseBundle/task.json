@@ -250,7 +250,7 @@
         }
     },
     "messages": {
-        "DeprecatedTask": "This task is deprecated. Please switch to GooglePlayRelease@4 that will be released in extension version 3.195.0. You can find a migration guide here: https://github.com/microsoft/google-play-vsts-extension/blob/master/docs/google-play-release-migration.md",
+        "DeprecatedTask": "This task is deprecated. Please switch to GooglePlayRelease@4 that will be released in extension version 4.195.0. You can find a migration guide here: https://github.com/microsoft/google-play-vsts-extension/blob/master/docs/google-play-release-migration.md",
         "InvalidAuthFile": "%s is not a valid auth file",
         "FoundMainBundle": "Found main bundle to upload: %s (version code %s)",
         "FoundDeobfuscationFile": "Found deobfuscation (mapping) file: %s",
