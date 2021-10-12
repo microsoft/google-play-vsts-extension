@@ -1,8 +1,6 @@
 {
     "tasks": [
-        "GooglePlayReleaseV3",
         "GooglePlayReleaseV4",
-        "GooglePlayReleaseBundleV3",
         "GooglePlayPromoteV2",
         "GooglePlayRolloutUpdateV3",
         "GooglePlayStatusUpdateV2"
