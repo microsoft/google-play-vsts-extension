@@ -2,14 +2,14 @@
 
 You will need to fill a new required input - "Application Id".
 
-They key difference is the "Action" input:
+The key difference is the "Action" input:
 - If you used to publish a single APK, choose "Upload single apk" option.
 - If you used to publish a primary APK and additional APKs, choose "Upload multiple apk/aab files" option.
 - If you had "Update only store listing" input enabled in your GooglePlayRelease@3 configuration, choose "Only update store listing" option.
 
 # Migrating from GooglePlayReleaseBundle@3 to GooglePlayRelease@4
 
-They key difference is the "Action" input:
+The key difference is the "Action" input:
 - If you used to publish a single bundle, choose "Upload single bundle" option.
 - You may now also publish multiple AAB files as a part of the same release by choosing the "Upload multiple apk/aab files" option.
 
