@@ -58,7 +58,7 @@ The key difference is the "Action" input:
     serviceEndpoint: 'ServiceEndpointName'
     applicationId: 'com.org.appId'
     action: 'SingleBundle'
-    apkFile: '/path/to/application.aab'
+    bundleFile: '/path/to/application.aab'
     track: 'internal'
 ```
 
