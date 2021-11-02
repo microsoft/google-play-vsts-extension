@@ -12,7 +12,7 @@
     "demands": [],
     "version": {
         "Major": "4",
-        "Minor": "194",
+        "Minor": "196",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
@@ -176,8 +176,7 @@
             "defaultValue": false,
             "type": "boolean",
             "helpMarkDown": "Change the in-app update priority value.",
-            "visibleRule": "action != OnlyStoreListing",
-            "groupName": "advanced"
+            "visibleRule": "action != OnlyStoreListing"
         },
         {
             "name": "updatePriority",
@@ -187,7 +186,6 @@
             "type": "pickList",
             "helpMarkDown": "Set a custom in-app update priority value to help keep your app up-to-date on your users' devices. To determine priority, Google Play uses an integer value between 0 and 5, with 0 being the default, and 5 being the highest priority. Priority can only be set when rolling out a new release, and cannot be changed later.",
             "visibleRule": "action != OnlyStoreListing && changeUpdatePriority = true",
-            "groupName": "advanced",
             "options": {
                 "0": "0",
                 "1": "1",
@@ -203,8 +201,7 @@
             "defaultValue": false,
             "type": "boolean",
             "helpMarkDown": "Roll out the release to a percentage of users.",
-            "visibleRule": "action != OnlyStoreListing",
-            "groupName": "advanced"
+            "visibleRule": "action != OnlyStoreListing"
         },
         {
             "name": "userFraction",
@@ -213,8 +210,7 @@
             "required": true,
             "type": "string",
             "helpMarkDown": "The percentage of users the specified application will be released to for the specified 'Track'. It can be increased later with the 'Google Play - Increase Rollout' task.",
-            "visibleRule": "action != OnlyStoreListing && rolloutToUserFraction = true",
-            "groupName": "advanced"
+            "visibleRule": "action != OnlyStoreListing && rolloutToUserFraction = true"
         },
         {
             "name": "shouldUploadMappingFile",
@@ -222,8 +218,7 @@
             "defaultValue": false,
             "type": "boolean",
             "helpMarkDown": "Select this option to attach your proguard mapping.txt file to your aab/apk.",
-            "visibleRule": "action != OnlyStoreListing && action != MultiApkAab",
-            "groupName": "advanced"
+            "visibleRule": "action != OnlyStoreListing && action != MultiApkAab"
         },
         {
             "name": "mappingFilePath",
@@ -232,8 +227,7 @@
             "required": true,
             "type": "string",
             "helpMarkDown": "The path to the proguard mapping.txt file to upload. Glob patterns are supported.",
-            "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadMappingFile = true",
-            "groupName": "advanced"
+            "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadMappingFile = true"
         },
         {
             "name": "changesNotSentForReview",
@@ -249,8 +243,7 @@
             "label": "Release name",
             "defaultValue": "",
             "helpMarkDown": "The release name is only for use in Play Console and won't be visible to users. To make your release easier to identify, add a release name that's meaningful to you.",
-            "visibleRule": "action != OnlyStoreListing",
-            "groupName": "advanced"
+            "visibleRule": "action != OnlyStoreListing"
         },
         {
             "name": "versionCodeFilterType",
@@ -259,7 +252,6 @@
             "type": "pickList",
             "helpMarkDown": "Specify version codes to replace in the selected track with the new aab(s)/apk(s): all, the comma separated list, or a regular expression pattern.",
             "visibleRule": "action != OnlyStoreListing",
-            "groupName": "advanced",
             "options": {
                 "all": "All",
                 "list": "List",
@@ -273,8 +265,7 @@
             "required": true,
             "type": "string",
             "helpMarkDown": "The comma separated list of version codes to be removed from the track with this deployment.",
-            "visibleRule": "action != OnlyStoreListing && versionCodeFilterType = list",
-            "groupName": "advanced"
+            "visibleRule": "action != OnlyStoreListing && versionCodeFilterType = list"
         },
         {
             "name": "replaceExpression",
@@ -283,8 +274,7 @@
             "required": true,
             "type": "string",
             "helpMarkDown": "The regular expression pattern to select a list of version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
-            "visibleRule": "action != OnlyStoreListing && versionCodeFilterType = expression",
-            "groupName": "advanced"
+            "visibleRule": "action != OnlyStoreListing && versionCodeFilterType = expression"
         }
     ],
     "execution": {
