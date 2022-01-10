@@ -1,5 +1,5 @@
 {
-  "loc.friendlyName": "Google Play - Promote renamed",
+  "loc.friendlyName": "Google Play - Promote second",
   "loc.description": "Promote an app from one release track to another",
   "loc.instanceNameFormat": "Promote $(packageName) from $(sourceTrack) to $(destinationTrack)",
   "loc.input.label.authType": "Authentication method",
