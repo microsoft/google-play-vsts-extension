@@ -124,7 +124,7 @@ Includes the following options:
 
     ![APK Path](images/apk-path.png)
 
-6. **Bundle paths, APK paths** *(Multiline, Optional)* - Paths or glob patterns to the APK/AAB files you want to publish to the specified track. It's required that at least one APK/AAB is picked up from these inputs, otherwise the task will fail. Only visible if `action` is *Upload multiple apk/aab files*.
+6. **Bundle paths, APK paths** *(Multiline, Optional)* - Paths or glob patterns to the APK/AAB files you want to publish to the specified track. To specify multiple paths/patterns, use line breaks. It's required that at least one APK/AAB is picked up from these inputs, otherwise the task will fail. Only visible if `action` is *Upload multiple apk/aab files*.
 
     ![APK/AAB Paths](images/apk-aab-paths.png)
 
