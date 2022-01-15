@@ -26,7 +26,7 @@
     "mocha-junit-reporter": "^1.12.1",
     "q": "1.4.1",
     "semver": "4.3.3",
-    "shelljs": "^0.3.0",
+    "shelljs": "^0.8.5",
     "sinon": "7.3.2",
     "sync-request": "6.1.0",
     "tfx-cli": "^0.7.8",
