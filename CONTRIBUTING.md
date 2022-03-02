@@ -33,6 +33,16 @@ This command will create the _build folder at the root of the repository.
 
 If you open the root of the repository in Visual Studio Code, you can build with Ctrl+Shift+B.
 
+## Tests
+Tests should be run with changes.  Before you run tests, make sure you have built the extension.  Run the following from the root of the repo:
+
+```bash
+node make.js test
+```
+To run the tests within Visual Studio Code, select the Debug viewlet, change the debug profile to "Launch L0 Tests", set a breakpoint directly in the
+L0.js file (e.g., _build/Tasks/GooglePlayPromoteV2/Tests/L0.js) and press `F5`.  At this time, you cannot debug the task itself during tests as a second
+node process is created (in which the task is run).
+
 ### Testing task changes
 In order to test your task changes, you will need to upload the new task to your own account and test it with a build definition.  First, create a build definition
 you can use to test your changes.  Then, after building the task you changed, upload the task to your account.  To upload a task, you will need to install the
@@ -68,4 +78,4 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 ## Submitting Pull Requests
 We welcome pull requests!  Fork this repo and send us your contributions.  Go [here](https://help.github.com/articles/using-pull-requests/) to get familiar with GitHub pull requests.
 
-Before submitting your request, ensure that `node make.js build` succeeds and you have verified the task changes manually.
+Before submitting your request, ensure that both `node make.js build` and `node make.js test` succeed.
