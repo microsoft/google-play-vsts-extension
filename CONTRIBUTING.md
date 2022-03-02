@@ -9,7 +9,7 @@ Interested in contributing to the google-play-vsts-extension project? There are 
 * Submit a code fix for a bug (see `Submitting Pull Requests` below)
 * Participate in [discussions](https://github.com/Microsoft/google-play-vsts-extension/issues)
 
-## Set up Node, npm and gulp
+## Set up Node and npm
 
 ### Node and npm
 **Windows and Mac OSX**: Download and install node from [nodejs.org](http://nodejs.org/)
@@ -23,21 +23,11 @@ v6.9.1
 3.10.8
 ```
 
-### Gulp
-Install gulp
-```bash
-[sudo] npm install gulp -g
-```
-From the root of the repo, install all of the build dependencies:
-```bash
-[sudo] npm install
-```
-
 ## Build
 To build the extension, run the following from the root of the repo:
 
 ```bash
-gulp
+node make.js build
 ```
 This command will create the _build folder at the root of the repository.
 
@@ -62,12 +52,12 @@ The package command will package the extension into a Visual Studio extension in
 
 From the root of the repo:
 ```bash
-gulp create
+node make.js create
 ```
 The VSIX package will be created in the root of the repository.
 
 ## Code Styles
-1. gulp build will run `tslint` and flag any errors.  Please ensure that the code stays clean.
+1. node make.js build will run `tslint` and flag any errors.  Please ensure that the code stays clean.
 
 ## Contribution License Agreement
 In order to contribute, you will need to sign a [Contributor License Agreement](https://cla.microsoft.com/).
@@ -78,4 +68,4 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 ## Submitting Pull Requests
 We welcome pull requests!  Fork this repo and send us your contributions.  Go [here](https://help.github.com/articles/using-pull-requests/) to get familiar with GitHub pull requests.
 
-Before submitting your request, ensure that `gulp` succeeds and you have verified the task changes manually.
+Before submitting your request, ensure that `node make.js build` succeeds and you have verified the task changes manually.
