@@ -1133,4 +1133,28 @@ var getTaskNodeVersion = function(buildPath, taskName) {
 }
 exports.getTaskNodeVersion = getTaskNodeVersion;
 
+var toOverrideString = function(object) {
+    return JSON.stringify(object).replace(/"/g, '\\"');
+}
+
+exports.toOverrideString = toOverrideString;
+
+var createExtension = function(manifest, publish) {
+    matchRemove('**/Tests', path.join(__dirname, '_build/Tasks/'));
+    matchRemove('**/*.js.map', path.join(__dirname, '_build/Tasks/'));
+    matchRemove('**/*.d.ts', path.join(__dirname, '_build/Tasks/'));
+
+    console.log('Creating vsix...');
+
+    var createCommand = "node ./node_modules/tfx-cli/_build/app.js extension create --manifest-globs vsts-extension-google-play.json --override " + toOverrideString(manifest);
+
+    if (publish === true) {
+        createCommand += " --share-with mobiledevops x04ty29er --token $PUBLISH_ACCESSTOKEN"
+    }
+    
+    run(createCommand);
+}
+
+exports.createExtension = createExtension;
+
 //------------------------------------------------------------------------------

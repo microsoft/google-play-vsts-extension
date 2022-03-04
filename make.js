@@ -52,6 +52,7 @@ var createResjson = util.createResjson;
 var createTaskLocJson = util.createTaskLocJson;
 var validateTask = util.validateTask;
 var getTaskNodeVersion = util.getTaskNodeVersion;
+var createExtension = util.createExtension;
 
 // global paths
 var buildPath = path.join(__dirname, '_build', 'Tasks');
@@ -303,4 +304,40 @@ target.test = function() {
             console.warn("No common library tests found");
         }
     }
+}
+
+target.create = function() {
+    banner('Creating PRODUCTION vsix...');
+
+    var prodManifestOverride = {
+        public: true
+    };
+
+    createExtension(prodManifestOverride, false);
+}
+
+target.createtest = function() {
+    banner('Creating TEST vsix...');
+
+    var createtestOverride = { 
+        public: false,
+        name: "Google Play-Dev", 
+        id: "vso-extension-android-dev", 
+        publisher: "ms-mobiledevops-test"
+    };
+
+    createExtension(createtestOverride, false);
+}
+
+target.publishtest = function() {
+    banner('Creating and publishing TEST vsix...');
+
+    var createPublishOverride = { 
+        public: false,
+        name: "Google Play-Dev", 
+        id: "vso-extension-android-dev", 
+        publisher: "ms-mobiledevops-test"
+    };
+
+    createExtension(createPublishOverride, true);
 }
