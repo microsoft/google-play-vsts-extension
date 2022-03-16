@@ -238,6 +238,14 @@
       "groupName": "advanced"
     },
     {
+      "name": "rescueChangesNotSentForReview",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.rescueChangesNotSentForReview",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rescueChangesNotSentForReview",
+      "groupName": "advanced"
+    },
+    {
       "name": "releaseName",
       "type": "string",
       "label": "ms-resource:loc.input.label.releaseName",

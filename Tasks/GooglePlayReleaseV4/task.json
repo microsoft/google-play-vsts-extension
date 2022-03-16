@@ -238,6 +238,14 @@
             "groupName": "advanced"
         },
         {
+            "name": "rescueChangesNotSentForReview",
+            "type": "boolean",
+            "label": "Retry commit if changesNotSetForReview failed",
+            "defaultValue": false,
+            "helpMarkDown": "Retry commit if changesNotSetForReview failed",
+            "groupName": "advanced"
+        },
+        {
             "name": "releaseName",
             "type": "string",
             "label": "Release name",
