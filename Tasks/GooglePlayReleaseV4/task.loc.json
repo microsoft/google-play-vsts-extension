@@ -230,6 +230,23 @@
       "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadMappingFile = true"
     },
     {
+      "name": "shouldUploadNativeMappingFile",
+      "label": "ms-resource:loc.input.label.shouldUploadNativeMappingFile",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadNativeMappingFile",
+      "visibleRule": "action != OnlyStoreListing && action != MultiApkAab"
+    },
+    {
+      "name": "nativeMappingFilePath",
+      "label": "ms-resource:loc.input.label.nativeMappingFilePath",
+      "defaultValue": "",
+      "required": true,
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.nativeMappingFilePath",
+      "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadMappingFile = true"
+    },
+    {
       "name": "changesNotSentForReview",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.changesNotSentForReview",
@@ -295,8 +312,10 @@
     "CannotUploadBundle": "ms-resource:loc.messages.CannotUploadBundle",
     "CannotUploadDeobfuscationFile": "ms-resource:loc.messages.CannotUploadDeobfuscationFile",
     "CannotUploadExpansionFile": "ms-resource:loc.messages.CannotUploadExpansionFile",
+    "CannotUploadNativeDeobfuscationFile": "ms-resource:loc.messages.CannotUploadNativeDeobfuscationFile",
     "FoundDeobfuscationFile": "ms-resource:loc.messages.FoundDeobfuscationFile",
     "FoundImageAtPath": "ms-resource:loc.messages.FoundImageAtPath",
+    "FoundNativeDeobfuscationFile": "ms-resource:loc.messages.FoundNativeDeobfuscationFile",
     "GetNewEditAfterAuth": "ms-resource:loc.messages.GetNewEditAfterAuth",
     "ImageDirNotFound": "ms-resource:loc.messages.ImageDirNotFound",
     "ImageTypeNotFound": "ms-resource:loc.messages.ImageTypeNotFound",

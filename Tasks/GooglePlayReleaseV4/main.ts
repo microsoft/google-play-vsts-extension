@@ -69,6 +69,9 @@ async function run(): Promise<void> {
         const uploadMappingFile: boolean = tl.getBoolInput('shouldUploadMappingFile', false) && (action === 'SingleApk' || action === 'SingleBundle');
         const mappingFilePattern: string = tl.getInput('mappingFilePath');
 
+        const uploadNativeMappingFile: boolean = tl.getBoolInput('shouldUploadNativeMappingFile', false) && (action === 'SingleApk' || action === 'SingleBundle');
+        const nativeMappingFilePattern: string = tl.getInput('nativeMappingFilePath');
+
         const changesNotSentForReview: boolean = tl.getBoolInput('changesNotSentForReview');
 
         const releaseName: string = tl.getInput('releaseName', false);
@@ -164,6 +167,16 @@ async function run(): Promise<void> {
                 console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
                 tl.debug(`Uploading ${mappingFilePath} for version code ${versionCodes[0]}`);
                 await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, versionCodes[0]);
+            }
+
+            if (uploadNativeMappingFile) {
+                tl.debug(`Native mapping file pattern: ${nativeMappingFilePattern}`);
+
+                const mappingFilePath = fileHelper.resolveGlobPath(nativeMappingFilePattern);
+                tl.checkPath(mappingFilePath, 'Native mapping file path');
+                console.log(tl.loc('FoundNativeDeobfuscationFile', mappingFilePath));
+                tl.debug(`Uploading ${mappingFilePath} for version code ${versionCodes[0]}`);
+                await googleutil.uploadNativeDeobfuscation(edits, mappingFilePath, packageName, versionCodes[0]);
             }
         }
 
