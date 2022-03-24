@@ -244,7 +244,7 @@
       "required": true,
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.nativeMappingFilePath",
-      "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadMappingFile = true"
+      "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadNativeMappingFile = true"
     },
     {
       "name": "changesNotSentForReview",
