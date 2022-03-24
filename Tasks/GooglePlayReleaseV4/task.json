@@ -244,7 +244,7 @@
             "required": true,
             "type": "string",
             "helpMarkDown": "The path to the native debug symbols (.zip) file to upload. Glob patterns are supported.",
-            "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadMappingFile = true"
+            "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadNativeMappingFile = true"
         },
         {
             "name": "changesNotSentForReview",
