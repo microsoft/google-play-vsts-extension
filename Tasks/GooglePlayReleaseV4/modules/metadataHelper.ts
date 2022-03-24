@@ -63,16 +63,16 @@ async function addAllReleaseNotes(versionCodes: number[], languageCode: string, 
     const releaseNotes: pub3.Schema$LocalizedText[] = [];
     for (const changelogFile of changelogs) {
         const changelogName: string = path.basename(changelogFile, path.extname(changelogFile));
-        const changelogVersion: number = parseInt(changelogName, 10);
-        if (!isNaN(changelogVersion) && (versionCodes.indexOf(changelogVersion) !== -1)) {
+        const changelogNameParsedInt: number = parseInt(changelogName, 10);
+        if ((!isNaN(changelogNameParsedInt) && (versionCodes.indexOf(changelogNameParsedInt) !== -1)) || (changelogName == 'default')) {
             const fullChangelogPath: string = path.join(changelogDir, changelogFile);
-
+            
             console.log(tl.loc('AppendChangelog', fullChangelogPath));
             releaseNotes.push({
                 language: languageCode,
                 text: getChangelog(fullChangelogPath)
             });
-            tl.debug(`Found release notes version ${changelogVersion} from ${fullChangelogPath} for language code ${languageCode}`);
+            tl.debug(`Found release notes version ${changelogName} from ${fullChangelogPath} for language code ${languageCode}`);
         } else {
             tl.debug(`The name of the file ${changelogFile} is not a valid version code. Skipping it.`);
         }
