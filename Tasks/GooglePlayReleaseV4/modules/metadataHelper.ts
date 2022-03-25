@@ -64,9 +64,8 @@ async function addAllReleaseNotes(versionCodes: number[], languageCode: string, 
     for (const changelogFile of changelogs) {
         const changelogName: string = path.basename(changelogFile, path.extname(changelogFile));
         const changelogNameParsedInt: number = parseInt(changelogName, 10);
-        if ((!isNaN(changelogNameParsedInt) && (versionCodes.indexOf(changelogNameParsedInt) !== -1)) || (changelogName == 'default')) {
+        if (!isNaN(changelogNameParsedInt) && (versionCodes.indexOf(changelogNameParsedInt) !== -1) || changelogName === 'default') {
             const fullChangelogPath: string = path.join(changelogDir, changelogFile);
-            
             console.log(tl.loc('AppendChangelog', fullChangelogPath));
             releaseNotes.push({
                 language: languageCode,
