@@ -259,8 +259,6 @@ export async function uploadDeobfuscation(
         tl.debug('returned: ' + JSON.stringify(res));
         return res.data;
     } catch (e) {
-        tl.debug(`Failed to upload deobfuscation file ${mappingFilePath}`);
-        tl.debug(e);
         throw new Error(tl.loc('CannotUploadDeobfuscationFile', mappingFilePath, e));
     }
 }
@@ -296,8 +294,6 @@ export async function uploadNativeDeobfuscation(
         tl.debug('returned: ' + JSON.stringify(res));
         return res.data;
     } catch (e) {
-        tl.debug(`Failed to upload native deobfuscation file ${mappingFilePath}`);
-        tl.debug(e);
         throw new Error(tl.loc('CannotUploadNativeDeobfuscationFile', mappingFilePath, e));
     }
 }
