@@ -61,24 +61,47 @@ async function addAllReleaseNotes(versionCodes: number[], languageCode: string, 
     }
 
     const releaseNotes: pub3.Schema$LocalizedText[] = [];
+    let fullDefaultChangelogPath: string = '';
     for (const changelogFile of changelogs) {
         const changelogName: string = path.basename(changelogFile, path.extname(changelogFile));
-        const changelogNameParsedInt: number = parseInt(changelogName, 10);
-        if (!isNaN(changelogNameParsedInt) && (versionCodes.indexOf(changelogNameParsedInt) !== -1) || changelogName === 'default') {
+        const changelogVersion: number = parseInt(changelogName, 10);
+        if (changelogName === 'default') {
+            fullDefaultChangelogPath = path.join(changelogDir, changelogFile);
+        }
+
+        if (!isNaN(changelogVersion) && (versionCodes.indexOf(changelogVersion) !== -1)) {
             const fullChangelogPath: string = path.join(changelogDir, changelogFile);
-            console.log(tl.loc('AppendChangelog', fullChangelogPath));
-            releaseNotes.push({
-                language: languageCode,
-                text: getChangelog(fullChangelogPath)
-            });
-            tl.debug(`Found release notes version ${changelogName} from ${fullChangelogPath} for language code ${languageCode}`);
+            const message: string = `Found release notes version ${changelogVersion} from ${fullChangelogPath} for language code ${languageCode}`;
+            appendChangelogToReleaseNotes(fullChangelogPath, releaseNotes, languageCode, message);
         } else {
             tl.debug(`The name of the file ${changelogFile} is not a valid version code. Skipping it.`);
         }
     }
 
+    if (releaseNotes.length === 0 && fullDefaultChangelogPath !== '') {
+        const message: string = `'default.txt' release notes file is found. It is used for language code ${languageCode}`;
+        appendChangelogToReleaseNotes(fullDefaultChangelogPath, releaseNotes, languageCode, message);
+    }
+
     tl.debug(`All release notes found for ${changelogDir}: ${JSON.stringify(releaseNotes)}`);
     return releaseNotes;
+}
+
+/**
+ * Adds Schema$LocalizedText object to array of changelogs
+ * @param {string} changelogPath Path to file found in 'changelogs' directory
+ * @param {pub3.Schema$LocalizedText[]} releaseNotes Array of Schema$LocalizedText changelogs
+ * @param {string} languageCode Language code (a BCP-47 language tag) of the localized listing to update
+ * @param {string} message Message to display after appending of new changelog object to array
+ * @returns nothing
+ */
+async function appendChangelogToReleaseNotes(changelogPath: string, releaseNotes: pub3.Schema$LocalizedText[], languageCode: string, message: string) {
+    console.log(tl.loc('AppendChangelog', changelogPath));
+    releaseNotes.push({
+        language: languageCode,
+        text: getChangelog(changelogPath)
+    });
+    tl.debug(message);
 }
 
 /**
