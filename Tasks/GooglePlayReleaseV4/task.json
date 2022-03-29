@@ -230,21 +230,21 @@
             "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadMappingFile = true"
         },
         {
-            "name": "shouldUploadNativeMappingFile",
+            "name": "shouldUploadNativeDebugSymbols",
             "label": "Upload native debug symbols",
             "defaultValue": false,
             "type": "boolean",
-            "helpMarkDown": "Select this option to attach your native mapping file to your aab/apk.",
+            "helpMarkDown": "Select this option to attach your native debug symbols archive to your aab/apk.",
             "visibleRule": "action != OnlyStoreListing && action != MultiApkAab"
         },
         {
-            "name": "nativeMappingFilePath",
-            "label": "Native debug symbols file path",
+            "name": "nativeDebugSymbolsFile",
+            "label": "Native debug symbols archive path",
             "defaultValue": "",
             "required": true,
             "type": "string",
             "helpMarkDown": "The path to the native debug symbols (.zip) file to upload. Glob patterns are supported.",
-            "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadNativeMappingFile = true"
+            "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadNativeDebugSymbols = true"
         },
         {
             "name": "changesNotSentForReview",
