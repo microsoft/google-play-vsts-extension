@@ -198,24 +198,30 @@ $(Specified Directory)
 
 6. **Deobfuscation path** *(File path, Required if visible)* - The path to the proguard mapping.txt file to upload. Glob patterns are supported. Only visible if `Upload deobfuscation file` is enabled.
 
-7. **Send changes to review** *(Boolean, Optional)* - Select this option to send changes for review in GooglePlay Console. If changes are already sent for review automatically, you shouldn't select this option.
+7. **Upload native debug symbols** *(Boolean, Optional)* - Allows to attach native debug symbols zip archive to your aab/apk. Only visible if `action` is *Upload single apk* or *Upload single bundle*.
+
+    ![Mapping File](images/mapping-file.png)
+
+8. **Deobfuscation path** *(File path, Required if visible)* - The path to the native debug symbols zip archive to upload. Glob patterns are supported. Only visible if `Upload native debug symbols` is enabled.
+
+9. **Send changes to review** *(Boolean, Optional)* - Select this option to send changes for review in GooglePlay Console. If changes are already sent for review automatically, you shouldn't select this option.
 
     ![Send Changes To Review](images/send-changes-to-review.png)
 
-8. **Release name** *(String, Optional)* - Allows to set meaningful release name that can be seen in your Google Play Console. It won't be visible to your users.
+10. **Release name** *(String, Optional)* - Allows to set meaningful release name that can be seen in your Google Play Console. It won't be visible to your users.
 
     ![Send Changes To Review](images/send-changes-to-review.png)
 
-9.  **Replace version codes** *(String, Required)* - You may specify which APK version codes should be replaced in the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
+11.  **Replace version codes** *(String, Required)* - You may specify which APK version codes should be replaced in the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
 
 
-10. **Replace Version Codes** *(String, Optional)* - Specify version codes to replace in the selected track with the new APKs/AABs: all, the comma separated list, or a regular expression pattern. Not visible if `action` is *Only update store listing*.
+12. **Replace Version Codes** *(String, Optional)* - Specify version codes to replace in the selected track with the new APKs/AABs: all, the comma separated list, or a regular expression pattern. Not visible if `action` is *Only update store listing*.
 
     ![Advanced Options](images/replace-version-codes.png)
 
-11. **Version Code List** *(String, Required if visible)* - The comma separated list of version codes to be removed from the track with this deployment. Only available if `Replace Version Codes` value is *List*.
+13. **Version Code List** *(String, Required if visible)* - The comma separated list of version codes to be removed from the track with this deployment. Only available if `Replace Version Codes` value is *List*.
 
-12. **Version Code Pattern** *(String, Required if visible)* - The regular expression pattern to select a list of version codes to be removed from the track with this deployment, e.g. .\*12?(3|4)?5. Only available if `Replace Version Codes` value is *Regular expression*.
+14. **Version Code Pattern** *(String, Required if visible)* - The regular expression pattern to select a list of version codes to be removed from the track with this deployment, e.g. .\*12?(3|4)?5. Only available if `Replace Version Codes` value is *Regular expression*.
 
 ### Google Play - Release V3 (deprecated in favor of Google Play - Release V4)
 
