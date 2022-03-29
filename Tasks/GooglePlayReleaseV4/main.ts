@@ -164,6 +164,7 @@ async function run(): Promise<void> {
 
                 const mappingFilePath = fileHelper.resolveGlobPath(mappingFilePattern);
                 tl.checkPath(mappingFilePath, 'Mapping file path');
+
                 console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
                 tl.debug(`Uploading ${mappingFilePath} for version code ${versionCodes[0]}`);
                 await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, versionCodes[0]);
@@ -174,6 +175,7 @@ async function run(): Promise<void> {
 
                 const mappingFilePath = fileHelper.resolveGlobPath(nativeMappingFilePattern);
                 tl.checkPath(mappingFilePath, 'Native mapping file path');
+
                 console.log(tl.loc('FoundNativeDeobfuscationFile', mappingFilePath));
                 tl.debug(`Uploading ${mappingFilePath} for version code ${versionCodes[0]}`);
                 await googleutil.uploadNativeDeobfuscation(edits, mappingFilePath, packageName, versionCodes[0]);
