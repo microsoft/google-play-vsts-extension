@@ -291,7 +291,7 @@ export async function uploadNativeDeobfuscation(
     try {
         tl.debug(`Request Parameters: ${JSON.stringify(requestParameters)}`);
         const res = await edits.deobfuscationfiles.upload(requestParameters, { onUploadProgress });
-        tl.debug('returned: ' + JSON.stringify(res));
+        tl.debug(`Response: ${JSON.stringify(res)}`);
         return res.data;
     } catch (e) {
         throw new Error(tl.loc('CannotUploadNativeDeobfuscationFile', mappingFilePath, e));
