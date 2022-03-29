@@ -289,7 +289,7 @@ export async function uploadNativeDeobfuscation(
     };
 
     try {
-        tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
+        tl.debug(`Request Parameters: ${JSON.stringify(requestParameters)}`);
         const res = await edits.deobfuscationfiles.upload(requestParameters, { onUploadProgress });
         tl.debug('returned: ' + JSON.stringify(res));
         return res.data;
