@@ -67,6 +67,7 @@ async function addAllReleaseNotes(versionCodes: number[], languageCode: string, 
         const changelogVersion: number = parseInt(changelogName, 10);
         if (changelogName === 'default') {
             fullDefaultChangelogPath = path.join(changelogDir, changelogFile);
+            continue;
         }
 
         if (!isNaN(changelogVersion) && (versionCodes.indexOf(changelogVersion) !== -1)) {
