@@ -69,6 +69,9 @@ async function run(): Promise<void> {
         const uploadMappingFile: boolean = tl.getBoolInput('shouldUploadMappingFile', false) && (action === 'SingleApk' || action === 'SingleBundle');
         const mappingFilePattern: string = tl.getInput('mappingFilePath');
 
+        const uploadNativeDebugSymbols: boolean = tl.getBoolInput('shouldUploadNativeDebugSymbols', false) && (action === 'SingleApk' || action === 'SingleBundle');
+        const nativeDebugSymbolsFilePattern: string = tl.getInput('nativeDebugSymbolsFile');
+
         const changesNotSentForReview: boolean = tl.getBoolInput('changesNotSentForReview');
 
         const releaseName: string = tl.getInput('releaseName', false);
@@ -161,9 +164,21 @@ async function run(): Promise<void> {
 
                 const mappingFilePath = fileHelper.resolveGlobPath(mappingFilePattern);
                 tl.checkPath(mappingFilePath, 'Mapping file path');
+
                 console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
                 tl.debug(`Uploading ${mappingFilePath} for version code ${versionCodes[0]}`);
                 await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, versionCodes[0]);
+            }
+
+            if (uploadNativeDebugSymbols) {
+                tl.debug(`Native debug symbols file pattern: ${nativeDebugSymbolsFilePattern}`);
+
+                const nativeDebugSymbolsFilePath = fileHelper.resolveGlobPath(nativeDebugSymbolsFilePattern);
+                tl.checkPath(nativeDebugSymbolsFilePath, 'Native debug symbols archive path');
+
+                console.log(tl.loc('FoundNativeDeobfuscationFile', nativeDebugSymbolsFilePath));
+                tl.debug(`Uploading ${nativeDebugSymbolsFilePath} for version code ${versionCodes[0]}`);
+                await googleutil.uploadNativeDeobfuscation(edits, nativeDebugSymbolsFilePath, packageName, versionCodes[0]);
             }
         }
 

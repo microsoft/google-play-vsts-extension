@@ -259,9 +259,42 @@ export async function uploadDeobfuscation(
         tl.debug('returned: ' + JSON.stringify(res));
         return res.data;
     } catch (e) {
-        tl.debug(`Failed to upload deobfuscation file ${mappingFilePath}`);
-        tl.debug(e);
         throw new Error(tl.loc('CannotUploadDeobfuscationFile', mappingFilePath, e));
+    }
+}
+
+/**
+ * Uploads a native debugs symbols file (debug.zip) for a given package
+ * Assumes authorized
+ * @param mappingFilePath the path to the file to upload
+ * @param packageName unique android package name (com.android.etc)
+ * @param versionCode version code of uploaded APK or AAB
+ * @returns deobfuscationFiles A promise that will return result from uploading a deobfuscation file
+ *                          { deobfuscationFile: { symbolType: string } }
+ */
+export async function uploadNativeDeobfuscation(
+    edits: pub3.Resource$Edits,
+    mappingFilePath: string,
+    packageName: string,
+    versionCode: number
+): Promise<pub3.Schema$DeobfuscationFilesUploadResponse> {
+    const requestParameters: pub3.Params$Resource$Edits$Deobfuscationfiles$Upload = {
+        deobfuscationFileType: 'nativeCode',
+        packageName: packageName,
+        apkVersionCode: versionCode,
+        media: {
+            body: fs.createReadStream(mappingFilePath),
+            mimeType: ''
+        }
+    };
+
+    try {
+        tl.debug(`Request Parameters: ${JSON.stringify(requestParameters)}`);
+        const res = await edits.deobfuscationfiles.upload(requestParameters, { onUploadProgress });
+        tl.debug(`Response: ${JSON.stringify(res)}`);
+        return res.data;
+    } catch (e) {
+        throw new Error(tl.loc('CannotUploadNativeDeobfuscationFile', mappingFilePath, e));
     }
 }
 
