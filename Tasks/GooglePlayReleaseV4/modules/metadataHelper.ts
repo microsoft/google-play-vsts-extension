@@ -96,7 +96,11 @@ async function addAllReleaseNotes(versionCodes: number[], languageCode: string, 
  * @param {string} message Message to display after appending of new changelog object to array
  * @returns nothing
  */
-async function appendChangelogToReleaseNotes(changelogPath: string, releaseNotes: pub3.Schema$LocalizedText[], languageCode: string, message: string) {
+async function appendChangelogToReleaseNotes(
+    changelogPath: string,
+    releaseNotes: pub3.Schema$LocalizedText[],
+    languageCode: string,
+    message: string): Promise<void> {
     console.log(tl.loc('AppendChangelog', changelogPath));
     releaseNotes.push({
         language: languageCode,
