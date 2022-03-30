@@ -175,7 +175,8 @@ $(Specified Directory)
      |  └ wearScreenshots
      |     └ *.png || *.jpg || *.jpeg
      └ changelogs
-       └ $(versioncodes).txt
+       ├ $(versioncodes).txt
+       └ default.txt
 ```
 
 11. **Release Notes** *(File path)* - Path to the file specifying the release notes for the release you are publishing. Only visible if `Update metadata` option is disabled.
