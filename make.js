@@ -249,7 +249,7 @@ target.build = function() {
 //
 target.test = function() {
     ensureTool('tsc', '--version', 'Version 3.6.3');
-    ensureTool('mocha', '--version', '6.1.4');
+    ensureTool('mocha', '--version', '9.2.2');
 
     // run the tests
     var suiteType = options.suite || 'L0';
