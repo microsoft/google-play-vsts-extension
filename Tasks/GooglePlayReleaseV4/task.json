@@ -230,6 +230,23 @@
             "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadMappingFile = true"
         },
         {
+            "name": "shouldUploadNativeDebugSymbols",
+            "label": "Upload native debug symbols",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Select this option to attach your native debug symbols archive to your aab/apk.",
+            "visibleRule": "action != OnlyStoreListing && action != MultiApkAab"
+        },
+        {
+            "name": "nativeDebugSymbolsFile",
+            "label": "Native debug symbols archive path",
+            "defaultValue": "",
+            "required": true,
+            "type": "string",
+            "helpMarkDown": "The path to the native debug symbols (.zip) file to upload. Glob patterns are supported.",
+            "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadNativeDebugSymbols = true"
+        },
+        {
             "name": "changesNotSentForReview",
             "type": "boolean",
             "label": "Send changes to review",
@@ -303,8 +320,10 @@
         "CannotUploadBundle": "Failed to upload the bundle %s. Failed with message: %s.",
         "CannotUploadDeobfuscationFile": "Failed to upload the deobfuscation file %s. Failed with message: %s.",
         "CannotUploadExpansionFile": "Failed to upload the expansion file %s. Failed with message: %s.",
+        "CannotUploadNativeDeobfuscationFile": "Failed to upload the native debug symbols file %s. Failed with message: %s.",
         "FoundDeobfuscationFile": "Found deobfuscation (mapping) file: %s",
         "FoundImageAtPath": "Found image for type %s at %s",
+        "FoundNativeDeobfuscationFile": "Found native debug symbols file: %s",
         "GetNewEditAfterAuth": "Authenticated with Google Play and getting new edit",
         "ImageDirNotFound": "Image directory for %s was not found. Skipping...",
         "ImageTypeNotFound": "Image for %s was not found. Skipping...",
