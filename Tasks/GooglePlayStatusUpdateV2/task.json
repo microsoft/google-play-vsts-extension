@@ -99,7 +99,7 @@
         }
     ],
     "execution": {
-        "Node10": {
+        "Node14": {
             "target": "google-play-status-update.js",
             "argumentFormat": ""
         }

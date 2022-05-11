@@ -84,7 +84,7 @@
     }
   ],
   "execution": {
-    "Node10": {
+    "Node14": {
       "target": "google-play-rollout-update.js",
       "argumentFormat": ""
     },

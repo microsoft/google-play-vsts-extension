@@ -125,7 +125,7 @@
     }
   ],
   "execution": {
-    "Node10": {
+    "Node14": {
       "target": "google-play-promote.js",
       "argumentFormat": ""
     },
