@@ -1,8 +1,8 @@
 {
     "tasks": [
         "GooglePlayReleaseV4",
-        "GooglePlayPromoteV2",
-        "GooglePlayRolloutUpdateV3",
+        "GooglePlayPromoteV3",
+        "GooglePlayIncreaseRolloutV2",
         "GooglePlayStatusUpdateV2"
     ],
     "taskResources": [

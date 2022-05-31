@@ -85,11 +85,11 @@
     ],
     "execution": {
         "Node10": {
-            "target": "google-play-rollout-update.js",
+            "target": "google-play-increase-rollout.js",
             "argumentFormat": ""
         },
         "PowerShell": {
-            "target": "$(currentDirectory)\\google-play-rollout-update.ps1",
+            "target": "$(currentDirectory)\\google-play-increase-rollout.ps1",
             "argumentFormat": "",
             "workingDirectory": "$(currentDirectory)"
         }

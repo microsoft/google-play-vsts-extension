@@ -10,4 +10,4 @@ $env:INPUT_serviceEndpoint = $serviceEndpoint
 $env:INPUT_packageName = $packageName
 $env:INPUT_userFraction = $userFraction
 
-node google-play-rollout-update.js
+node google-play-increase-rollout.js
