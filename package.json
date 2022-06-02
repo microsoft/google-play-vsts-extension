@@ -29,7 +29,7 @@
     "tfx-cli": "^0.11.0",
     "tslint": "^5.20.1",
     "typescript": "3.6.3",
-    "validator": "3.33.0",
-    "yargs": "^6.4.0"
+    "validator": "^13.7.0",
+    "yargs": "^17.5.1"
   }
 }
