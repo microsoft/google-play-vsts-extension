@@ -17,7 +17,13 @@ var makeOptions = require('./make-options.json');
 // list of .NET culture names
 var cultureNames = [ 'cs', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt-BR', 'ru', 'tr', 'zh-Hans', 'zh-Hant' ];
 
-const allowedTypescriptVersions = ['2.3.4', '4.0.2'];
+// core dev-dependencies constants
+const constants = require('./dev-dependencies-constants');
+
+const TSC_MIN_VERSION = constants.TSC_MIN_VERSION;
+const TSC_CURRENT_VERSION = constants.TSC_CURRENT_VERSION;
+
+const allowedTypescriptVersions = [TSC_MIN_VERSION, TSC_CURRENT_VERSION];
 
 //------------------------------------------------------------------------------
 // shell functions
