@@ -1,6 +1,6 @@
 {
   "name": "vso-android-extension",
-  "version": "4.207.0",
+  "version": "4.207.1",
   "description": "Provides build/release tasks that enable performing continuous delivery to the Google Play store from an automated VSTS build or release definition.",
   "repository": {
     "type": "git",
