@@ -113,4 +113,14 @@ it('updateTrack tests', async function () {
     assert.equal(0.9, response.requestBody.releases[0].userFraction);
     assert.equal('inProgress', response.requestBody.releases[0].status);
     stub.reset();
+
+    stub.returns({ data: {}});
+    const isDraftRelease = true;
+    await googleutil.updateTrack(edits, packname, track, [345], 0.9, 0, undefined, undefined, isDraftRelease);
+    assert(stub.called);
+    response = stub.args[0][0];
+    assert.equal(345, response.requestBody.releases[0].versionCodes);
+    assert.equal('draft', response.requestBody.releases[0].status);
+    assert(!response.requestBody.releases[0].userFraction);
+    stub.reset();
 });

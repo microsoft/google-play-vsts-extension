@@ -292,6 +292,15 @@
             "type": "string",
             "helpMarkDown": "The regular expression pattern to select a list of version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
             "visibleRule": "action != OnlyStoreListing && versionCodeFilterType = expression"
+        },
+        {
+            "name": "isDraftRelease",
+            "label": "Release as Draft",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Allows to deploy the release to an app that is still in \"Draft\" status in the Play Store Console.",
+            "groupName": "advanced",
+            "visibleRule": "rolloutToUserFraction != true"
         }
     ],
     "execution": {

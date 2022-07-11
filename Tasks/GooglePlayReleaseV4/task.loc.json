@@ -292,6 +292,15 @@
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.replaceExpression",
       "visibleRule": "action != OnlyStoreListing && versionCodeFilterType = expression"
+    },
+    {
+      "name": "isDraftRelease",
+      "label": "ms-resource:loc.input.label.isDraftRelease",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.isDraftRelease",
+      "groupName": "advanced",
+      "visibleRule": "rolloutToUserFraction != true"
     }
   ],
   "execution": {

@@ -224,6 +224,8 @@ $(Specified Directory)
 
 14. **Version Code Pattern** *(String, Required if visible)* - The regular expression pattern to select a list of version codes to be removed from the track with this deployment, e.g. .\*12?(3|4)?5. Only available if `Replace Version Codes` value is *Regular expression*.
 
+15. **Release as Draft** *(Boolean, Optional)* - Select this option if your app status is "Draft" in the GooglePlay Console.
+
 ### Google Play - Release V3 (deprecated in favor of Google Play - Release V4)
 
 Allows you to release an update to your app on Google Play, and includes the following options:
