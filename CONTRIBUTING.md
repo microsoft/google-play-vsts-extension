@@ -40,7 +40,7 @@ Tests should be run with changes.  Before you run tests, make sure you have buil
 node make.js test
 ```
 To run the tests within Visual Studio Code, select the Debug viewlet, change the debug profile to "Launch L0 Tests", set a breakpoint directly in the
-L0.js file (e.g., _build/Tasks/GooglePlayPromoteV2/Tests/L0.js) and press `F5`.  At this time, you cannot debug the task itself during tests as a second
+L0.js file (e.g., _build/Tasks/GooglePlayPromoteV3/Tests/L0.js) and press `F5`.  At this time, you cannot debug the task itself during tests as a second
 node process is created (in which the task is run).
 
 ### Testing task changes

@@ -11,7 +11,7 @@
   ],
   "version": {
     "Major": "2",
-    "Minor": "207",
+    "Minor": "208",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -85,11 +85,11 @@
   ],
   "execution": {
     "Node10": {
-      "target": "google-play-rollout-update.js",
+      "target": "google-play-increase-rollout.js",
       "argumentFormat": ""
     },
     "PowerShell": {
-      "target": "$(currentDirectory)\\google-play-rollout-update.ps1",
+      "target": "$(currentDirectory)\\google-play-increase-rollout.ps1",
       "argumentFormat": "",
       "workingDirectory": "$(currentDirectory)"
     }

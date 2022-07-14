@@ -4,7 +4,7 @@ import process = require('process');
 
 import * as ttm from 'azure-pipelines-task-lib/mock-test';
 
-describe('L0 Suite google-play-rollout-update', function () {
+describe('L0 Suite google-play-increase-rollout', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
     before((done) => {

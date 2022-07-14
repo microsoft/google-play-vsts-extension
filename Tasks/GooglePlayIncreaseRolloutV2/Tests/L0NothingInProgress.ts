@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 
 import path = require('path');
 
-const taskPath = path.join(__dirname, '..', 'google-play-rollout-update.js');
+const taskPath = path.join(__dirname, '..', 'google-play-increase-rollout.js');
 const tr: tmrm.TaskMockRunner = new tmrm.TaskMockRunner(taskPath);
 
 tr.setInput('authType', 'ServiceEndpoint');
@@ -21,15 +21,12 @@ tr.registerMock('./googleutil', {
     getJWT: () => ({ authorize: () => sinon.stub() }),
     updateGlobalParams: () => ({}),
     getNewEdit: () => Promise.resolve({}),
-    updateTrack: (_edits, _packageName, _track, _versionCode, _userFraction, releaseNotes?) => Promise.resolve(releaseNotes),
+    updateTrack: () => Promise.resolve({}),
     getTrack: () => Promise.resolve({
         releases: [
             {
-                status: 'inProgress',
-                versionCodes: [123],
-                releaseNotes: [
-                    { text: 'release contents', language: 'en-US' }
-                ]
+                status: 'complete',
+                versionCodes: [123]
             }
         ]
     })

@@ -1,8 +1,8 @@
 {
-  "name": "vso-task-google-play-rollout-update",
+  "name": "vso-task-google-play-increase-rollout",
   "version": "1.0.0",
   "description": "A VSO build task for updating the rollout fraction of a Google Play store app",
-  "main": "google-play-rollout-update.js",
+  "main": "google-play-increase-rollout.js",
   "scripts": {
     "deploy": "tfx build tasks upload ./ --overwrite"
   },
