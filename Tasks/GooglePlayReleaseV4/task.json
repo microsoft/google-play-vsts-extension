@@ -298,7 +298,7 @@
             "label": "Release as Draft",
             "defaultValue": false,
             "type": "boolean",
-            "helpMarkDown": "Allows to deploy the release to an app that is still in \"Draft\" status in the Play Store Console.",
+            "helpMarkDown": "Allows to create a draft release which can later be deployed via the Google Play Console.",
             "groupName": "advanced",
             "visibleRule": "rolloutToUserFraction != true"
         }
