@@ -12,7 +12,7 @@
     "demands": [],
     "version": {
         "Major": "4",
-        "Minor": "207",
+        "Minor": "209",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
@@ -292,6 +292,15 @@
             "type": "string",
             "helpMarkDown": "The regular expression pattern to select a list of version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ ",
             "visibleRule": "action != OnlyStoreListing && versionCodeFilterType = expression"
+        },
+        {
+            "name": "isDraftRelease",
+            "label": "Release as Draft",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Allows to create a draft release which can later be deployed via the Google Play Console.",
+            "groupName": "advanced",
+            "visibleRule": "rolloutToUserFraction != true"
         }
     ],
     "execution": {

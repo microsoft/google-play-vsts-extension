@@ -66,6 +66,7 @@ export async function getTrack(edits: pub3.Resource$Edits, packageName: string, 
  * @param updatePriority in-app update priority value of the release. All newly added APKs in the release will be considered at this priority. Can take values in the range [0, 5], with 5 the highest priority. Defaults to 0.
  * @param releaseNotes optional release notes to be attached as part of the update
  * @param releaseName optional release name. If not set, the name is generated from the APK's version_name. If the release contains multiple APKs, the name is generated from the date
+ * @param isDraftRelease optional flag to indicate whether this release is a draft release. Defaults to false
  * @returns track - A promise that will return result from updating a track
  *                            { track: string, versionCodes: [integer], userFraction: double }
  */
@@ -77,7 +78,8 @@ export async function updateTrack(
     userFraction: number,
     updatePriority: number,
     releaseNotes?: pub3.Schema$LocalizedText[],
-    releaseName?: string
+    releaseName?: string,
+    isDraftRelease?: boolean
 ): Promise<pub3.Schema$Track> {
     tl.debug('Updating track');
     const versionCodesArray: number[] = (Array.isArray(versionCodes) ? versionCodes : [versionCodes]);
@@ -96,7 +98,10 @@ export async function updateTrack(
         release.releaseNotes = releaseNotes;
     }
 
-    if (userFraction < 1.0) {
+    if (isDraftRelease) {
+        tl.debug('Setting release as draft');
+        release.status = 'draft';
+    } else if (userFraction < 1.0) {
         release.userFraction = userFraction;
         release.status = 'inProgress';
     } else {
