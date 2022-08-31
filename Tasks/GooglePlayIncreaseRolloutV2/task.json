@@ -1,5 +1,5 @@
 {
-    "id": "f8c97cf9-4e17-4244-b0fb-f540cea78153",
+    "id": "162fc54a-f34d-46d3-8af3-73582d43420e",
     "name": "GooglePlayIncreaseRollout",
     "friendlyName": "Google Play - Increase Rollout",
     "description": "Increase the rollout fraction of an app previously deployed to the Google Play Store",
@@ -12,7 +12,7 @@
     "version": {
         "Major": "2",
         "Minor": "208",
-        "Patch": "0"
+        "Patch": "1"
     },
     "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Increase $(packageName) rollout fraction to $(userFraction)",
