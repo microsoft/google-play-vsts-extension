@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1.0,
-    "id": "google-play-220831",
-    "name": "Google Play 220831",
+    "id": "google-play-220901",
+    "name": "Google Play 220901",
     "version": "4.209.1",
     "publisher": "DenisRumyantsev",
     "description": "Provides tasks for continuous delivery to the Google Play Store from TFS/Team Services build or release definitions",
@@ -119,8 +119,8 @@
                 "ms.vss-endpoint.endpoint-types"
             ],
             "properties": {
-                "name": "google-play-220831",
-                "displayName": "Google Play 220831",
+                "name": "google-play-220901",
+                "displayName": "Google Play 220901",
                 "url": "https://accounts.google.com/o/oauth2/v2/auth",
                 "inputDescriptors": [],
                 "authenticationSchemes": [
