@@ -2,3 +2,5 @@ _build
 node_modules
 .DS_Store
 _download
+.taskkey
+*.vsix
