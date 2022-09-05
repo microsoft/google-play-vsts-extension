@@ -83,7 +83,7 @@ export function getApksOrAabs(
     action: Action,
     singleAction: 'SingleApk' | 'SingleBundle',
     singleInput: 'apkFile' | 'bundleFile',
-    multiInput: 'apkFiles' | 'bundleFiles',
+    multiInput: 'apkFiles' | 'bundleFiles'
 ): string[] {
     if (action === singleAction) {
         const pattern: string = tl.getInput(singleInput, true);

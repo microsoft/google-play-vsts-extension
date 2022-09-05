@@ -16,11 +16,11 @@ Interested in contributing to the google-play-vsts-extension project? There are 
 
 **Linux**: Install [using package manager](https://nodejs.org/en/download/package-manager/)
 
-From a terminal ensure at least node 5.4.1 and npm 3:
+From a terminal ensure at least node 10.0.0 and npm 5.6.0:
 ```bash
 $ node -v && npm -v
-v6.9.1
-3.10.8
+v10.24.1
+6.14.12
 ```
 
 ## Build
@@ -40,7 +40,7 @@ Tests should be run with changes.  Before you run tests, make sure you have buil
 node make.js test
 ```
 To run the tests within Visual Studio Code, select the Debug viewlet, change the debug profile to "Launch L0 Tests", set a breakpoint directly in the
-L0.js file (e.g., _build/Tasks/GooglePlayPromoteV2/Tests/L0.js) and press `F5`.  At this time, you cannot debug the task itself during tests as a second
+L0.js file (e.g., _build/Tasks/GooglePlayPromoteV3/Tests/L0.js) and press `F5`.  At this time, you cannot debug the task itself during tests as a second
 node process is created (in which the task is run).
 
 ### Testing task changes

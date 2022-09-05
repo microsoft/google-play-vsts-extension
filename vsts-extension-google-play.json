@@ -2,7 +2,7 @@
     "manifestVersion": 1.0,
     "id": "google-play",
     "name": "Google Play",
-    "version": "4.204.0",
+    "version": "4.210.3",
     "publisher": "ms-vsclient",
     "description": "Provides tasks for continuous delivery to the Google Play Store from TFS/Team Services build or release definitions",
     "categories": [
@@ -39,10 +39,10 @@
             "path": "_build/Tasks/GooglePlayReleaseV4"
         },
         {
-            "path": "_build/Tasks/GooglePlayPromoteV2"
+            "path": "_build/Tasks/GooglePlayPromoteV3"
         },
         {
-            "path": "_build/Tasks/GooglePlayRolloutUpdateV3"
+            "path": "_build/Tasks/GooglePlayIncreaseRolloutV2"
         },
         {
             "path": "_build/Tasks/GooglePlayStatusUpdateV2"
@@ -88,7 +88,7 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "_build/Tasks/GooglePlayPromoteV2"
+                "name": "_build/Tasks/GooglePlayPromoteV3"
             }
         },
         {
@@ -98,7 +98,7 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "_build/Tasks/GooglePlayRolloutUpdateV3"
+                "name": "_build/Tasks/GooglePlayIncreaseRolloutV2"
             }
         },
         {

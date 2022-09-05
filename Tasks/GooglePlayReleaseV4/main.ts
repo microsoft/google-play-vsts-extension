@@ -201,6 +201,12 @@ async function run(): Promise<void> {
             requireTrackUpdate = true;
         }
 
+        const isDraftRelease: boolean = !userFractionSupplied && tl.getBoolInput('isDraftRelease', false);
+
+        if (isDraftRelease) {
+            requireTrackUpdate = true;
+        }
+
         if (requireTrackUpdate) {
             console.log(tl.loc('UpdateTrack'));
             tl.debug(`Updating the track ${track}.`);
@@ -213,6 +219,7 @@ async function run(): Promise<void> {
                 versionCodeFilter,
                 userFraction,
                 updatePriority,
+                isDraftRelease,
                 releaseNotes,
                 releaseName
             };
@@ -268,6 +275,7 @@ interface TrackUpdateParameters {
     versionCodeFilter: string | number[];
     userFraction: number;
     updatePriority: number;
+    isDraftRelease: boolean;
     releaseNotes?: pub3.Schema$LocalizedText[];
     releaseName?: string;
 }
@@ -294,6 +302,7 @@ async function prepareTrackUpdate({
     versionCodeFilter,
     userFraction,
     updatePriority,
+    isDraftRelease,
     releaseNotes,
     releaseName
 }: TrackUpdateParameters): Promise<pub3.Schema$Track> {
@@ -344,7 +353,7 @@ async function prepareTrackUpdate({
 
     tl.debug(`New ${track} track version codes: ` + JSON.stringify(newTrackVersionCodes));
     try {
-        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction, updatePriority, releaseNotes, releaseName);
+        res = await googleutil.updateTrack(edits, packageName, track, newTrackVersionCodes, userFraction, updatePriority, releaseNotes, releaseName, isDraftRelease);
     } catch (e) {
         tl.debug(`Failed to update track ${track}.`);
         tl.debug(e);
