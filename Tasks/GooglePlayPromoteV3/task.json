@@ -11,7 +11,7 @@
     ],
     "version": {
         "Major": "3",
-        "Minor": "208",
+        "Minor": "211",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
@@ -116,9 +116,9 @@
             "visibleRule": "rolloutToUserFraction = true"
         },
         {
-            "name": "сleanTheSourceTrack",
+            "name": "cleanTheSourceTrack",
             "type": "boolean",
-            "label": "Сlean the source track",
+            "label": "Clean the source track",
             "defaultValue": true,
             "required": false,
             "helpMarkDown": "Source track will be cleared"
