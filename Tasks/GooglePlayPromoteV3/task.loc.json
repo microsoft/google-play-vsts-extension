@@ -117,6 +117,9 @@
     },
     {
       "name": "cleanTheSourceTrack",
+      "aliases": [
+        "сleanTheSourceTrack"
+      ],
       "type": "boolean",
       "label": "ms-resource:loc.input.label.cleanTheSourceTrack",
       "defaultValue": true,
