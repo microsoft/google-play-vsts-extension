@@ -319,6 +319,8 @@ Allows you to promote a previously released APK from one track to another (e.g. 
 
 5. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the app out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). If you use rollout, and want to be able to automate the process of increasing the rollout over time, refer to the `Google Play - Increase Rollout` task.
 
+6. **Clean Source Track** *(Boolean, Optional)* - Clean the source track. Default value is _true_.
+
 ### Google Play - Increase Rollout
 
 Allows you to increase the rollout percentage of an app that was previously released to the **Rollout** track, and includes the following options:

@@ -21,15 +21,11 @@ In order to automate the release of app updates to the Google Play store, you ne
 
 6. Save the provided JSON file somewhere safe and memorable. You'll be using it later.
 
-7. Go to the **IAM** page and click on the **Add** button.
+7. Back in the **Google Play Developer Console**, click the **Done** button to close the modal
 
-8. Select the newly created service account in the **New members** box and assign it the  **Service Account User Role**, then click **Save**.
+8. Click the **Grant access** button in the row associated with the service account you just created.
 
-9. Back in the **Google Play Developer Console**, click the **Done** button to close the modal
-
-10. Click the **Grant access** button in the row associated with the service account you just created.
-
-11. Ensure that the **Role** is set to **Release Manager** and then click the **Add user** button
+9. Ensure that the **Role** is set to **Release Manager** and then click the **Add user** button
 
 To take advantage of the metadata updating capabilities, files need to be organized using fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) format:
 
@@ -224,8 +220,6 @@ $(Specified Directory)
 
 14. **Version Code Pattern** *(String, Required if visible)* - The regular expression pattern to select a list of version codes to be removed from the track with this deployment, e.g. .\*12?(3|4)?5. Only available if `Replace Version Codes` value is *Regular expression*.
 
-15. **Release as Draft** *(Boolean, Optional)* - Allows to create a draft release which can later be deployed via the Google Play Console.
-
 ### Google Play - Release V3 (deprecated in favor of Google Play - Release V4)
 
 Allows you to release an update to your app on Google Play, and includes the following options:
@@ -324,6 +318,8 @@ Allows you to promote a previously released APK from one track to another (e.g. 
 4. **Destination Track** *(Required, Required)* - The track you wish to promote your app to (e.g. `production`).
 
 5. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the app out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). If you use rollout, and want to be able to automate the process of increasing the rollout over time, refer to the `Google Play - Increase Rollout` task.
+
+6. **Clean Source Track** *(Boolean, Optional)* - Clean the source track. Default value is _true_.
 
 ### Google Play - Increase Rollout
 
@@ -440,3 +436,4 @@ $(Specified Directory)
 Google Play and the Google Play logo are trademarks of Google Inc.
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+Google Play and the Google Play logo are trademarks of Google Inc.

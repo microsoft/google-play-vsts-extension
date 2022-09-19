@@ -8,8 +8,6 @@
 
 # Visual Studio Team Services Extension for Google Play
 
-[![Build status](https://dev.azure.com/mseng/AzureDevOps/_apis/build/status/CrossPlatform.google-play-vsts-extension.GitHub.CI)](https://dev.azure.com/mseng/AzureDevOps/_build/latest?definitionId=5350)
-
 This extension contains a set of deployment tasks which allow you to automate the release, promotion and rollout of app updates to the Google Play store from your CI environment. This can reduce the effort needed to keep your internal test, alpha, beta, rollout and production deployments up-to-date, since you can simply push changes to the configured source control branches, and let your automated build take care of the rest.
 
 ## Prerequisites
@@ -31,15 +29,11 @@ In order to automate the release of app updates to the Google Play store, you ne
 
 6. Save the provided JSON file somewhere safe and memorable. You'll be using it later.
 
-7. Go to the **IAM** page and click on the **Add** button.
+7. Back in the **Google Play Developer Console**, click the **Done** button to close the modal
 
-8. Select the newly created service account in the **New members** box and assign it the  **Service Account User Role**, then click **Save**.
+8. Click the **Grant access** button in the row associated with the service account you just created.
 
-9. Back in the **Google Play Developer Console**, click the **Done** button to close the modal
-
-10. Click the **Grant access** button in the row associated with the service account you just created.
-
-11. Ensure that the **Role** is set to **Release Manager** and then click the **Add user** button
+9. Ensure that the **Role** is set to **Release Manager** and then click the **Add user** button
 
 To take advantage of the metadata updating capabilities, files need to be organized using fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) format:
 
@@ -333,6 +327,8 @@ Allows you to promote a previously released APK from one track to another (e.g. 
 
 5. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the app out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). If you use rollout, and want to be able to automate the process of increasing the rollout over time, refer to the `Google Play - Increase Rollout` task.
 
+6. **Clean Source Track** *(Boolean, Optional)* - Clean the source track. Default value is _true_.
+
 ### Google Play - Increase Rollout
 
 Allows you to increase the rollout percentage of an app that was previously released to the **Rollout** track, and includes the following options:
@@ -448,3 +444,4 @@ $(Specified Directory)
 Google Play and the Google Play logo are trademarks of Google Inc.
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+Google Play and the Google Play logo are trademarks of Google Inc.
