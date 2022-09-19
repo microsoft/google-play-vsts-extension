@@ -116,7 +116,7 @@
             "visibleRule": "rolloutToUserFraction = true"
         },
         {
-            "name": "cleanTheSourceTrack",
+            "name": "cleanSourceTrack",
             "aliases": [
                 "сleanTheSourceTrack"
             ],

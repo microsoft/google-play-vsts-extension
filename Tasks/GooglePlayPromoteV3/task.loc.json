@@ -116,15 +116,15 @@
       "visibleRule": "rolloutToUserFraction = true"
     },
     {
-      "name": "cleanTheSourceTrack",
+      "name": "cleanSourceTrack",
       "aliases": [
         "сleanTheSourceTrack"
       ],
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.cleanTheSourceTrack",
+      "label": "ms-resource:loc.input.label.cleanSourceTrack",
       "defaultValue": true,
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.cleanTheSourceTrack"
+      "helpMarkDown": "ms-resource:loc.input.help.cleanSourceTrack"
     }
   ],
   "execution": {

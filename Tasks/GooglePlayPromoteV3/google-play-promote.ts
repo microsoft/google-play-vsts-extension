@@ -33,7 +33,7 @@ async function run() {
         const destinationTrack: string = tl.getInput('destinationTrack', true);
         const userFractionSupplied: boolean = tl.getBoolInput('rolloutToUserFraction');
         const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
-        const cleanSourceTrack: boolean = tl.getBoolInput('cleanTheSourceTrack');
+        const cleanSourceTrack: boolean = tl.getBoolInput('cleanSourceTrack');
         const versionCode: string = tl.getInput('versionCode', false);
 
         // Constants
