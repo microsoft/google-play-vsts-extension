@@ -1,5 +1,7 @@
 # Visual Studio Team Services Extension for Google Play
 
+[![Build status](https://dev.azure.com/mseng/AzureDevOps/_apis/build/status/CrossPlatform.google-play-vsts-extension.GitHub.CI)](https://dev.azure.com/mseng/AzureDevOps/_build/latest?definitionId=5350)
+
 This extension contains a set of deployment tasks which allow you to automate the release, promotion and rollout of app updates to the Google Play store from your CI environment. This can reduce the effort needed to keep your internal test, alpha, beta, rollout and production deployments up-to-date, since you can simply push changes to the configured source control branches, and let your automated build take care of the rest.
 
 ## Prerequisites
@@ -9,7 +11,7 @@ This extension supports Visual Studio Team Services (VSTS) and Team Foundation S
 In order to automate the release of app updates to the Google Play store, you need to have manually released at least one version through the [Google Play Developer Console](https://play.google.com/apps/publish/). Additionally, you need to create a service account that is authorized to manage your app(s) releases on your behalf and can be used to authenticate "headlessly" from your VSTS build/release definitions. If you haven't already done so, then perform the following steps to create a service account:
 > For a more in depth guide [click this link](https://docs.microsoft.com/en-us/appcenter/distribution/stores/googleplay).
 
-1. Login to the [Google Play Developer Console](https://play.google.com/apps/publish/) and select **Settings** in the left-hand navigation menu (the gear icon)
+1. Login to the [Google Play Developer Console](https://play.google.com/apps/publish/) and select **Setup** in the left-hand navigation menu (the gear icon)
 
 2. Select the **API access** setting and click the **Create Service Account** button underneath the **Service Accounts** section
 
@@ -201,7 +203,7 @@ $(Specified Directory)
 
 8. **Deobfuscation path** *(File path, Required if visible)* - The path to the native debug symbols zip archive to upload. Glob patterns are supported. Only visible if `Upload native debug symbols` is enabled.
 
-9. **Send changes to review** *(Boolean, Optional)* - Select this option to send changes for review in GooglePlay Console. If changes are already sent for review automatically, you shouldn't select this option.
+9.  **Send changes to review** *(Boolean, Optional)* - Select this option to send changes for review in GooglePlay Console. If changes are already sent for review automatically, you shouldn't select this option.
 
     ![Send Changes To Review](images/send-changes-to-review.png)
 
@@ -209,7 +211,7 @@ $(Specified Directory)
 
     ![Send Changes To Review](images/send-changes-to-review.png)
 
-11.  **Replace version codes** *(String, Required)* - You may specify which APK version codes should be replaced in the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
+11. **Replace version codes** *(String, Required)* - You may specify which APK version codes should be replaced in the track with this deployment. Available options are: *All*, *List* - comma separated list of version codes, *Regular expression* - a regular expression pattern to select a list of APK version codes to be removed from the track with this deployment, e.g. _.\\*12?(3|4)?5_ 
 
 
 12. **Replace Version Codes** *(String, Optional)* - Specify version codes to replace in the selected track with the new APKs/AABs: all, the comma separated list, or a regular expression pattern. Not visible if `action` is *Only update store listing*.
