@@ -19,7 +19,7 @@ This extension supports Visual Studio Team Services (VSTS) and Team Foundation S
 In order to automate the release of app updates to the Google Play store, you need to have manually released at least one version through the [Google Play Developer Console](https://play.google.com/apps/publish/). Additionally, you need to create a service account that is authorized to manage your app(s) releases on your behalf and can be used to authenticate "headlessly" from your VSTS build/release definitions. If you haven't already done so, then perform the following steps to create a service account:
 > For a more in depth guide [click this link](https://docs.microsoft.com/en-us/appcenter/distribution/stores/googleplay).
 
-1. Login to the [Google Play Developer Console](https://play.google.com/apps/publish/) and select **Settings** in the left-hand navigation menu (the gear icon)
+1. Login to the [Google Play Developer Console](https://play.google.com/apps/publish/) and select **Setup** in the left-hand navigation menu (the gear icon)
 
 2. Select the **API access** setting and click the **Create Service Account** button underneath the **Service Accounts** section
 
@@ -31,15 +31,11 @@ In order to automate the release of app updates to the Google Play store, you ne
 
 6. Save the provided JSON file somewhere safe and memorable. You'll be using it later.
 
-7. Go to the **IAM** page and click on the **Add** button.
+7. Back in the **Google Play Developer Console**, click the **Done** button to close the modal
 
-8. Select the newly created service account in the **New members** box and assign it the  **Service Account User Role**, then click **Save**.
+8. Click the **Grant access** button in the row associated with the service account you just created.
 
-9. Back in the **Google Play Developer Console**, click the **Done** button to close the modal
-
-10. Click the **Grant access** button in the row associated with the service account you just created.
-
-11. Ensure that the **Role** is set to **Release Manager** and then click the **Add user** button
+9. Ensure that the **Role** is set to **Release Manager** and then click the **Add user** button
 
 To take advantage of the metadata updating capabilities, files need to be organized using fastlane’s [supply tool](https://github.com/fastlane/fastlane/tree/master/supply#readme) format:
 
@@ -215,7 +211,7 @@ $(Specified Directory)
 
 8. **Deobfuscation path** *(File path, Required if visible)* - The path to the native debug symbols zip archive to upload. Glob patterns are supported. Only visible if `Upload native debug symbols` is enabled.
 
-9. **Send changes to review** *(Boolean, Optional)* - Select this option to send changes for review in GooglePlay Console. If changes are already sent for review automatically, you shouldn't select this option.
+9.  **Send changes to review** *(Boolean, Optional)* - Select this option to send changes for review in GooglePlay Console. If changes are already sent for review automatically, you shouldn't select this option.
 
     ![Send Changes To Review](images/send-changes-to-review.png)
 
@@ -333,6 +329,8 @@ Allows you to promote a previously released APK from one track to another (e.g. 
 
 5. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the app out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). If you use rollout, and want to be able to automate the process of increasing the rollout over time, refer to the `Google Play - Increase Rollout` task.
 
+6. **Clean Source Track** *(Boolean, Optional)* - Clean the source track. Default value is _true_.
+
 ### Google Play - Increase Rollout
 
 Allows you to increase the rollout percentage of an app that was previously released to the **Rollout** track, and includes the following options:
@@ -448,3 +446,4 @@ $(Specified Directory)
 Google Play and the Google Play logo are trademarks of Google Inc.
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+Google Play and the Google Play logo are trademarks of Google Inc.

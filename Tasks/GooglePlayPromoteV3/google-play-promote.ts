@@ -33,7 +33,7 @@ async function run() {
         const destinationTrack: string = tl.getInput('destinationTrack', true);
         const userFractionSupplied: boolean = tl.getBoolInput('rolloutToUserFraction');
         const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
-        const сleanSourceTrack: boolean = tl.getBoolInput('сleanTheSourceTrack');
+        const cleanSourceTrack: boolean = tl.getBoolInput('cleanSourceTrack');
         const versionCode: string = tl.getInput('versionCode', false);
 
         // Constants
@@ -73,7 +73,7 @@ async function run() {
         track = await googleutil.updateTrack(edits, packageName, destinationTrack, versionNumber, userFraction, releaseNotes);
         tl.debug(`Update track: ${JSON.stringify(track)}`);
 
-        if (сleanSourceTrack) {
+        if (cleanSourceTrack) {
             console.log(tl.loc('CleanTrack', sourceTrack));
             track = await googleutil.updateTrack(edits, packageName, sourceTrack, [], userFraction);
             tl.debug(`Update clean track: ${JSON.stringify(track)}`);

@@ -1,5 +1,7 @@
 # Visual Studio Team Services Extension for Google Play
 
+[![Build status](https://dev.azure.com/mseng/AzureDevOps/_apis/build/status/CrossPlatform.google-play-vsts-extension.GitHub.CI)](https://dev.azure.com/mseng/AzureDevOps/_build/latest?definitionId=5350)
+
 This extension contains a set of deployment tasks which allow you to automate the release, promotion and rollout of app updates to the Google Play store from your CI environment. This can reduce the effort needed to keep your internal test, alpha, beta, rollout and production deployments up-to-date, since you can simply push changes to the configured source control branches, and let your automated build take care of the rest.
 
 ## Prerequisites
@@ -9,7 +11,7 @@ This extension supports Visual Studio Team Services (VSTS) and Team Foundation S
 In order to automate the release of app updates to the Google Play store, you need to have manually released at least one version through the [Google Play Developer Console](https://play.google.com/apps/publish/). Additionally, you need to create a service account that is authorized to manage your app(s) releases on your behalf and can be used to authenticate "headlessly" from your VSTS build/release definitions. If you haven't already done so, then perform the following steps to create a service account:
 > For a more in depth guide [click this link](https://docs.microsoft.com/en-us/appcenter/distribution/stores/googleplay).
 
-1. Login to the [Google Play Developer Console](https://play.google.com/apps/publish/) and select **Settings** in the left-hand navigation menu (the gear icon)
+1. Login to the [Google Play Developer Console](https://play.google.com/apps/publish/) and select **Setup** in the left-hand navigation menu (the gear icon)
 
 2. Select the **API access** setting and click the **Create Service Account** button underneath the **Service Accounts** section
 
@@ -318,6 +320,8 @@ Allows you to promote a previously released APK from one track to another (e.g. 
 4. **Destination Track** *(Required, Required)* - The track you wish to promote your app to (e.g. `production`).
 
 5. **Rollout Fraction** *(String, Required if visible)* - The percentage of users to roll the app out to, specified as a number between 0 and 1 (e.g. `0.5` == `50%` of users). If you use rollout, and want to be able to automate the process of increasing the rollout over time, refer to the `Google Play - Increase Rollout` task.
+
+6. **Clean Source Track** *(Boolean, Optional)* - Clean the source track. Default value is _true_.
 
 ### Google Play - Increase Rollout
 

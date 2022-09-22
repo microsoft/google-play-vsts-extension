@@ -14,7 +14,7 @@
   "version": {
     "Major": "3",
     "Minor": "211",
-    "Patch": "0"
+    "Patch": "1"
   },
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -118,12 +118,15 @@
       "visibleRule": "rolloutToUserFraction = true"
     },
     {
-      "name": "сleanTheSourceTrack",
+      "name": "cleanSourceTrack",
+      "aliases": [
+        "сleanTheSourceTrack"
+      ],
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.сleanTheSourceTrack",
+      "label": "ms-resource:loc.input.label.cleanSourceTrack",
       "defaultValue": true,
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.сleanTheSourceTrack"
+      "helpMarkDown": "ms-resource:loc.input.help.cleanSourceTrack"
     }
   ],
   "execution": {
