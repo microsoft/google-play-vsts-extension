@@ -3,6 +3,8 @@
   "name": "GooglePlayPromote",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "author": "Microsoft Corporation",
   "category": "Deploy",
   "visibility": [
@@ -162,6 +164,5 @@
     "settableVariables": {
       "allowed": []
     }
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }

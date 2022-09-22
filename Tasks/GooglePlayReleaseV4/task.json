@@ -3,6 +3,8 @@
     "name": "GooglePlayRelease",
     "friendlyName": "Google Play - Release",
     "description": "Release an app to the Google Play Store",
+    "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
+    "helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play)",
     "author": "Microsoft Corporation",
     "category": "Deploy",
     "visibility": [
@@ -12,7 +14,7 @@
     "demands": [],
     "version": {
         "Major": "4",
-        "Minor": "209",
+        "Minor": "211",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",

@@ -1,5 +1,6 @@
 {
   "loc.friendlyName": "Google Play - Release",
+  "loc.helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play)",
   "loc.description": "Release an app to the Google Play Store",
   "loc.instanceNameFormat": "Release $(applicationId) to $(track)",
   "loc.group.displayName.advanced": "Advanced Options",
