@@ -3,6 +3,8 @@
   "name": "GooglePlayRelease",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "author": "Microsoft Corporation",
   "category": "Deploy",
   "visibility": [
@@ -12,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": "4",
-    "Minor": "210",
+    "Minor": "214",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -356,6 +358,5 @@
     "settableVariables": {
       "allowed": []
     }
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }

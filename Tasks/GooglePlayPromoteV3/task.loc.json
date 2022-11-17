@@ -3,6 +3,8 @@
   "name": "GooglePlayPromote",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
+  "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "author": "Microsoft Corporation",
   "category": "Deploy",
   "visibility": [
@@ -11,8 +13,8 @@
   ],
   "version": {
     "Major": "3",
-    "Minor": "208",
-    "Patch": "0"
+    "Minor": "211",
+    "Patch": "1"
   },
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -116,12 +118,15 @@
       "visibleRule": "rolloutToUserFraction = true"
     },
     {
-      "name": "сleanTheSourceTrack",
+      "name": "cleanSourceTrack",
+      "aliases": [
+        "сleanTheSourceTrack"
+      ],
       "type": "boolean",
-      "label": "ms-resource:loc.input.label.сleanTheSourceTrack",
+      "label": "ms-resource:loc.input.label.cleanSourceTrack",
       "defaultValue": true,
       "required": false,
-      "helpMarkDown": "ms-resource:loc.input.help.сleanTheSourceTrack"
+      "helpMarkDown": "ms-resource:loc.input.help.cleanSourceTrack"
     }
   ],
   "execution": {
@@ -159,6 +164,5 @@
     "settableVariables": {
       "allowed": []
     }
-  },
-  "helpMarkDown": "ms-resource:loc.helpMarkDown"
+  }
 }
