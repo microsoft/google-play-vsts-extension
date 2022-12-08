@@ -1,0 +1,133 @@
+{
+  "id": "92e6c372-4193-44e5-9db7-58d7d253f4d8",
+  "name": "GooglePlayStatusUpdate",
+  "friendlyName": "ms-resource:loc.friendlyName",
+  "description": "ms-resource:loc.description",
+  "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
+  "helpMarkDown": "ms-resource:loc.helpMarkDown",
+  "author": "Microsoft Corporation",
+  "category": "Deploy",
+  "visibility": [
+    "Build",
+    "Release"
+  ],
+  "version": {
+    "Major": "2",
+    "Minor": "211",
+    "Patch": "0"
+  },
+  "minimumAgentVersion": "2.182.1",
+  "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
+  "inputs": [
+    {
+      "name": "authType",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.authType",
+      "defaultValue": "ServiceEndpoint",
+      "helpMarkDown": "",
+      "options": {
+        "JsonFile": "JSON auth file",
+        "ServiceEndpoint": "Service connection"
+      }
+    },
+    {
+      "name": "serviceEndpoint",
+      "aliases": [
+        "serviceConnection"
+      ],
+      "type": "connectedService:google-play",
+      "label": "ms-resource:loc.input.label.serviceEndpoint",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serviceEndpoint",
+      "visibleRule": "authType = ServiceEndpoint"
+    },
+    {
+      "name": "serviceAccountKey",
+      "type": "filePath",
+      "label": "ms-resource:loc.input.label.serviceAccountKey",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.serviceAccountKey",
+      "visibleRule": "authType = JsonFile"
+    },
+    {
+      "name": "packageName",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.packageName",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.packageName"
+    },
+    {
+      "name": "track",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.track",
+      "defaultValue": "production",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.track",
+      "options": {
+        "internal": "Internal test",
+        "alpha": "Alpha",
+        "beta": "Beta",
+        "production": "Production"
+      },
+      "properties": {
+        "EditableOptions": "True"
+      }
+    },
+    {
+      "name": "status",
+      "type": "pickList",
+      "label": "ms-resource:loc.input.label.status",
+      "defaultValue": "halted",
+      "required": true,
+      "helpMarkDown": "ms-resource:loc.input.help.status",
+      "options": {
+        "draft": "Draft",
+        "inProgress": "In progress",
+        "halted": "Halted",
+        "completed": "Completed"
+      }
+    },
+    {
+      "name": "userFraction",
+      "type": "string",
+      "label": "ms-resource:loc.input.label.userFraction",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "ms-resource:loc.input.help.userFraction",
+      "visibleRule": "status = inProgress || status = halted"
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "google-play-status-update.js",
+      "argumentFormat": ""
+    }
+  },
+  "messages": {
+    "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
+    "InvalidAuthFilewithName": "ms-resource:loc.messages.InvalidAuthFilewithName",
+    "JsonKeyFileNotFound": "ms-resource:loc.messages.JsonKeyFileNotFound",
+    "EndpointNotFound": "ms-resource:loc.messages.EndpointNotFound",
+    "Authenticating": "ms-resource:loc.messages.Authenticating",
+    "GetTrackInfo": "ms-resource:loc.messages.GetTrackInfo",
+    "EmptyReleases": "ms-resource:loc.messages.EmptyReleases",
+    "keepUserFrac": "ms-resource:loc.messages.keepUserFrac",
+    "CurrentUserFrac": "ms-resource:loc.messages.CurrentUserFrac",
+    "UserFracSpecified": "ms-resource:loc.messages.UserFracSpecified",
+    "userFractionInvalid": "ms-resource:loc.messages.userFractionInvalid",
+    "StatusUpdating": "ms-resource:loc.messages.StatusUpdating",
+    "Success": "ms-resource:loc.messages.Success",
+    "Failure": "ms-resource:loc.messages.Failure"
+  },
+  "restrictions": {
+    "commands": {
+      "mode": "restricted"
+    },
+    "settableVariables": {
+      "allowed": []
+    }
+  }
+}

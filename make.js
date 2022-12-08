@@ -51,6 +51,8 @@ var getExternals = util.getExternals;
 var createResjson = util.createResjson;
 var createTaskLocJson = util.createTaskLocJson;
 var validateTask = util.validateTask;
+var getTaskNodeVersion = util.getTaskNodeVersion;
+var createExtension = util.createExtension;
 
 // global paths
 var buildPath = path.join(__dirname, '_build', 'Tasks');
@@ -60,11 +62,20 @@ var packagePath = path.join(__dirname, '_package');
 var testTasksPath = path.join(__dirname, '_test', 'Tasks');
 var testPath = path.join(__dirname, '_test', 'Tests');
 
-// node min version
-var minNodeVer = '4.0.0';
-if (semver.lt(process.versions.node, minNodeVer)) {
-    fail('requires node >= ' + minNodeVer + '.  installed: ' + process.versions.node);
+// core dev-dependencies constants
+const constants = require('./dev-dependencies-constants');
+
+const MOCHA_TARGET_VERSION = constants.MOCHA_TARGET_VERSION;
+const TSC_MIN_VERSION = constants.TSC_MIN_VERSION;
+const NODE_MIN_VERSION = constants.NODE_MIN_VERSION;
+const NPM_MIN_VERSION = constants.NPM_MIN_VERSION;
+
+if (semver.lt(process.versions.node,  NODE_MIN_VERSION)) {
+    fail(`requires node >= ${NODE_MIN_VERSION}. installed: ${process.versions.node}`);
 }
+
+// Node 14 is supported by the build system, but not currently by the agent. Block it for now
+var supportedNodeTargets = ["Node", "Node10"/*, "Node14"*/];
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 var binPath = path.join(__dirname, 'node_modules', '.bin');
@@ -103,11 +114,10 @@ target.clean = function () {
 target.build = function() {
     target.clean();
 
-    ensureTool('tsc', '--version', 'Version 3.6.3');
-    ensureTool('typings', '--version', '2.1.1');
+    ensureTool('tsc', '--version', `Version ${TSC_MIN_VERSION}`);
     ensureTool('npm', '--version', function (output) {
-        if (semver.lt(output, '3.10.8')) {
-            fail('expected 3.10.8 or higher');
+        if (semver.lt(output, NPM_MIN_VERSION)) {
+            fail(`expected ${NPM_MIN_VERSION} or higher`);
         }
     });
 
@@ -126,14 +136,14 @@ target.build = function() {
             validateTask(taskDef);
 
             // fixup the outDir (required for relative pathing in legacy L0 tests)
-            outDir = path.join(buildPath, taskDef.name);
+            outDir = path.join(buildPath, taskName);
 
             // create loc files
             createTaskLocJson(taskPath);
             createResjson(taskDef, taskPath);
 
             // determine the type of task
-            shouldBuildNode = shouldBuildNode || taskDef.execution.hasOwnProperty('Node');
+            shouldBuildNode = shouldBuildNode || supportedNodeTargets.some(node => taskDef.execution.hasOwnProperty(node));
             shouldBuildPs3 = taskDef.execution.hasOwnProperty('PowerShell3');
         }
         else {
@@ -198,7 +208,6 @@ target.build = function() {
                     var originalDir = pwd();
                     cd(taskPath);
                     run('npm install ' + modOutDir);
-                    // run('typings install ' + modOutDir);
                     cd(originalDir);
                 }
                 // copy module resources to the task output dir
@@ -245,31 +254,96 @@ target.build = function() {
 // node make.js test --task ShellScript --suite L0
 //
 target.test = function() {
-    ensureTool('tsc', '--version', 'Version 3.6.3');
-    ensureTool('mocha', '--version', '6.1.4');
+    ensureTool('tsc', '--version', `Version ${TSC_MIN_VERSION}`);
+    ensureTool('mocha', '--version', MOCHA_TARGET_VERSION);
 
     // run the tests
     var suiteType = options.suite || 'L0';
-    var taskType = options.task || '*';
-    var pattern1 = buildPath + '/' + taskType + '/Tests/' + suiteType + '.js';
-    var pattern2 = buildPath + '/Common/' + taskType + '/Tests/' + suiteType + '.js';
-    var testsSpec = matchFind(pattern1, buildPath)
-        .concat(matchFind(pattern2, buildPath));
-    if (!testsSpec.length) {
-        fail(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`);
+    function runTaskTests(taskName) {
+        banner('Testing: ' + taskName);
+        // find the tests
+        var nodeVersion = options.node || getTaskNodeVersion(buildPath, taskName) + "";
+        var pattern1 = path.join(buildPath, taskName, 'Tests', suiteType + '.js');
+        var pattern2 = path.join(buildPath, 'Common', taskName, 'Tests', suiteType + '.js');
+
+        var testsSpec = [];
+
+        if (fs.existsSync(pattern1)) {
+            testsSpec.push(pattern1);
+        }
+        if (fs.existsSync(pattern2)) {
+            testsSpec.push(pattern2);
+        }
+
+        if (testsSpec.length == 0) {
+            console.warn(`Unable to find tests using the following patterns: ${JSON.stringify([pattern1, pattern2])}`);
+            return;
+        }
+        // setup the version of node to run the tests
+        util.installNode(nodeVersion);
+
+        run('mocha ' + testsSpec.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
     }
 
-    // set up any test reporting
-    var testResultsArgs = '';
-    if (options.testResults) {
-        if (options.testReporter) {
-            testResultsArgs += ' -R ' + options.testReporter;
+    if (options.task) {
+        runTaskTests(options.task);
+    } else {
+        // Run tests for each task that exists
+        taskList.forEach(function(taskName) {
+            var taskPath = path.join(buildPath, taskName);
+            if (fs.existsSync(taskPath)) {
+                runTaskTests(taskName);
+            }
+        });
+
+        banner('Running common library tests');
+        var commonLibPattern = path.join(buildPath, 'Common', '*', 'Tests', suiteType + '.js');
+        var specs = [];
+        if (matchFind(commonLibPattern, buildPath).length > 0) {
+            specs.push(commonLibPattern);
         }
-        if (options.testReportLocation) {
-            testResultsArgs += ' -O mochaFile=' + path.join(__dirname, options.testReportLocation);
+        if (specs.length > 0) {
+            // setup the version of node to run the tests
+            util.installNode(options.node);
+            run('mocha ' + specs.join(' ') /*+ ' --reporter mocha-junit-reporter --reporter-options mochaFile=../testresults/test-results.xml'*/, /*inheritStreams:*/true);
+        } else {
+            console.warn("No common library tests found");
         }
     }
-    console.log('testResultsArgs=' + testResultsArgs);
+}
 
-    run('mocha ' + testsSpec.join(' ') + testResultsArgs, /*inheritStreams:*/true);
+target.create = function() {
+    banner('Creating PRODUCTION vsix...');
+
+    var prodManifestOverride = {
+        public: true
+    };
+
+    createExtension(prodManifestOverride, false);
+}
+
+target.createtest = function() {
+    banner('Creating TEST vsix...');
+
+    var createtestOverride = { 
+        public: false,
+        name: "Google Play-Dev", 
+        id: "vso-extension-android-dev", 
+        publisher: "ms-mobiledevops-test"
+    };
+
+    createExtension(createtestOverride, false);
+}
+
+target.publishtest = function() {
+    banner('Creating and publishing TEST vsix...');
+
+    var createPublishOverride = { 
+        public: false,
+        name: "Google Play-Dev", 
+        id: "vso-extension-android-dev", 
+        publisher: "ms-mobiledevops-test"
+    };
+
+    createExtension(createPublishOverride, true);
 }

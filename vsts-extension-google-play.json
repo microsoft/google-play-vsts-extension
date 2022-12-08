@@ -2,11 +2,11 @@
     "manifestVersion": 1.0,
     "id": "google-play",
     "name": "Google Play",
-    "version": "3.179.0",
+    "version": "4.209.1",
     "publisher": "ms-vsclient",
     "description": "Provides tasks for continuous delivery to the Google Play Store from TFS/Team Services build or release definitions",
     "categories": [
-        "Build and release"
+        "Azure Pipelines"
     ],
     "targets": [
         {
@@ -36,16 +36,16 @@
     },
     "files": [
         {
-            "path": "_build/Tasks/GooglePlayRelease"
+            "path": "_build/Tasks/GooglePlayReleaseV4"
         },
         {
-            "path": "_build/Tasks/GooglePlayReleaseBundle"
+            "path": "_build/Tasks/GooglePlayPromoteV3"
         },
         {
-            "path": "_build/Tasks/GooglePlayPromote"
+            "path": "_build/Tasks/GooglePlayIncreaseRolloutV2"
         },
         {
-            "path": "_build/Tasks/GooglePlayIncreaseRollout"
+            "path": "_build/Tasks/GooglePlayStatusUpdateV2"
         },
         {
             "path": "images",
@@ -78,17 +78,7 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "_build/Tasks/GooglePlayRelease"
-            }
-        },
-        {
-            "id": "google-play-release-bundle",
-            "type": "ms.vss-distributed-task.task",
-            "targets": [
-                "ms.vss-distributed-task.tasks"
-            ],
-            "properties": {
-                "name": "_build/Tasks/GooglePlayReleaseBundle"
+                "name": "_build/Tasks/GooglePlayReleaseV4"
             }
         },
         {
@@ -98,7 +88,7 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "_build/Tasks/GooglePlayPromote"
+                "name": "_build/Tasks/GooglePlayPromoteV3"
             }
         },
         {
@@ -108,7 +98,17 @@
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "_build/Tasks/GooglePlayIncreaseRollout"
+                "name": "_build/Tasks/GooglePlayIncreaseRolloutV2"
+            }
+        },
+        {
+            "id": "google-play-status-update",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "_build/Tasks/GooglePlayStatusUpdateV2"
             }
         },
         {

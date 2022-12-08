@@ -1,0 +1,21 @@
+{
+  "name": "vso-task-google-play-promote",
+  "version": "1.0.0",
+  "description": "A VSO build task for promoting a Google Play store app from one track to another",
+  "main": "GooglePlay.js",
+  "scripts": {
+    "deploy": "tfx build tasks upload ./ --overwrite"
+  },
+  "author": "Jonathan Carter",
+  "license": "ISC",
+  "dependencies": {
+    "azure-pipelines-task-lib": "^3.1.2",
+    "googleapis": "^67.1.0",
+    "google-auth-library": "^7.14.1",
+    "@types/node": "^10.17.0",
+    "@types/mocha": "^5.2.7"
+  },
+  "devDependencies": {
+    "typescript": "4.0.2"
+  }
+}
