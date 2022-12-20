@@ -259,9 +259,9 @@
         {
             "name": "rescueChangesNotSentForReview",
             "type": "boolean",
-            "label": "Retry commit if changesNotSetForReview failed",
+            "label": "Retry commit if changesNotSentForReview failed",
             "defaultValue": false,
-            "helpMarkDown": "Retry commit if changesNotSetForReview failed",
+            "helpMarkDown": "Retry commit if changesNotSentForReview failed",
             "groupName": "advanced"
         },
         {
