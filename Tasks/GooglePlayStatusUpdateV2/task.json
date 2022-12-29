@@ -1,10 +1,10 @@
 {
-    "id": "92e6c372-4193-44e5-9db7-58d7d253f4d8",
-    "name": "GooglePlayStatusUpdate",
+    "id": "20221229-4193-44e5-9db7-58d7d253f4d8",
+    "name": "GooglePlayStatusUpdate20221229",
     "friendlyName": "Google Play - Status Update",
     "description": "Update status of an app previously deployed to the Google Play Store",
-    "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
-    "helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play)",
+    "helpUrl": "https://marketplace.visualstudio.com/items?itemName=DenisRumyantsev.google-play",
+    "helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=DenisRumyantsev.google-play)",
     "author": "Microsoft Corporation",
     "category": "Deploy",
     "visibility": [

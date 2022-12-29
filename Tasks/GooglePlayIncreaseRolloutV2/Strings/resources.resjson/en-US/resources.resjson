@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Google Play - Increase Rollout",
-  "loc.helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play)",
+  "loc.helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=DenisRumyantsev.google-play)",
   "loc.description": "Increase the rollout fraction of an app previously deployed to the Google Play Store",
   "loc.instanceNameFormat": "Increase $(packageName) rollout fraction to $(userFraction)",
   "loc.input.label.authType": "Authentication method",

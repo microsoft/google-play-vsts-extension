@@ -2,7 +2,7 @@
 <td width="140px" style="text-align: center;"><img src="android_default.png" style="max-width:100%" /></td>
 <td><strong>Visual Studio Team Services Extension for Google Play</strong><br />
 <i>Provides build/release tasks that enable performing continuous delivery to the Google Play store from an automated VSTS build or release definition</i><br />
-<a href="https://marketplace.visualstudio.com/items/ms-vsclient.google-play">Install now!</a>
+<a href="https://marketplace.visualstudio.com/items/DenisRumyantsev.google-play">Install now!</a>
 </td>
 </tr></table>
 
@@ -56,7 +56,7 @@ supply init
 
 Once you have created or retrieved credentials for you Google Play service account, then perform the following steps to automate releasing updates from a VSTS build or release definition:
 
-1. Install the Google Play extension from the [VSTS Marketplace](https://marketplace.visualstudio.com/items/ms-vsclient.google-play)
+1. Install the Google Play extension from the [VSTS Marketplace](https://marketplace.visualstudio.com/items/DenisRumyantsev.google-play)
 
 2. Go to your Visual Studio Team Services or TFS project, click on the **Build** tab, and create a new build definition (the "+" icon) that is hooked up to your project's appropriate source repo
 

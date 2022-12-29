@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Google Play - Promote",
-  "loc.helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play)",
+  "loc.helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=DenisRumyantsev.google-play)",
   "loc.description": "Promote an app from one release track to another",
   "loc.instanceNameFormat": "Promote $(packageName) from $(sourceTrack) to $(destinationTrack)",
   "loc.input.label.authType": "Authentication method",

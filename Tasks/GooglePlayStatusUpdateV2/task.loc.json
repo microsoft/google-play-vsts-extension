@@ -1,9 +1,9 @@
 {
-  "id": "92e6c372-4193-44e5-9db7-58d7d253f4d8",
-  "name": "GooglePlayStatusUpdate",
+  "id": "20221229-4193-44e5-9db7-58d7d253f4d8",
+  "name": "GooglePlayStatusUpdate20221229",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
+  "helpUrl": "https://marketplace.visualstudio.com/items?itemName=DenisRumyantsev.google-play",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "author": "Microsoft Corporation",
   "category": "Deploy",

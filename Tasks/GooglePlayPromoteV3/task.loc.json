@@ -1,9 +1,9 @@
 {
-  "id": "4dae1f76-29d3-482f-97d5-e3189a8347c2",
-  "name": "GooglePlayPromote",
+  "id": "20221229-29d3-482f-97d5-e3189a8347c2",
+  "name": "GooglePlayPromote20221229",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
+  "helpUrl": "https://marketplace.visualstudio.com/items?itemName=DenisRumyantsev.google-play",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "author": "Microsoft Corporation",
   "category": "Deploy",

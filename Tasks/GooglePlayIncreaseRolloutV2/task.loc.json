@@ -1,9 +1,9 @@
 {
-  "id": "f8c97cf9-4e17-4244-b0fb-f540cea78153",
-  "name": "GooglePlayIncreaseRollout",
+  "id": "20221229-4e17-4244-b0fb-f540cea78153",
+  "name": "GooglePlayIncreaseRollout20221229",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
-  "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
+  "helpUrl": "https://marketplace.visualstudio.com/items?itemName=DenisRumyantsev.google-play",
   "helpMarkDown": "ms-resource:loc.helpMarkDown",
   "author": "Microsoft Corporation",
   "category": "Deploy",

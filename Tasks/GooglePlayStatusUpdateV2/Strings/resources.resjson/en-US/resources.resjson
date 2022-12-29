@@ -1,6 +1,6 @@
 {
   "loc.friendlyName": "Google Play - Status Update",
-  "loc.helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play)",
+  "loc.helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=DenisRumyantsev.google-play)",
   "loc.description": "Update status of an app previously deployed to the Google Play Store",
   "loc.instanceNameFormat": "Update $(packageName) status to $(status)",
   "loc.input.label.authType": "Authentication method",

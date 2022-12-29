@@ -1,10 +1,10 @@
 {
-    "id": "f8c97cf9-4e17-4244-b0fb-f540cea78153",
-    "name": "GooglePlayIncreaseRollout",
+    "id": "20221229-4e17-4244-b0fb-f540cea78153",
+    "name": "GooglePlayIncreaseRollout20221229",
     "friendlyName": "Google Play - Increase Rollout",
     "description": "Increase the rollout fraction of an app previously deployed to the Google Play Store",
-    "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
-    "helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play)",
+    "helpUrl": "https://marketplace.visualstudio.com/items?itemName=DenisRumyantsev.google-play",
+    "helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=DenisRumyantsev.google-play)",
     "author": "Microsoft Corporation",
     "category": "Deploy",
     "visibility": [
