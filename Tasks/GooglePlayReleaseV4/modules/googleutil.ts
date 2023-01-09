@@ -190,7 +190,7 @@ export async function addApk(edits: pub3.Resource$Edits, packageName: string, ap
     } catch (e) {
         tl.debug(`Failed to upload APK ${apkFile}`);
         tl.debug(e);
-        throw new Error(tl.loc('CannotUploadAPK', apkFile, e));
+        throw new Error(tl.loc('CannotUploadApk', apkFile, e));
     }
 }
 
