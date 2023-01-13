@@ -161,19 +161,7 @@ async function run(): Promise<void> {
 
             if (uploadMappingFile) {
                 
-                if (versionCodes.length == 1) {
-                            tl.debug(`Mapping file pattern: ${mappingFilePattern}`);
-
-                const mappingFilePath = fileHelper.resolveGlobPath(mappingFilePattern);
-                tl.checkPath(mappingFilePath, 'Mapping file path');
-
-                console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
-                tl.debug(`Uploading ${mappingFilePath} for version code ${versionCodes[0]}`);
-                await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, versionCodes[0]);
-                    
-                } else {
-                    
-                    for (const versionCode of versionCodes) {
+                for (const versionCode of versionCodes) {
                      
                         const mappingFilePath = fileHelper.resolveGlobPath(mappingFilePattern);
                 tl.checkPath(mappingFilePath, 'Mapping file path');
@@ -184,12 +172,6 @@ async function run(): Promise<void> {
                         
                         
                     }
-                    
-                    
-                }
-                
-                
-        
                 
                 
             } 
