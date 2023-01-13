@@ -66,7 +66,7 @@ async function run(): Promise<void> {
         const userFractionSupplied: boolean = tl.getBoolInput('rolloutToUserFraction');
         const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
 
-        const uploadMappingFile: boolean = tl.getBoolInput('shouldUploadMappingFile', false) && (action === 'SingleApk' || action === 'SingleBundle');
+        const uploadMappingFile: boolean = tl.getBoolInput('shouldUploadMappingFile', false) && (action === 'SingleApk' || action === 'SingleBundle' || action === 'MultiApk');
         const mappingFilePattern: string = tl.getInput('mappingFilePath');
 
         const uploadNativeDebugSymbols: boolean = tl.getBoolInput('shouldUploadNativeDebugSymbols', false) && (action === 'SingleApk' || action === 'SingleBundle');
@@ -160,7 +160,9 @@ async function run(): Promise<void> {
             }
 
             if (uploadMappingFile) {
-                tl.debug(`Mapping file pattern: ${mappingFilePattern}`);
+                
+                if (versionCodes.length == 1) {
+                            tl.debug(`Mapping file pattern: ${mappingFilePattern}`);
 
                 const mappingFilePath = fileHelper.resolveGlobPath(mappingFilePattern);
                 tl.checkPath(mappingFilePath, 'Mapping file path');
@@ -168,7 +170,29 @@ async function run(): Promise<void> {
                 console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
                 tl.debug(`Uploading ${mappingFilePath} for version code ${versionCodes[0]}`);
                 await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, versionCodes[0]);
-            }
+                    
+                } else {
+                    
+                    for (const versionCode of versionCodes) {
+                     
+                        const mappingFilePath = fileHelper.resolveGlobPath(mappingFilePattern);
+                tl.checkPath(mappingFilePath, 'Mapping file path');
+
+                console.log(tl.loc('FoundDeobfuscationFile', mappingFilePath));
+                tl.debug(`Uploading ${mappingFilePath} for version code ${versionCode]}`);
+                await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, versionCode);
+                        
+                        
+                    }
+                    
+                    
+                }
+                
+                
+        
+                
+                
+            } 
 
             if (uploadNativeDebugSymbols) {
                 tl.debug(`Native debug symbols file pattern: ${nativeDebugSymbolsFilePattern}`);
