@@ -2,11 +2,13 @@
   "name": "google-play-release-v4",
   "version": "1.0.0",
   "dependencies": {
+    "@types/jsdom": "16.2.15",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.39",
     "azure-pipelines-task-lib": "^4.1.0",
     "glob": "^7.1.7",
-    "googleapis": "^90.0.0"
+    "googleapis": "^90.0.0",
+    "jsdom": "16.7.0"
   },
   "devDependencies": {
     "typescript": "4.0.2"

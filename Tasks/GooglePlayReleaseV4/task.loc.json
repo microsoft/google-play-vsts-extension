@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": "4",
-    "Minor": "216",
+    "Minor": "217",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -161,6 +161,14 @@
       "defaultValue": "en-US",
       "type": "string",
       "helpMarkDown": "ms-resource:loc.input.help.languageCode",
+      "visibleRule": "shouldAttachMetadata = false"
+    },
+    {
+      "name": "releaseNotesContainLanguageTags",
+      "label": "ms-resource:loc.input.label.releaseNotesContainLanguageTags",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesContainLanguageTags",
       "visibleRule": "shouldAttachMetadata = false"
     },
     {
