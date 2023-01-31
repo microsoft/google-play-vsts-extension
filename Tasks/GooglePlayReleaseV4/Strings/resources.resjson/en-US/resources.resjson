@@ -30,6 +30,8 @@
   "loc.input.help.changeLogFile": "Path to the file specifying the release notes (change log) for the application you are publishing.",
   "loc.input.label.languageCode": "Language code",
   "loc.input.help.languageCode": "An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_",
+  "loc.input.label.releaseNotesContainLanguageTags": "Release notes contain language tags",
+  "loc.input.help.releaseNotesContainLanguageTags": "Select this option if the release notes file contains language tags.",
   "loc.input.label.metadataRootPath": "Metadata root directory",
   "loc.input.help.metadataRootPath": "The path to the metadata folder with the fastlane metadata structure.",
   "loc.input.label.changeUpdatePriority": "Set in-app update priority",
