@@ -120,7 +120,7 @@
         {
             "name": "cleanSourceTrack",
             "aliases": [
-                "сleanTheSourceTrack"
+                "cleanTheSourceTrack"
             ],
             "type": "boolean",
             "label": "Clean the source track",
