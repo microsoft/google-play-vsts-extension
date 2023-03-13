@@ -1,29 +1,46 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { JSDOM } from 'jsdom';
 import * as tl from 'azure-pipelines-task-lib/task';
 
 import { androidpublisher_v3 as pub3 } from 'googleapis';
 
 /**
  * Uploads change log files if specified for all the version codes in the update
- * @param changelogFile
- * @param versionCodes
- * @returns nothing
+ * @param {string} languageCode
+ * @param {string} changelogFile
+ * @param {boolean} releaseNotesContainLanguageTags
+ * @returns {pub3.Schema$LocalizedText[]} `[{ language: 'en-US|fr-FR|it-IT|...', text: 'Localized_Release_Notes' }, ...]`
  */
-export async function getCommonReleaseNotes(languageCode: string, changelogFile: string): Promise<pub3.Schema$LocalizedText | null> {
+export async function getCommonReleaseNotes(languageCode: string, changelogFile: string, releaseNotesContainLanguageTags: boolean): Promise<pub3.Schema$LocalizedText[]> {
     const stats: tl.FsStats = tl.stats(changelogFile);
+    const releaseNotes: pub3.Schema$LocalizedText[] = [];
 
-    let releaseNotes: pub3.Schema$LocalizedText = null;
     if (stats && stats.isFile()) {
         console.log(tl.loc('AppendChangelog', changelogFile));
-        releaseNotes = {
-            language: languageCode,
-            text: getChangelog(changelogFile)
-        };
+        const changelog: string = getChangelog(changelogFile);
 
+        if (changelog) {
+            if (releaseNotesContainLanguageTags) {
+                for (const node of new JSDOM(changelog).window.document.body.childNodes.values()) {
+                    const language = node['tagName'];
+                    const text = node.textContent.trim();
+
+                    if (language && text) {
+                        releaseNotes.push({ language, text });
+                    }
+                }
+            } else {
+                releaseNotes.push({
+                    language: languageCode,
+                    text: changelog
+                });
+            }
+        }
     } else {
         tl.debug(`The change log path ${changelogFile} either does not exist or points to a directory. Ignoring...`);
     }
+
     return releaseNotes;
 }
 
@@ -36,7 +53,7 @@ export async function getCommonReleaseNotes(languageCode: string, changelogFile:
 function getChangelog(changelogFile: string): string {
     tl.debug(`Reading change log from ${changelogFile}`);
     try {
-        return fs.readFileSync(changelogFile).toString();
+        return fs.readFileSync(changelogFile).toString().trim();
     } catch (e) {
         tl.debug(`Change log reading from ${changelogFile} failed`);
         tl.debug(e);
@@ -211,14 +228,14 @@ async function uploadMetadataWithLanguageCode(edits: pub3.Resource$Edits, versio
 async function addLanguageListing(edits: pub3.Resource$Edits, languageCode: string, directory: string) {
     const listingResource: pub3.Schema$Listing = createListingResource(languageCode, directory);
 
-    const isPatch:boolean = (!listingResource.fullDescription) ||
-                          (!listingResource.shortDescription) ||
-                          (!listingResource.title);
+    const isPatch: boolean = (!listingResource.fullDescription) ||
+        (!listingResource.shortDescription) ||
+        (!listingResource.title);
 
-    const isEmpty:boolean = (!listingResource.fullDescription) &&
-                          (!listingResource.shortDescription) &&
-                          (!listingResource.video) &&
-                          (!listingResource.title);
+    const isEmpty: boolean = (!listingResource.fullDescription) &&
+        (!listingResource.shortDescription) &&
+        (!listingResource.video) &&
+        (!listingResource.title);
 
     const listingRequestParameters: pub3.Params$Resource$Edits$Listings$Patch = {
         language: languageCode,
@@ -371,7 +388,7 @@ function getImageList(directory: string): { [key: string]: string[] } {
     const acceptedExtensions: string[] = ['.png', '.jpg', '.jpeg'];
 
     const imageDirectory: string = path.join(directory, 'images');
-    const imageList: { [key: string]: string[] }  = {};
+    const imageList: { [key: string]: string[] } = {};
 
     for (const imageType of imageTypes) {
         let shouldAttemptUpload: boolean = false;

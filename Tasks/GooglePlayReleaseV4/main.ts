@@ -48,6 +48,7 @@ async function run(): Promise<void> {
 
         let changelogFile: string = null;
         let languageCode: string = null;
+        let releaseNotesContainLanguageTags: boolean = false;
         let metadataRootPath: string = null;
 
         if (shouldAttachMetadata) {
@@ -56,6 +57,7 @@ async function run(): Promise<void> {
             changelogFile = tl.getInput('changelogFile', false);
             const defaultLanguageCode = 'en-US';
             languageCode = tl.getInput('languageCode', false) || defaultLanguageCode;
+            releaseNotesContainLanguageTags = tl.getBoolInput('releaseNotesContainLanguageTags', false);
         }
 
         // Advanced inputs
@@ -193,8 +195,7 @@ async function run(): Promise<void> {
             requireTrackUpdate = action !== 'OnlyStoreListing';
         } else if (changelogFile) {
             tl.debug(`Uploading the common change log ${changelogFile} to all versions`);
-            const commonNotes = await metadataHelper.getCommonReleaseNotes(languageCode, changelogFile);
-            releaseNotes = commonNotes && [commonNotes];
+            releaseNotes = await metadataHelper.getCommonReleaseNotes(languageCode, changelogFile, releaseNotesContainLanguageTags);
             requireTrackUpdate = true;
         }
 

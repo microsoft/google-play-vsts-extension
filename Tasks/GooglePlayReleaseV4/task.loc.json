@@ -164,6 +164,14 @@
       "visibleRule": "shouldAttachMetadata = false"
     },
     {
+      "name": "releaseNotesContainLanguageTags",
+      "label": "ms-resource:loc.input.label.releaseNotesContainLanguageTags",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesContainLanguageTags",
+      "visibleRule": "shouldAttachMetadata = false"
+    },
+    {
       "name": "metadataRootPath",
       "label": "ms-resource:loc.input.label.metadataRootPath",
       "defaultValue": "",
@@ -307,6 +315,10 @@
   ],
   "execution": {
     "Node10": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node16": {
       "target": "main.js",
       "argumentFormat": ""
     }
