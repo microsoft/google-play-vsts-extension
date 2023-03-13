@@ -49,12 +49,18 @@
       <Item ItemId=";loc.input.help.apkFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Path to the APK file you want to publish to the specified track. Wildcards can be used. For example, _\*\*/\*.apk_ to match the first APK file, in any directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Ruta de acceso al archivo APK que desea publicar en la pista especificada. Se pueden usar caracteres comodín. Por ejemplo, _\*\*/\*.apk_ para que coincida con el primer archivo APK, en cualquier directorio.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.apkFiles" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Paths to the APK files you want to publish to the specified track. Wildcards can be used. For example, _\*\*/\*.apk_ to match all APK files, in any directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Rutas de acceso a los archivos APK que desea publicar en la pista especificada. Se pueden usar caracteres comodín. Por ejemplo, _\*\*/\*.apk_ para que coincida con todos los archivos APK, en cualquier directorio.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -70,12 +76,18 @@
       <Item ItemId=";loc.input.help.bundleFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Path to the bundle file you want to publish to the specified track. Wildcards can be used. For example, _\*\*/\*.aab_ to match the first AAB file, in any directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Ruta de acceso al archivo de agrupación que desea publicar en la pista especificada. Se pueden usar caracteres comodín. Por ejemplo, _\*\*/\*.aab_ para que coincida con el primer archivo de AAB, en cualquier directorio.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.bundleFiles" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Paths to the bundle files you want to publish to the specified track. Wildcards can be used. For example, _\*\*/\*.aab_ to match all AAB files, in any directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Rutas de acceso a los archivos de agrupación que desea publicar en la pista especificada. Se pueden usar caracteres comodín. Por ejemplo, _\*\*/\*.aab_ para que coincida con todos los archivos de AAB, en cualquier directorio.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>

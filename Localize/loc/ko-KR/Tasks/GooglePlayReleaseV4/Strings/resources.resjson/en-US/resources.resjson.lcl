@@ -49,12 +49,18 @@
       <Item ItemId=";loc.input.help.apkFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Path to the APK file you want to publish to the specified track. Wildcards can be used. For example, _\*\*/\*.apk_ to match the first APK file, in any directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[지정된 트랙에 게시하려는 APK 파일의 경로입니다. 와일드카드를 사용할 수 있습니다. 예를 들어 _\*\*/\*.apk_는 모든 디렉터리에서 첫 번째 APK 파일과 일치합니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.apkFiles" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Paths to the APK files you want to publish to the specified track. Wildcards can be used. For example, _\*\*/\*.apk_ to match all APK files, in any directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[지정된 트랙에 게시하려는 APK 파일의 경로입니다. 와일드카드를 사용할 수 있습니다. 예를 들어 _\*\*/\*.apk_는 모든 디렉터리의 모든 APK 파일과 일치합니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
@@ -70,12 +76,18 @@
       <Item ItemId=";loc.input.help.bundleFile" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Path to the bundle file you want to publish to the specified track. Wildcards can be used. For example, _\*\*/\*.aab_ to match the first AAB file, in any directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[지정된 트랙에 게시하려는 번들 파일의 경로입니다. 와일드카드를 사용할 수 있습니다. 예를 들어 _\*\*/\*.aab_는 모든 디렉터리에서 첫 번째 AAB 파일과 일치합니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";loc.input.help.bundleFiles" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Paths to the bundle files you want to publish to the specified track. Wildcards can be used. For example, _\*\*/\*.aab_ to match all AAB files, in any directory.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[지정된 트랙에 게시하려는 번들 파일의 경로입니다. 와일드카드를 사용할 수 있습니다. 예를 들어 _\*\*/\*.aab_는 모든 디렉터리의 모든 AAB 파일과 일치합니다.]]></Val>
+          </Tgt>
         </Str>
         <Disp Icon="Str" />
       </Item>
