@@ -181,7 +181,35 @@ $(Specified Directory)
 
 12. **Language Code** *(String, Optional)* - An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_. Only visible if `Update metadata` option is disabled.
 
-13. **Update Metadata** *(Boolean, Optional)* - Allows automating metadata updates to the Google Play store by leveraging the contents of the `Metadata Root Directory`.
+13. **Release notes contain language tags** *(Boolean, Optional)* - Allows adding the release notes file containing language tags. Only visible if `Update metadata` option is disabled.
+
+* The `releaseNotesContainLanguageTags` input:
+
+    ![releaseNotesContainLanguageTags](images/releaseNotesContainLanguageTags.png)
+
+* The `Release Notes` file content example:
+
+```xml
+<en-US>
+    Minor updates, bug fixes, and performance improvements.
+</en-US>
+<fr-FR>
+    Mises à jour mineures, corrections de bogues et améliorations des performances.
+</fr-FR>
+<it-IT>
+    Aggiornamenti minori, correzioni di bug e miglioramenti delle prestazioni.
+</it-IT>
+```
+
+* Result if the `releaseNotesContainLanguageTags` input is set to `false` (by default):
+
+    ![releaseNotesContainLanguageTags is false](images/releaseNotesContainLanguageTags-is-false.png)
+
+* Result if the `releaseNotesContainLanguageTags` input is set to `true` (the `Language Code` input will be ignored):
+
+    ![releaseNotesContainLanguageTags is true](images/releaseNotesContainLanguageTags-is-true.png)
+
+14. **Update Metadata** *(Boolean, Optional)* - Allows automating metadata updates to the Google Play store by leveraging the contents of the `Metadata Root Directory`.
 
     ![Update Metadata](images/update-metadata.png)
 

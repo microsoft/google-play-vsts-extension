@@ -164,6 +164,14 @@
             "visibleRule": "shouldAttachMetadata = false"
         },
         {
+            "name": "releaseNotesContainLanguageTags",
+            "label": "Release notes contain language tags",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Select this option if the release notes file contains language tags.",
+            "visibleRule": "shouldAttachMetadata = false"
+        },
+        {
             "name": "metadataRootPath",
             "label": "Metadata root directory",
             "defaultValue": "",
