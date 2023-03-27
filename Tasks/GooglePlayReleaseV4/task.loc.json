@@ -270,7 +270,8 @@
       "label": "ms-resource:loc.input.label.rescueChangesNotSentForReview",
       "defaultValue": false,
       "helpMarkDown": "ms-resource:loc.input.help.rescueChangesNotSentForReview",
-      "groupName": "advanced"
+      "groupName": "advanced",
+      "visibleRule": "changesNotSentForReview = true"
     },
     {
       "name": "releaseName",
