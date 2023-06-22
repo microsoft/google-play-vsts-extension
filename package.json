@@ -22,7 +22,7 @@
     "minimist": "^1.2.6",
     "mocha": "^6.2.3",
     "q": "1.4.1",
-    "semver": "4.3.3",
+    "semver": "7.5.2",
     "shelljs": "^0.8.5",
     "sinon": "7.3.2",
     "sync-request": "6.1.0",
