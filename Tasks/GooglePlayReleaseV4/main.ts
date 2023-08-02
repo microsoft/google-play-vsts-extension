@@ -113,7 +113,7 @@ async function run(): Promise<void> {
         const edits: pub3.Resource$Edits = googleutil.publisher.edits;
 
         tl.debug('Authorize JWT.');
-        await jwtClient.authorize();
+        await googleutil.authorize(jwtClient);
 
         console.log(tl.loc('GetNewEditAfterAuth'));
         tl.debug('Creating a new edit transaction in Google Play.');

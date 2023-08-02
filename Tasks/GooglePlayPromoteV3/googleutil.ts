@@ -101,6 +101,19 @@ export function getJWT(key: ClientKey): JWT {
     return new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
 }
 
+export async function authorize(jwtClient: JWT): Promise<void> {
+    await jwtClient.authorize();
+
+    const credsToken: string = jwtClient.credentials.access_token;
+    const rawToken: string = jwtClient.gtoken.rawToken.access_token;
+
+    tl.setSecret(credsToken);
+
+    if (rawToken !== credsToken) {
+        tl.setSecret(rawToken);
+    }
+}
+
 /**
  * Uses the provided JWT client to request a new edit from the Play store and attach the edit id to all requests made this session
  * Assumes authorized
