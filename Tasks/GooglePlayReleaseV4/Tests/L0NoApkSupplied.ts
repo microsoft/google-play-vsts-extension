@@ -11,6 +11,13 @@ tr.setInput('applicationId', 'package');
 tr.setInput('action', 'SingleApk');
 tr.setInput('apkFile', '');
 
-process.env['ENDPOINT_AUTH_myServiceEndpoint'] = '{ "parameters": {"username": "myUser", "password": "myPass"}, "scheme": "UsernamePassword"}';
+process.env['ENDPOINT_AUTH_myServiceEndpoint'] = JSON.stringify({
+    parameters: {
+        username: 'myUser',
+        password: 'myPass'
+    },
+
+    scheme: 'UsernamePassword'
+});
 
 tr.run();
