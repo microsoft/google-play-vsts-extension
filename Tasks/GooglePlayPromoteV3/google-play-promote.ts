@@ -46,7 +46,7 @@ async function run() {
         googleutil.updateGlobalParams(globalParams, 'packageName', packageName);
 
         console.log(tl.loc('Authenticating'));
-        await jwtClient.authorize();
+        await googleutil.authorize(jwtClient);
         const edit = await googleutil.getNewEdit(edits, globalParams, packageName);
         googleutil.updateGlobalParams(globalParams, 'editId', edit.id);
 
