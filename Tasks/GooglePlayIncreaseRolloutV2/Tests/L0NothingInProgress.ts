@@ -18,7 +18,8 @@ tr.registerMock('./googleutil', {
             commit: () => Promise.resolve({ data: {} })
         }
     },
-    getJWT: () => ({ authorize: () => sinon.stub() }),
+    getJWT: () => ({ authorize: () => { throw new Error('JWT.authorize() should be run via googleutil.authorize(JWT)'); } }),
+    authorize: () => Promise.resolve(),
     updateGlobalParams: () => ({}),
     getNewEdit: () => Promise.resolve({}),
     updateTrack: () => Promise.resolve({}),
@@ -32,6 +33,13 @@ tr.registerMock('./googleutil', {
     })
 });
 
-process.env['ENDPOINT_AUTH_myServiceEndpoint'] = '{ "parameters": {"username": "myUser", "password": "myPass"}, "scheme": "UsernamePassword"}';
+process.env['ENDPOINT_AUTH_myServiceEndpoint'] = JSON.stringify({
+    parameters: {
+        username: 'myUser',
+        password: 'myPass'
+    },
+
+    scheme: 'UsernamePassword'
+});
 
 tr.run();

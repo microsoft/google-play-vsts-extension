@@ -16,14 +16,18 @@ tr.registerMock('./googleutil', {
     publisher: {
         edits: {}
     },
-    getJWT: () => {
-        return {
-            authorize: () => { throw new Error('authorize() error'); }
-        };
-    },
+    getJWT: () => ({ authorize: () => { throw new Error('JWT.authorize() should be run via googleutil.authorize(JWT)'); } }),
+    authorize: () => Promise.reject(new Error('authorize() error')),
     updateGlobalParams: () => sinon.stub()
 });
 
-process.env['ENDPOINT_AUTH_myServiceEndpoint'] = '{ "parameters": {"username": "myUser", "password": "myPass"}, "scheme": "UsernamePassword"}';
+process.env['ENDPOINT_AUTH_myServiceEndpoint'] = JSON.stringify({
+    parameters: {
+        username: 'myUser',
+        password: 'myPass'
+    },
+
+    scheme: 'UsernamePassword'
+});
 
 tr.run();

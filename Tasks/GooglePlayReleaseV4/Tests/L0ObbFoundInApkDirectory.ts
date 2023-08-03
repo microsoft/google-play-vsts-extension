@@ -13,7 +13,14 @@ stubForReaddirSync.onFirstCall().returns(['/path/to/obbfolder/file.exe', '/path/
 stubForReaddirSync.onSecondCall().returns(['main.1.package.obb', '/path/to/obbfolder/filename.txt']);
 stubForReaddirSync.onThirdCall().returns(['main.1.package.obb', '/path/to/obbfolder/filename.txt']);
 
-process.env['ENDPOINT_AUTH_myServiceEndpoint'] = '{ "parameters": {"username": "myUser", "password": "myPass"}, "scheme": "UsernamePassword"}';
+process.env['ENDPOINT_AUTH_myServiceEndpoint'] = JSON.stringify({
+    parameters: {
+        username: 'myUser',
+        password: 'myPass'
+    },
+
+    scheme: 'UsernamePassword'
+});
 
 tr.setInput('authType', 'ServiceEndpoint');
 tr.setInput('serviceEndpoint', 'myServiceEndpoint');
@@ -38,11 +45,8 @@ tr.registerMock('./modules/googleutil', {
             commit: sinon.stub()
         }
     },
-    getJWT: () => {
-        return {
-            authorize: sinon.stub()
-        };
-    },
+    getJWT: () => ({ authorize: () => { throw new Error('JWT.authorize() should be run via googleutil.authorize(JWT)'); } }),
+    authorize: () => Promise.resolve(),
     getNewEdit: () => Promise.resolve({}),
     getTrack: () => Promise.resolve({ releases: [{ versionCodes: [1, 2, 3 ]}]}),
     updateTrack: () => Promise.resolve({}),
