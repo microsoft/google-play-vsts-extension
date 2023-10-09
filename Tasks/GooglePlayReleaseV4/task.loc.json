@@ -257,6 +257,22 @@
       "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadNativeDebugSymbols = true"
     },
     {
+      "name": "shouldUploadMappingFiles",
+      "label": "ms-resource:loc.input.label.shouldUploadMappingFiles",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadMappingFiles",
+      "visibleRule": "action = MultiApkAab"
+    },
+    {
+      "name": "shouldUploadNativeDebugSymbolFiles",
+      "label": "ms-resource:loc.input.label.shouldUploadNativeDebugSymbolFiles",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadNativeDebugSymbolFiles",
+      "visibleRule": "action = MultiApkAab"
+    },
+    {
       "name": "changesNotSentForReview",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.changesNotSentForReview",

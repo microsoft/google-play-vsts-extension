@@ -75,3 +75,47 @@ export function getObbFile(apkPath: string, packageName: string, versionCode: nu
     tl.debug(`Found Obb file for upload in current directory: ${obbPathFileInCurrent}`);
     return path.join(currentDirectory, obbPathFileInCurrent);
 }
+
+/**
+ * Get mapping file. Returns mapping file from apk directory with pattern: main.<versionCode>.<packageName>.mapping.txt
+ * @param apkPath apk file path
+ * @param packageName package name of the apk
+ * @param versionCode version code of the apk
+ * @returns file path of the mapping file if present else null
+ */
+export function getMappingFile(apkPath: string, packageName: string, versionCode: number): string | null {
+    const currentDirectory: string = path.dirname(apkPath);
+    const fileNamesInApkDirectory: string[] = fs.readdirSync(currentDirectory);
+    const expectedMappingFile: string = `${versionCode}.${packageName}.mapping.txt`;
+    const mappingPathFileInCurrent: string | undefined = fileNamesInApkDirectory.find(file => file.toString() === expectedMappingFile);
+
+    if (!mappingPathFileInCurrent) {
+        tl.debug(`No Mapping file found for ${apkPath}, skipping upload`);
+        return null;
+    }
+
+    tl.debug(`Found Mapping file for upload in current directory: ${mappingPathFileInCurrent}`);
+    return path.join(currentDirectory, mappingPathFileInCurrent);
+}
+
+/**
+ * Get symbols zip file. Returns symbols zip file from apk directory with pattern: main.<versionCode>.<packageName>.symbols.zip
+ * @param apkPath apk file path
+ * @param packageName package name of the apk
+ * @param versionCode version code of the apk
+ * @returns file path of the symbols zip file if present else null
+ */
+export function getSymbolsFile(apkPath: string, packageName: string, versionCode: number): string | null {
+    const currentDirectory: string = path.dirname(apkPath);
+    const fileNamesInApkDirectory: string[] = fs.readdirSync(currentDirectory);
+    const expectedSymbolsFile: string = `${versionCode}.${packageName}.symbols.zip`;
+    const symbolsPathFileInCurrent: string | undefined = fileNamesInApkDirectory.find(file => file.toString() === expectedSymbolsFile);
+
+    if (!symbolsPathFileInCurrent) {
+        tl.debug(`No Symbols file found for ${apkPath}, skipping upload`);
+        return null;
+    }
+
+    tl.debug(`Found Symbols file for upload in current directory: ${symbolsPathFileInCurrent}`);
+    return path.join(currentDirectory, symbolsPathFileInCurrent);
+}
