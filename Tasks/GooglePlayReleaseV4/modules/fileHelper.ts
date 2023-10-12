@@ -77,7 +77,7 @@ export function getObbFile(apkPath: string, packageName: string, versionCode: nu
 }
 
 /**
- * Get mapping file. Returns mapping file from apk directory with pattern: main.<versionCode>.<packageName>.mapping.txt
+ * Get mapping file. Returns mapping file from apk directory with pattern: <versionCode>.<packageName>.mapping.txt
  * @param apkPath apk file path
  * @param packageName package name of the apk
  * @param versionCode version code of the apk
@@ -99,7 +99,7 @@ export function getMappingFile(apkPath: string, packageName: string, versionCode
 }
 
 /**
- * Get symbols zip file. Returns symbols zip file from apk directory with pattern: main.<versionCode>.<packageName>.symbols.zip
+ * Get symbols zip file. Returns symbols zip file from apk directory with pattern: <versionCode>.<packageName>.symbols.zip
  * @param apkPath apk file path
  * @param packageName package name of the apk
  * @param versionCode version code of the apk
