@@ -172,7 +172,7 @@ async function run(): Promise<void> {
                         tl.debug(`Uploading ${mappingFilePath} for version code ${apk.versionCode}`);
                         await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, apk.versionCode);
                     } else {
-                        tl.warning(tl.loc(`Mapping file not found for version code ${apk.versionCode}`));
+                        tl.warning(tl.loc('NotFoundMappingFiles', apk.versionCode));
                     }
                 }
 
@@ -183,7 +183,7 @@ async function run(): Promise<void> {
                         tl.debug(`Uploading ${nativeDebugSymbolsFilePath} for version code ${apk.versionCode}`);
                         await googleutil.uploadNativeDeobfuscation(edits, nativeDebugSymbolsFilePath, packageName, apk.versionCode);
                     } else {
-                        tl.warning(tl.loc(`Symbols not found for version code ${apk.versionCode}`));
+                        tl.warning(tl.loc('NotFoundSymbolFiles', apk.versionCode));
                     }
                 }
                 versionCodes.push(apk.versionCode);

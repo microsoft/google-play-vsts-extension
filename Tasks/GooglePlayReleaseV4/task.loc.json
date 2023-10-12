@@ -372,6 +372,8 @@
     "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
     "MustProvideApkIfObb": "ms-resource:loc.messages.MustProvideApkIfObb",
     "MustProvideApkOrAab": "ms-resource:loc.messages.MustProvideApkOrAab",
+    "NotFoundMappingFiles": "ms-resource:loc.messages.NotFoundMappingFiles",
+    "NotFoundSymbolFiles": "ms-resource:loc.messages.NotFoundSymbolFiles",
     "PublishSucceed": "ms-resource:loc.messages.PublishSucceed",
     "SetUnusedInput": "ms-resource:loc.messages.SetUnusedInput",
     "StatNotDirectory": "ms-resource:loc.messages.StatNotDirectory",

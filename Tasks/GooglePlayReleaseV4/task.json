@@ -372,6 +372,8 @@
         "InvalidAuthFile": "%s is not a valid auth file",
         "MustProvideApkIfObb": "shouldPickObbFile input is enabled, but no apk files could be found",
         "MustProvideApkOrAab": "You must provide either apk or aab file(s). Neither were found.",
+        "NotFoundMappingFiles": "Mapping files not found for version code %s",
+        "NotFoundSymbolFiles": "Symbol files not found for version code %s",
         "PublishSucceed": "App was successfully published!",
         "SetUnusedInput": "Input %s was set, but it will not be used in this action",
         "StatNotDirectory": "Stat returned that %s was not a directory. Is there a file that shares this name?",
