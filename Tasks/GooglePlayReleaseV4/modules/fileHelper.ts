@@ -77,16 +77,14 @@ export function getObbFile(apkPath: string, packageName: string, versionCode: nu
 }
 
 /**
- * Get mapping file. Returns mapping file from apk directory with pattern: <versionCode>.<packageName>.mapping.txt
+ * Get mapping file. Returns mapping file from apk directory with name: mapping.txt
  * @param apkPath apk file path
- * @param packageName package name of the apk
- * @param versionCode version code of the apk
  * @returns file path of the mapping file if present else null
  */
-export function getMappingFile(apkPath: string, packageName: string, versionCode: number): string | null {
+export function getMappingFile(apkPath: string): string | null {
     const currentDirectory: string = path.dirname(apkPath);
     const fileNamesInApkDirectory: string[] = fs.readdirSync(currentDirectory);
-    const expectedMappingFile: string = `${versionCode}.${packageName}.mapping.txt`;
+    const expectedMappingFile: string = "mapping.txt";
     const mappingPathFileInCurrent: string | undefined = fileNamesInApkDirectory.find(file => file.toString() === expectedMappingFile);
 
     if (!mappingPathFileInCurrent) {
@@ -99,16 +97,14 @@ export function getMappingFile(apkPath: string, packageName: string, versionCode
 }
 
 /**
- * Get symbols zip file. Returns symbols zip file from apk directory with pattern: <versionCode>.<packageName>.symbols.zip
+ * Get symbols zip file. Returns symbols zip file from apk directory with name: symbols.zip
  * @param apkPath apk file path
- * @param packageName package name of the apk
- * @param versionCode version code of the apk
  * @returns file path of the symbols zip file if present else null
  */
-export function getSymbolsFile(apkPath: string, packageName: string, versionCode: number): string | null {
+export function getSymbolsFile(apkPath: string): string | null {
     const currentDirectory: string = path.dirname(apkPath);
     const fileNamesInApkDirectory: string[] = fs.readdirSync(currentDirectory);
-    const expectedSymbolsFile: string = `${versionCode}.${packageName}.symbols.zip`;
+    const expectedSymbolsFile: string = "symbols.zip";
     const symbolsPathFileInCurrent: string | undefined = fileNamesInApkDirectory.find(file => file.toString() === expectedSymbolsFile);
 
     if (!symbolsPathFileInCurrent) {

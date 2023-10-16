@@ -166,7 +166,7 @@ async function run(): Promise<void> {
                 }
 
                 if (uploadMappingFiles) {
-                    const mappingFilePath: string | null = fileHelper.getMappingFile(apkFile, packageName, apk.versionCode);
+                    const mappingFilePath: string | null = fileHelper.getMappingFile(apkFile);
 
                     if (mappingFilePath !== null) {
                         tl.debug(`Uploading ${mappingFilePath} for version code ${apk.versionCode}`);
@@ -177,7 +177,7 @@ async function run(): Promise<void> {
                 }
 
                 if (uploadNativeDebugSymbolFiles) {
-                    const nativeDebugSymbolsFilePath: string | null = fileHelper.getSymbolsFile(apkFile, packageName, apk.versionCode);
+                    const nativeDebugSymbolsFilePath: string | null = fileHelper.getSymbolsFile(apkFile);
 
                     if (nativeDebugSymbolsFilePath !== null) {
                         tl.debug(`Uploading ${nativeDebugSymbolsFilePath} for version code ${apk.versionCode}`);

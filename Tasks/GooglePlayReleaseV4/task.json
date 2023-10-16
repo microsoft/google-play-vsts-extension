@@ -261,7 +261,7 @@
             "label": "Upload deobfuscation files (mapping.txt) for all APKs",
             "defaultValue": false,
             "type": "boolean",
-            "helpMarkDown": "Select this option to pick mapping files for the apks. It will pick mapping file from apk directory with expected format as <version code>.<package name>.mapping.txt",
+            "helpMarkDown": "Select this option to pick mapping files for the apks. It will pick mapping file from apk directory with name mapping.txt",
             "visibleRule": "action = MultiApkAab"
         },
         {
@@ -269,7 +269,7 @@
             "label": "Upload native debug symbols for all APKs",
             "defaultValue": false,
             "type": "boolean",
-            "helpMarkDown": "Select this option to pick native debug symbols (.zip) files for all apks. It will pick native debug symbols (.zip) file from apk directory with expected format as <version code>.<package name>.symbols.zip",
+            "helpMarkDown": "Select this option to pick native debug symbols (.zip) files for all apks. It will pick native debug symbols (.zip) file from apk directory with name symbols.zip",
             "visibleRule": "action = MultiApkAab"
         },
         {
