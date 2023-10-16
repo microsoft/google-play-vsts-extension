@@ -84,7 +84,7 @@ export function getObbFile(apkPath: string, packageName: string, versionCode: nu
 export function getMappingFile(apkPath: string): string | null {
     const currentDirectory: string = path.dirname(apkPath);
     const fileNamesInApkDirectory: string[] = fs.readdirSync(currentDirectory);
-    const expectedMappingFile: string = "mapping.txt";
+    const expectedMappingFile: string = 'mapping.txt';
     const mappingPathFileInCurrent: string | undefined = fileNamesInApkDirectory.find(file => file.toString() === expectedMappingFile);
 
     if (!mappingPathFileInCurrent) {
@@ -104,7 +104,7 @@ export function getMappingFile(apkPath: string): string | null {
 export function getSymbolsFile(apkPath: string): string | null {
     const currentDirectory: string = path.dirname(apkPath);
     const fileNamesInApkDirectory: string[] = fs.readdirSync(currentDirectory);
-    const expectedSymbolsFile: string = "symbols.zip";
+    const expectedSymbolsFile: string = 'symbols.zip';
     const symbolsPathFileInCurrent: string | undefined = fileNamesInApkDirectory.find(file => file.toString() === expectedSymbolsFile);
 
     if (!symbolsPathFileInCurrent) {
