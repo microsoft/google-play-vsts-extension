@@ -77,41 +77,35 @@ export function getObbFile(apkPath: string, packageName: string, versionCode: nu
 }
 
 /**
- * Get mapping file. Returns mapping file from apk directory with name: mapping.txt
+ * Get `mapping.txt` file from apk directory
  * @param apkPath apk file path
- * @returns file path of the mapping file if present else null
+ * @returns path of the `mapping.txt` file if present else null
  */
 export function getMappingFile(apkPath: string): string | null {
-    const currentDirectory: string = path.dirname(apkPath);
-    const fileNamesInApkDirectory: string[] = fs.readdirSync(currentDirectory);
-    const expectedMappingFile: string = 'mapping.txt';
-    const mappingPathFileInCurrent: string | undefined = fileNamesInApkDirectory.find(file => file.toString() === expectedMappingFile);
+    const mappingFilePath: string = path.join(path.dirname(apkPath), 'mapping.txt');
 
-    if (!mappingPathFileInCurrent) {
-        tl.debug(`No Mapping file found for ${apkPath}, skipping upload`);
-        return null;
+    if (fs.existsSync(mappingFilePath)) {
+        tl.debug(`Found Mapping file for upload in apk directory: ${mappingFilePath}`);
+        return mappingFilePath;
     }
 
-    tl.debug(`Found Mapping file for upload in current directory: ${mappingPathFileInCurrent}`);
-    return path.join(currentDirectory, mappingPathFileInCurrent);
+    tl.debug(`No Mapping file found for ${apkPath}, skipping upload`);
+    return null;
 }
 
 /**
- * Get symbols zip file. Returns symbols zip file from apk directory with name: symbols.zip
+ * Get `symbols.zip` file from apk directory
  * @param apkPath apk file path
- * @returns file path of the symbols zip file if present else null
+ * @returns path of the `symbols.zip` file if present else null
  */
 export function getSymbolsFile(apkPath: string): string | null {
-    const currentDirectory: string = path.dirname(apkPath);
-    const fileNamesInApkDirectory: string[] = fs.readdirSync(currentDirectory);
-    const expectedSymbolsFile: string = 'symbols.zip';
-    const symbolsPathFileInCurrent: string | undefined = fileNamesInApkDirectory.find(file => file.toString() === expectedSymbolsFile);
+    const symbolsFilePath: string = path.join(path.dirname(apkPath), 'symbols.zip');
 
-    if (!symbolsPathFileInCurrent) {
-        tl.debug(`No Symbols file found for ${apkPath}, skipping upload`);
-        return null;
+    if (fs.existsSync(symbolsFilePath)) {
+        tl.debug(`Found Symbols file for upload in apk directory: ${symbolsFilePath}`);
+        return symbolsFilePath;
     }
 
-    tl.debug(`Found Symbols file for upload in current directory: ${symbolsPathFileInCurrent}`);
-    return path.join(currentDirectory, symbolsPathFileInCurrent);
+    tl.debug(`No Symbols file found for ${apkPath}, skipping upload`);
+    return null;
 }
