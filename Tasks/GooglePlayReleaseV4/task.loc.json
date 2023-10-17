@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": "4",
-    "Minor": "227",
+    "Minor": "229",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -257,6 +257,22 @@
       "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadNativeDebugSymbols = true"
     },
     {
+      "name": "shouldUploadMappingFiles",
+      "label": "ms-resource:loc.input.label.shouldUploadMappingFiles",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadMappingFiles",
+      "visibleRule": "action = MultiApkAab"
+    },
+    {
+      "name": "shouldUploadNativeDebugSymbolFiles",
+      "label": "ms-resource:loc.input.label.shouldUploadNativeDebugSymbolFiles",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadNativeDebugSymbolFiles",
+      "visibleRule": "action = MultiApkAab"
+    },
+    {
       "name": "changesNotSentForReview",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.changesNotSentForReview",
@@ -356,6 +372,8 @@
     "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
     "MustProvideApkIfObb": "ms-resource:loc.messages.MustProvideApkIfObb",
     "MustProvideApkOrAab": "ms-resource:loc.messages.MustProvideApkOrAab",
+    "NotFoundMappingFile": "ms-resource:loc.messages.NotFoundMappingFile",
+    "NotFoundSymbolsFile": "ms-resource:loc.messages.NotFoundSymbolsFile",
     "PublishSucceed": "ms-resource:loc.messages.PublishSucceed",
     "SetUnusedInput": "ms-resource:loc.messages.SetUnusedInput",
     "StatNotDirectory": "ms-resource:loc.messages.StatNotDirectory",

@@ -75,3 +75,37 @@ export function getObbFile(apkPath: string, packageName: string, versionCode: nu
     tl.debug(`Found Obb file for upload in current directory: ${obbPathFileInCurrent}`);
     return path.join(currentDirectory, obbPathFileInCurrent);
 }
+
+/**
+ * Get `mapping.txt` file from apk directory
+ * @param apkPath apk file path
+ * @returns path of the `mapping.txt` file if present else null
+ */
+export function getMappingFile(apkPath: string): string | null {
+    const mappingFilePath: string = path.join(path.dirname(apkPath), 'mapping.txt');
+
+    if (fs.existsSync(mappingFilePath)) {
+        tl.debug(`Found Mapping file for upload in apk directory: ${mappingFilePath}`);
+        return mappingFilePath;
+    }
+
+    tl.debug(`No Mapping file found for ${apkPath}, skipping upload`);
+    return null;
+}
+
+/**
+ * Get `symbols.zip` file from apk directory
+ * @param apkPath apk file path
+ * @returns path of the `symbols.zip` file if present else null
+ */
+export function getSymbolsFile(apkPath: string): string | null {
+    const symbolsFilePath: string = path.join(path.dirname(apkPath), 'symbols.zip');
+
+    if (fs.existsSync(symbolsFilePath)) {
+        tl.debug(`Found Symbols file for upload in apk directory: ${symbolsFilePath}`);
+        return symbolsFilePath;
+    }
+
+    tl.debug(`No Symbols file found for ${apkPath}, skipping upload`);
+    return null;
+}
