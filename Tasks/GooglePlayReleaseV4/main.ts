@@ -350,7 +350,7 @@ async function prepareTrackUpdate({
         const versionCodesFromResponse: string[] = res.releases[0].versionCodes;
 
         if (!versionCodesFromResponse) {
-            console.log('Version codes do not exist for the latest completed release; nothing to remove.');
+            console.log('Version codes do not exist for the latest completed release; nothing to filter.');
             newTrackVersionCodes = versionCodes;
         } else {
             const oldTrackVersionCodes: number[] = versionCodesFromResponse.map((v) => Number(v));
