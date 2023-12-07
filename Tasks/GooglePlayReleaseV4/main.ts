@@ -347,35 +347,43 @@ async function prepareTrackUpdate({
             throw new Error(tl.loc('CannotDownloadTrack', track, e));
         }
 
-        const oldTrackVersionCodes: number[] = res.releases[0].versionCodes.map((v) => Number(v));
-        tl.debug('Current version codes: ' + JSON.stringify(oldTrackVersionCodes));
+        const versionCodesFromResponse: string[] = res.releases[0].versionCodes;
 
-        if (typeof(versionCodeFilter) === 'string') {
-            tl.debug(`Removing version codes matching the regular expression: ^${versionCodeFilter}$`);
-            const versionCodesToRemove: RegExp = new RegExp(`^${versionCodeFilter}$`);
-
-            oldTrackVersionCodes.forEach((versionCode) => {
-                if (!versionCode.toString().match(versionCodesToRemove)) {
-                    newTrackVersionCodes.push(versionCode);
-                }
-            });
+        if (!versionCodesFromResponse) {
+            console.log('Version codes do not exist for the latest completed release; nothing to filter.');
+            newTrackVersionCodes = versionCodes;
         } else {
-            const versionCodesToRemove = versionCodeFilter;
-            tl.debug('Removing version codes: ' + JSON.stringify(versionCodesToRemove));
+            const oldTrackVersionCodes: number[] = versionCodesFromResponse.map((v) => Number(v));
 
-            oldTrackVersionCodes.forEach((versionCode) => {
-                if (versionCodesToRemove.indexOf(versionCode) === -1) {
+            tl.debug('Current version codes: ' + JSON.stringify(oldTrackVersionCodes));
+
+            if (typeof(versionCodeFilter) === 'string') {
+                tl.debug(`Removing version codes matching the regular expression: ^${versionCodeFilter}$`);
+                const versionCodesToRemove: RegExp = new RegExp(`^${versionCodeFilter}$`);
+
+                oldTrackVersionCodes.forEach((versionCode) => {
+                    if (!versionCode.toString().match(versionCodesToRemove)) {
+                        newTrackVersionCodes.push(versionCode);
+                    }
+                });
+            } else {
+                const versionCodesToRemove = versionCodeFilter;
+                tl.debug('Removing version codes: ' + JSON.stringify(versionCodesToRemove));
+
+                oldTrackVersionCodes.forEach((versionCode) => {
+                    if (versionCodesToRemove.indexOf(versionCode) === -1) {
+                        newTrackVersionCodes.push(versionCode);
+                    }
+                });
+            }
+
+            tl.debug('Version codes to keep: ' + JSON.stringify(newTrackVersionCodes));
+            versionCodes.forEach((versionCode) => {
+                if (newTrackVersionCodes.indexOf(versionCode) === -1) {
                     newTrackVersionCodes.push(versionCode);
                 }
             });
         }
-
-        tl.debug('Version codes to keep: ' + JSON.stringify(newTrackVersionCodes));
-        versionCodes.forEach((versionCode) => {
-            if (newTrackVersionCodes.indexOf(versionCode) === -1) {
-                newTrackVersionCodes.push(versionCode);
-            }
-        });
     }
 
     tl.debug(`New ${track} track version codes: ` + JSON.stringify(newTrackVersionCodes));
