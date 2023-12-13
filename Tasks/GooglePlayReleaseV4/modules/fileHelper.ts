@@ -102,7 +102,7 @@ export function getSymbolsFile(filePath: string): string | null {
     const symbolsFilePath: string = path.join(path.dirname(filePath), 'symbols.zip');
 
     if (fs.existsSync(symbolsFilePath)) {
-        tl.debug(`Found Symbols file for upload in apk directory: ${symbolsFilePath}`);
+        tl.debug(`Found Symbols file for upload in apk/aab directory: ${symbolsFilePath}`);
         return symbolsFilePath;
     }
 

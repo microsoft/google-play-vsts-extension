@@ -147,7 +147,7 @@ async function run(): Promise<void> {
                         tl.debug(`Uploading ${nativeDebugSymbolsFilePath} for version code ${bundle.versionCode}`);
                         await googleutil.uploadNativeDeobfuscation(edits, nativeDebugSymbolsFilePath, packageName, bundle.versionCode);
                     } else {
-                        tl.warning(tl.loc('NotFoundSymbolFiles', bundle.versionCode));
+                        tl.warning(tl.loc('NotFoundSymbolsFile', bundle.versionCode));
                     }
                 }
             }
