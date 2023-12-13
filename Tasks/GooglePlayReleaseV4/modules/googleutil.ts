@@ -367,6 +367,14 @@ async function retryUploadError(
             tl.debug(`Failed to upload "${file}" due to a known Google API error. Attemps left: ${attemptsLeft}`);
 
             if (attemptsLeft === 0) {
+                tl.error(`Failed to upload "${file}" due to a known Google API error.
+This error most likely is caused by an outage on the Google side.
+It is recommended to look for similar issues on the Google Issue Tracker, in the repo of the googleapis npm package, and in the repo of the Google Play VSTS extension as well, and create a new one if it is not created yet.
+* Repo of the Google Play VSTS extension: https://github.com/microsoft/google-play-vsts-extension/issues
+* Repo of the googleapis npm package: https://github.com/googleapis/google-api-nodejs-client/issues
+* Google Issue Tracker: https://issuetracker.google.com/issues?q=Request%20is%20missing%20required%20authentication%20credential
+`);
+
                 throw error;
             }
 
