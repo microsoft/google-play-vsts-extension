@@ -138,6 +138,18 @@ async function run(): Promise<void> {
                 const bundle: pub3.Schema$Bundle = await googleutil.addBundle(edits, packageName, bundleFile);
                 tl.debug(`Uploaded ${bundleFile} with the version code ${bundle.versionCode}`);
                 versionCodes.push(bundle.versionCode);
+
+                // Uploading native debug symbols for aab files
+                if (uploadNativeDebugSymbolFiles) {
+                    const nativeDebugSymbolsFilePath: string | null = fileHelper.getSymbolsFile(bundleFile);
+
+                    if (nativeDebugSymbolsFilePath !== null) {
+                        tl.debug(`Uploading ${nativeDebugSymbolsFilePath} for version code ${bundle.versionCode}`);
+                        await googleutil.uploadNativeDeobfuscation(edits, nativeDebugSymbolsFilePath, packageName, bundle.versionCode);
+                    } else {
+                        tl.warning(tl.loc('NotFoundSymbolsFile', bundle.versionCode));
+                    }
+                }
             }
 
             tl.debug(`Uploading ${apkFileList.length} APK(s).`);

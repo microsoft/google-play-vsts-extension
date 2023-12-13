@@ -94,18 +94,18 @@ export function getMappingFile(apkPath: string): string | null {
 }
 
 /**
- * Get `symbols.zip` file from apk directory
- * @param apkPath apk file path
+ * Get `symbols.zip` file from apk/aab directory
+ * @param filePath apk/aab file path
  * @returns path of the `symbols.zip` file if present else null
  */
-export function getSymbolsFile(apkPath: string): string | null {
-    const symbolsFilePath: string = path.join(path.dirname(apkPath), 'symbols.zip');
+export function getSymbolsFile(filePath: string): string | null {
+    const symbolsFilePath: string = path.join(path.dirname(filePath), 'symbols.zip');
 
     if (fs.existsSync(symbolsFilePath)) {
-        tl.debug(`Found Symbols file for upload in apk directory: ${symbolsFilePath}`);
+        tl.debug(`Found Symbols file for upload in apk/aab directory: ${symbolsFilePath}`);
         return symbolsFilePath;
     }
 
-    tl.debug(`No Symbols file found for ${apkPath}, skipping upload`);
+    tl.debug(`No Symbols file found for ${filePath}, skipping upload`);
     return null;
 }
