@@ -9,13 +9,13 @@
   "author": "Jonathan Carter",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^10.17.0",
     "@types/mocha": "^5.2.7",
-    "azure-pipelines-task-lib": "^3.1.2",
-    "googleapis": "^67.1.0",
-    "google-auth-library": "^7.14.1"
+    "@types/node": "^20.11.6",
+    "azure-pipelines-task-lib": "^4.8.2",
+    "google-auth-library": "^7.14.1",
+    "googleapis": "^67.1.0"
   },
   "devDependencies": {
-    "typescript": "4.0.2"
+    "typescript": "5.1.6"
   }
 }

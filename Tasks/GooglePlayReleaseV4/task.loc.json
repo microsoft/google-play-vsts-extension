@@ -14,8 +14,8 @@
   "demands": [],
   "version": {
     "Major": "4",
-    "Minor": "232",
-    "Patch": "1"
+    "Minor": "235",
+    "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -346,6 +346,10 @@
     "Node16": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -389,5 +393,9 @@
     "settableVariables": {
       "allowed": []
     }
+  },
+  "_buildConfigMapping": {
+    "Default": "4.232.1",
+    "Node20-228": "4.235.0"
   }
 }
