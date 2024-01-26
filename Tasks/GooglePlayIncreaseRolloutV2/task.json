@@ -90,6 +90,10 @@
             "target": "google-play-increase-rollout.js",
             "argumentFormat": ""
         },
+        "Node16": {
+            "target": "google-play-increase-rollout.js",
+            "argumentFormat": ""
+        },
         "Node20_1": {
             "target": "google-play-increase-rollout.js",
             "argumentFormat": ""

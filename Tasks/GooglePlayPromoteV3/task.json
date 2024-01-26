@@ -134,6 +134,10 @@
             "target": "google-play-promote.js",
             "argumentFormat": ""
         },
+        "Node16": {
+            "target": "google-play-promote.js",
+            "argumentFormat": ""
+        },
         "Node20_1": {
             "target": "google-play-promote.js",
             "argumentFormat": ""

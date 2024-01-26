@@ -105,6 +105,10 @@
       "target": "google-play-status-update.js",
       "argumentFormat": ""
     },
+    "Node16": {
+      "target": "google-play-status-update.js",
+      "argumentFormat": ""
+    },
     "Node20_1": {
       "target": "google-play-status-update.js",
       "argumentFormat": ""
