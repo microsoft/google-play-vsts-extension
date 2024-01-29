@@ -249,7 +249,7 @@ target.test = async function() {
 
     // run the tests
     var suiteType = options.suite || 'L0';
-    async function runTaskTests(taskName) {
+    async function runTaskTestsAsync(taskName) {
         banner('Testing: ' + taskName);
         // find the tests
         var nodeVersion = options.node || getTaskNodeVersion(buildPath, taskName) + "";
@@ -276,15 +276,15 @@ target.test = async function() {
     }
 
     if (options.task) {
-        runTaskTests(options.task);
+        await runTaskTestsAsync(options.task);
     } else {
         // Run tests for each task that exists
-        taskList.forEach(function(taskName) {
+        for (var taskName of taskList) {
             var taskPath = path.join(buildPath, taskName);
             if (fs.existsSync(taskPath)) {
-                runTaskTests(taskName);
+                await runTaskTestsAsync(taskName);
             }
-        });
+        }
 
         banner('Running common library tests');
         var commonLibPattern = path.join(buildPath, 'Common', '*', 'Tests', suiteType + '.js');
