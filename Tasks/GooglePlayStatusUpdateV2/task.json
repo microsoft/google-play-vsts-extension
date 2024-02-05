@@ -13,7 +13,7 @@
     ],
     "version": {
         "Major": "2",
-        "Minor": "211",
+        "Minor": "235",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
@@ -104,6 +104,14 @@
         "Node10": {
             "target": "google-play-status-update.js",
             "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "google-play-status-update.js",
+            "argumentFormat": ""
+        },
+        "Node20_1": {
+            "target": "google-play-status-update.js",
+            "argumentFormat": ""
         }
     },
     "messages": {
@@ -129,5 +137,9 @@
         "settableVariables": {
             "allowed": []
         }
+    },
+    "_buildConfigMapping": {
+        "Default": "2.226.0",
+        "Node20-228": "2.235.0"
     }
 }

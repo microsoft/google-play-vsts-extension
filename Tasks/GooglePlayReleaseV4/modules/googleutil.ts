@@ -19,6 +19,19 @@ export function getJWT(key: ClientKey): googleapis.Auth.JWT {
     return new googleapis.Auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
 }
 
+export async function authorize(jwtClient: googleapis.Auth.JWT): Promise<void> {
+    await jwtClient.authorize();
+
+    const credsToken: string = jwtClient.credentials.access_token;
+    const rawToken: string = jwtClient.gtoken.rawToken.access_token;
+
+    tl.setSecret(credsToken);
+
+    if (rawToken !== credsToken) {
+        tl.setSecret(rawToken);
+    }
+}
+
 /**
  * Uses the provided JWT client to request a new edit from the Play store and attach the edit id to all requests made this session
  * Assumes authorized
@@ -155,11 +168,11 @@ export async function addBundle(edits: pub3.Resource$Edits, packageName: string,
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        const res = await edits.bundles.upload(requestParameters, { onUploadProgress });
+        const res = await retryUploadError(edits.bundles, requestParameters, bundleFile) as googleapis.Common.GaxiosResponse<pub3.Schema$Bundle>;
         tl.debug('Returned: ' + JSON.stringify(res));
         return res.data;
     } catch (e) {
-        tl.debug(`Failed to upload Bundle ${bundleFile}`);
+        tl.debug(`Failed to upload the bundle "${bundleFile}"`);
         tl.debug(e);
         throw new Error(tl.loc('CannotUploadBundle', bundleFile, e));
     }
@@ -184,13 +197,13 @@ export async function addApk(edits: pub3.Resource$Edits, packageName: string, ap
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        const res = await edits.apks.upload(requestParameters, { onUploadProgress });
+        const res = await retryUploadError(edits.apks, requestParameters, apkFile) as googleapis.Common.GaxiosResponse<pub3.Schema$Apk>;
         tl.debug('Returned: ' + JSON.stringify(res));
         return res.data;
     } catch (e) {
         tl.debug(`Failed to upload APK ${apkFile}`);
         tl.debug(e);
-        throw new Error(tl.loc('CannotUploadAPK', apkFile, e));
+        throw new Error(tl.loc('CannotUploadApk', apkFile, e));
     }
 }
 
@@ -223,7 +236,7 @@ export async function addObb(
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        const res = await edits.expansionfiles.upload(requestParameters, { onUploadProgress });
+        const res = await retryUploadError(edits.expansionfiles, requestParameters, obbFile) as googleapis.Common.GaxiosResponse<pub3.Schema$ExpansionFilesUploadResponse>;
         tl.debug('returned: ' + JSON.stringify(res));
         return res.data;
     } catch (e) {
@@ -260,7 +273,7 @@ export async function uploadDeobfuscation(
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        const res = await edits.deobfuscationfiles.upload(requestParameters, { onUploadProgress });
+        const res = await retryUploadError(edits.deobfuscationfiles, requestParameters, mappingFilePath) as googleapis.Common.GaxiosResponse<pub3.Schema$DeobfuscationFilesUploadResponse>;
         tl.debug('returned: ' + JSON.stringify(res));
         return res.data;
     } catch (e) {
@@ -295,11 +308,80 @@ export async function uploadNativeDeobfuscation(
 
     try {
         tl.debug(`Request Parameters: ${JSON.stringify(requestParameters)}`);
-        const res = await edits.deobfuscationfiles.upload(requestParameters, { onUploadProgress });
+        const res = await retryUploadError(edits.deobfuscationfiles, requestParameters, mappingFilePath) as googleapis.Common.GaxiosResponse<pub3.Schema$DeobfuscationFilesUploadResponse>;
         tl.debug(`Response: ${JSON.stringify(res)}`);
         return res.data;
     } catch (e) {
         throw new Error(tl.loc('CannotUploadNativeDeobfuscationFile', mappingFilePath, e));
+    }
+}
+
+/**
+ * Retries uploading a file to Google Play in case of a known Google API error.
+ * @param edits - The Google Play edits resource.
+ * @param requestParameters - The parameters for the upload request.
+ * @param file - The path of the file to upload.
+ * @returns A promise that resolves with the response from the upload request.
+ * @throws An error if the upload fails after the maximum number of attempts.
+ */
+async function retryUploadError(
+    edits:
+        pub3.Resource$Edits$Bundles |
+        pub3.Resource$Edits$Apks |
+        pub3.Resource$Edits$Expansionfiles |
+        pub3.Resource$Edits$Deobfuscationfiles,
+    requestParameters: pub3.Params$Resource$Edits$Bundles$Upload,
+    file: string
+): Promise<googleapis.Common.GaxiosResponse<
+    pub3.Schema$Bundle |
+    pub3.Schema$Apk |
+    pub3.Schema$ExpansionFilesUploadResponse |
+    pub3.Schema$DeobfuscationFilesUploadResponse
+>> {
+    let attemptsLeft: number = 7;
+    let delayInSeconds: number = 2;
+
+    while (true) {
+        try {
+            // to avoid typescript errors
+            switch (edits.constructor.name) {
+                case 'Resource$Edits$Bundles':
+                    return await (edits as pub3.Resource$Edits$Bundles).upload(requestParameters, { onUploadProgress });
+                case 'Resource$Edits$Apks':
+                    return await (edits as pub3.Resource$Edits$Apks).upload(requestParameters, { onUploadProgress });
+                case 'Resource$Edits$Expansionfiles':
+                    return await (edits as pub3.Resource$Edits$Expansionfiles).upload(requestParameters, { onUploadProgress });
+                case 'Resource$Edits$Deobfuscationfiles':
+                    return await (edits as pub3.Resource$Edits$Deobfuscationfiles).upload(requestParameters, { onUploadProgress });
+            }
+        } catch (error) {
+            if (
+                !error.message.includes(
+                    'Request is missing required authentication credential.'
+                )
+            ) {
+                throw error;
+            }
+
+            attemptsLeft--;
+            tl.debug(`Failed to upload "${file}" due to a known Google API error. Attemps left: ${attemptsLeft}`);
+
+            if (attemptsLeft === 0) {
+                tl.error(`Failed to upload "${file}" due to a known Google API error.
+This error most likely is caused by an outage on the Google side.
+It is recommended to look for similar issues on the Google Issue Tracker, in the repo of the googleapis npm package, and in the repo of the Google Play VSTS extension as well, and create a new one if it is not created yet.
+* Repo of the Google Play VSTS extension: https://github.com/microsoft/google-play-vsts-extension/issues
+* Repo of the googleapis npm package: https://github.com/googleapis/google-api-nodejs-client/issues
+* Google Issue Tracker: https://issuetracker.google.com/issues?q=Request%20is%20missing%20required%20authentication%20credential
+`);
+
+                throw error;
+            }
+
+            tl.debug(`Waiting ${delayInSeconds} seconds before retrying.`);
+            await new Promise(resolve => setTimeout(resolve, delayInSeconds * 1000));
+            delayInSeconds *= 2;
+        }
     }
 }
 

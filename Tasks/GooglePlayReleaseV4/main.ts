@@ -48,6 +48,7 @@ async function run(): Promise<void> {
 
         let changelogFile: string = null;
         let languageCode: string = null;
+        let releaseNotesContainLanguageTags: boolean = false;
         let metadataRootPath: string = null;
 
         if (shouldAttachMetadata) {
@@ -56,6 +57,7 @@ async function run(): Promise<void> {
             changelogFile = tl.getInput('changelogFile', false);
             const defaultLanguageCode = 'en-US';
             languageCode = tl.getInput('languageCode', false) || defaultLanguageCode;
+            releaseNotesContainLanguageTags = tl.getBoolInput('releaseNotesContainLanguageTags', false);
         }
 
         // Advanced inputs
@@ -72,7 +74,13 @@ async function run(): Promise<void> {
         const uploadNativeDebugSymbols: boolean = tl.getBoolInput('shouldUploadNativeDebugSymbols', false) && (action === 'SingleApk' || action === 'SingleBundle');
         const nativeDebugSymbolsFilePattern: string = tl.getInput('nativeDebugSymbolsFile');
 
+        const uploadMappingFiles: boolean = tl.getBoolInput('shouldUploadMappingFiles', false) && (action === 'MultiApkAab');
+        const uploadNativeDebugSymbolFiles: boolean = tl.getBoolInput('shouldUploadNativeDebugSymbolFiles', false) && (action === 'MultiApkAab');
+
         const changesNotSentForReview: boolean = tl.getBoolInput('changesNotSentForReview');
+        tl.debug(`changesNotSentForReview: ${changesNotSentForReview}`);
+        const rescueChangesNotSentForReview: boolean = tl.getBoolInput('rescueChangesNotSentForReview', false);
+        tl.debug(`rescueChangesNotSentForReview: ${rescueChangesNotSentForReview}`);
 
         const releaseName: string = tl.getInput('releaseName', false);
 
@@ -108,7 +116,7 @@ async function run(): Promise<void> {
         const edits: pub3.Resource$Edits = googleutil.publisher.edits;
 
         tl.debug('Authorize JWT.');
-        await jwtClient.authorize();
+        await googleutil.authorize(jwtClient);
 
         console.log(tl.loc('GetNewEditAfterAuth'));
         tl.debug('Creating a new edit transaction in Google Play.');
@@ -130,6 +138,18 @@ async function run(): Promise<void> {
                 const bundle: pub3.Schema$Bundle = await googleutil.addBundle(edits, packageName, bundleFile);
                 tl.debug(`Uploaded ${bundleFile} with the version code ${bundle.versionCode}`);
                 versionCodes.push(bundle.versionCode);
+
+                // Uploading native debug symbols for aab files
+                if (uploadNativeDebugSymbolFiles) {
+                    const nativeDebugSymbolsFilePath: string | null = fileHelper.getSymbolsFile(bundleFile);
+
+                    if (nativeDebugSymbolsFilePath !== null) {
+                        tl.debug(`Uploading ${nativeDebugSymbolsFilePath} for version code ${bundle.versionCode}`);
+                        await googleutil.uploadNativeDeobfuscation(edits, nativeDebugSymbolsFilePath, packageName, bundle.versionCode);
+                    } else {
+                        tl.warning(tl.loc('NotFoundSymbolsFile', bundle.versionCode));
+                    }
+                }
             }
 
             tl.debug(`Uploading ${apkFileList.length} APK(s).`);
@@ -156,6 +176,29 @@ async function run(): Promise<void> {
                         }
                     }
                 }
+
+                if (uploadMappingFiles) {
+                    const mappingFilePath: string | null = fileHelper.getMappingFile(apkFile);
+
+                    if (mappingFilePath !== null) {
+                        tl.debug(`Uploading ${mappingFilePath} for version code ${apk.versionCode}`);
+                        await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, apk.versionCode);
+                    } else {
+                        tl.warning(tl.loc('NotFoundMappingFile', apk.versionCode));
+                    }
+                }
+
+                if (uploadNativeDebugSymbolFiles) {
+                    const nativeDebugSymbolsFilePath: string | null = fileHelper.getSymbolsFile(apkFile);
+
+                    if (nativeDebugSymbolsFilePath !== null) {
+                        tl.debug(`Uploading ${nativeDebugSymbolsFilePath} for version code ${apk.versionCode}`);
+                        await googleutil.uploadNativeDeobfuscation(edits, nativeDebugSymbolsFilePath, packageName, apk.versionCode);
+                    } else {
+                        tl.warning(tl.loc('NotFoundSymbolsFile', apk.versionCode));
+                    }
+                }
+
                 versionCodes.push(apk.versionCode);
             }
 
@@ -193,8 +236,7 @@ async function run(): Promise<void> {
             requireTrackUpdate = action !== 'OnlyStoreListing';
         } else if (changelogFile) {
             tl.debug(`Uploading the common change log ${changelogFile} to all versions`);
-            const commonNotes = await metadataHelper.getCommonReleaseNotes(languageCode, changelogFile);
-            releaseNotes = commonNotes && [commonNotes];
+            releaseNotes = await metadataHelper.getCommonReleaseNotes(languageCode, changelogFile, releaseNotesContainLanguageTags);
             requireTrackUpdate = true;
         }
 
@@ -225,8 +267,37 @@ async function run(): Promise<void> {
         }
 
         tl.debug('Committing the edit transaction in Google Play.');
-        await edits.commit({ changesNotSentForReview });
+        try {
+            await edits.commit({ changesNotSentForReview });
+        } catch (error) {
+            if (!rescueChangesNotSentForReview) {
+                throw error;
+            }
 
+            tl.debug('Try to rescue commit enabled.');
+            if (
+                error.message.includes(
+                    'The query parameter changesNotSentForReview must not be set'
+                )
+            ) {
+                console.log(
+                    'Try to rescue commit without sending changesNotSentForReview flag.'
+                );
+                await edits.commit();
+            } else if (
+                error.message.includes(
+                    'Please set the query parameter changesNotSentForReview to true'
+                )
+            ) {
+                console.log(
+                    'Try to rescue commit by setting changesNotSentForReview to true'
+                );
+                let changesNotSentForReview = true;
+                await edits.commit({ changesNotSentForReview });
+            } else {
+                throw error;
+            }
+        }
         console.log(tl.loc('TrackInfo', track));
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('PublishSucceed'));
     } catch (e) {
@@ -288,35 +359,43 @@ async function prepareTrackUpdate({
             throw new Error(tl.loc('CannotDownloadTrack', track, e));
         }
 
-        const oldTrackVersionCodes: number[] = res.releases[0].versionCodes.map((v) => Number(v));
-        tl.debug('Current version codes: ' + JSON.stringify(oldTrackVersionCodes));
+        const versionCodesFromResponse: string[] = res.releases[0].versionCodes;
 
-        if (typeof(versionCodeFilter) === 'string') {
-            tl.debug(`Removing version codes matching the regular expression: ^${versionCodeFilter}$`);
-            const versionCodesToRemove: RegExp = new RegExp(`^${versionCodeFilter}$`);
-
-            oldTrackVersionCodes.forEach((versionCode) => {
-                if (!versionCode.toString().match(versionCodesToRemove)) {
-                    newTrackVersionCodes.push(versionCode);
-                }
-            });
+        if (!versionCodesFromResponse) {
+            console.log('Version codes do not exist for the latest completed release; nothing to filter.');
+            newTrackVersionCodes = versionCodes;
         } else {
-            const versionCodesToRemove = versionCodeFilter;
-            tl.debug('Removing version codes: ' + JSON.stringify(versionCodesToRemove));
+            const oldTrackVersionCodes: number[] = versionCodesFromResponse.map((v) => Number(v));
 
-            oldTrackVersionCodes.forEach((versionCode) => {
-                if (versionCodesToRemove.indexOf(versionCode) === -1) {
+            tl.debug('Current version codes: ' + JSON.stringify(oldTrackVersionCodes));
+
+            if (typeof(versionCodeFilter) === 'string') {
+                tl.debug(`Removing version codes matching the regular expression: ^${versionCodeFilter}$`);
+                const versionCodesToRemove: RegExp = new RegExp(`^${versionCodeFilter}$`);
+
+                oldTrackVersionCodes.forEach((versionCode) => {
+                    if (!versionCode.toString().match(versionCodesToRemove)) {
+                        newTrackVersionCodes.push(versionCode);
+                    }
+                });
+            } else {
+                const versionCodesToRemove = versionCodeFilter;
+                tl.debug('Removing version codes: ' + JSON.stringify(versionCodesToRemove));
+
+                oldTrackVersionCodes.forEach((versionCode) => {
+                    if (versionCodesToRemove.indexOf(versionCode) === -1) {
+                        newTrackVersionCodes.push(versionCode);
+                    }
+                });
+            }
+
+            tl.debug('Version codes to keep: ' + JSON.stringify(newTrackVersionCodes));
+            versionCodes.forEach((versionCode) => {
+                if (newTrackVersionCodes.indexOf(versionCode) === -1) {
                     newTrackVersionCodes.push(versionCode);
                 }
             });
         }
-
-        tl.debug('Version codes to keep: ' + JSON.stringify(newTrackVersionCodes));
-        versionCodes.forEach((versionCode) => {
-            if (newTrackVersionCodes.indexOf(versionCode) === -1) {
-                newTrackVersionCodes.push(versionCode);
-            }
-        });
     }
 
     tl.debug(`New ${track} track version codes: ` + JSON.stringify(newTrackVersionCodes));

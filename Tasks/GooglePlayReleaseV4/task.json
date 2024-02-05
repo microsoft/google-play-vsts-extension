@@ -14,7 +14,7 @@
     "demands": [],
     "version": {
         "Major": "4",
-        "Minor": "211",
+        "Minor": "235",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
@@ -164,6 +164,14 @@
             "visibleRule": "shouldAttachMetadata = false"
         },
         {
+            "name": "releaseNotesContainLanguageTags",
+            "label": "Release notes contain language tags",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Select this option if the release notes file contains language tags.",
+            "visibleRule": "shouldAttachMetadata = false"
+        },
+        {
             "name": "metadataRootPath",
             "label": "Metadata root directory",
             "defaultValue": "",
@@ -249,12 +257,37 @@
             "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadNativeDebugSymbols = true"
         },
         {
+            "name": "shouldUploadMappingFiles",
+            "label": "Upload deobfuscation files (mapping.txt) for all APKs",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Select this option to pick mapping files for the apks. It will pick mapping file from apk directory with name mapping.txt",
+            "visibleRule": "action = MultiApkAab"
+        },
+        {
+            "name": "shouldUploadNativeDebugSymbolFiles",
+            "label": "Upload native debug symbols for all APKs",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Select this option to pick native debug symbols (.zip) files for all apks. It will pick native debug symbols (.zip) file from apk directory with name symbols.zip",
+            "visibleRule": "action = MultiApkAab"
+        },
+        {
             "name": "changesNotSentForReview",
             "type": "boolean",
             "label": "Send changes to review",
             "defaultValue": false,
             "helpMarkDown": "Select this option to send changes for review in GooglePlay Console. If changes are already sent for review automatically, you shouldn't select this option. [More info](https://developers.google.com/android-publisher/api-ref/rest/v3/edits/commit#query-parameters).",
             "groupName": "advanced"
+        },
+        {
+            "name": "rescueChangesNotSentForReview",
+            "type": "boolean",
+            "label": "Retry commit if changesNotSentForReview failed",
+            "defaultValue": false,
+            "helpMarkDown": "Retry commit if changesNotSentForReview failed",
+            "groupName": "advanced",
+            "visibleRule": "changesNotSentForReview = true"
         },
         {
             "name": "releaseName",
@@ -309,6 +342,14 @@
         "Node10": {
             "target": "main.js",
             "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "main.js",
+            "argumentFormat": ""
+        },
+        "Node20_1": {
+            "target": "main.js",
+            "argumentFormat": ""
         }
     },
     "messages": {
@@ -335,6 +376,8 @@
         "InvalidAuthFile": "%s is not a valid auth file",
         "MustProvideApkIfObb": "shouldPickObbFile input is enabled, but no apk files could be found",
         "MustProvideApkOrAab": "You must provide either apk or aab file(s). Neither were found.",
+        "NotFoundMappingFile": "Mapping file not found for version code %s",
+        "NotFoundSymbolsFile": "Symbols file not found for version code %s",
         "PublishSucceed": "App was successfully published!",
         "SetUnusedInput": "Input %s was set, but it will not be used in this action",
         "StatNotDirectory": "Stat returned that %s was not a directory. Is there a file that shares this name?",
@@ -350,5 +393,9 @@
         "settableVariables": {
             "allowed": []
         }
+    },
+    "_buildConfigMapping": {
+        "Default": "4.232.1",
+        "Node20-228": "4.235.0"
     }
 }

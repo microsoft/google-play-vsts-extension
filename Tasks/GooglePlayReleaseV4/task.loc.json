@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": "4",
-    "Minor": "211",
+    "Minor": "235",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -164,6 +164,14 @@
       "visibleRule": "shouldAttachMetadata = false"
     },
     {
+      "name": "releaseNotesContainLanguageTags",
+      "label": "ms-resource:loc.input.label.releaseNotesContainLanguageTags",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesContainLanguageTags",
+      "visibleRule": "shouldAttachMetadata = false"
+    },
+    {
       "name": "metadataRootPath",
       "label": "ms-resource:loc.input.label.metadataRootPath",
       "defaultValue": "",
@@ -249,12 +257,37 @@
       "visibleRule": "action != OnlyStoreListing && action != MultiApkAab && shouldUploadNativeDebugSymbols = true"
     },
     {
+      "name": "shouldUploadMappingFiles",
+      "label": "ms-resource:loc.input.label.shouldUploadMappingFiles",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadMappingFiles",
+      "visibleRule": "action = MultiApkAab"
+    },
+    {
+      "name": "shouldUploadNativeDebugSymbolFiles",
+      "label": "ms-resource:loc.input.label.shouldUploadNativeDebugSymbolFiles",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.shouldUploadNativeDebugSymbolFiles",
+      "visibleRule": "action = MultiApkAab"
+    },
+    {
       "name": "changesNotSentForReview",
       "type": "boolean",
       "label": "ms-resource:loc.input.label.changesNotSentForReview",
       "defaultValue": false,
       "helpMarkDown": "ms-resource:loc.input.help.changesNotSentForReview",
       "groupName": "advanced"
+    },
+    {
+      "name": "rescueChangesNotSentForReview",
+      "type": "boolean",
+      "label": "ms-resource:loc.input.label.rescueChangesNotSentForReview",
+      "defaultValue": false,
+      "helpMarkDown": "ms-resource:loc.input.help.rescueChangesNotSentForReview",
+      "groupName": "advanced",
+      "visibleRule": "changesNotSentForReview = true"
     },
     {
       "name": "releaseName",
@@ -309,6 +342,14 @@
     "Node10": {
       "target": "main.js",
       "argumentFormat": ""
+    },
+    "Node16": {
+      "target": "main.js",
+      "argumentFormat": ""
+    },
+    "Node20_1": {
+      "target": "main.js",
+      "argumentFormat": ""
     }
   },
   "messages": {
@@ -335,6 +376,8 @@
     "InvalidAuthFile": "ms-resource:loc.messages.InvalidAuthFile",
     "MustProvideApkIfObb": "ms-resource:loc.messages.MustProvideApkIfObb",
     "MustProvideApkOrAab": "ms-resource:loc.messages.MustProvideApkOrAab",
+    "NotFoundMappingFile": "ms-resource:loc.messages.NotFoundMappingFile",
+    "NotFoundSymbolsFile": "ms-resource:loc.messages.NotFoundSymbolsFile",
     "PublishSucceed": "ms-resource:loc.messages.PublishSucceed",
     "SetUnusedInput": "ms-resource:loc.messages.SetUnusedInput",
     "StatNotDirectory": "ms-resource:loc.messages.StatNotDirectory",
@@ -350,5 +393,9 @@
     "settableVariables": {
       "allowed": []
     }
+  },
+  "_buildConfigMapping": {
+    "Default": "4.232.1",
+    "Node20-228": "4.235.0"
   }
 }

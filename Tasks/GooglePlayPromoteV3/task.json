@@ -13,8 +13,8 @@
     ],
     "version": {
         "Major": "3",
-        "Minor": "211",
-        "Patch": "1"
+        "Minor": "235",
+        "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Promote $(packageName) from $(sourceTrack) to $(destinationTrack)",
@@ -134,6 +134,14 @@
             "target": "google-play-promote.js",
             "argumentFormat": ""
         },
+        "Node16": {
+            "target": "google-play-promote.js",
+            "argumentFormat": ""
+        },
+        "Node20_1": {
+            "target": "google-play-promote.js",
+            "argumentFormat": ""
+        },
         "PowerShell": {
             "target": "$(currentDirectory)\\google-play-promote.ps1",
             "argumentFormat": "",
@@ -164,5 +172,9 @@
         "settableVariables": {
             "allowed": []
         }
+    },
+    "_buildConfigMapping": {
+        "Default": "3.226.0",
+        "Node20-228": "3.235.0"
     }
 }
