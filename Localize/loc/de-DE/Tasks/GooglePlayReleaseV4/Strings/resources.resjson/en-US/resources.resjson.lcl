@@ -172,6 +172,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.releaseNotesContainLanguageTags" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select this option if the release notes file contains language tags.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Wählen Sie diese Option aus, wenn die Versionshinweisdatei Sprachtags enthält.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.replaceExpression" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The regular expression pattern to select a list of version codes to be removed from the track with this deployment, e.g. _.\*12?(3|4)?5_ ]]></Val>
@@ -186,6 +195,15 @@
           <Val><![CDATA[The comma separated list of version codes to be removed from the track with this deployment.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Die durch Trennzeichen getrennte Liste der Versionscodes, die bei dieser Bereitstellung aus dem Titel entfernt werden sollen.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.rescueChangesNotSentForReview" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Retry commit if changesNotSentForReview failed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Commit wiederholen, wenn changesNotSentForReview fehlgeschlagen ist]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -240,6 +258,24 @@
           <Val><![CDATA[Select this option to attach your proguard mapping.txt file to your aab/apk.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Wählen Sie diese Option aus, um Ihre Proguard-mapping.txt-Datei an Ihr AAB/APK anzufügen.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.shouldUploadMappingFiles" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select this option to pick mapping files for the apks. It will pick mapping file from apk directory with name mapping.txt]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Wählen Sie diese Option aus, um Zuordnungsdateien für die APKs auszuwählen. Aus dem APK-Verzeichnis wird eine Zuordnungsdatei mit dem Namen „mapping.txt“ ausgewählt.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.shouldUploadNativeDebugSymbolFiles" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select this option to pick native debug symbols (.zip) files for all apks. It will pick native debug symbols (.zip) file from apk directory with name symbols.zip]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Wählen Sie diese Option aus, um native Debugsymboldateien (.zip) für alle APKs auszuwählen. Aus dem APK-Verzeichnis wird eine native Debugsymboldatei (.zip) mit dem Namen „symbols.zip“ ausgewählt.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -433,6 +469,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.releaseNotesContainLanguageTags" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Release notes contain language tags]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Versionshinweise enthalten Sprachtags]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.replaceExpression" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Version code pattern]]></Val>
@@ -447,6 +492,15 @@
           <Val><![CDATA[Version code list]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Versionscodeliste]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.rescueChangesNotSentForReview" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Retry commit if changesNotSentForReview failed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Commit wiederholen, wenn changesNotSentForReview fehlgeschlagen ist]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -501,6 +555,24 @@
           <Val><![CDATA[Upload deobfuscation file (mapping.txt)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Deobfuskationdatei hochladen (mapping.txt)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.shouldUploadMappingFiles" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Upload deobfuscation files (mapping.txt) for all APKs]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Deobfuskationsdateien (mapping.txt) für alle APKs hochladen]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.shouldUploadNativeDebugSymbolFiles" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Upload native debug symbols for all APKs]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Native Debugsymbole für alle APKs hochladen]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -762,6 +834,24 @@
           <Val><![CDATA[You must provide either apk or aab file(s). Neither were found.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Sie müssen entweder APK- oder AAB-Datei(en) angeben. Es wurden aber keine solchen Dateien gefunden.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.NotFoundMappingFile" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Mapping file not found for version code %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Zuordnungsdatei für Versionscode %s nicht gefunden]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.NotFoundSymbolsFile" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Symbols file not found for version code %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Symboldatei für Versionscode %s nicht gefunden]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
