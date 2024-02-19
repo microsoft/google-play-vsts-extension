@@ -172,6 +172,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.help.releaseNotesContainLanguageTags" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select this option if the release notes file contains language tags.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如果发行说明文件包含语言标记，请选择此选项。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.help.replaceExpression" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[The regular expression pattern to select a list of version codes to be removed from the track with this deployment, e.g. _.\*12?(3|4)?5_ ]]></Val>
@@ -186,6 +195,15 @@
           <Val><![CDATA[The comma separated list of version codes to be removed from the track with this deployment.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[要通过此部署从轨道中删除的版本代码的逗号分隔列表。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.rescueChangesNotSentForReview" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Retry commit if changesNotSentForReview failed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如果 changesNotSentForReview 失败，请重试提交]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -240,6 +258,24 @@
           <Val><![CDATA[Select this option to attach your proguard mapping.txt file to your aab/apk.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[选择此选项可将 proguard mapping.txt 文件附加到 aab/apk。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.shouldUploadMappingFiles" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select this option to pick mapping files for the apks. It will pick mapping file from apk directory with name mapping.txt]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[选择此选项以选取 apk 的映射文件。它将从名为 mapping.txt 的 apk 目录中选取映射文件]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.help.shouldUploadNativeDebugSymbolFiles" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Select this option to pick native debug symbols (.zip) files for all apks. It will pick native debug symbols (.zip) file from apk directory with name symbols.zip]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[选择此选项可为所有 apk 选取本机调试符号(.zip)文件。它将从名为 symbols.zip 的 apk 目录中选择本机调试符号(.zip)文件]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -433,6 +469,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";loc.input.label.releaseNotesContainLanguageTags" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Release notes contain language tags]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[发行说明包含语言标记]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";loc.input.label.replaceExpression" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Version code pattern]]></Val>
@@ -447,6 +492,15 @@
           <Val><![CDATA[Version code list]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[版本代码列表]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.rescueChangesNotSentForReview" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Retry commit if changesNotSentForReview failed]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[如果 changesNotSentForReview 失败，请重试提交]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -501,6 +555,24 @@
           <Val><![CDATA[Upload deobfuscation file (mapping.txt)]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[上传反混淆文件(mapping.txt)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.shouldUploadMappingFiles" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Upload deobfuscation files (mapping.txt) for all APKs]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[为所有 APK 上传反迷惑文件(mapping.txt)]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.input.label.shouldUploadNativeDebugSymbolFiles" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Upload native debug symbols for all APKs]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[上传所有 APK 的本机调试符号]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
@@ -762,6 +834,24 @@
           <Val><![CDATA[You must provide either apk or aab file(s). Neither were found.]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[必须提供 apk 或 aab 文件。两者均未找到。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.NotFoundMappingFile" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Mapping file not found for version code %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[找不到版本代码为 %s 的映射文件]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";loc.messages.NotFoundSymbolsFile" ItemType="0" PsrId="306" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Symbols file not found for version code %s]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[找不到版本代码为 %s 的符号文件]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />
