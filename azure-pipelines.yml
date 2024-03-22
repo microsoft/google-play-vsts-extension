@@ -1,0 +1,15 @@
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Bash@3
+  displayName: Linter
+  inputs:
+    targetType: inline
+    script: |
+      npm install tslint --silent
+      $BIN_PATH/tslint --init
+      $BIN_PATH/tslint --project . 
+  env:
+      BIN_PATH: node_modules/.bin
+  
