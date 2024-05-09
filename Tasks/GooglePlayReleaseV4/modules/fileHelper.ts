@@ -77,19 +77,19 @@ export function getObbFile(apkPath: string, packageName: string, versionCode: nu
 }
 
 /**
- * Get `mapping.txt` file from apk directory
- * @param apkPath apk file path
+ * Get `mapping.txt` file from apk/aab directory
+ * @param filePath apk file path
  * @returns path of the `mapping.txt` file if present else null
  */
-export function getMappingFile(apkPath: string): string | null {
-    const mappingFilePath: string = path.join(path.dirname(apkPath), 'mapping.txt');
+export function getMappingFile(filePath: string): string | null {
+    const mappingFilePath: string = path.join(path.dirname(filePath), 'mapping.txt');
 
     if (fs.existsSync(mappingFilePath)) {
-        tl.debug(`Found Mapping file for upload in apk directory: ${mappingFilePath}`);
+        tl.debug(`Found Mapping file for upload in apk/aab directory: ${mappingFilePath}`);
         return mappingFilePath;
     }
 
-    tl.debug(`No Mapping file found for ${apkPath}, skipping upload`);
+    tl.debug(`No Mapping file found for ${filePath}, skipping upload`);
     return null;
 }
 
