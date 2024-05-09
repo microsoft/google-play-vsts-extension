@@ -139,6 +139,18 @@ async function run(): Promise<void> {
                 tl.debug(`Uploaded ${bundleFile} with the version code ${bundle.versionCode}`);
                 versionCodes.push(bundle.versionCode);
 
+                // Uploading mapping file for aab files
+                if (uploadMappingFiles) {
+                    const mappingFilePath: string | null = fileHelper.getMappingFile(bundleFile);
+
+                    if (mappingFilePath !== null) {
+                        tl.debug(`Uploading ${mappingFilePath} for version code ${bundle.versionCode}`);
+                        await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, bundle.versionCode);
+                    } else {
+                        tl.warning(tl.loc('NotFoundMappingFile', bundle.versionCode));
+                    }
+                }
+
                 // Uploading native debug symbols for aab files
                 if (uploadNativeDebugSymbolFiles) {
                     const nativeDebugSymbolsFilePath: string | null = fileHelper.getSymbolsFile(bundleFile);
