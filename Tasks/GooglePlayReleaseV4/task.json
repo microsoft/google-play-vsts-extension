@@ -14,8 +14,8 @@
     "demands": [],
     "version": {
         "Major": "4",
-        "Minor": "236",
-        "Patch": "1"
+        "Minor": "240",
+        "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Release $(applicationId) to $(track)",
