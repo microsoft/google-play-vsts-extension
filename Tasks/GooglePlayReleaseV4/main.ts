@@ -129,6 +129,32 @@ async function run(): Promise<void> {
         if (action === 'OnlyStoreListing') {
             tl.debug('Selected store listing update only -> skip APK/AAB reading');
         } else {
+            async function uploadRelatedFiles (filePath: string, versionCode: number): Promise<void> {
+                // Uploading mapping file
+                if (uploadMappingFiles) {
+                    const mappingFilePath: string | null = fileHelper.getMappingFile(filePath);
+
+                    if (mappingFilePath !== null) {
+                        tl.debug(`Uploading ${mappingFilePath} for version code ${versionCode}`);
+                        await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, versionCode);
+                    } else {
+                        tl.warning(tl.loc('NotFoundMappingFile', versionCode));
+                    }
+                }
+
+                // Uploading native debug symbols file
+                if (uploadNativeDebugSymbolFiles) {
+                    const nativeDebugSymbolsFilePath: string | null = fileHelper.getSymbolsFile(filePath);
+
+                    if (nativeDebugSymbolsFilePath !== null) {
+                        tl.debug(`Uploading ${nativeDebugSymbolsFilePath} for version code ${versionCode}`);
+                        await googleutil.uploadNativeDeobfuscation(edits, nativeDebugSymbolsFilePath, packageName, versionCode);
+                    } else {
+                        tl.warning(tl.loc('NotFoundSymbolsFile', versionCode));
+                    }
+                }
+            }
+
             requireTrackUpdate = true;
 
             tl.debug(`Uploading ${bundleFileList.length} AAB(s).`);
@@ -137,19 +163,8 @@ async function run(): Promise<void> {
                 tl.debug(`Uploading bundle ${bundleFile}`);
                 const bundle: pub3.Schema$Bundle = await googleutil.addBundle(edits, packageName, bundleFile);
                 tl.debug(`Uploaded ${bundleFile} with the version code ${bundle.versionCode}`);
+                await uploadRelatedFiles(bundleFile, bundle.versionCode);
                 versionCodes.push(bundle.versionCode);
-
-                // Uploading native debug symbols for aab files
-                if (uploadNativeDebugSymbolFiles) {
-                    const nativeDebugSymbolsFilePath: string | null = fileHelper.getSymbolsFile(bundleFile);
-
-                    if (nativeDebugSymbolsFilePath !== null) {
-                        tl.debug(`Uploading ${nativeDebugSymbolsFilePath} for version code ${bundle.versionCode}`);
-                        await googleutil.uploadNativeDeobfuscation(edits, nativeDebugSymbolsFilePath, packageName, bundle.versionCode);
-                    } else {
-                        tl.warning(tl.loc('NotFoundSymbolsFile', bundle.versionCode));
-                    }
-                }
             }
 
             tl.debug(`Uploading ${apkFileList.length} APK(s).`);
@@ -177,28 +192,7 @@ async function run(): Promise<void> {
                     }
                 }
 
-                if (uploadMappingFiles) {
-                    const mappingFilePath: string | null = fileHelper.getMappingFile(apkFile);
-
-                    if (mappingFilePath !== null) {
-                        tl.debug(`Uploading ${mappingFilePath} for version code ${apk.versionCode}`);
-                        await googleutil.uploadDeobfuscation(edits, mappingFilePath, packageName, apk.versionCode);
-                    } else {
-                        tl.warning(tl.loc('NotFoundMappingFile', apk.versionCode));
-                    }
-                }
-
-                if (uploadNativeDebugSymbolFiles) {
-                    const nativeDebugSymbolsFilePath: string | null = fileHelper.getSymbolsFile(apkFile);
-
-                    if (nativeDebugSymbolsFilePath !== null) {
-                        tl.debug(`Uploading ${nativeDebugSymbolsFilePath} for version code ${apk.versionCode}`);
-                        await googleutil.uploadNativeDeobfuscation(edits, nativeDebugSymbolsFilePath, packageName, apk.versionCode);
-                    } else {
-                        tl.warning(tl.loc('NotFoundSymbolsFile', apk.versionCode));
-                    }
-                }
-
+                await uploadRelatedFiles(apkFile, apk.versionCode);
                 versionCodes.push(apk.versionCode);
             }
 
