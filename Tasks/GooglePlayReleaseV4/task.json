@@ -15,7 +15,7 @@
     "version": {
         "Major": "4",
         "Minor": "240",
-        "Patch": "0"
+        "Patch": "1"
     },
     "minimumAgentVersion": "2.182.1",
     "instanceNameFormat": "Release $(applicationId) to $(track)",
