@@ -6,7 +6,7 @@
 trigger:
   branches:
     include:
-    - master
+    - /refs/heads/users/levochkin/add-1es-template
 variables:
 - name: CodeQL.Enabled
   value: true
