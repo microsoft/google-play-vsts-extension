@@ -6,7 +6,7 @@
 trigger:
   branches:
     include:
-    - '**'
+    - master
 variables:
 - name: CodeQL.Enabled
   value: true
