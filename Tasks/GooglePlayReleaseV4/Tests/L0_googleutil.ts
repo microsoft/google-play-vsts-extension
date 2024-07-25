@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import * as mockery from 'mockery';
+import * as libMocker from 'azure-pipelines-task-lib/lib-mocker';
 import * as sinon from 'sinon';
 
 import * as mockTask from 'azure-pipelines-task-lib/mock-task';
@@ -8,24 +8,24 @@ import * as googleutil from '../modules/googleutil';
 import * as googleapis from 'googleapis';
 
 before(function () {
-    mockery.enable({
+    libMocker.enable({
         useCleanCache: true,
         warnOnUnregistered: false
     });
 });
 
 after(function () {
-    mockery.disable();
+    libMocker.disable();
 });
 
 afterEach(function () {
-    mockery.deregisterAll();
-    mockery.resetCache();
+    libMocker.deregisterAll();
+    libMocker.resetCache();
 });
 
 it('getNewEdit tests', async function () {
-    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
-    mockery.registerMock('googleapis', {
+    libMocker.registerMock('azure-pipelines-task-lib/task', mockTask);
+    libMocker.registerMock('googleapis', {
         google: {
             androidpublisher: () => ({})
         }
@@ -50,8 +50,8 @@ it('getNewEdit tests', async function () {
 });
 
 it('getTrack tests', async function () {
-    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
-    mockery.registerMock('googleapis', {
+    libMocker.registerMock('azure-pipelines-task-lib/task', mockTask);
+    libMocker.registerMock('googleapis', {
         google: {
             androidpublisher: () => ({})
         }
@@ -72,8 +72,8 @@ it('getTrack tests', async function () {
 });
 
 it('updateTrack tests', async function () {
-    mockery.registerMock('azure-pipelines-task-lib/task', mockTask);
-    mockery.registerMock('googleapis', {
+    libMocker.registerMock('azure-pipelines-task-lib/task', mockTask);
+    libMocker.registerMock('googleapis', {
         google: {
             androidpublisher: () => ({})
         }
