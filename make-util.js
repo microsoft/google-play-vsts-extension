@@ -1066,7 +1066,7 @@ exports.storeNonAggregatedZip = storeNonAggregatedZip;
 var installNodeAsync = async function (nodeVersion) {
     switch (nodeVersion || '') {
         case '20':
-            nodeVersion = 'v20.11.0';
+            nodeVersion = 'v20.14.0';
             break;
         case '16':
             nodeVersion = 'v16.17.1';
