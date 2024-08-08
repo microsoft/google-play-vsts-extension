@@ -1,6 +1,6 @@
 {
-  "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
-  "name": "GooglePlayRelease",
+  "id": "0cf7cac0-620b-11e5-b4cf-8565e60f4d27",
+  "name": "AleksandrGooglePlayRelease",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": "4",
-    "Minor": "243",
+    "Minor": "244",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",

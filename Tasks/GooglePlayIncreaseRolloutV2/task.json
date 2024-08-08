@@ -1,7 +1,7 @@
 {
-    "id": "f8c97cf9-4e17-4244-b0fb-f540cea78153",
-    "name": "GooglePlayIncreaseRollout",
-    "friendlyName": "Google Play - Increase Rollout",
+    "id": "c8c97cf9-4e17-4244-b0fb-f540cea78153",
+    "name": "AleksandrGooglePlayIncreaseRollout",
+    "friendlyName": "Aleksandr Google Play - Increase Rollout",
     "description": "Increase the rollout fraction of an app previously deployed to the Google Play Store",
     "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
     "helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play)",
@@ -13,7 +13,7 @@
     ],
     "version": {
         "Major": "2",
-        "Minor": "243",
+        "Minor": "244",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",

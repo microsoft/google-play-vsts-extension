@@ -7,15 +7,18 @@ trigger:
   branches:
     include:
     - master
+
 variables:
 - name: CodeQL.Enabled
   value: true
+
 resources:
   repositories:
   - repository: 1ESPipelineTemplates
     type: git
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
+
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
@@ -30,6 +33,7 @@ extends:
       os: linux
     customBuildTags:
     - ES365AIMigrationTooling
+
     stages:
     - stage: stage
       jobs:
@@ -42,31 +46,42 @@ extends:
             displayName: 'Publish Artifact: vsix'
             targetPath: '$(System.ArtifactsDirectory)'
             artifactName: vsix
+
         steps:
         - checkout: self
           clean: true
           fetchTags: false
+
+        - task: UseNode@1
+          displayName: Use Node
+          inputs:
+            version: '20.14.0'
+
         - task: Npm@1
           name: Npm_1
           displayName: npm install
           inputs:
             command: 'install'
             verbose: false
+
         - task: CmdLine@2
           displayName: Build
           inputs:
             script: node make.js build
+
         - task: CmdLine@2
           displayName: Run Tests
           inputs:
             script: node make.js test
+
         - task: CmdLine@2
           displayName: Create extension
           inputs:
             script: node make.js create
+
         - task: CopyFiles@2
           name: CopyFiles_5
-          displayName: 'Copy Files to: $(build.artifactsdirectory)'
+          displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
           inputs:
             Contents: '*.vsix'
-            TargetFolder: $(build.artifactsdirectory)
+            TargetFolder: $(System.ArtifactsDirectory)

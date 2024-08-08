@@ -1,7 +1,7 @@
 {
-    "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
-    "name": "GooglePlayRelease",
-    "friendlyName": "Google Play - Release",
+    "id": "0cf7cac0-620b-11e5-b4cf-8565e60f4d27",
+    "name": "AleksandrGooglePlayRelease",
+    "friendlyName": "Aleksandr Google Play - Release",
     "description": "Release an app to the Google Play Store",
     "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
     "helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play)",
@@ -14,7 +14,7 @@
     "demands": [],
     "version": {
         "Major": "4",
-        "Minor": "243",
+        "Minor": "244",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
