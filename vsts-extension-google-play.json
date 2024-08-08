@@ -119,8 +119,8 @@
                 "ms.vss-endpoint.endpoint-types"
             ],
             "properties": {
-                "name": "google-play",
-                "displayName": "Google Play",
+                "name": "google-play-test",
+                "displayName": "Google Play Test",
                 "url": "https://accounts.google.com/o/oauth2/v2/auth",
                 "inputDescriptors": [],
                 "authenticationSchemes": [
