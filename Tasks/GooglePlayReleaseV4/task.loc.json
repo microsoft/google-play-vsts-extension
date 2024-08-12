@@ -1,6 +1,6 @@
 {
-  "id": "0cf7cac0-620b-11e5-b4cf-8565e60f4d27",
-  "name": "AleksandrGooglePlayRelease",
+  "id": "8cf7cac0-620b-11e5-b4cf-8565e60f4d27",
+  "name": "GooglePlayRelease",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",

@@ -1,7 +1,7 @@
 {
-    "id": "6dae1f76-29d3-482f-97d5-e3189a8347c2",
-    "name": "AleksandrGooglePlayPromote",
-    "friendlyName": "Aleksandr Play - Promote",
+    "id": "4dae1f76-29d3-482f-97d5-e3189a8347c2",
+    "name": "GooglePlayPromote",
+    "friendlyName": "Google Play - Promote",
     "description": "Promote an app from one release track to another",
     "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
     "helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play)",

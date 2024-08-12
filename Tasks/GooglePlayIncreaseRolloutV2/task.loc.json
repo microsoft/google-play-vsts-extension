@@ -1,6 +1,6 @@
 {
-  "id": "c8c97cf9-4e17-4244-b0fb-f540cea78153",
-  "name": "AleksandrGooglePlayIncreaseRollout",
+  "id": "f8c97cf9-4e17-4244-b0fb-f540cea78153",
+  "name": "GooglePlayIncreaseRollout",
   "friendlyName": "ms-resource:loc.friendlyName",
   "description": "ms-resource:loc.description",
   "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",

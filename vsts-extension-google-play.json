@@ -3,7 +3,7 @@
     "id": "google-play",
     "name": "Google Play",
     "version": "4.244.0",
-    "publisher": "AleksandrLevockin",
+    "publisher": "ms-vsclient",
     "description": "Provides tasks for continuous delivery to the Google Play Store from TFS/Team Services build or release definitions",
     "categories": [
         "Azure Pipelines"
@@ -119,8 +119,8 @@
                 "ms.vss-endpoint.endpoint-types"
             ],
             "properties": {
-                "name": "google-play-test",
-                "displayName": "Google Play Test",
+                "name": "google-play",
+                "displayName": "Google Play",
                 "url": "https://accounts.google.com/o/oauth2/v2/auth",
                 "inputDescriptors": [],
                 "authenticationSchemes": [
