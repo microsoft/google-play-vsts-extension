@@ -57,6 +57,10 @@ extends:
           inputs:
             version: '20.14.0'
 
+        - task: NpmAuthenticate@0
+          inputs:
+            workingFile: .npmrc
+
         - task: Npm@1
           name: Npm_1
           displayName: npm install
