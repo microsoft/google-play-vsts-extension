@@ -323,7 +323,7 @@ Allows you to promote a previously released APK from one track to another (e.g. 
 
 6. **Clean Source Track** *(Boolean, Optional)* - Clean the source track. Default value is _true_.
 
-7. **Release Notes** *(File path)* - Path to the file specifying the release notes for the APK you are publishing.
+7. **Release Notes** *(File path, Optional)* - Path to the file specifying the release notes for the APK you are publishing. Overrides release notes from the source track. (When no version code is given and no path is specified, the release notes are copied from the source track).
 
     ![Release Notes](images/release-notes.png)
 

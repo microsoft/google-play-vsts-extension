@@ -184,7 +184,8 @@
     "DestTrack": "ms-resource:loc.messages.DestTrack",
     "Success": "ms-resource:loc.messages.Success",
     "Failure": "ms-resource:loc.messages.Failure",
-    "ReturnedNullEdit": "ms-resource:loc.messages.ReturnedNullEdit"
+    "ReturnedNullEdit": "ms-resource:loc.messages.ReturnedNullEdit",
+    "AppendChangelog": "ms-resource:loc.messages.AppendChangelog"
   },
   "restrictions": {
     "commands": {

@@ -42,5 +42,6 @@
   "loc.messages.DestTrack": "Destination track: %s",
   "loc.messages.Success": "Successfully promote APK.",
   "loc.messages.Failure": "Failed to promote APK.",
-  "loc.messages.ReturnedNullEdit": "Failed to promote apk: promote operation returned null"
+  "loc.messages.ReturnedNullEdit": "Failed to promote apk: promote operation returned null",
+  "loc.messages.AppendChangelog": "Appending changelog %s"
 }

@@ -184,7 +184,8 @@
         "DestTrack": "Destination track: %s",
         "Success": "Successfully promote APK.",
         "Failure": "Failed to promote APK.",
-        "ReturnedNullEdit": "Failed to promote apk: promote operation returned null"
+        "ReturnedNullEdit": "Failed to promote apk: promote operation returned null",
+        "AppendChangelog": "Appending changelog %s"
     },
     "restrictions": {
         "commands": {

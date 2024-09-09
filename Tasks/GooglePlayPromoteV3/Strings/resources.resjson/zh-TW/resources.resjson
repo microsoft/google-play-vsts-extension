@@ -22,6 +22,12 @@
   "loc.input.help.userFraction": "將針對指定的 [目的地軌道] 發行指定 APK 的使用者百分比。可以之後使用 [Google Play - 增加推出] 工作來增加。",
   "loc.input.label.cleanSourceTrack": "清理來源軌道",
   "loc.input.help.cleanSourceTrack": "將清除來源軌道",
+  "loc.input.label.changeLogFile": "版本資訊 (檔案)",
+  "loc.input.help.changeLogFile": "指定您所要發佈應用程式的版本資訊 (變更記錄) 檔案的路徑。",
+  "loc.input.label.languageCode": "語言代碼",
+  "loc.input.help.languageCode": "IETF 語言標記，識別 BCP-47 文件中指定的版本資訊的語言。預設值為 _en-US_",
+  "loc.input.label.releaseNotesContainLanguageTags": "發行備註包含語言標籤",
+  "loc.input.help.releaseNotesContainLanguageTags": "如果發行備註檔案包含語言標籤，請選取此選項。",
   "loc.messages.InvalidAuthFile": "指定的驗證檔案無效",
   "loc.messages.InvalidAuthFilewithName": "%s 不是有效的驗證檔案",
   "loc.messages.JsonKeyFileNotFound": "找不到服務帳戶 JSON 金鑰檔案。",
@@ -36,5 +42,6 @@
   "loc.messages.DestTrack": "目的地軌道: %s",
   "loc.messages.Success": "已成功升階 APK。",
   "loc.messages.Failure": "無法升階 APK。",
-  "loc.messages.ReturnedNullEdit": "無法升階 APK: 升階作業傳回 Null"
+  "loc.messages.ReturnedNullEdit": "無法升階 APK: 升階作業傳回 Null",
+  "loc.messages.AppendChangelog": "附加變更記錄 %s"
 }

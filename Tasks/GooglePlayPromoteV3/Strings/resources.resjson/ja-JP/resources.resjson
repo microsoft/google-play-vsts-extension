@@ -22,6 +22,12 @@
   "loc.input.help.userFraction": "指定した 'Destination track' に対して、指定した APK がリリースされるユーザーの割合。これは、後で 'Google Play - ロールアウトの拡張' タスクで増やすことができます。",
   "loc.input.label.cleanSourceTrack": "ソース トラックの消去",
   "loc.input.help.cleanSourceTrack": "ソース トラックがクリアされます",
+  "loc.input.label.changeLogFile": "リリース ノート (ファイル)",
+  "loc.input.help.changeLogFile": "公開するアプリケーションのリリース ノート (変更ログ) を指定するファイルへのパス。",
+  "loc.input.label.languageCode": "言語コード",
+  "loc.input.help.languageCode": "BCP-47 ドキュメントで指定されているリリース ノートの言語を識別する IETF 言語タグ。既定値は _en-US_ です",
+  "loc.input.label.releaseNotesContainLanguageTags": "リリース ノートに言語タグが含まれています",
+  "loc.input.help.releaseNotesContainLanguageTags": "リリース ノート ファイルに言語タグが含まれている場合は、このオプションを選択します。",
   "loc.messages.InvalidAuthFile": "指定された認証ファイルが無効でした",
   "loc.messages.InvalidAuthFilewithName": "%s は有効な認証ファイルではありませんでした",
   "loc.messages.JsonKeyFileNotFound": "サービス アカウントの JSON キー ファイルが見つかりませんでした。",
@@ -36,5 +42,6 @@
   "loc.messages.DestTrack": "コピー先トラック: %s",
   "loc.messages.Success": "APK が正常に昇格されました。",
   "loc.messages.Failure": "APK を昇格できませんでした。",
-  "loc.messages.ReturnedNullEdit": "APK の昇格に失敗しました: 昇格操作が null を返しました"
+  "loc.messages.ReturnedNullEdit": "APK の昇格に失敗しました: 昇格操作が null を返しました",
+  "loc.messages.AppendChangelog": "変更ログ %s を追加しています"
 }
