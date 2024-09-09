@@ -22,6 +22,12 @@
   "loc.input.help.userFraction": "Porcentaje de usuarios en los que se liberará el APK especificado para la \"pista de destino\" especificada. Se puede aumentar más adelante con la tarea \"Google Play - Aumentar lanzamiento\".",
   "loc.input.label.cleanSourceTrack": "Limpieza de la pista de origen",
   "loc.input.help.cleanSourceTrack": "Se borrará la pista de origen",
+  "loc.input.label.changeLogFile": "Notas de la versión (archivo)",
+  "loc.input.help.changeLogFile": "Ruta de acceso al archivo que especifica las notas de la versión (registro de cambios) de la aplicación que va a publicar.",
+  "loc.input.label.languageCode": "Código de idioma",
+  "loc.input.help.languageCode": "Etiqueta de idioma IETF que identifica el idioma de las notas de la versión, tal como se especifica en el documento BCP-47. El valor predeterminado es _en-US_",
+  "loc.input.label.releaseNotesContainLanguageTags": "Las notas de la versión contienen etiquetas de idioma",
+  "loc.input.help.releaseNotesContainLanguageTags": "Seleccione esta opción si el archivo de notas de la versión contiene etiquetas de idioma.",
   "loc.messages.InvalidAuthFile": "El archivo de autenticación especificado no era válido",
   "loc.messages.InvalidAuthFilewithName": "%s no era un archivo de autenticación válido",
   "loc.messages.JsonKeyFileNotFound": "No se ha encontrado el archivo de clave JSON de la cuenta de servicio.",
@@ -36,5 +42,6 @@
   "loc.messages.DestTrack": "Pista de destino: %s",
   "loc.messages.Success": "El APK se ha promocionado correctamente.",
   "loc.messages.Failure": "No se ha podido promover el APK.",
-  "loc.messages.ReturnedNullEdit": "No se ha podido promover el apk: la operación de promoción devolvió null."
+  "loc.messages.ReturnedNullEdit": "No se ha podido promover el apk: la operación de promoción devolvió null.",
+  "loc.messages.AppendChangelog": "Anexando registro de cambios %s"
 }
