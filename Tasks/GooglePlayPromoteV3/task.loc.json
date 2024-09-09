@@ -14,7 +14,7 @@
   "version": {
     "Major": "3",
     "Minor": "244",
-    "Patch": "0"
+    "Patch": "1"
   },
   "minimumAgentVersion": "2.182.1",
   "instanceNameFormat": "ms-resource:loc.instanceNameFormat",
@@ -127,6 +127,27 @@
       "defaultValue": true,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cleanSourceTrack"
+    },
+    {
+      "name": "changeLogFile",
+      "label": "ms-resource:loc.input.label.changeLogFile",
+      "defaultValue": "",
+      "type": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogFile"
+    },
+    {
+      "name": "languageCode",
+      "label": "ms-resource:loc.input.label.languageCode",
+      "defaultValue": "en-US",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.languageCode"
+    },
+    {
+      "name": "releaseNotesContainLanguageTags",
+      "label": "ms-resource:loc.input.label.releaseNotesContainLanguageTags",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesContainLanguageTags"
     }
   ],
   "execution": {

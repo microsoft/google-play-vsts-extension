@@ -1,6 +1,7 @@
 import * as path from 'path';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as googleutil from './googleutil';
+import * as metadataHelper from './modules/metadataHelper';
 
 async function run() {
     try {
@@ -35,6 +36,10 @@ async function run() {
         const userFraction: number = Number(userFractionSupplied ? tl.getInput('userFraction', false) : 1.0);
         const cleanSourceTrack: boolean = tl.getBoolInput('cleanSourceTrack');
         const versionCode: string = tl.getInput('versionCode', false);
+        const defaultLanguageCode = 'en-US';
+        const changelogFile: string = tl.getInput('changelogFile', false);
+        const languageCode: string = tl.getInput('languageCode', false) || defaultLanguageCode;
+        const releaseNotesContainLanguageTags: boolean = tl.getBoolInput('releaseNotesContainLanguageTags', false);
 
         // Constants
         const globalParams: googleutil.GlobalParams = { auth: null, params: {} };
@@ -67,6 +72,11 @@ async function run() {
             versionNumber = [versionCodeNumber];
             // don't override the release notes with latest release notes, potentially dangerous
             releaseNotes = undefined;
+        }
+
+        if (changelogFile) {
+            tl.debug(`Uploading the common change log ${changelogFile} to all versions`);
+            releaseNotes = await metadataHelper.getCommonReleaseNotes(languageCode, changelogFile, releaseNotesContainLanguageTags);
         }
 
         console.log(tl.loc('PromoteTrack', destinationTrack));
