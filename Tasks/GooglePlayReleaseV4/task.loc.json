@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": "4",
-    "Minor": "236",
+    "Minor": "244",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -393,9 +393,5 @@
     "settableVariables": {
       "allowed": []
     }
-  },
-  "_buildConfigMapping": {
-    "Default": "4.232.1",
-    "Node20-228": "4.235.0"
   }
 }

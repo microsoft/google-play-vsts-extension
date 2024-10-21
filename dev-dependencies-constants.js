@@ -4,7 +4,7 @@
 */
 
 /** Target mocha version for running tests */
-exports.MOCHA_TARGET_VERSION = '6.2.3';
+exports.MOCHA_TARGET_VERSION = '10.7.3';
 /** Current typescript version */
 exports.TSC_CURRENT_VERSION = '5.1.6';
 /** Minimum supported node version */
