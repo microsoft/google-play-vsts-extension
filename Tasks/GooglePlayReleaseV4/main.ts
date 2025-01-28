@@ -78,9 +78,6 @@ async function run(): Promise<void> {
         const uploadNativeDebugSymbolFiles: boolean = tl.getBoolInput('shouldUploadNativeDebugSymbolFiles', false) && (action === 'MultiApkAab');
 
         const changesNotSentForReview: boolean = tl.getBoolInput('changesNotSentForReview');
-        tl.debug(`changesNotSentForReview: ${changesNotSentForReview}`);
-        const rescueChangesNotSentForReview: boolean = tl.getBoolInput('rescueChangesNotSentForReview', false);
-        tl.debug(`rescueChangesNotSentForReview: ${rescueChangesNotSentForReview}`);
 
         const releaseName: string = tl.getInput('releaseName', false);
 
@@ -261,37 +258,8 @@ async function run(): Promise<void> {
         }
 
         tl.debug('Committing the edit transaction in Google Play.');
-        try {
-            await edits.commit({ changesNotSentForReview });
-        } catch (error) {
-            if (!rescueChangesNotSentForReview) {
-                throw error;
-            }
+        await edits.commit({ changesNotSentForReview });
 
-            tl.debug('Try to rescue commit enabled.');
-            if (
-                error.message.includes(
-                    'The query parameter changesNotSentForReview must not be set'
-                )
-            ) {
-                console.log(
-                    'Try to rescue commit without sending changesNotSentForReview flag.'
-                );
-                await edits.commit();
-            } else if (
-                error.message.includes(
-                    'Please set the query parameter changesNotSentForReview to true'
-                )
-            ) {
-                console.log(
-                    'Try to rescue commit by setting changesNotSentForReview to true'
-                );
-                let changesNotSentForReview = true;
-                await edits.commit({ changesNotSentForReview });
-            } else {
-                throw error;
-            }
-        }
         console.log(tl.loc('TrackInfo', track));
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('PublishSucceed'));
     } catch (e) {
