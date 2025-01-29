@@ -22,6 +22,12 @@
   "loc.input.help.userFraction": "Pourcentage d’utilisateurs vers lesquels l’APK spécifié sera publié pour la 'Piste de destination' spécifiée. Il peut être augmenté ultérieurement avec la tâche 'Google Play - Augmenter le déploiement'.",
   "loc.input.label.cleanSourceTrack": "Nettoyer la piste source",
   "loc.input.help.cleanSourceTrack": "La piste source sera effacée",
+  "loc.input.label.changeLogFile": "Notes de publication (fichier)",
+  "loc.input.help.changeLogFile": "Chemin d’accès du fichier spécifiant les notes de publication (journal des modifications) pour l’application que vous publiez.",
+  "loc.input.label.languageCode": "Code de langue",
+  "loc.input.help.languageCode": "Balise de langue IETF identifiant la langue des notes de publication, comme spécifié dans le document BCP-47. La valeur par défaut est _en-US_",
+  "loc.input.label.releaseNotesContainLanguageTags": "Les notes de publication contiennent des balises de langue",
+  "loc.input.help.releaseNotesContainLanguageTags": "Sélectionnez cette option si le fichier de notes de publication contient des balises de langue.",
   "loc.messages.InvalidAuthFile": "Le fichier d’authentification spécifié n’était pas valide",
   "loc.messages.InvalidAuthFilewithName": "%s n’était pas un fichier d’authentification valide",
   "loc.messages.JsonKeyFileNotFound": "Le fichier de clé JSON du compte de service n'a pas été trouvé.",
@@ -36,5 +42,6 @@
   "loc.messages.DestTrack": "Piste de destination : %s",
   "loc.messages.Success": "Promouvoir l’APK avec succès",
   "loc.messages.Failure": "Nous n’avons pas pu promouvoir l’APK.",
-  "loc.messages.ReturnedNullEdit": "Nous n’avons pas pu promouvoir d’apk : l’opération de promotion a retourné la valeur Null"
+  "loc.messages.ReturnedNullEdit": "Nous n’avons pas pu promouvoir d’apk : l’opération de promotion a retourné la valeur Null",
+  "loc.messages.AppendChangelog": "Ajout d’un %s de journal des modifications"
 }
