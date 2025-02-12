@@ -24,13 +24,13 @@ extends:
   parameters:
     sdl:
       sourceAnalysisPool:
-        name: 1ES-ABTT-Shared-Pool
-        image: abtt-windows-2022
-        os: windows
+        name: 1ESPtTfsAgentBuildPoolSDL
+        # image: abtt-windows-2022
+        # os: windows
     pool:
-      name: 1ES-ABTT-Shared-Pool
-      image: abtt-ubuntu-2204
-      os: linux
+      name: 1ESPtTfsAgentBuildPool1
+      # image: abtt-ubuntu-2204
+      # os: linux
     customBuildTags:
     - ES365AIMigrationTooling
 
