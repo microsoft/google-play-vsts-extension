@@ -84,6 +84,50 @@ extends:
           inputs:
             script: node make.js create
 
+        - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
+          displayName: ESRP CodeSigning
+          inputs:
+            ConnectedServiceName: '$(Control.EsrpServiceConnectionName)'
+            AppRegistrationClientId: '$(Control.AppRegistrationClientId)'
+            AppRegistrationTenantId: '$(Control.AppRegistrationTenantId)'
+            AuthAKVName: '$(Control.AuthAKVName)'
+            AuthCertName: '$(Control.AuthCertName)'
+            AuthSignCertName: '$(Control.AuthSignCertName)'
+            FolderPath: $(System.DefaultWorkingDirectory)
+            Pattern: '*.vsix'
+            signConfigType: inlineSignParams
+            inlineOperation: |-
+              [
+                {
+                  "keyCode": "CP-230072",
+                  "operationSetCode": "SigntoolSign",
+                  "parameters": [
+                    {
+                      "parameterName": "OpusName",
+                      "parameterValue": "Microsoft"
+                    },
+                    {
+                      "parameterName": "OpusInfo",
+                      "parameterValue": "http://www.microsoft.com"
+                    },
+                    {
+                      "parameterName": "PageHash",
+                      "parameterValue": "/NPH"
+                    },
+                    {
+                      "parameterName": "FileDigest",
+                      "parameterValue": "/fd sha256"
+                    },
+                    {
+                      "parameterName": "TimeStamp",
+                      "parameterValue": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                    }
+                  ],
+                  "toolName": "signtool.exe",
+                  "toolVersion": "6.2.9304.0"
+                }
+              ]
+            SessionTimeout: 30
 
         - task: CopyFiles@2
           name: CopyFiles_5
