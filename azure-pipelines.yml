@@ -11,7 +11,7 @@ trigger:
 variables:
 - name: CodeQL.Enabled
   value: true
-- group: EsrpSigningTest # Trying with test signing # https://dev.azure.com/mseng/AzureDevOps/_apps/hub/ms.vss-distributed-task.hub-library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=473&path=EsrpSigningProd
+- group: EsrpSigningProd # Trying with test signing # https://dev.azure.com/mseng/AzureDevOps/_apps/hub/ms.vss-distributed-task.hub-library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=473&path=EsrpSigningProd
 
 resources:
   repositories:
@@ -99,7 +99,7 @@ extends:
             inlineOperation: |-
               [
                {
-                "KeyCode": "CP-230072",
+                "KeyCode": "CP-233016",
                 "OperationCode": "OPCSign",
                 "ToolName": "sign",
                 "ToolVersion": "1.0",
@@ -108,7 +108,7 @@ extends:
                 }
                },
                {
-                "KeyCode": "CP-230072",
+                "KeyCode": "CP-233016",
                 "OperationCode": "OPCVerify",
                 "ToolName": "sign",
                 "ToolVersion": "1.0",
