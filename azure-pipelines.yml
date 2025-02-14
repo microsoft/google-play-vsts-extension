@@ -11,7 +11,7 @@ trigger:
 variables:
 - name: CodeQL.Enabled
   value: true
-- group: EsrpSigningProd # Trying with test signing # https://dev.azure.com/mseng/AzureDevOps/_apps/hub/ms.vss-distributed-task.hub-library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=473&path=EsrpSigningProd
+- group: EPS.ESRPSigningProdAME # https://dev.azure.com/mseng/AzureDevOps/_apps/hub/ms.vss-distributed-task.hub-library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=473&path=EsrpSigningProd
 
 resources:
   repositories:
