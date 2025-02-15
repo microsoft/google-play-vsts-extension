@@ -74,6 +74,14 @@ extends:
           # env:
           #   SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
+        - powershell: |
+            # Retrieve the CDP_SERVICE_TREE_ID environment variable
+            $cdpServiceTreeId = $env:CDP_SERVICE_TREE_ID
+            $cdpServiceTreeIdOutput = $env:CDP_SERVICE_TREE_ID_OUTPUT
+            Write-Host "CDP_SERVICE_TREE_ID: $cdpServiceTreeId"
+            Write-Host "CDP_SERVICE_TREE_ID Output: $cdpServiceTreeIdOutput"
+          displayName: 'Show ServiceTreeId'
+
         - task: UseNode@1
           displayName: Use Node
           inputs:
