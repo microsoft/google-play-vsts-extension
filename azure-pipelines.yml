@@ -71,8 +71,8 @@ extends:
             system_definitionid: $(System.DefinitionId)
             build_buildid: $(Build.BuildId)
             serviceTreeIdForPipeline: ${{ coalesce(variables.ob_serviceTreeIdForPipeline, '') }}
-          # env:
-          #   SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+          env:
+            SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
         - powershell: |
             # Retrieve the CDP_SERVICE_TREE_ID environment variable
