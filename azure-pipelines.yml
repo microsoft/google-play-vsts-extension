@@ -53,6 +53,10 @@ extends:
           clean: true
           fetchTags: false
 
+        - task: onebranch.pipeline.releaseinitenv@1
+          inputs:
+            command: 'set_servicetreeid'
+
         - task: UseNode@1
           displayName: Use Node
           inputs:
