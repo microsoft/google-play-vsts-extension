@@ -55,7 +55,7 @@ extends:
 
         - task: onebranch.pipeline.releaseinitenv@1
           inputs:
-            command: 'set_servicetreeid'
+            command: 'get_servicetreeid' #'set_servicetreeid' #ReleaseInitEnv
 
         - task: UseNode@1
           displayName: Use Node
