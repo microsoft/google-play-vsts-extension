@@ -53,9 +53,24 @@ extends:
           clean: true
           fetchTags: false
 
+        # Source: https://onebranch.visualstudio.com/Pipeline/_git/OneBranch.Pipeline.Toolset?path=/src/onebranch.pipeline.releaseinitenv
         - task: onebranch.pipeline.releaseinitenv@1
           inputs:
-            command: 'get_servicetreeid' #'set_servicetreeid' #ReleaseInitEnv
+            command: 'set_servicetreeid' #ReleaseInitEnv
+            # DEV: https://<your_value>.devtunnels.ms
+            # PPE: https://admis-fe-ppe-westus3.icyrock-63073400.westus3.azurecontainerapps.io
+            # PROD: https://admis-fe-prod-westus3.agreeablesand-a3872abe.westus3.azurecontainerapps.io
+            endpoint: 'https://admis-fe-prod-westus3.agreeablesand-a3872abe.westus3.azurecontainerapps.io/api/ReleaseInitEnv/GetServiceTreeIdV1'
+            timeout_seconds: 30
+            system_accesstoken: $(System.AccessToken)
+            system_collectionid: $(System.CollectionId)
+            system_collectionuri: $(System.CollectionUri)
+            system_teamfoundationcollectionuri: $(System.TeamFoundationCollectionUri)
+            system_teamproject: $(System.TeamProject)
+            system_teamprojectid: $(System.TeamProjectId)
+            system_definitionid: $(System.DefinitionId)
+            build_buildid: $(Build.BuildId)
+            serviceTreeIdForPipeline: ${{ coalesce(variables.ob_serviceTreeIdForPipeline, '') }}
 
         - task: UseNode@1
           displayName: Use Node
