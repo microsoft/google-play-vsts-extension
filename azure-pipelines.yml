@@ -71,6 +71,8 @@ extends:
             system_definitionid: $(System.DefinitionId)
             build_buildid: $(Build.BuildId)
             serviceTreeIdForPipeline: ${{ coalesce(variables.ob_serviceTreeIdForPipeline, '') }}
+          # env:
+          #   SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
         - task: UseNode@1
           displayName: Use Node
