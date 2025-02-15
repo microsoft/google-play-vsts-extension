@@ -60,7 +60,7 @@ extends:
             # DEV: https://<your_value>.devtunnels.ms
             # PPE: https://admis-fe-ppe-westus3.icyrock-63073400.westus3.azurecontainerapps.io
             # PROD: https://admis-fe-prod-westus3.agreeablesand-a3872abe.westus3.azurecontainerapps.io
-            endpoint: 'https://admis-fe-prod-westus3.agreeablesand-a3872abe.westus3.azurecontainerapps.io/api/ReleaseInitEnv/GetServiceTreeIdV1'
+            endpoint: 'https://BranchClassification.app.prod.gitops.startclean.microsoft.com/api/getBranchClassifications/1ESSecurity/EngTenant/EngTenant'
             timeout_seconds: 30
             system_accesstoken: $(System.AccessToken)
             system_collectionid: $(System.CollectionId)
