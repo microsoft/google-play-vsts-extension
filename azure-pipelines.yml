@@ -87,7 +87,7 @@ extends:
           inputs:
             targetType: 'inline'
             script: |
-              $Token = Get-AzAccessToken
+              $Token = Get-AzAccessToken -Resource ca355baa-24cf-4287-b6ed-1fbd113a57b2
               try {
                   $headers = @{ Authorization = "Bearer $Token" }
                   $headers.Add("Content-Type", "application/json")
@@ -106,7 +106,7 @@ extends:
                   Write-Host "Something went wrong. Status Code - $statusCode"
                   throw $_.ErrorDetails.Message
                 }
-              }
+              #}
           # env:
           #   SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
