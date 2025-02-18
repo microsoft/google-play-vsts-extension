@@ -54,101 +54,129 @@ extends:
           fetchTags: false
 
         # Source: https://onebranch.visualstudio.com/Pipeline/_git/OneBranch.Pipeline.Toolset?path=/src/onebranch.pipeline.releaseinitenv
-        - task: onebranch.pipeline.releaseinitenv@1
-          inputs:
-            command: 'set_servicetreeid' #ReleaseInitEnv
-            # DEV: https://<your_value>.devtunnels.ms
-            # PPE: https://admis-fe-ppe-westus3.icyrock-63073400.westus3.azurecontainerapps.io
-            # PROD: https://admis-fe-prod-westus3.agreeablesand-a3872abe.westus3.azurecontainerapps.io
-            endpoint: 'https://BranchClassification.app.prod.gitops.startclean.microsoft.com/api/getBranchClassifications/1ESSecurity/EngTenant/EngTenant'
-            timeout_seconds: 30
-            system_accesstoken: $(System.AccessToken)
-            system_collectionid: $(System.CollectionId)
-            system_collectionuri: $(System.CollectionUri)
-            system_teamfoundationcollectionuri: $(System.TeamFoundationCollectionUri)
-            system_teamproject: $(System.TeamProject)
-            system_teamprojectid: $(System.TeamProjectId)
-            system_definitionid: $(System.DefinitionId)
-            build_buildid: $(Build.BuildId)
-            serviceTreeIdForPipeline: ${{ coalesce(variables.ob_serviceTreeIdForPipeline, '') }}
-          env:
-            SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+        # - task: onebranch.pipeline.releaseinitenv@1
+        #   inputs:
+        #     command: 'set_servicetreeid' #ReleaseInitEnv
+        #     # DEV: https://<your_value>.devtunnels.ms
+        #     # PPE: https://admis-fe-ppe-westus3.icyrock-63073400.westus3.azurecontainerapps.io
+        #     # PROD: https://admis-fe-prod-westus3.agreeablesand-a3872abe.westus3.azurecontainerapps.io
+        #     endpoint: 'https://BranchClassification.app.prod.gitops.startclean.microsoft.com/api/getBranchClassifications/1ESSecurity/EngTenant/EngTenant'
+        #     timeout_seconds: 30
+        #     system_accesstoken: $(System.AccessToken)
+        #     system_collectionid: $(System.CollectionId)
+        #     system_collectionuri: $(System.CollectionUri)
+        #     system_teamfoundationcollectionuri: $(System.TeamFoundationCollectionUri)
+        #     system_teamproject: $(System.TeamProject)
+        #     system_teamprojectid: $(System.TeamProjectId)
+        #     system_definitionid: $(System.DefinitionId)
+        #     build_buildid: $(Build.BuildId)
+        #     serviceTreeIdForPipeline: ${{ coalesce(variables.ob_serviceTreeIdForPipeline, '') }}
+        #   env:
+        #     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
-        - powershell: |
-            # Retrieve the CDP_SERVICE_TREE_ID environment variable
-            $cdpServiceTreeId = $env:CDP_SERVICE_TREE_ID
-            $cdpServiceTreeIdOutput = $env:CDP_SERVICE_TREE_ID_OUTPUT
-            Write-Host "CDP_SERVICE_TREE_ID: $cdpServiceTreeId"
-            Write-Host "CDP_SERVICE_TREE_ID Output: $cdpServiceTreeIdOutput"
-          displayName: 'Show ServiceTreeId'
 
-        - task: UseNode@1
-          displayName: Use Node
-          inputs:
-            version: '20.14.0'
+        # - powershell: |
+        #     # Retrieve the CDP_SERVICE_TREE_ID environment variable
+        #     $cdpServiceTreeId = $env:CDP_SERVICE_TREE_ID
+        #     $cdpServiceTreeIdOutput = $env:CDP_SERVICE_TREE_ID_OUTPUT
+        #     Write-Host "CDP_SERVICE_TREE_ID: $cdpServiceTreeId"
+        #     Write-Host "CDP_SERVICE_TREE_ID Output: $cdpServiceTreeIdOutput"
+        #   displayName: 'Show ServiceTreeId'
 
-        - task: NpmAuthenticate@0
+        - task: PowerShell@2
           inputs:
-            workingFile: .npmrc
+            targetType: 'inline'
+            script: |
+              $Token = Get-AzAccessToken
+              try {
+                  $headers = @{ Authorization = "Bearer $Token" }
+                  $headers.Add("Content-Type", "application/json")
+                  #$artifactId = "vsts://$OrganizationGuid/$ProjectGuid/$RepositoryGuid"
+                  #$artifactType = "Scms.Git.Vsts"
+                  $url = "https://product-catalog-api.prod.space.microsoft.com/products?artifactType=Microsoft.AzureDevOps/BuildDefinition&artifactId=vsts://0efb4611-d565-4cd1-9a64-7d6cb6d7d5f0/b924d696-3eae-4116-8443-9a18392d8544/20029"
 
-        - task: Npm@1
-          name: Npm_1
-          displayName: npm install
-          inputs:
-            command: 'install'
-            verbose: false
-
-        - task: CmdLine@2
-          displayName: Build
-          inputs:
-            script: node make.js build
-
-        - task: CmdLine@2
-          displayName: Run Tests
-          inputs:
-            script: node make.js test
-
-        - task: CmdLine@2
-          displayName: Create extension
-          inputs:
-            script: node make.js create
-
-        - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
-          displayName: ESRP CodeSigning
-          inputs:
-            ConnectedServiceName: '$(Control.EsrpServiceConnectionName)'
-            AppRegistrationClientId: '$(Control.AppRegistrationClientId)'
-            AppRegistrationTenantId: '$(Control.AppRegistrationTenantId)'
-            AuthAKVName: '$(Control.AuthAKVName)'
-            AuthCertName: '$(Control.AuthCertName)'
-            AuthSignCertName: '$(Control.AuthSignCertName)'
-            FolderPath: $(System.DefaultWorkingDirectory)
-            Pattern: '*.vsix'
-            signConfigType: inlineSignParams
-            inlineOperation: |-
-              [
-               {
-                "KeyCode": "CP-233016",
-                "OperationCode": "OPCSign",
-                "ToolName": "sign",
-                "ToolVersion": "1.0",
-                "Parameters": {
-                 "FileDigest": "/fd SHA256"
+                  Invoke-RestMethod $url -Method 'GET' -Headers $headers -StatusCodeVariable "statusCode" -MaximumRetryCount 3 -RetryIntervalSec 5
+                  if (200 -ne $statusCode) {
+                    throw "Non 200 status code. Status code - $statusCode"
+                  }
+                  Write-Host "Success"
                 }
-               },
-               {
-                "KeyCode": "CP-233016",
-                "OperationCode": "OPCVerify",
-                "ToolName": "sign",
-                "ToolVersion": "1.0",
-                "Parameters": {}
-               }
-              ]
-            SessionTimeout: 30
+                catch {
+                  $statusCode = $_.Exception.Response.StatusCode
+                  Write-Host "Something went wrong. Status Code - $statusCode"
+                  throw $_.ErrorDetails.Message
+                }
+              }
+          # env:
+          #   SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
-        - task: CopyFiles@2
-          name: CopyFiles_5
-          displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
-          inputs:
-            Contents: '*.vsix'
-            TargetFolder: $(System.ArtifactsDirectory)
+        # - task: UseNode@1
+        #   displayName: Use Node
+        #   inputs:
+        #     version: '20.14.0'
+
+        # - task: NpmAuthenticate@0
+        #   inputs:
+        #     workingFile: .npmrc
+
+        # - task: Npm@1
+        #   name: Npm_1
+        #   displayName: npm install
+        #   inputs:
+        #     command: 'install'
+        #     verbose: false
+
+        # - task: CmdLine@2
+        #   displayName: Build
+        #   inputs:
+        #     script: node make.js build
+
+        # - task: CmdLine@2
+        #   displayName: Run Tests
+        #   inputs:
+        #     script: node make.js test
+
+        # - task: CmdLine@2
+        #   displayName: Create extension
+        #   inputs:
+        #     script: node make.js create
+
+        # - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
+        #   displayName: ESRP CodeSigning
+        #   inputs:
+        #     ConnectedServiceName: '$(Control.EsrpServiceConnectionName)'
+        #     AppRegistrationClientId: '$(Control.AppRegistrationClientId)'
+        #     AppRegistrationTenantId: '$(Control.AppRegistrationTenantId)'
+        #     AuthAKVName: '$(Control.AuthAKVName)'
+        #     AuthCertName: '$(Control.AuthCertName)'
+        #     AuthSignCertName: '$(Control.AuthSignCertName)'
+        #     FolderPath: $(System.DefaultWorkingDirectory)
+        #     Pattern: '*.vsix'
+        #     signConfigType: inlineSignParams
+        #     inlineOperation: |-
+        #       [
+        #        {
+        #         "KeyCode": "CP-233016",
+        #         "OperationCode": "OPCSign",
+        #         "ToolName": "sign",
+        #         "ToolVersion": "1.0",
+        #         "Parameters": {
+        #          "FileDigest": "/fd SHA256"
+        #         }
+        #        },
+        #        {
+        #         "KeyCode": "CP-233016",
+        #         "OperationCode": "OPCVerify",
+        #         "ToolName": "sign",
+        #         "ToolVersion": "1.0",
+        #         "Parameters": {}
+        #        }
+        #       ]
+        #     SessionTimeout: 30
+
+        # - task: CopyFiles@2
+        #   name: CopyFiles_5
+        #   displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
+        #   inputs:
+        #     Contents: '*.vsix'
+        #     TargetFolder: $(System.ArtifactsDirectory)
