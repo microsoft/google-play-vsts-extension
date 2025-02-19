@@ -93,7 +93,10 @@ extends:
             targetType: 'inline'
             script: |
               Import-Module -Name Az
-              $Token = Get-AzAccessToken -Resource ca355baa-24cf-4287-b6ed-1fbd113a57b2
+
+              Connect-AzAccount
+              $Token = Get-AzAccessToken -Resource ca355baa-24cf-4287-b6ed-1fbd113a57b2 -AsSecureString
+              
               try {
                   $headers = @{ Authorization = "Bearer $Token" }
                   $headers.Add("Content-Type", "application/json")
