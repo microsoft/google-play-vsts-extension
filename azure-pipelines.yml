@@ -86,7 +86,13 @@ extends:
         - task: PowerShell@2
           inputs:
             targetType: 'inline'
+            script: 'Install-Module -Name Az -AllowClobber -Force'
+
+        - task: PowerShell@2
+          inputs:
+            targetType: 'inline'
             script: |
+              Import-Module -Name Az
               $Token = Get-AzAccessToken -Resource ca355baa-24cf-4287-b6ed-1fbd113a57b2
               try {
                   $headers = @{ Authorization = "Bearer $Token" }
