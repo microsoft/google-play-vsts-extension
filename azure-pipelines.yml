@@ -104,7 +104,7 @@ extends:
                 "ToolName": "sign",
                 "ToolVersion": "1.0",
                 "Parameters": {
-                 "FileDigest": "/fd SHA256"
+                 "FileDigest": "/fd SHA384"
                 }
                },
                {
