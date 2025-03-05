@@ -84,38 +84,38 @@ extends:
           inputs:
             script: node make.js create
 
-        # - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
-        #   displayName: ESRP CodeSigning
-        #   inputs:
-        #     ConnectedServiceName: '$(Control.EsrpServiceConnectionName)'
-        #     AppRegistrationClientId: '$(Control.AppRegistrationClientId)'
-        #     AppRegistrationTenantId: '$(Control.AppRegistrationTenantId)'
-        #     AuthAKVName: '$(Control.AuthAKVName)'
-        #     AuthCertName: '$(Control.AuthCertName)'
-        #     AuthSignCertName: '$(Control.AuthSignCertName)'
-        #     FolderPath: $(System.DefaultWorkingDirectory)
-        #     Pattern: '*.vsix'
-        #     signConfigType: inlineSignParams
-        #     inlineOperation: |-
-        #       [
-        #        {
-        #         "KeyCode": "CP-233016",
-        #         "OperationCode": "OPCSign",
-        #         "ToolName": "sign",
-        #         "ToolVersion": "1.0",
-        #         "Parameters": {
-        #          "FileDigest": "/fd SHA512"
-        #         }
-        #        },
-        #        {
-        #         "KeyCode": "CP-233016",
-        #         "OperationCode": "OPCVerify",
-        #         "ToolName": "sign",
-        #         "ToolVersion": "1.0",
-        #         "Parameters": {}
-        #        }
-        #       ]
-        #     SessionTimeout: 30
+        - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
+          displayName: ESRP CodeSigning
+          inputs:
+            ConnectedServiceName: '$(Control.EsrpServiceConnectionName)'
+            AppRegistrationClientId: '$(Control.AppRegistrationClientId)'
+            AppRegistrationTenantId: '$(Control.AppRegistrationTenantId)'
+            AuthAKVName: '$(Control.AuthAKVName)'
+            AuthCertName: '$(Control.AuthCertName)'
+            AuthSignCertName: '$(Control.AuthSignCertName)'
+            FolderPath: $(System.DefaultWorkingDirectory)
+            Pattern: '*.vsix'
+            signConfigType: inlineSignParams
+            inlineOperation: |-
+              [
+               {
+                "KeyCode": "CP-233016",
+                "OperationCode": "OPCSign",
+                "ToolName": "sign",
+                "ToolVersion": "1.0",
+                "Parameters": {
+                 "FileDigest": "/fd SHA512"
+                }
+               },
+               {
+                "KeyCode": "CP-233016",
+                "OperationCode": "OPCVerify",
+                "ToolName": "sign",
+                "ToolVersion": "1.0",
+                "Parameters": {}
+               }
+              ]
+            SessionTimeout: 30
 
         - task: CopyFiles@2
           name: CopyFiles_5
