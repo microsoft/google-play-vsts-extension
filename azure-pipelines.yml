@@ -68,7 +68,7 @@ extends:
           inputs:
             signType: 'real'
             zipSources: false
-            feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
+            feedSource: 'https://pkgs.dev.azure.com/mseng/_packaging/MicroBuildToolset/nuget/v3/index.json'
           condition: eq(variables['UseMicroBuild'], 'true')
 
         - task: NpmAuthenticate@0
