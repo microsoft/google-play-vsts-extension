@@ -58,6 +58,19 @@ extends:
           inputs:
             version: '20.14.0'
 
+        - task: UseDotNet@2
+          displayName: 'Use .NET Core sdk 3.1.x'
+          inputs:
+            version: 3.1.x
+          condition: eq(variables['UseMicroBuild'], 'true')
+
+        - task: MicroBuildSigningPlugin@4
+          inputs:
+            signType: 'real'
+            zipSources: false
+            feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
+          condition: eq(variables['UseMicroBuild'], 'true')
+
         - task: NpmAuthenticate@0
           inputs:
             workingFile: .npmrc
@@ -117,19 +130,6 @@ extends:
               ]
             SessionTimeout: 30
           condition: eq(variables['UseESRP'], 'true')
-
-        - task: UseDotNet@2
-          displayName: 'Use .NET Core sdk 3.1.x'
-          inputs:
-            version: 3.1.x
-          condition: eq(variables['UseMicroBuild'], 'true')
-
-        - task: MicroBuildSigningPlugin@4
-          inputs:
-            signType: 'real'
-            zipSources: false
-            feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
-          condition: eq(variables['UseMicroBuild'], 'true')
 
         - task: PowerShell@2
           inputs:
