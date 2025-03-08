@@ -28,10 +28,18 @@ extends:
         name: 1ESPtTfsAgentBuildPoolSDL
         # image: abtt-windows-2022
         # os: windows
-    pool:
-      name: 1ESPtTfsAgentBuildPool1
-      # image: abtt-ubuntu-2204
-      # os: linux
+    # pool:
+    #   name: 1ESPtTfsAgentBuildPool1
+    #   # image: abtt-ubuntu-2204
+    #   # os: linux
+      pool:
+        # ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/main'), ne(variables['Build.Reason'], 'PullRequest')) }}:
+        name: MSEngSS-MicroBuild2022-1ES  #VSEngSS-MicroBuild2022-1ES
+        # ${{ else }}:
+        #   name: AzurePipelines-EO
+        #   image: 1ESPT-Windows2022
+        os: windows
+
     customBuildTags:
     - ES365AIMigrationTooling
 
