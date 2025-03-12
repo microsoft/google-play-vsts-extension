@@ -142,7 +142,7 @@ extends:
         - task: PowerShell@2
           inputs:
             targetType: 'inline'
-            script: 'dotnet $MBSIGN_APPFOLDER/DDSignFiles.dll /file:$(System.DefaultWorkingDirectory)/ms-vsclient.google-play-4.244.0.vsix /certs:VsixSHA2'
+            script: 'dotnet $env:MBSIGN_APPFOLDER/DDSignFiles.dll /file:$(System.DefaultWorkingDirectory)/ms-vsclient.google-play-4.244.0.vsix /certs:VsixSHA2'
             failOnStderr: true
           condition: eq(variables['UseMicroBuild'], 'true')
 
