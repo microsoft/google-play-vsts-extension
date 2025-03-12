@@ -5,6 +5,7 @@
     "version": "4.244.0",
     "publisher": "ms-vsclient",
     "description": "Provides tasks for continuous delivery to the Google Play Store from TFS/Team Services build or release definitions",
+    "public": false,
     "categories": [
         "Azure Pipelines"
     ],
