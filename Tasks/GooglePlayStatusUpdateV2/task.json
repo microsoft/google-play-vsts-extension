@@ -1,6 +1,6 @@
 {
   "id": "0b7105c8-3fcb-4467-9ecb-7e9b22786e6c",
-  "name": "GooglePlayStatusUpdate-merlynop20250312-test",
+  "name": "GooglePlayStatusUpdate0merlynop20250312test",
   "friendlyName": "Google Play - Status Update",
   "description": "Update status of an app previously deployed to the Google Play Store",
   "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",

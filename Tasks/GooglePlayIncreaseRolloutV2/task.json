@@ -1,6 +1,6 @@
 {
   "id": "caebc566-35c9-4707-a8f6-d4c83e00bb7b",
-  "name": "GooglePlayIncreaseRollout-merlynop20250312-test",
+  "name": "GooglePlayIncreaseRollout0merlynop20250312test",
   "friendlyName": "Google Play - Increase Rollout",
   "description": "Increase the rollout fraction of an app previously deployed to the Google Play Store",
   "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
