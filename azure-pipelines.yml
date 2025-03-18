@@ -15,6 +15,15 @@ resources:
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
 
+parameters:
+  - name: codeSign
+    type: boolean
+    default: false
+
+variables:
+  - name: shouldRunCodeSigning
+    value: $[or(parameters.codeSign, eq(variables['Build.SourceBranchName'], 'master'))]
+
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
@@ -77,6 +86,7 @@ extends:
 
         - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
           displayName: ESRP CodeSigning
+          condition: eq(variables['shouldRunCodeSigning'], 'true')
           inputs:
             ConnectedServiceName: '$(Control.EsrpServiceConnectionName)'
             AppRegistrationClientId: '$(Control.AppRegistrationClientId)'
