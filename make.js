@@ -308,7 +308,7 @@ target.create = function() {
     banner('Creating PRODUCTION vsix...');
 
     var prodManifestOverride = {
-        public: false
+        public: true
     };
 
     createExtension(prodManifestOverride, false);

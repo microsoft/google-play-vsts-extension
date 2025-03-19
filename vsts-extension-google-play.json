@@ -1,11 +1,10 @@
 {
     "manifestVersion": 1.0,
-    "id": "google-play-merlynoptest20250312",
-    "name": "Google Play-merlynoptest20250312",
+    "id": "google-play",
+    "name": "Google Play",
     "version": "4.244.0",
     "publisher": "ms-vsclient",
     "description": "Provides tasks for continuous delivery to the Google Play Store from TFS/Team Services build or release definitions",
-    "public": false,
     "categories": [
         "Azure Pipelines"
     ],
@@ -14,6 +13,7 @@
             "id": "Microsoft.VisualStudio.Services"
         }
     ],
+    "galleryFlags": [],
     "icons": {
         "default": "android_default.png",
         "wide": "android_wide.jpg"
@@ -72,7 +72,7 @@
     },
     "contributions": [
         {
-            "id": "google-play-release-merlynoptest20250312",
+            "id": "google-play-release",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
@@ -82,7 +82,7 @@
             }
         },
         {
-            "id": "google-play-promote-merlynoptest20250312",
+            "id": "google-play-promote",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
@@ -92,7 +92,7 @@
             }
         },
         {
-            "id": "google-play-rollout-update-merlynoptest20250312",
+            "id": "google-play-rollout-update",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
@@ -102,7 +102,7 @@
             }
         },
         {
-            "id": "google-play-status-update-merlynoptest20250312",
+            "id": "google-play-status-update",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
@@ -112,15 +112,15 @@
             }
         },
         {
-            "id": "google-play-service-endpoint-merlynoptest20250312",
+            "id": "google-play-service-endpoint",
             "description": "GooglePlayAuthenticationEndpoint",
             "type": "ms.vss-endpoint.service-endpoint-type",
             "targets": [
                 "ms.vss-endpoint.endpoint-types"
             ],
             "properties": {
-                "name": "google-play-merlynoptest20250312",
-                "displayName": "Google Play-merlynoptest20250312",
+                "name": "google-play",
+                "displayName": "Google Play",
                 "url": "https://accounts.google.com/o/oauth2/v2/auth",
                 "inputDescriptors": [],
                 "authenticationSchemes": [

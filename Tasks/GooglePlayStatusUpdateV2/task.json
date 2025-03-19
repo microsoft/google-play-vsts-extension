@@ -1,141 +1,141 @@
 {
-  "id": "0b7105c8-3fcb-4467-9ecb-7e9b22786e6c",
-  "name": "GooglePlayStatusUpdate0merlynop20250312test",
-  "friendlyName": "Google Play - Status Update",
-  "description": "Update status of an app previously deployed to the Google Play Store",
-  "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
-  "helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play)",
-  "author": "Microsoft Corporation",
-  "category": "Deploy",
-  "visibility": [
-    "Build",
-    "Release"
-  ],
-  "version": {
-    "Major": "2",
-    "Minor": "244",
-    "Patch": "0"
-  },
-  "minimumAgentVersion": "2.182.1",
-  "instanceNameFormat": "Update $(packageName) status to $(status)",
-  "inputs": [
-    {
-      "name": "authType",
-      "type": "pickList",
-      "label": "Authentication method",
-      "defaultValue": "ServiceEndpoint",
-      "helpMarkDown": "",
-      "options": {
-        "JsonFile": "JSON auth file",
-        "ServiceEndpoint": "Service connection"
-      }
+    "id": "92e6c372-4193-44e5-9db7-58d7d253f4d8",
+    "name": "GooglePlayStatusUpdate",
+    "friendlyName": "Google Play - Status Update",
+    "description": "Update status of an app previously deployed to the Google Play Store",
+    "helpUrl": "https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play",
+    "helpMarkDown": "[Learn more about this task](https://marketplace.visualstudio.com/items?itemName=ms-vsclient.google-play)",
+    "author": "Microsoft Corporation",
+    "category": "Deploy",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "version": {
+        "Major": "2",
+        "Minor": "244",
+        "Patch": "0"
     },
-    {
-      "name": "serviceEndpoint",
-      "aliases": [
-        "serviceConnection"
-      ],
-      "type": "connectedService:google-play",
-      "label": "Service connection",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "Google Play service connection that is configured with your account credentials.",
-      "visibleRule": "authType = ServiceEndpoint"
+    "minimumAgentVersion": "2.182.1",
+    "instanceNameFormat": "Update $(packageName) status to $(status)",
+    "inputs": [
+        {
+            "name": "authType",
+            "type": "pickList",
+            "label": "Authentication method",
+            "defaultValue": "ServiceEndpoint",
+            "helpMarkDown": "",
+            "options": {
+                "JsonFile": "JSON auth file",
+                "ServiceEndpoint": "Service connection"
+            }
+        },
+        {
+            "name": "serviceEndpoint",
+            "aliases": [
+                "serviceConnection"
+            ],
+            "type": "connectedService:google-play",
+            "label": "Service connection",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "Google Play service connection that is configured with your account credentials.",
+            "visibleRule": "authType = ServiceEndpoint"
+        },
+        {
+            "name": "serviceAccountKey",
+            "type": "filePath",
+            "label": "JSON key path",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The JSON file provided by Google Play that includes the service account's identity you wish to publish your APK under.",
+            "visibleRule": "authType = JsonFile"
+        },
+        {
+            "name": "packageName",
+            "type": "string",
+            "label": "Package name",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The unique package identifier (e.g. com.foo.myapp) that you wish to update the status."
+        },
+        {
+            "name": "track",
+            "type": "pickList",
+            "label": "Track",
+            "defaultValue": "production",
+            "required": true,
+            "helpMarkDown": "Track you want to update the status of the APK from.",
+            "options": {
+                "internal": "Internal test",
+                "alpha": "Alpha",
+                "beta": "Beta",
+                "production": "Production"
+            },
+            "properties": {
+                "EditableOptions": "True"
+            }
+        },
+        {
+            "name": "status",
+            "type": "pickList",
+            "label": "Status",
+            "defaultValue": "halted",
+            "required": true,
+            "helpMarkDown": "The status of the release you want to update to, for details of statuses: https://developers.google.com/android-publisher/api-ref/rest/v3/edits.tracks#status.",
+            "options": {
+                "draft": "Draft",
+                "inProgress": "In progress",
+                "halted": "Halted",
+                "completed": "Completed"
+            }
+        },
+        {
+            "name": "userFraction",
+            "type": "string",
+            "label": "User fraction",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "The fraction of the app's users who will receive the update. 0 < fraction < 1. Blank input means keeping userfraction unchanged.",
+            "visibleRule": "status = inProgress || status = halted"
+        }
+    ],
+    "execution": {
+        "Node10": {
+            "target": "google-play-status-update.js",
+            "argumentFormat": ""
+        },
+        "Node16": {
+            "target": "google-play-status-update.js",
+            "argumentFormat": ""
+        },
+        "Node20_1": {
+            "target": "google-play-status-update.js",
+            "argumentFormat": ""
+        }
     },
-    {
-      "name": "serviceAccountKey",
-      "type": "filePath",
-      "label": "JSON key path",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "The JSON file provided by Google Play that includes the service account\u0027s identity you wish to publish your APK under.",
-      "visibleRule": "authType = JsonFile"
+    "messages": {
+        "InvalidAuthFile": "Specified Auth file was invalid",
+        "InvalidAuthFilewithName": "%s was not a valid auth file",
+        "JsonKeyFileNotFound": "The service account JSON key file could not be found.",
+        "EndpointNotFound": "The service connection could not be found.",
+        "Authenticating": "Authenticating with Google Play",
+        "GetTrackInfo": "Getting information for track %s",
+        "EmptyReleases": "This track has no release",
+        "keepUserFrac": "Blank userFraction, maintain the current userFraction.",
+        "CurrentUserFrac": "Current user fraction: %s",
+        "UserFracSpecified": "UserFraction is specified to %s.",
+        "userFractionInvalid": "UserFraction Invalid, userFraction should be a number between 0 - 1.",
+        "StatusUpdating": "The status is updating to %s!",
+        "Success": "Successfully halt APKs.",
+        "Failure": "Failed to halt APKs."
     },
-    {
-      "name": "packageName",
-      "type": "string",
-      "label": "Package name",
-      "defaultValue": "",
-      "required": true,
-      "helpMarkDown": "The unique package identifier (e.g. com.foo.myapp) that you wish to update the status."
-    },
-    {
-      "name": "track",
-      "type": "pickList",
-      "label": "Track",
-      "defaultValue": "production",
-      "required": true,
-      "helpMarkDown": "Track you want to update the status of the APK from.",
-      "options": {
-        "internal": "Internal test",
-        "alpha": "Alpha",
-        "beta": "Beta",
-        "production": "Production"
-      },
-      "properties": {
-        "EditableOptions": "True"
-      }
-    },
-    {
-      "name": "status",
-      "type": "pickList",
-      "label": "Status",
-      "defaultValue": "halted",
-      "required": true,
-      "helpMarkDown": "The status of the release you want to update to, for details of statuses: https://developers.google.com/android-publisher/api-ref/rest/v3/edits.tracks#status.",
-      "options": {
-        "draft": "Draft",
-        "inProgress": "In progress",
-        "halted": "Halted",
-        "completed": "Completed"
-      }
-    },
-    {
-      "name": "userFraction",
-      "type": "string",
-      "label": "User fraction",
-      "defaultValue": "",
-      "required": false,
-      "helpMarkDown": "The fraction of the app\u0027s users who will receive the update. 0 \u003C fraction \u003C 1. Blank input means keeping userfraction unchanged.",
-      "visibleRule": "status = inProgress || status = halted"
+    "restrictions": {
+        "commands": {
+            "mode": "restricted"
+        },
+        "settableVariables": {
+            "allowed": []
+        }
     }
-  ],
-  "execution": {
-    "Node10": {
-      "target": "google-play-status-update.js",
-      "argumentFormat": ""
-    },
-    "Node16": {
-      "target": "google-play-status-update.js",
-      "argumentFormat": ""
-    },
-    "Node20_1": {
-      "target": "google-play-status-update.js",
-      "argumentFormat": ""
-    }
-  },
-  "messages": {
-    "InvalidAuthFile": "Specified Auth file was invalid",
-    "InvalidAuthFilewithName": "%s was not a valid auth file",
-    "JsonKeyFileNotFound": "The service account JSON key file could not be found.",
-    "EndpointNotFound": "The service connection could not be found.",
-    "Authenticating": "Authenticating with Google Play",
-    "GetTrackInfo": "Getting information for track %s",
-    "EmptyReleases": "This track has no release",
-    "keepUserFrac": "Blank userFraction, maintain the current userFraction.",
-    "CurrentUserFrac": "Current user fraction: %s",
-    "UserFracSpecified": "UserFraction is specified to %s.",
-    "userFractionInvalid": "UserFraction Invalid, userFraction should be a number between 0 - 1.",
-    "StatusUpdating": "The status is updating to %s!",
-    "Success": "Successfully halt APKs.",
-    "Failure": "Failed to halt APKs."
-  },
-  "restrictions": {
-    "commands": {
-      "mode": "restricted"
-    },
-    "settableVariables": {
-      "allowed": []
-    }
-  }
 }
