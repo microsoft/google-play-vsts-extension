@@ -117,6 +117,10 @@ extends:
             SessionTimeout: 30
 
     - stage: PublishArtifacts
+      dependsOn:
+        - BuildAndTest
+        - CodeSigning
+      condition: succeeded('BuildAndTest') and (not(eq(variables['shouldRunCodeSigning'], 'true')) or succeeded('CodeSigning'))
       jobs:
       - job: PublishJob
         displayName: Publish Artifacts
