@@ -36,92 +36,106 @@ extends:
     customBuildTags:
     - ES365AIMigrationTooling
 
-    stages:
-    - stage: stage
-      jobs:
-      - job: Phase_1
-        displayName: Agent job 1
-        cancelTimeoutInMinutes: 1
-        templateContext:
-          outputs:
-          - output: pipelineArtifact
-            displayName: 'Publish Artifact: vsix'
-            targetPath: '$(System.ArtifactsDirectory)'
-            artifactName: vsix
+stages:
+- stage: BuildAndTest
+  jobs:
+  - job: Phase_1
+    displayName: Agent job 1
+    cancelTimeoutInMinutes: 1
+    templateContext:
+      outputs:
+      - output: pipelineArtifact
+        displayName: 'Publish Artifact: vsix'
+        targetPath: '$(System.ArtifactsDirectory)'
+        artifactName: vsix
 
-        steps:
-        - checkout: self
-          clean: true
-          fetchTags: false
+    steps:
+    - checkout: self
+      clean: true
+      fetchTags: false
 
-        - task: UseNode@1
-          displayName: Use Node
-          inputs:
-            version: '20.14.0'
+    - task: UseNode@1
+      displayName: Use Node
+      inputs:
+        version: '20.14.0'
 
-        - task: NpmAuthenticate@0
-          inputs:
-            workingFile: .npmrc
+    - task: NpmAuthenticate@0
+      inputs:
+        workingFile: .npmrc
 
-        - task: Npm@1
-          name: Npm_1
-          displayName: npm install
-          inputs:
-            command: 'install'
-            verbose: false
+    - task: Npm@1
+      name: Npm_1
+      displayName: npm install
+      inputs:
+        command: 'install'
+        verbose: false
 
-        - task: CmdLine@2
-          displayName: Build
-          inputs:
-            script: node make.js build
+    - task: CmdLine@2
+      displayName: Build
+      inputs:
+        script: node make.js build
 
-        - task: CmdLine@2
-          displayName: Run Tests
-          inputs:
-            script: node make.js test
+    - task: CmdLine@2
+      displayName: Run Tests
+      inputs:
+        script: node make.js test
 
-        - task: CmdLine@2
-          displayName: Create extension
-          inputs:
-            script: node make.js create
+    - task: CmdLine@2
+      displayName: Create extension
+      inputs:
+        script: node make.js create
 
-        - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
-          displayName: ESRP CodeSigning
-          condition: eq(variables['shouldRunCodeSigning'], 'true')
-          inputs:
-            ConnectedServiceName: '$(Control.EsrpServiceConnectionName)'
-            AppRegistrationClientId: '$(Control.AppRegistrationClientId)'
-            AppRegistrationTenantId: '$(Control.AppRegistrationTenantId)'
-            AuthAKVName: '$(Control.AuthAKVName)'
-            AuthCertName: '$(Control.AuthCertName)'
-            AuthSignCertName: '$(Control.AuthSignCertName)'
-            FolderPath: $(System.DefaultWorkingDirectory)
-            Pattern: '*.vsix'
-            signConfigType: inlineSignParams
-            inlineOperation: |-
-              [
-               {
-                "KeyCode": "CP-233016",
-                "OperationCode": "OPCSign",
-                "ToolName": "sign",
-                "ToolVersion": "1.0",
-                "Parameters": {
-                 "FileDigest": "/fd SHA512"
-                }
-               },
-               {
-                "KeyCode": "CP-233016",
-                "OperationCode": "OPCVerify",
-                "ToolName": "sign",
-                "ToolVersion": "1.0",
-                "Parameters": {}
-               }
-              ]
-            SessionTimeout: 30
+- stage: CodeSigning
+  condition: eq(variables['shouldRunCodeSigning'], 'true')
+  dependsOn: BuildAndTest
+  jobs:
+  - job: CodeSigningJob
+    displayName: ESRP CodeSigning
+    steps:
+    - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
+      displayName: ESRP CodeSigning
+      inputs:
+        ConnectedServiceName: '$(Control.EsrpServiceConnectionName)'
+        AppRegistrationClientId: '$(Control.AppRegistrationClientId)'
+        AppRegistrationTenantId: '$(Control.AppRegistrationTenantId)'
+        AuthAKVName: '$(Control.AuthAKVName)'
+        AuthCertName: '$(Control.AuthCertName)'
+        AuthSignCertName: '$(Control.AuthSignCertName)'
+        FolderPath: $(System.DefaultWorkingDirectory)
+        Pattern: '*.vsix'
+        signConfigType: inlineSignParams
+        inlineOperation: |-
+          [
+           {
+            "KeyCode": "CP-233016",
+            "OperationCode": "OPCSign",
+            "ToolName": "sign",
+            "ToolVersion": "1.0",
+            "Parameters": {
+             "FileDigest": "/fd SHA512"
+            }
+           },
+           {
+            "KeyCode": "CP-233016",
+            "OperationCode": "OPCVerify",
+            "ToolName": "sign",
+            "ToolVersion": "1.0",
+            "Parameters": {}
+           }
+          ]
+        SessionTimeout: 30
 
-        - task: CopyFiles@2
-          name: CopyFiles_5
-          displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
-          inputs:
-            Contents: '*.vsix'
-            TargetFolder: $(System.ArtifactsDirectory)
+- stage: PublishArtifacts
+  dependsOn:
+    - BuildAndTest
+    - CodeSigning
+  jobs:
+  - job: PublishJob
+    displayName: Publish Artifacts
+    steps:
+    - task: CopyFiles@2
+      name: CopyFiles_5
+      displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
+      inputs:
+        Contents: '*.vsix'
+        TargetFolder: $(System.ArtifactsDirectory)
