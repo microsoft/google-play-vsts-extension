@@ -38,42 +38,44 @@ extends:
 
     stages:
     - stage: BuildAndTest
+      jobs:
+        - job: BuildAndTestJob        
+          displayName: Build and Test
+          steps:
+          - checkout: self
+            clean: true
+            fetchTags: false
 
-        steps:
-        - checkout: self
-          clean: true
-          fetchTags: false
+          - task: UseNode@1
+            displayName: Use Node
+            inputs:
+              version: '20.14.0'
 
-        - task: UseNode@1
-          displayName: Use Node
-          inputs:
-            version: '20.14.0'
+          - task: NpmAuthenticate@0
+            inputs:
+              workingFile: .npmrc
 
-        - task: NpmAuthenticate@0
-          inputs:
-            workingFile: .npmrc
+          - task: Npm@1
+            name: Npm_1
+            displayName: npm install
+            inputs:
+              command: 'install'
+              verbose: false
 
-        - task: Npm@1
-          name: Npm_1
-          displayName: npm install
-          inputs:
-            command: 'install'
-            verbose: false
+          - task: CmdLine@2
+            displayName: Build
+            inputs:
+              script: node make.js build
 
-        - task: CmdLine@2
-          displayName: Build
-          inputs:
-            script: node make.js build
+          - task: CmdLine@2
+            displayName: Run Tests
+            inputs:
+              script: node make.js test
 
-        - task: CmdLine@2
-          displayName: Run Tests
-          inputs:
-            script: node make.js test
-
-        - task: CmdLine@2
-          displayName: Create extension
-          inputs:
-            script: node make.js create
+          - task: CmdLine@2
+            displayName: Create extension
+            inputs:
+              script: node make.js create
 
     - stage: CodeSigning
       condition: eq(variables['shouldRunCodeSigning'], 'true')
