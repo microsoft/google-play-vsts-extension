@@ -38,16 +38,6 @@ extends:
 
     stages:
     - stage: BuildAndTest
-      jobs:
-      - job: Phase_1
-        displayName: Agent job 1
-        cancelTimeoutInMinutes: 1
-        templateContext:
-          outputs:
-          - output: pipelineArtifact
-            displayName: 'Publish Artifact: vsix'
-            targetPath: '$(System.ArtifactsDirectory)'
-            artifactName: vsix
 
         steps:
         - checkout: self
@@ -87,7 +77,6 @@ extends:
 
     - stage: CodeSigning
       condition: eq(variables['shouldRunCodeSigning'], 'true')
-      dependsOn: BuildAndTest
       jobs:
       - job: CodeSigningJob
         displayName: ESRP CodeSigning
@@ -126,12 +115,15 @@ extends:
             SessionTimeout: 30
 
     - stage: PublishArtifacts
-      dependsOn:
-        - BuildAndTest
-        - CodeSigning
       jobs:
       - job: PublishJob
         displayName: Publish Artifacts
+        templateContext:
+          outputs:
+          - output: pipelineArtifact
+            displayName: 'Publish Artifact: vsix'
+            targetPath: '$(System.ArtifactsDirectory)'
+            artifactName: vsix        
         steps:
         - task: CopyFiles@2
           name: CopyFiles_5
