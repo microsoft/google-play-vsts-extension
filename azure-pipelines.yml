@@ -120,7 +120,7 @@ extends:
       dependsOn:
         - BuildAndTest
         - CodeSigning
-      condition: or(and(succeeded('BuildAndTest'), (not(eq(variables['shouldRunCodeSigning'], 'true'))), succeeded('CodeSigning')))
+      condition: or( and(succeeded('BuildAndTest'), not(eq(variables['shouldRunCodeSigning'], 'true'))), succeeded('CodeSigning'))
       jobs:
       - job: PublishJob
         displayName: Publish Artifacts
