@@ -7,6 +7,9 @@ parameters:
   - name: forceCodeSign
     type: boolean
     default: false
+  - name: simulateCodeSigningError # Simulate a code signing error to ensure PublishArtifacts is skipped when CodeSigning fails
+    type: boolean
+    default: false
 
 variables:
 - name: CodeQL.Enabled
@@ -79,10 +82,18 @@ extends:
 
     - stage: CodeSigning
       condition: eq(variables['shouldRunCodeSigning'], 'true')
+      dependsOn: BuildAndTest
       jobs:
       - job: CodeSigningJob
         displayName: ESRP CodeSigning
         steps:
+        - script: |
+            echo "Simulating CodeSigning step..."
+            if [ ${{ parameters.simulateCodeSigningError }} = true ]; then
+              echo "Simulated error in CodeSigning step."
+              exit 1
+            fi
+          displayName: Simulate CodeSigning Error
         - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
           displayName: ESRP CodeSigning
           inputs:
