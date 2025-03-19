@@ -86,13 +86,11 @@ extends:
       jobs:
       - job: CodeSigningJob
         displayName: ESRP CodeSigning
+        condition: eq(variables['simulateCodeSigningError'], 'true')
         steps:
         - script: |
-            echo "Simulating CodeSigning step..."
-            if [ ${{ parameters.simulateCodeSigningError }} = true ]; then
-              echo "Simulated error in CodeSigning step."
-              exit 1
-            fi
+            echo "Simulated error in CodeSigning step."
+            exit 1
           displayName: Simulate CodeSigning Error
         - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
           displayName: ESRP CodeSigning
