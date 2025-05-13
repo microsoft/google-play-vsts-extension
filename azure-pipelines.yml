@@ -80,6 +80,11 @@ extends:
             inputs:
               script: node make.js create
 
+          - task: CmdLine@2
+            displayName: Create test extension
+            inputs:
+              script: node make.js createtest
+
     - stage: CodeSigning
       condition: eq(variables['shouldRunCodeSigning'], 'true')
       dependsOn: BuildAndTest
@@ -146,3 +151,18 @@ extends:
           inputs:
             Contents: '*.vsix'
             TargetFolder: $(System.ArtifactsDirectory)
+
+    - stage: TestPublishToMarketplace
+      dependsOn:
+        - PublishArtifacts
+      condition: succeeded('PublishArtifacts')
+      trigger: manual      
+      jobs:
+      - job: PublishMarketplateJob
+        displayName: Test - Publish to Marketplace
+        steps:
+          - task: CmdLine@2
+            displayName: Test - Publish to Marketplace
+            inputs:
+              script: node tfx extension publish --manifest-globs vsts-extension-google-play.json --share-with canarytest --token $PUBLISH_ACCESSTOKEN
+
