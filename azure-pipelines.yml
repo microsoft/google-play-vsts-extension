@@ -15,7 +15,7 @@ variables:
 - name: CodeQL.Enabled
   value: true
 - group: EPS.ESRPSigningProdAME # Mseng -> Library -> EsrpSigningProd
-- ${{ if eq(parameters.forceCodeSign, true) }}:
+- ${{ if parameters.forceCodeSign }}:
   - name: shouldRunCodeSigning
     value: true
 - ${{ else }}:
