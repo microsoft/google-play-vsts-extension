@@ -1,7 +1,7 @@
-trigger:
-  branches:
-    include:
-    - master
+trigger: none
+#  branches:
+#    include:
+#    - master
 
 parameters:
   - name: forceCodeSign
@@ -153,8 +153,6 @@ extends:
             TargetFolder: $(System.ArtifactsDirectory)
 
     - stage: TestPublishToMarketplace
-      dependsOn:
-        - PublishArtifacts
       condition: succeeded('PublishArtifacts')
       trigger: manual      
       jobs:
