@@ -78,17 +78,17 @@ extends:
               script: node make.js create
 
     - stage: CodeSigning
-      condition: or(eq(parameters['IsMainBranchBuild'], 'true'), eq(parameters['forceCodeSign'], 'true'), eq(parameters['simulateCodeSigningError'], 'true'))
+      condition: or(eq(variables['IsMainBranchBuild'], 'true'), parameters.forceCodeSign, parameters.simulateCodeSigningError)
       dependsOn: BuildAndTest
       jobs:
       - job: CodeSigningJob
         displayName: ESRP CodeSigning
-        condition: eq(parameters['simulateCodeSigningError'], 'true')
         steps:
         - script: |
             echo "Simulated error in CodeSigning step."
             exit 1
           displayName: Simulate CodeSigning Error
+          condition: parameters.simulateCodeSigningError
         - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
           displayName: ESRP CodeSigning
           inputs:
