@@ -107,7 +107,7 @@ extends:
             inlineOperation: |-
               [
               {
-                "KeyCode": "CP-233016",
+                "KeyCode": "CP-500813",
                 "OperationCode": "OPCSign",
                 "ToolName": "sign",
                 "ToolVersion": "1.0",
@@ -116,7 +116,7 @@ extends:
                 }
               },
               {
-                "KeyCode": "CP-233016",
+                "KeyCode": "CP-500813",
                 "OperationCode": "OPCVerify",
                 "ToolName": "sign",
                 "ToolVersion": "1.0",
