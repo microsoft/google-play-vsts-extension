@@ -15,12 +15,8 @@ variables:
 - name: CodeQL.Enabled
   value: true
 - group: EPS.ESRPSigningProdAME # Mseng -> Library -> EsrpSigningProd
-- ${{ if parameters['forceCodeSign'] }}:
-  - name: shouldRunCodeSigning
-    value: true
-- ${{ else }}:
-  - name: shouldRunCodeSigning
-    value: eq(variables['Build.SourceBranchName'], 'master')
+- name: IsMainBranchBuild
+  value: eq(variables['Build.SourceBranchName'], 'master')
 
 resources:
   repositories:
@@ -82,7 +78,7 @@ extends:
               script: node make.js create
 
     - stage: CodeSigning
-      condition: eq(variables['shouldRunCodeSigning'], 'true')
+      condition: or(eq(variables['IsMainBranchBuild'], 'true'), eq(variables['forceCodeSign'], 'true'), eq(variables['simulateCodeSigningError'], 'true'))
       dependsOn: BuildAndTest
       jobs:
       - job: CodeSigningJob
@@ -130,7 +126,7 @@ extends:
       dependsOn:
         - BuildAndTest
         - CodeSigning
-      condition: or( and(succeeded('BuildAndTest'), not(eq(variables['shouldRunCodeSigning'], 'true'))), succeeded('CodeSigning'))
+      #condition: or( and(succeeded('BuildAndTest'), not(eq(variables['shouldRunCodeSigning'], 'true'))), succeeded('CodeSigning'))
       jobs:
       - job: PublishJob
         displayName: Publish Artifacts
