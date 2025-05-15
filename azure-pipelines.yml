@@ -108,6 +108,7 @@ extends:
         steps:
         - download: current
           artifact: vsix-unsigned
+          displayName: Download Artifact
         - script: |
             echo "Simulated error in CodeSigning step."
             exit 1
@@ -123,7 +124,7 @@ extends:
             AuthCertName: '$(Control.AuthCertName)'
             AuthSignCertName: '$(Control.AuthSignCertName)'
             FolderPath: $(System.DefaultWorkingDirectory)
-            Pattern: 'vsix-unsigned/*.vsix'
+            Pattern: '$(Pipeline.Workspace)/vsix-unsigned/*.vsix'
             signConfigType: inlineSignParams
             inlineOperation: |-
               [
@@ -149,7 +150,7 @@ extends:
           name: CopyFiles_5
           displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
           inputs:
-            Contents: 'vsix-unsigned/*.vsix'
+            Contents: '$(Pipeline.Workspace)/vsix-unsigned/*.vsix'
             TargetFolder: $(System.ArtifactsDirectory)
 
     - stage: TestPublishToMarketplace
