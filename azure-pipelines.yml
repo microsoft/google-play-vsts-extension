@@ -95,7 +95,8 @@ extends:
             displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
             inputs:
               Contents: '*.vsix'
-              TargetFolder: $(System.ArtifactsDirectory)              
+              TargetFolder: $(System.ArtifactsDirectory)  
+
     - stage: CodeSigning
       condition: or(eq(variables['IsMainBranchBuild'], 'true'), ${{ eq(parameters.forceCodeSign, 'true') }}, ${{ eq(parameters.simulateCodeSigningError, 'true') }})
       dependsOn: BuildAndTest
@@ -142,21 +143,21 @@ extends:
               }
               ]
             SessionTimeout: 30
-        - job: PublishJob
-          displayName: Publish Artifacts
-          templateContext:
-            outputs:
-            - output: pipelineArtifact
-              displayName: 'Publish Artifact: vsix'
-              targetPath: '$(System.ArtifactsDirectory)'
-              artifactName: vsix        
-          steps:
-          - task: CopyFiles@2
-            name: CopyFiles_5
-            displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
-            inputs:
-              Contents: '*.vsix'
-              TargetFolder: $(System.ArtifactsDirectory)
+      - job: PublishJob
+        displayName: Publish Artifacts
+        templateContext:
+          outputs:
+          - output: pipelineArtifact
+            displayName: 'Publish Artifact: vsix'
+            targetPath: '$(System.ArtifactsDirectory)'
+            artifactName: vsix        
+        steps:
+        - task: CopyFiles@2
+          name: CopyFiles_5
+          displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
+          inputs:
+            Contents: '*.vsix'
+            TargetFolder: $(System.ArtifactsDirectory)
 
     - stage: TestPublishToMarketplace
       condition: succeeded('PublishArtifacts')
