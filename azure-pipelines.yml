@@ -41,6 +41,12 @@ extends:
       jobs:
         - job: BuildAndTestJob        
           displayName: Build and Test
+          templateContext:
+            outputs:
+            - output: pipelineArtifact
+              displayName: 'Publish Artifact: vsix'
+              targetPath: '$(System.ArtifactsDirectory)'
+              artifactName: vsix          
           steps:
           - checkout: self
             clean: true
@@ -76,20 +82,10 @@ extends:
             displayName: Create extension
             inputs:
               script: node make.js create
-
           - task: CmdLine@2
             displayName: Create test extension
             inputs:
               script: node make.js createtest
-        - job: PublishJob
-          displayName: Publish Artifacts
-          templateContext:
-            outputs:
-            - output: pipelineArtifact
-              displayName: 'Publish Artifact: vsix'
-              targetPath: '$(System.ArtifactsDirectory)'
-              artifactName: vsix        
-          steps:
           - task: CopyFiles@2
             name: CopyFiles_5
             displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
