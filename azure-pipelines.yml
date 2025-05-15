@@ -99,6 +99,12 @@ extends:
       jobs:
       - job: CodeSigningJob
         displayName: ESRP CodeSigning
+        templateContext:
+          outputs:
+          - output: pipelineArtifact
+            displayName: 'Publish Artifact: vsix'
+            targetPath: '$(System.ArtifactsDirectory)'
+            artifactName: vsix
         steps:
         - download: current
           artifact: vsix-unsigned
@@ -139,15 +145,6 @@ extends:
               }
               ]
             SessionTimeout: 30
-      - job: PublishJob
-        displayName: Publish Artifacts
-        templateContext:
-          outputs:
-          - output: pipelineArtifact
-            displayName: 'Publish Artifact: vsix'
-            targetPath: '$(System.ArtifactsDirectory)'
-            artifactName: vsix
-        steps:
         - task: CopyFiles@2
           name: CopyFiles_5
           displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
