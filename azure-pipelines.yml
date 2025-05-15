@@ -124,7 +124,7 @@ extends:
             AuthCertName: '$(Control.AuthCertName)'
             AuthSignCertName: '$(Control.AuthSignCertName)'
             FolderPath: $(System.DefaultWorkingDirectory)
-            Pattern: '$(Pipeline.Workspace)\vsix-unsigned\*.vsix'
+            Pattern: '..\vsix-unsigned\*.vsix'
             signConfigType: inlineSignParams
             inlineOperation: |-
               [
