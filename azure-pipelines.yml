@@ -129,20 +129,20 @@ extends:
             inlineOperation: |-
               [
                 {
-                  "KeyCode": "CP-500813",
-                  "OperationCode": "OPCSign",
-                  "ToolName": "sign",
-                  "ToolVersion": "1.0",
-                  "Parameters": {
+                "KeyCode": "CP-233016",
+                "OperationCode": "OPCSign",
+                "ToolName": "sign",
+                "ToolVersion": "1.0",
+                "Parameters": {
                   "FileDigest": "/fd SHA512"
-                  }
+                }
                 },
                 {
-                  "KeyCode": "CP-500813",
-                  "OperationCode": "OPCVerify",
-                  "ToolName": "sign",
-                  "ToolVersion": "1.0",
-                  "Parameters": {}
+                "KeyCode": "CP-233016",
+                "OperationCode": "OPCVerify",
+                "ToolName": "sign",
+                "ToolVersion": "1.0",
+                "Parameters": {}
                 }
               ]
             SessionTimeout: 30
