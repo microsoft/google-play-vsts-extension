@@ -150,7 +150,7 @@ extends:
           name: CopyFiles_5
           displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
           inputs:
-            Contents: '$(Pipeline.Workspace)/vsix-unsigned/*.vsix'
+            Contents: '..\vsix-unsigned\*.vsix'
             TargetFolder: $(System.ArtifactsDirectory)
 
     - stage: TestPublishToMarketplace
