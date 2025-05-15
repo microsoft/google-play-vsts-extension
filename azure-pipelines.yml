@@ -81,6 +81,21 @@ extends:
             displayName: Create test extension
             inputs:
               script: node make.js createtest
+        - job: PublishJob
+          displayName: Publish Artifacts
+          templateContext:
+            outputs:
+            - output: pipelineArtifact
+              displayName: 'Publish Artifact: vsix'
+              targetPath: '$(System.ArtifactsDirectory)'
+              artifactName: vsix        
+          steps:
+          - task: CopyFiles@2
+            name: CopyFiles_5
+            displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
+            inputs:
+              Contents: '*.vsix'
+              TargetFolder: $(System.ArtifactsDirectory)              
     - stage: CodeSigning
       condition: or(eq(variables['IsMainBranchBuild'], 'true'), ${{ eq(parameters.forceCodeSign, 'true') }}, ${{ eq(parameters.simulateCodeSigningError, 'true') }})
       dependsOn: BuildAndTest
@@ -88,6 +103,8 @@ extends:
       - job: CodeSigningJob
         displayName: ESRP CodeSigning
         steps:
+        - download: current
+          artifact: visx        
         - script: |
             echo "Simulated error in CodeSigning step."
             exit 1
@@ -125,28 +142,21 @@ extends:
               }
               ]
             SessionTimeout: 30
-
-    - stage: PublishArtifacts
-      dependsOn:
-        - BuildAndTest
-        - CodeSigning
-      #condition: or( and(succeeded('BuildAndTest'), not(eq(variables['shouldRunCodeSigning'], 'true'))), succeeded('CodeSigning'))
-      jobs:
-      - job: PublishJob
-        displayName: Publish Artifacts
-        templateContext:
-          outputs:
-          - output: pipelineArtifact
-            displayName: 'Publish Artifact: vsix'
-            targetPath: '$(System.ArtifactsDirectory)'
-            artifactName: vsix        
-        steps:
-        - task: CopyFiles@2
-          name: CopyFiles_5
-          displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
-          inputs:
-            Contents: '*.vsix'
-            TargetFolder: $(System.ArtifactsDirectory)
+        - job: PublishJob
+          displayName: Publish Artifacts
+          templateContext:
+            outputs:
+            - output: pipelineArtifact
+              displayName: 'Publish Artifact: vsix'
+              targetPath: '$(System.ArtifactsDirectory)'
+              artifactName: vsix        
+          steps:
+          - task: CopyFiles@2
+            name: CopyFiles_5
+            displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
+            inputs:
+              Contents: '*.vsix'
+              TargetFolder: $(System.ArtifactsDirectory)
 
     - stage: TestPublishToMarketplace
       condition: succeeded('PublishArtifacts')
@@ -155,6 +165,8 @@ extends:
       - job: PublishMarketplateJob
         displayName: Test - Publish to Marketplace
         steps:
+          - download: current
+            artifact: visx
           - task: CmdLine@2
             displayName: Test - Publish to Marketplace
             inputs:
