@@ -128,22 +128,22 @@ extends:
             signConfigType: inlineSignParams
             inlineOperation: |-
               [
-              {
-                "KeyCode": "CP-500813",
+                {
+                "KeyCode": "CP-233016",
                 "OperationCode": "OPCSign",
                 "ToolName": "sign",
                 "ToolVersion": "1.0",
                 "Parameters": {
-                "FileDigest": "/fd SHA512"
+                  "FileDigest": "/fd SHA512"
                 }
-              },
-              {
-                "KeyCode": "CP-500813",
+                },
+                {
+                "KeyCode": "CP-233016",
                 "OperationCode": "OPCVerify",
                 "ToolName": "sign",
                 "ToolVersion": "1.0",
                 "Parameters": {}
-              }
+                }
               ]
             SessionTimeout: 30
         - task: CopyFiles@2
