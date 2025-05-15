@@ -15,11 +15,8 @@ variables:
 - name: CodeQL.Enabled
   value: true
 - group: EPS.ESRPSigningProdAME # Mseng -> Library -> EsrpSigningProd
-- name: shouldRunCodeSigning
-  ${{ if eq(parameters.forceCodeSign, 'true') }}:
-    value: true
-  ${{ else }}:
-    value: eq(variables['Build.SourceBranchName'], 'master')
+- name: IsMainBranchBuild
+  value: eq(variables['Build.SourceBranchName'], 'master')
 
 resources:
   repositories:
@@ -84,19 +81,18 @@ extends:
             displayName: Create test extension
             inputs:
               script: node make.js createtest
-
     - stage: CodeSigning
-      condition: eq(variables['shouldRunCodeSigning'], 'true')
+      condition: or(eq(variables['IsMainBranchBuild'], 'true'), ${{ eq(parameters.forceCodeSign, 'true') }}, ${{ eq(parameters.simulateCodeSigningError, 'true') }})
       dependsOn: BuildAndTest
       jobs:
       - job: CodeSigningJob
         displayName: ESRP CodeSigning
-        condition: eq(variables['simulateCodeSigningError'], 'true')
         steps:
         - script: |
             echo "Simulated error in CodeSigning step."
             exit 1
           displayName: Simulate CodeSigning Error
+          condition: ${{ eq(parameters.simulateCodeSigningError, 'true') }}
         - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
           displayName: ESRP CodeSigning
           inputs:
@@ -112,7 +108,7 @@ extends:
             inlineOperation: |-
               [
               {
-                "KeyCode": "CP-233016",
+                "KeyCode": "CP-500813",
                 "OperationCode": "OPCSign",
                 "ToolName": "sign",
                 "ToolVersion": "1.0",
@@ -121,7 +117,7 @@ extends:
                 }
               },
               {
-                "KeyCode": "CP-233016",
+                "KeyCode": "CP-500813",
                 "OperationCode": "OPCVerify",
                 "ToolName": "sign",
                 "ToolVersion": "1.0",
@@ -134,7 +130,7 @@ extends:
       dependsOn:
         - BuildAndTest
         - CodeSigning
-      condition: or( and(succeeded('BuildAndTest'), not(eq(variables['shouldRunCodeSigning'], 'true'))), succeeded('CodeSigning'))
+      #condition: or( and(succeeded('BuildAndTest'), not(eq(variables['shouldRunCodeSigning'], 'true'))), succeeded('CodeSigning'))
       jobs:
       - job: PublishJob
         displayName: Publish Artifacts
