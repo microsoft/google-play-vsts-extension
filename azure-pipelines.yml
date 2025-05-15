@@ -123,7 +123,7 @@ extends:
             AuthCertName: '$(Control.AuthCertName)'
             AuthSignCertName: '$(Control.AuthSignCertName)'
             FolderPath: $(System.DefaultWorkingDirectory)
-            Pattern: '*.vsix'
+            Pattern: 'vsix-unsigned/*.vsix'
             signConfigType: inlineSignParams
             inlineOperation: |-
               [
@@ -149,7 +149,7 @@ extends:
           name: CopyFiles_5
           displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
           inputs:
-            Contents: '*.vsix'
+            Contents: 'vsix-unsigned/*.vsix'
             TargetFolder: $(System.ArtifactsDirectory)
 
     - stage: TestPublishToMarketplace
