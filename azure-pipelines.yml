@@ -46,7 +46,7 @@ extends:
             - output: pipelineArtifact
               displayName: 'Publish Artifact: vsix'
               targetPath: '$(System.ArtifactsDirectory)'
-              artifactName: vsix          
+              artifactName: vsix-unsigned
           steps:
           - checkout: self
             clean: true
@@ -101,7 +101,7 @@ extends:
         displayName: ESRP CodeSigning
         steps:
         - download: current
-          artifact: visx        
+          artifact: vsix-unsigned
         - script: |
             echo "Simulated error in CodeSigning step."
             exit 1
@@ -146,7 +146,7 @@ extends:
           - output: pipelineArtifact
             displayName: 'Publish Artifact: vsix'
             targetPath: '$(System.ArtifactsDirectory)'
-            artifactName: vsix        
+            artifactName: vsix
         steps:
         - task: CopyFiles@2
           name: CopyFiles_5
