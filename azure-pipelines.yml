@@ -114,11 +114,6 @@ extends:
             exit 1
           displayName: Simulate CodeSigning Error
           condition: ${{ eq(parameters.simulateCodeSigningError, 'true') }}
-        - task: CopyFiles@2
-          displayName: 'Copy Files to: $(System.DefaultWorkingDirectory)'
-          inputs:
-            Contents: '..\vsix-unsigned\*.vsix'
-            TargetFolder: $(System.DefaultWorkingDirectory)        
         - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
           displayName: ESRP CodeSigning
           inputs:
@@ -129,7 +124,7 @@ extends:
             AuthCertName: '$(Control.AuthCertName)'
             AuthSignCertName: '$(Control.AuthSignCertName)'
             FolderPath: $(System.DefaultWorkingDirectory)
-            Pattern: '*.vsix'
+            Pattern: '..\vsix-unsigned\*.vsix'
             signConfigType: inlineSignParams
             inlineOperation: |-
               [
@@ -155,7 +150,7 @@ extends:
           name: CopyFiles_5
           displayName: 'Copy Files to: $(System.ArtifactsDirectory)'
           inputs:
-            Contents: '*.vsix'
+            Contents: '..\vsix-unsigned\*.vsix'
             TargetFolder: $(System.ArtifactsDirectory)
 
     - stage: TestPublishToMarketplace
