@@ -117,7 +117,8 @@ extends:
         - task: CopyFiles@2
           displayName: 'Copy Files to: $(System.DefaultWorkingDirectory)'
           inputs:
-            Contents: '$(Pipeline.Workspace)\vsix-unsigned\*.vsix'
+            SourceFolder: '$(Pipeline.Workspace)\vsix-unsigned'
+            Contents: '*.vsix'
             TargetFolder: $(System.DefaultWorkingDirectory)             
         - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@5
           displayName: ESRP CodeSigning
