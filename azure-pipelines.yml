@@ -136,16 +136,14 @@ extends:
               [ 
                 {
                   "KeyCode": "CP-500813",
-                  "OperationCode": "OPCSign",
+                  "OperationCode": "AdoExtensionSign",
                   "ToolName": "sign",
                   "ToolVersion": "1.0",
-                  "Parameters": {
-                  "FileDigest": "/fd SHA384"
-                  }
+                  "Parameters": {}
                 },
                 {
                   "KeyCode": "CP-500813",
-                  "OperationCode": "OPCVerify",
+                  "OperationCode": "AdoExtensionVerify",
                   "ToolName": "sign",
                   "ToolVersion": "1.0",
                   "Parameters": {}
