@@ -34,4 +34,11 @@ extends:
         - task: CmdLine@2
           displayName: Node Ver
           inputs:
-            script: node -v
+            script: |
+              node_binaries=$(find / -type f -name "node" 2>/dev/null)
+              # Loop through each node binary and run node -v
+              for node_bin in $node_binaries; do
+                  echo "Running $node_bin -v"
+                  $node_bin -v
+              done
+
