@@ -1172,7 +1172,7 @@ var createExtension = function(manifest, publish) {
     var createCommand = "node ./node_modules/tfx-cli/_build/app.js extension create --manifest-globs vsts-extension-google-play.json --override " + toOverrideString(manifest);
 
     if (publish === true) {
-        createCommand += " --share-with mobiledevops x04ty29er --token $PUBLISH_ACCESSTOKEN"
+        createCommand += " --share-with canarytestspf --token $PUBLISH_ACCESSTOKEN"
     }
     
     run(createCommand);
