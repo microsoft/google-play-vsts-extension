@@ -2,7 +2,7 @@
     "manifestVersion": 1.0,
     "id": "google-play",
     "name": "Google Play",
-    "version": "4.246.0",
+    "version": "4.261.0",
     "publisher": "ms-vsclient",
     "description": "Provides tasks for continuous delivery to the Google Play Store from TFS/Team Services build or release definitions",
     "categories": [
