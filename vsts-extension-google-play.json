@@ -29,7 +29,7 @@
         "thirdpartynotice": {
             "path": "ThirdPartyNotices.txt"
         },
-         "license": {
+        "license": {
             "path": "LICENSE"
         }
     },
