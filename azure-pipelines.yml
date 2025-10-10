@@ -28,8 +28,6 @@ resources:
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
-    settings:
-      networkIsolationPolicy: NpmJsOrg,NodeJsOrg,Permissive
     sdl:
       sourceAnalysisPool:
         name: 1ESPtTfsAgentBuildPoolSDL
