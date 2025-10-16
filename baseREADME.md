@@ -323,6 +323,12 @@ Allows you to promote a previously released APK from one track to another (e.g. 
 
 6. **Clean Source Track** *(Boolean, Optional)* - Clean the source track. Default value is _true_.
 
+7. **Release Notes** *(File path, Optional)* - Path to the file specifying the release notes for the APK you are publishing. Overrides release notes from the source track. (When no version code is given and no path is specified, the release notes are copied from the source track).
+
+    ![Release Notes](images/release-notes.png)
+
+8. **Language Code** *(String, Optional)* - An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_.
+
 ### Google Play - Increase Rollout
 
 Allows you to increase the rollout percentage of an app that was previously released to the **Rollout** track, and includes the following options:

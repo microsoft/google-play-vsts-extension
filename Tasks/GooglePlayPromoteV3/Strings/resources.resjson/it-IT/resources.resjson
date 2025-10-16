@@ -22,6 +22,12 @@
   "loc.input.help.userFraction": "La percentuale di utenti a cui verrà rilasciato l'APK specificato per la \"traccia di destinazione\" specificata. Potrà essere aumentata in un secondo momento con l'attività \"Google Play - Aumenta implementazione\".",
   "loc.input.label.cleanSourceTrack": "Pulisci traccia di origine",
   "loc.input.help.cleanSourceTrack": "La traccia di origine verrà cancellata",
+  "loc.input.label.changeLogFile": "File delle note sulla versione",
+  "loc.input.help.changeLogFile": "Percorso del file che specifica le note sulla versione (log delle modifiche) dell'applicazione che si sta pubblicando.",
+  "loc.input.label.languageCode": "Codice lingua",
+  "loc.input.help.languageCode": "Un tag di lingua IETF che identifica la lingua delle note sulla versione come specificato nel documento BCP-47. Il valore predefinito è _en-US_.",
+  "loc.input.label.releaseNotesContainLanguageTags": "Le note sulla versione contengono tag di lingua",
+  "loc.input.help.releaseNotesContainLanguageTags": "Selezionare questa opzione se il file di note sulla versione contiene tag di lingua.",
   "loc.messages.InvalidAuthFile": "Il file di autenticazione specificato non era valido",
   "loc.messages.InvalidAuthFilewithName": "%s non era un file di autenticazione valido",
   "loc.messages.JsonKeyFileNotFound": "Il file di chiave JSON dell'account di servizio non è stato trovato.",
@@ -36,5 +42,6 @@
   "loc.messages.DestTrack": "Traccia di destinazione: %s",
   "loc.messages.Success": "L’innalzamento di livello di APK è stato completato.",
   "loc.messages.Failure": "Non è stato possibile alzare di livello l’APK.",
-  "loc.messages.ReturnedNullEdit": "Non è stato possibile alzare di livello l'APK: l'operazione di innalzamento di livello ha restituito Null"
+  "loc.messages.ReturnedNullEdit": "Non è stato possibile alzare di livello l'APK: l'operazione di innalzamento di livello ha restituito Null",
+  "loc.messages.AppendChangelog": "Accodamento del log delle modifiche %s"
 }

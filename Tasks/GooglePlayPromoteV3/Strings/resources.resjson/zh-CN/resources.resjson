@@ -22,6 +22,12 @@
   "loc.input.help.userFraction": "将针对指定“目标轨道”向其发布指定 APK 的用户百分比。稍后可通过“Google Play - 增加推出”任务来增加。",
   "loc.input.label.cleanSourceTrack": "清理源轨道",
   "loc.input.help.cleanSourceTrack": "源轨道将被清除",
+  "loc.input.label.changeLogFile": "发行说明(文件)",
+  "loc.input.help.changeLogFile": "指定要发布的应用程序的发行说明(更改日志)的文件的路径。",
+  "loc.input.label.languageCode": "语言代码",
+  "loc.input.help.languageCode": "标识 BCP-47 文档中指定的发行说明语言的 IETF 语言标记。默认值为 _en-US_",
+  "loc.input.label.releaseNotesContainLanguageTags": "发行说明包含语言标记",
+  "loc.input.help.releaseNotesContainLanguageTags": "如果发行说明文件包含语言标记，请选择此选项。",
   "loc.messages.InvalidAuthFile": "指定的身份验证文件无效",
   "loc.messages.InvalidAuthFilewithName": "%s 不是有效的身份验证文件",
   "loc.messages.JsonKeyFileNotFound": "找不到服务帐户 JSON 密钥文件。",
@@ -36,5 +42,6 @@
   "loc.messages.DestTrack": "目标轨道: %s",
   "loc.messages.Success": "已成功提升 APK。",
   "loc.messages.Failure": "未能提升 APK。",
-  "loc.messages.ReturnedNullEdit": "未能提升 apk: 提升操作返回了 null"
+  "loc.messages.ReturnedNullEdit": "未能提升 apk: 提升操作返回了 null",
+  "loc.messages.AppendChangelog": "正在追加更改日志 %s"
 }

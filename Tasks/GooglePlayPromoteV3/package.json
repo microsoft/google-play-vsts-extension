@@ -13,7 +13,8 @@
     "@types/node": "^20.11.6",
     "azure-pipelines-task-lib": "^4.13.0",
     "google-auth-library": "^7.14.1",
-    "googleapis": "^67.1.0"
+    "googleapis": "^67.1.0",
+    "jsdom": "16.7.0"
   },
   "devDependencies": {
     "typescript": "5.1.6"

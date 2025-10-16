@@ -13,7 +13,7 @@
   ],
   "version": {
     "Major": "3",
-    "Minor": "244",
+    "Minor": "245",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -127,6 +127,27 @@
       "defaultValue": true,
       "required": false,
       "helpMarkDown": "ms-resource:loc.input.help.cleanSourceTrack"
+    },
+    {
+      "name": "changeLogFile",
+      "label": "ms-resource:loc.input.label.changeLogFile",
+      "defaultValue": "",
+      "type": "filePath",
+      "helpMarkDown": "ms-resource:loc.input.help.changeLogFile"
+    },
+    {
+      "name": "languageCode",
+      "label": "ms-resource:loc.input.label.languageCode",
+      "defaultValue": "en-US",
+      "type": "string",
+      "helpMarkDown": "ms-resource:loc.input.help.languageCode"
+    },
+    {
+      "name": "releaseNotesContainLanguageTags",
+      "label": "ms-resource:loc.input.label.releaseNotesContainLanguageTags",
+      "defaultValue": false,
+      "type": "boolean",
+      "helpMarkDown": "ms-resource:loc.input.help.releaseNotesContainLanguageTags"
     }
   ],
   "execution": {
@@ -163,7 +184,8 @@
     "DestTrack": "ms-resource:loc.messages.DestTrack",
     "Success": "ms-resource:loc.messages.Success",
     "Failure": "ms-resource:loc.messages.Failure",
-    "ReturnedNullEdit": "ms-resource:loc.messages.ReturnedNullEdit"
+    "ReturnedNullEdit": "ms-resource:loc.messages.ReturnedNullEdit",
+    "AppendChangelog": "ms-resource:loc.messages.AppendChangelog"
   },
   "restrictions": {
     "commands": {

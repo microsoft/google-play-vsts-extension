@@ -13,7 +13,7 @@
     ],
     "version": {
         "Major": "3",
-        "Minor": "244",
+        "Minor": "245",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
@@ -127,6 +127,27 @@
             "defaultValue": true,
             "required": false,
             "helpMarkDown": "Source track will be cleared"
+        },
+        {
+            "name": "changeLogFile",
+            "label": "Release notes (file)",
+            "defaultValue": "",
+            "type": "filePath",
+            "helpMarkDown": "Path to the file specifying the release notes (change log) for the application you are publishing."
+        },
+        {
+            "name": "languageCode",
+            "label": "Language code",
+            "defaultValue": "en-US",
+            "type": "string",
+            "helpMarkDown": "An IETF language tag identifying the language of the release notes as specified in the BCP-47 document. Default value is _en-US_"
+        },
+        {
+            "name": "releaseNotesContainLanguageTags",
+            "label": "Release notes contain language tags",
+            "defaultValue": false,
+            "type": "boolean",
+            "helpMarkDown": "Select this option if the release notes file contains language tags."
         }
     ],
     "execution": {
@@ -163,7 +184,8 @@
         "DestTrack": "Destination track: %s",
         "Success": "Successfully promote APK.",
         "Failure": "Failed to promote APK.",
-        "ReturnedNullEdit": "Failed to promote apk: promote operation returned null"
+        "ReturnedNullEdit": "Failed to promote apk: promote operation returned null",
+        "AppendChangelog": "Appending changelog %s"
     },
     "restrictions": {
         "commands": {
