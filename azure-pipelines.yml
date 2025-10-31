@@ -1,7 +1,4 @@
 trigger: none
-#  branches:
-#    include:
-#    - master
 
 parameters:
   - name: forceCodeSign
