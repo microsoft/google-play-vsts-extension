@@ -1,8 +1,7 @@
-trigger:
-- master
-
 pr:
-- master
+  branches:
+    include:
+    - '*'
 
 variables:
 - name: CodeQL.Enabled
