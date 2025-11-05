@@ -22,6 +22,12 @@
   "loc.input.help.userFraction": "Процент пользователей, которым станет доступен выпуск указанного APK для указанного целевого трека. Его можно увеличить позже с помощью задачи \"Google Play - увеличить выпуск\".",
   "loc.input.label.cleanSourceTrack": "Очистить исходный трек",
   "loc.input.help.cleanSourceTrack": "Исходный трек будет очищен",
+  "loc.input.label.changeLogFile": "Заметки о выпуске (файл)",
+  "loc.input.help.changeLogFile": "Путь к файлу, содержащему заметки о выпуске (журнал изменений) для публикуемого приложения.",
+  "loc.input.label.languageCode": "Код языка",
+  "loc.input.help.languageCode": "Тег языка IETF, определяющий язык заметок о выпуске, в соответствии с документом BCP-47. Значение по умолчанию _en-US_",
+  "loc.input.label.releaseNotesContainLanguageTags": "Заметки о выпуске содержат теги языка",
+  "loc.input.help.releaseNotesContainLanguageTags": "Выберите этот параметр, если файл заметок о выпуске содержит теги языка.",
   "loc.messages.InvalidAuthFile": "Указанный файл проверки подлинности недействителен",
   "loc.messages.InvalidAuthFilewithName": "%s не был действительным файлом проверки подлинности",
   "loc.messages.JsonKeyFileNotFound": "Файл ключа JSON учетной записи службы не найден.",
@@ -36,5 +42,6 @@
   "loc.messages.DestTrack": "Целевой трек: %s",
   "loc.messages.Success": "Уровень APK успешно повышен.",
   "loc.messages.Failure": "Не удалось повысить уровень APK",
-  "loc.messages.ReturnedNullEdit": "Не удалось повысить уровень APK: операция повышения вернула значение NULL"
+  "loc.messages.ReturnedNullEdit": "Не удалось повысить уровень APK: операция повышения вернула значение NULL",
+  "loc.messages.AppendChangelog": "Производится добавление в журнал изменений %s"
 }

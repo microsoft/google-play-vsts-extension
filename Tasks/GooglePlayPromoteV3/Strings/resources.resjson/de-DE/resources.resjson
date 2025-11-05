@@ -22,6 +22,12 @@
   "loc.input.help.userFraction": "Der Prozentsatz der Benutzer, für den das angegebene APK für den angegebenen „Zieltitel“ freigegeben wird. Er kann später mithilfe der Aufgabe „Google Play – Rollout vergrößern“ gesteigert werden.",
   "loc.input.label.cleanSourceTrack": "Quelltitel bereinigen",
   "loc.input.help.cleanSourceTrack": "Der Quelltitel wird gelöscht",
+  "loc.input.label.changeLogFile": "Versionshinweise (Datei)",
+  "loc.input.help.changeLogFile": "Pfad zur Datei, die die Versionshinweise (Änderungsprotokoll) für die Anwendung enthält, die Sie veröffentlichen.",
+  "loc.input.label.languageCode": "Sprachcode",
+  "loc.input.help.languageCode": "Ein IETF-Sprachtag, das die Sprache der Versionshinweise identifiziert, wie im BCP-47-Dokument angegeben. Der Standardwert ist _en-US_.",
+  "loc.input.label.releaseNotesContainLanguageTags": "Versionshinweise enthalten Sprachtags",
+  "loc.input.help.releaseNotesContainLanguageTags": "Wählen Sie diese Option aus, wenn die Versionshinweisdatei Sprachtags enthält.",
   "loc.messages.InvalidAuthFile": "Die angegebene Authentifizierungsdatei war ungültig.",
   "loc.messages.InvalidAuthFilewithName": "%s war keine gültige Authentifizierungsdatei.",
   "loc.messages.JsonKeyFileNotFound": "Die JSON-Schlüsseldatei für das Dienstkonto wurde nicht gefunden.",
@@ -36,5 +42,6 @@
   "loc.messages.DestTrack": "Zieltitel: %s",
   "loc.messages.Success": "Stufen Sie ein APK erfolgreich höher.",
   "loc.messages.Failure": "Fehler beim Höherstufen des APK.",
-  "loc.messages.ReturnedNullEdit": "Fehler beim Höherstufen des APK: Der Vorgang hat NULL zurückgegeben."
+  "loc.messages.ReturnedNullEdit": "Fehler beim Höherstufen des APK: Der Vorgang hat NULL zurückgegeben.",
+  "loc.messages.AppendChangelog": "Das Änderungsprotokolls %s wird angefügt..."
 }

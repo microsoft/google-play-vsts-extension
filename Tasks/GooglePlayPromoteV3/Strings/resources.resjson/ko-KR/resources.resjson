@@ -22,6 +22,12 @@
   "loc.input.help.userFraction": "지정된 '대상 트랙'에 대해 지정된 APK가 릴리스될 사용자의 비율입니다. 나중에 'Google Play - 롤아웃 늘리기' 작업으로 늘릴 수 있습니다.",
   "loc.input.label.cleanSourceTrack": "원본 트랙 정리",
   "loc.input.help.cleanSourceTrack": "원본 트랙이 삭제됩니다.",
+  "loc.input.label.changeLogFile": "릴리스 정보(파일)",
+  "loc.input.help.changeLogFile": "게시할 애플리케이션에 대한 릴리스 정보(변경 로그)를 지정하는 파일의 경로입니다.",
+  "loc.input.label.languageCode": "언어 코드",
+  "loc.input.help.languageCode": "BCP-47 문서에 지정된 릴리스 정보의 언어를 식별하는 IETF 언어 태그입니다. 기본값은 _en-US_입니다.",
+  "loc.input.label.releaseNotesContainLanguageTags": "릴리스 정보에 언어 태그가 포함되어 있습니다.",
+  "loc.input.help.releaseNotesContainLanguageTags": "릴리스 정보 파일에 언어 태그가 포함된 경우 이 옵션을 선택합니다.",
   "loc.messages.InvalidAuthFile": "지정된 인증 파일이 잘못되었습니다.",
   "loc.messages.InvalidAuthFilewithName": "%s은(는) 유효한 인증 파일이 아닙니다.",
   "loc.messages.JsonKeyFileNotFound": "서비스 계정 JSON 키 파일을 찾을 수 없습니다.",
@@ -36,5 +42,6 @@
   "loc.messages.DestTrack": "대상 트랙: %s",
   "loc.messages.Success": "APK를 승격했습니다.",
   "loc.messages.Failure": "APK를 승격하지 못했습니다.",
-  "loc.messages.ReturnedNullEdit": "APK 승격 실패: 승격 작업이 null을 반환했습니다."
+  "loc.messages.ReturnedNullEdit": "APK 승격 실패: 승격 작업이 null을 반환했습니다.",
+  "loc.messages.AppendChangelog": "변경 로그 %s 추가 중"
 }

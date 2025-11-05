@@ -68,4 +68,24 @@ describe('L0 Suite google-play-promote', function () {
         assert(testRunner.succeeded, 'task should have succeeded');
     });
 
+    it('test custom release notes with version code selected', async () => {
+        const testFile = path.join(__dirname, 'L0PromoteWithVersionCodeAndReleaseNotes.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        await testRunner.runAsync();
+
+        assert(testRunner.stdOutContained('Update track: {"releases":[{"status":"inProgress","versionCodes":[120],"releaseNotes":[{"language":"en-US","text":"file contents"}]}]}'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.succeeded, 'task should have succeeded');
+    });
+
+    it('test custom release notes with no version code selected', async () => {
+        const testFile = path.join(__dirname, 'L0PromoteNoVersionCodeWithReleaseNotes.js');
+        const testRunner = new ttm.MockTestRunner(testFile);
+
+        await testRunner.runAsync();
+
+        assert(testRunner.stdOutContained('Update track: {"releases":[{"status":"inProgress","versionCodes":[123],"releaseNotes":[{"language":"en-US","text":"file contents"}]}]}'), 'Did not print the expected message: ' + JSON.stringify(testRunner));
+        assert(testRunner.succeeded, 'task should have succeeded');
+    });
+
 });
