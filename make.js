@@ -320,8 +320,8 @@ target.createtest = function() {
     var createtestOverride = { 
         public: false,
         name: "Google Play-Dev", 
-        id: "vso-extension-android-dev", 
-        publisher: "ms-mobiledevops-test"
+        id: "google-play-dev", 
+        publisher: "ms-vsclient"
     };
 
     createExtension(createtestOverride, false);
@@ -333,8 +333,8 @@ target.publishtest = function() {
     var createPublishOverride = { 
         public: false,
         name: "Google Play-Dev", 
-        id: "vso-extension-android-dev", 
-        publisher: "ms-mobiledevops-test"
+        id: "google-play-dev", 
+        publisher: "ms-vsclient"
     };
 
     createExtension(createPublishOverride, true);
