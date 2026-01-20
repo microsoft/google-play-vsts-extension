@@ -1,4 +1,5 @@
 import * as path from 'path';
+import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as googleutil from './googleutil';
 import { androidpublisher_v3 } from 'googleapis';
@@ -16,7 +17,7 @@ async function run() {
             if (!serviceAccountKeyFile) {
                 throw new Error(tl.loc('JsonKeyFileNotFound'));
             }
-            const stats: tl.FsStats = tl.stats(serviceAccountKeyFile);
+            const stats: fs.Stats = tl.stats(serviceAccountKeyFile);
             if (stats && stats.isFile()) {
                 key = require(serviceAccountKeyFile);
             } else {

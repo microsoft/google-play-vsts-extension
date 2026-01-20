@@ -13,7 +13,7 @@
   ],
   "version": {
     "Major": "3",
-    "Minor": "244",
+    "Minor": "269",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -139,6 +139,10 @@
       "argumentFormat": ""
     },
     "Node20_1": {
+      "target": "google-play-promote.js",
+      "argumentFormat": ""
+    },
+    "Node24": {
       "target": "google-play-promote.js",
       "argumentFormat": ""
     },

@@ -65,7 +65,7 @@ if (semver.lt(process.versions.node,  NODE_MIN_VERSION)) {
     fail(`requires node >= ${NODE_MIN_VERSION}. installed: ${process.versions.node}`);
 }
 
-var supportedNodeTargets = ["Node", "Node10", "Node16", "Node20_1"];
+var supportedNodeTargets = ["Node", "Node10", "Node16", "Node20_1", "Node24"];
 
 // add node modules .bin to the path so we can dictate version of tsc etc...
 var binPath = path.join(__dirname, 'node_modules', '.bin');
