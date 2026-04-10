@@ -5,7 +5,7 @@
     "@types/jsdom": "^21.1.7",
     "@types/mocha": "^9.0.0",
     "@types/node": "^24.10.0",
-    "azure-pipelines-task-lib": "^5.2.4",
+    "azure-pipelines-task-lib": "^5.2.8",
     "glob": "^7.1.7",
     "googleapis": "^90.0.0",
     "jsdom": "26.1.0"
