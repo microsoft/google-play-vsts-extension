@@ -111,6 +111,8 @@ extends:
       - job: PublishMarketplateJob
         displayName: Test - Publish to private Marketplace
         steps:
+          - checkout: self
+
           - download: current
             artifact: vsix
             displayName: Download Signed Artifact
@@ -120,9 +122,17 @@ extends:
             inputs:
               version: '20.19.4'
 
+          - task: NpmAuthenticate@0
+            displayName: Authenticate npm feed
+            inputs:
+              workingFile: .npmrc
+
           - task: TfxInstaller@5
             inputs:
               version: 'v0.21.1'
+            env:
+              NPM_CONFIG_REGISTRY: https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/npm/registry/
+              NPM_CONFIG_USERCONFIG: $(Build.SourcesDirectory)/.npmrc
 
           - task: 1ES.PublishAzureDevOpsExtension@1
             displayName: 'Publish the dev private extension to ms-vsclient'
@@ -141,6 +151,8 @@ extends:
       - job: PublishMarketplateJob
         displayName: Prod - Publish to Marketplace
         steps:
+          - checkout: self
+
           - download: current
             artifact: vsix
             displayName: Download Signed Artifact
@@ -150,9 +162,17 @@ extends:
             inputs:
               version: '20.19.4'
 
+          - task: NpmAuthenticate@0
+            displayName: Authenticate npm feed
+            inputs:
+              workingFile: .npmrc
+
           - task: TfxInstaller@5
             inputs:
               version: 'v0.21.1'
+            env:
+              NPM_CONFIG_REGISTRY: https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/npm/registry/
+              NPM_CONFIG_USERCONFIG: $(Build.SourcesDirectory)/.npmrc
 
           - task: 1ES.PublishAzureDevOpsExtension@1
             displayName: 'Publish the production extension to ms-vsclient'
