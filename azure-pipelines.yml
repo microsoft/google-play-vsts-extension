@@ -108,7 +108,6 @@ extends:
     - stage: ValidateTfxInstallerCFS
       displayName: Validate TfxInstaller CFS routing
       trigger: manual
-      dependsOn: BuildAndTest
       jobs:
       - job: ValidateTfxInstallerCFSJob
         displayName: Install tfx-cli without publishing
