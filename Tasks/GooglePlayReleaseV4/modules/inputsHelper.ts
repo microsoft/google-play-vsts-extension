@@ -29,7 +29,7 @@ export function getClientKey(): googleutil.ClientKey {
     return key;
 }
 
-const actions = ['OnlyStoreListing', 'SingleBundle', 'SingleApk', 'MultiApkAab'] as const;
+const actions = ['OnlyStoreListing', 'SingleBundle', 'SingleApk', 'MultiApkAab',"MultiApk"] as const;
 export type Action = (typeof actions)[number];
 
 /**
