@@ -29,7 +29,7 @@ extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
     settings:
-      networkIsolationPolicy: Monitored.Unrestricted,CFSClean,CFSClean2,CFSClean3,GitHub
+      networkIsolationPolicy: Monitored.Unrestricted,CFSClean,CFSClean2,CFSClean3,GitHub,NodeTool
     sdl:
       sourceAnalysisPool:
         name: 1ESPtTfsAgentBuildPoolSDL
@@ -129,7 +129,7 @@ extends:
           - task: TfxInstaller@5
             displayName: Install tfx-cli through CFS
             inputs:
-              version: 'v0.21.1'
+              version: 'v0.24.2'
             env:
               NPM_CONFIG_REGISTRY: https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/npm/registry/
               NPM_CONFIG_USERCONFIG: $(Build.SourcesDirectory)/.npmrc
@@ -161,7 +161,7 @@ extends:
 
           - task: TfxInstaller@5
             inputs:
-              version: 'v0.21.1'
+              version: 'v0.24.2'
             env:
               NPM_CONFIG_REGISTRY: https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/npm/registry/
               NPM_CONFIG_USERCONFIG: $(Build.SourcesDirectory)/.npmrc
@@ -201,7 +201,7 @@ extends:
 
           - task: TfxInstaller@5
             inputs:
-              version: 'v0.21.1'
+              version: 'v0.24.2'
             env:
               NPM_CONFIG_REGISTRY: https://pkgs.dev.azure.com/mseng/PipelineTools/_packaging/PipelineTools_PublicPackages/npm/registry/
               NPM_CONFIG_USERCONFIG: $(Build.SourcesDirectory)/.npmrc
