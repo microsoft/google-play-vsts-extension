@@ -6,7 +6,7 @@
 </td>
 </tr></table>
 
-# Visual Studio Team Services Extension for Google Play
+# Visual Studio Team Services Extension for Google Play 
 
 [![Build status](https://dev.azure.com/mseng/AzureDevOps/_apis/build/status/CrossPlatform.google-play-vsts-extension.GitHub.CI)](https://dev.azure.com/mseng/AzureDevOps/_build/latest?definitionId=5350)
 
