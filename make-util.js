@@ -1065,6 +1065,9 @@ exports.storeNonAggregatedZip = storeNonAggregatedZip;
 
 var installNodeAsync = async function (nodeVersion) {
     switch (nodeVersion || '') {
+        case '24':
+            nodeVersion = 'v24.10.0';
+            break;
         case '20':
             nodeVersion = 'v20.14.0';
             break;
@@ -1139,7 +1142,9 @@ var getTaskNodeVersion = function(buildPath, taskName) {
     var execution = taskJson['execution'] || taskJson['prejobexecution'];
     let nodeVersion = 0;
     for (var key of Object.keys(execution)) {
-        if (key.toLowerCase() == 'node20_1') {
+        if (key.toLowerCase() == 'node24') {
+            nodeVersion = Math.max(24, nodeVersion);
+        } else if (key.toLowerCase() == 'node20_1') {
             nodeVersion = Math.max(20, nodeVersion);
         } else if (key.toLowerCase() == 'node16') {
             nodeVersion = Math.max(16, nodeVersion);

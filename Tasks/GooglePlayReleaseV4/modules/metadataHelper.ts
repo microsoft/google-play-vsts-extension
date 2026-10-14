@@ -13,7 +13,7 @@ import { androidpublisher_v3 as pub3 } from 'googleapis';
  * @returns {pub3.Schema$LocalizedText[]} `[{ language: 'en-US|fr-FR|it-IT|...', text: 'Localized_Release_Notes' }, ...]`
  */
 export async function getCommonReleaseNotes(languageCode: string, changelogFile: string, releaseNotesContainLanguageTags: boolean): Promise<pub3.Schema$LocalizedText[]> {
-    const stats: tl.FsStats = tl.stats(changelogFile);
+    const stats: fs.Stats = tl.stats(changelogFile);
     const releaseNotes: pub3.Schema$LocalizedText[] = [];
 
     if (stats && stats.isFile()) {
@@ -129,10 +129,10 @@ async function appendChangelogToReleaseNotes(
 /**
  * Filters the directory contents to find files or directories
  * @param {string} directory the directory to search
- * @param {(stats: tl.FsStats) => boolean} filter callback on every item in the directory, return true to keep the results
+ * @param {(stats: fs.Stats) => boolean} filter callback on every item in the directory, return true to keep the results
  * @returns the filtered contents of the directory
  */
-function filterDirectoryContents(directory: string, filter: (stats: tl.FsStats) => boolean): string[] {
+function filterDirectoryContents(directory: string, filter: (stats: fs.Stats) => boolean): string[] {
     return fs.readdirSync(directory).filter(subPath => {
         try {
             const fullPath: string = path.join(directory, subPath);
@@ -404,7 +404,7 @@ function getImageList(directory: string): { [key: string]: string[] } {
                 for (let acceptedExtension of acceptedExtensions) {
                     let fullPathToFileToCheck: string = path.join(imageDirectory, imageType + acceptedExtension);
                     try {
-                        let imageStat: tl.FsStats = tl.stats(fullPathToFileToCheck);
+                        let imageStat: fs.Stats = tl.stats(fullPathToFileToCheck);
                         if (imageStat) {
                             shouldAttemptUpload = imageStat.isFile();
                             if (shouldAttemptUpload) {

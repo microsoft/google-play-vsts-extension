@@ -1,5 +1,5 @@
 import * as tl from 'azure-pipelines-task-lib/task';
-
+import * as fs from 'fs';
 import * as googleutil from './googleutil';
 import * as fileHelper from './fileHelper';
 
@@ -13,7 +13,7 @@ export function getClientKey(): googleutil.ClientKey {
     if (authType === 'JsonFile') {
         const serviceAccountKeyFile: string = tl.getPathInput('serviceAccountKey', true, true);
 
-        const stats: tl.FsStats = tl.stats(serviceAccountKeyFile);
+        const stats: fs.Stats = tl.stats(serviceAccountKeyFile);
         if (stats && stats.isFile()) {
             key = require(serviceAccountKeyFile);
         } else {
