@@ -7,7 +7,8 @@
     "@types/node": "^24.10.0",
     "azure-pipelines-task-lib": "^5.280.3",
     "glob": "^7.1.7",
-    "googleapis": "^90.0.0",
+    "google-auth-library": "11.3.4",
+    "googleapis": "190.0.0",
     "jsdom": "27.4.0"
   },
   "devDependencies": {

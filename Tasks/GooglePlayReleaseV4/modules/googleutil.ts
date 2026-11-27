@@ -2,8 +2,12 @@ import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib';
 import * as googleapis from 'googleapis';
 import { androidpublisher_v3 as pub3 } from 'googleapis'; // Short alias for convenience
+import { JWT } from 'google-auth-library';
 
-export const publisher: pub3.Androidpublisher = googleapis.google.androidpublisher('v3');
+export const publisher: pub3.Androidpublisher = googleapis.google.androidpublisher({
+    version: 'v3',
+    rootUrl: 'https://androidpublisher.googleapis.com/'
+});
 
 export interface ClientKey {
     client_email?: string;
@@ -14,22 +18,21 @@ export interface ClientKey {
  * @param key an object containing client email and private key
  * @returns JWT service account credentials.
  */
-export function getJWT(key: ClientKey): googleapis.Auth.JWT {
+export function getJWT(key: ClientKey): JWT {
     const GOOGLE_PLAY_SCOPES: string[] = ['https://www.googleapis.com/auth/androidpublisher'];
-    return new googleapis.Auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
+    return new JWT({
+        email: key.client_email,
+        key: key.private_key,
+        scopes: GOOGLE_PLAY_SCOPES
+    });
 }
 
-export async function authorize(jwtClient: googleapis.Auth.JWT): Promise<void> {
-    await jwtClient.authorize();
-
-    const credsToken: string = jwtClient.credentials.access_token;
-    const rawToken: string = jwtClient.gtoken.rawToken.access_token;
-
-    tl.setSecret(credsToken);
-
-    if (rawToken !== credsToken) {
-        tl.setSecret(rawToken);
+export async function authorize(jwtClient: JWT): Promise<void> {
+    const credentials = await jwtClient.authorize();
+    if (!credentials.access_token) {
+        throw new Error(tl.loc('AccessTokenNotFound'));
     }
+    tl.setSecret(credentials.access_token);
 }
 
 /**
@@ -168,7 +171,7 @@ export async function addBundle(edits: pub3.Resource$Edits, packageName: string,
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        const res = await retryUploadError(edits.bundles, requestParameters, bundleFile) as googleapis.Common.GaxiosResponse<pub3.Schema$Bundle>;
+        const res = await retryUploadError(edits.bundles, requestParameters, bundleFile) as googleapis.Common.GaxiosResponseWithHTTP2<pub3.Schema$Bundle>;
         tl.debug('Returned: ' + JSON.stringify(res));
         return res.data;
     } catch (e) {
@@ -197,7 +200,7 @@ export async function addApk(edits: pub3.Resource$Edits, packageName: string, ap
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        const res = await retryUploadError(edits.apks, requestParameters, apkFile) as googleapis.Common.GaxiosResponse<pub3.Schema$Apk>;
+        const res = await retryUploadError(edits.apks, requestParameters, apkFile) as googleapis.Common.GaxiosResponseWithHTTP2<pub3.Schema$Apk>;
         tl.debug('Returned: ' + JSON.stringify(res));
         return res.data;
     } catch (e) {
@@ -236,7 +239,7 @@ export async function addObb(
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        const res = await retryUploadError(edits.expansionfiles, requestParameters, obbFile) as googleapis.Common.GaxiosResponse<pub3.Schema$ExpansionFilesUploadResponse>;
+        const res = await retryUploadError(edits.expansionfiles, requestParameters, obbFile) as googleapis.Common.GaxiosResponseWithHTTP2<pub3.Schema$ExpansionFilesUploadResponse>;
         tl.debug('returned: ' + JSON.stringify(res));
         return res.data;
     } catch (e) {
@@ -273,7 +276,7 @@ export async function uploadDeobfuscation(
 
     try {
         tl.debug('Request Parameters: ' + JSON.stringify(requestParameters));
-        const res = await retryUploadError(edits.deobfuscationfiles, requestParameters, mappingFilePath) as googleapis.Common.GaxiosResponse<pub3.Schema$DeobfuscationFilesUploadResponse>;
+        const res = await retryUploadError(edits.deobfuscationfiles, requestParameters, mappingFilePath) as googleapis.Common.GaxiosResponseWithHTTP2<pub3.Schema$DeobfuscationFilesUploadResponse>;
         tl.debug('returned: ' + JSON.stringify(res));
         return res.data;
     } catch (e) {
@@ -308,7 +311,7 @@ export async function uploadNativeDeobfuscation(
 
     try {
         tl.debug(`Request Parameters: ${JSON.stringify(requestParameters)}`);
-        const res = await retryUploadError(edits.deobfuscationfiles, requestParameters, mappingFilePath) as googleapis.Common.GaxiosResponse<pub3.Schema$DeobfuscationFilesUploadResponse>;
+        const res = await retryUploadError(edits.deobfuscationfiles, requestParameters, mappingFilePath) as googleapis.Common.GaxiosResponseWithHTTP2<pub3.Schema$DeobfuscationFilesUploadResponse>;
         tl.debug(`Response: ${JSON.stringify(res)}`);
         return res.data;
     } catch (e) {
@@ -332,7 +335,7 @@ async function retryUploadError(
         pub3.Resource$Edits$Deobfuscationfiles,
     requestParameters: pub3.Params$Resource$Edits$Bundles$Upload,
     file: string
-): Promise<googleapis.Common.GaxiosResponse<
+): Promise<googleapis.Common.GaxiosResponseWithHTTP2<
     pub3.Schema$Bundle |
     pub3.Schema$Apk |
     pub3.Schema$ExpansionFilesUploadResponse |

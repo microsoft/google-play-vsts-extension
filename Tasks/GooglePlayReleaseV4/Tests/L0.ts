@@ -11,6 +11,10 @@ describe('L0 Suite GooglePlayReleaseV4', function () {
         require('./L0_googleutil');
     });
 
+    describe('Google Play dedicated endpoints', function () {
+        require('./L0GoogleEndpoints');
+    });
+
     it('test no service endpoint fails', async () => {
         const testFile = path.join(__dirname, 'L0NoServiceEndpoint.js');
         const testRunner = new ttm.MockTestRunner(testFile);

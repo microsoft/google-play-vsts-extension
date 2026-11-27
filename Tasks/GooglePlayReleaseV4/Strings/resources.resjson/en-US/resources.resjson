@@ -84,6 +84,7 @@
   "loc.messages.FoundImageAtPath": "Found image for type %s at %s",
   "loc.messages.FoundNativeDeobfuscationFile": "Found native debug symbols file: %s",
   "loc.messages.GetNewEditAfterAuth": "Authenticated with Google Play and getting new edit",
+  "loc.messages.AccessTokenNotFound": "Google Play authentication did not return an access token.",
   "loc.messages.ImageDirNotFound": "Image directory for %s was not found. Skipping...",
   "loc.messages.ImageTypeNotFound": "Image for %s was not found. Skipping...",
   "loc.messages.IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s",

@@ -14,7 +14,7 @@
   "demands": [],
   "version": {
     "Major": "4",
-    "Minor": "281",
+    "Minor": "283",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -373,6 +373,7 @@
     "FoundImageAtPath": "ms-resource:loc.messages.FoundImageAtPath",
     "FoundNativeDeobfuscationFile": "ms-resource:loc.messages.FoundNativeDeobfuscationFile",
     "GetNewEditAfterAuth": "ms-resource:loc.messages.GetNewEditAfterAuth",
+    "AccessTokenNotFound": "ms-resource:loc.messages.AccessTokenNotFound",
     "ImageDirNotFound": "ms-resource:loc.messages.ImageDirNotFound",
     "ImageTypeNotFound": "ms-resource:loc.messages.ImageTypeNotFound",
     "IncorrectVersionCodeFilter": "ms-resource:loc.messages.IncorrectVersionCodeFilter",

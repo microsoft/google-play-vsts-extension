@@ -14,7 +14,7 @@
     "demands": [],
     "version": {
         "Major": "4",
-        "Minor": "281",
+        "Minor": "283",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
@@ -373,6 +373,7 @@
         "FoundImageAtPath": "Found image for type %s at %s",
         "FoundNativeDeobfuscationFile": "Found native debug symbols file: %s",
         "GetNewEditAfterAuth": "Authenticated with Google Play and getting new edit",
+        "AccessTokenNotFound": "Google Play authentication did not return an access token.",
         "ImageDirNotFound": "Image directory for %s was not found. Skipping...",
         "ImageTypeNotFound": "Image for %s was not found. Skipping...",
         "IncorrectVersionCodeFilter": "Version code list specified contains incorrect codes: %s",
