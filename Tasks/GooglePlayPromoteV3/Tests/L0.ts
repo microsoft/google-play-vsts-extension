@@ -7,6 +7,10 @@ import * as ttm from 'azure-pipelines-task-lib/mock-test';
 describe('L0 Suite google-play-promote', function () {
     this.timeout(parseInt(process.env.TASK_TEST_TIMEOUT) || 20000);
 
+    describe('Google Play dedicated endpoints', function () {
+        require('./L0GoogleEndpoints');
+    });
+
     it('test no service endpoint fails', async () => {
         const testFile = path.join(__dirname, 'L0NoServiceEndpoint.js');
         const testRunner = new ttm.MockTestRunner(testFile);

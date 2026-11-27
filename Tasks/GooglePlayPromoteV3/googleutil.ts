@@ -4,7 +4,10 @@ import * as tl from 'azure-pipelines-task-lib/task';
 import { google } from 'googleapis';
 import { JWT } from 'google-auth-library';
 
-export const publisher = google.androidpublisher('v3');
+export const publisher = google.androidpublisher({
+    version: 'v3',
+    rootUrl: 'https://androidpublisher.googleapis.com/'
+});
 
 export interface ClientKey {
     client_email?: string;
@@ -53,7 +56,7 @@ export interface PackageParams {
     packageName?: string;
     editId?: any;
     track?: string;
-    resource?: AndroidResource; // 'resource' goes into the 'body' of the http request
+    requestBody?: AndroidResource;
     media?: AndroidMedia;
     apkVersionCode?: number;
     language?: string;
@@ -98,20 +101,19 @@ export interface GlobalParams {
 
 export function getJWT(key: ClientKey): JWT {
     const GOOGLE_PLAY_SCOPES: string[] = ['https://www.googleapis.com/auth/androidpublisher'];
-    return new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
+    return new google.auth.JWT({
+        email: key.client_email,
+        key: key.private_key,
+        scopes: GOOGLE_PLAY_SCOPES
+    });
 }
 
 export async function authorize(jwtClient: JWT): Promise<void> {
-    await jwtClient.authorize();
-
-    const credsToken: string = jwtClient.credentials.access_token;
-    const rawToken: string = jwtClient.gtoken.rawToken.access_token;
-
-    tl.setSecret(credsToken);
-
-    if (rawToken !== credsToken) {
-        tl.setSecret(rawToken);
+    const credentials = await jwtClient.authorize();
+    if (!credentials.access_token) {
+        throw new Error(tl.loc('AccessTokenNotFound'));
     }
+    tl.setSecret(credentials.access_token);
 }
 
 /**
@@ -185,7 +187,7 @@ export async function updateTrack(edits: any, packageName: string, track: string
     const requestParameters: PackageParams = {
         packageName: packageName,
         track: track,
-        resource: {
+        requestBody: {
             track: track,
             releases: [release]
         }

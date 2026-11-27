@@ -13,7 +13,7 @@
     ],
     "version": {
         "Major": "3",
-        "Minor": "281",
+        "Minor": "283",
         "Patch": "0"
     },
     "minimumAgentVersion": "2.182.1",
@@ -158,6 +158,7 @@
         "JsonKeyFileNotFound": "The service account JSON key file could not be found.",
         "EndpointNotFound": "The service connection could not be found.",
         "Authenticating": "Authenticating with Google Play",
+        "AccessTokenNotFound": "Google Play authentication did not return an access token.",
         "GetTrackInfo": "Getting information for track %s",
         "InvalidVersionCode": "Version code should be a positive integer",
         "PromoteTrack": "Promoting to track %s",
