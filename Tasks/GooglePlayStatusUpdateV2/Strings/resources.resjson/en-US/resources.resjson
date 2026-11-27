@@ -21,6 +21,7 @@
   "loc.messages.JsonKeyFileNotFound": "The service account JSON key file could not be found.",
   "loc.messages.EndpointNotFound": "The service connection could not be found.",
   "loc.messages.Authenticating": "Authenticating with Google Play",
+  "loc.messages.AccessTokenNotFound": "Google Play authentication did not return an access token.",
   "loc.messages.GetTrackInfo": "Getting information for track %s",
   "loc.messages.EmptyReleases": "This track has no release",
   "loc.messages.keepUserFrac": "Blank userFraction, maintain the current userFraction.",

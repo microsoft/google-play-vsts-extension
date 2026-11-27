@@ -2,9 +2,8 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
 import * as googleutil from './googleutil';
-import { androidpublisher_v3 } from 'googleapis';
+import { androidpublisher_v3, Common } from 'googleapis';
 import { JWT } from 'google-auth-library';
-import { GaxiosResponse } from 'gaxios/build/src/common';
 
 async function run() {
     try {
@@ -80,7 +79,7 @@ async function run() {
         tl.debug('Update Track: ' + JSON.stringify(updatedTrack));
 
         console.log(tl.loc('StatusUpdating', status));
-        const commit: GaxiosResponse<androidpublisher_v3.Schema$AppEdit> = await edits.commit();
+        const commit: Common.GaxiosResponseWithHTTP2<androidpublisher_v3.Schema$AppEdit> = await edits.commit();
         tl.debug('Commit: ' + JSON.stringify(commit.data));
 
         tl.setResult(tl.TaskResult.Succeeded, tl.loc('Success'));

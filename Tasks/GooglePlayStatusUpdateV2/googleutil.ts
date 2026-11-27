@@ -1,11 +1,13 @@
 // common code shared by all tasks
 import * as fs from 'fs';
 import * as tl from 'azure-pipelines-task-lib/task';
-import { google, androidpublisher_v3 } from 'googleapis';
+import { google, androidpublisher_v3, Common } from 'googleapis';
 import { JWT } from 'google-auth-library';
-import { GaxiosResponse } from 'gaxios/build/src/common';
 
-export const publisher: androidpublisher_v3.Androidpublisher = google.androidpublisher('v3');
+export const publisher: androidpublisher_v3.Androidpublisher = google.androidpublisher({
+    version: 'v3',
+    rootUrl: 'https://androidpublisher.googleapis.com/'
+});
 
 export interface ClientKey {
     client_email?: string;
@@ -26,7 +28,7 @@ export interface PackageParams {
     packageName?: string;
     editId?: string;
     track?: string;
-    resource?: AndroidResource; // 'resource' goes into the 'body' of the http request
+    requestBody?: AndroidResource;
     media?: AndroidMedia;
     apkVersionCode?: number;
     language?: string;
@@ -46,20 +48,19 @@ export interface GlobalParams {
 
 export function getJWT(key: ClientKey): JWT {
     const GOOGLE_PLAY_SCOPES: string[] = ['https://www.googleapis.com/auth/androidpublisher'];
-    return new google.auth.JWT(key.client_email, null, key.private_key, GOOGLE_PLAY_SCOPES, null);
+    return new google.auth.JWT({
+        email: key.client_email,
+        key: key.private_key,
+        scopes: GOOGLE_PLAY_SCOPES
+    });
 }
 
 export async function authorize(jwtClient: JWT): Promise<void> {
-    await jwtClient.authorize();
-
-    const credsToken: string = jwtClient.credentials.access_token;
-    const rawToken: string = jwtClient.gtoken.rawToken.access_token;
-
-    tl.setSecret(credsToken);
-
-    if (rawToken !== credsToken) {
-        tl.setSecret(rawToken);
+    const credentials = await jwtClient.authorize();
+    if (!credentials.access_token) {
+        throw new Error(tl.loc('AccessTokenNotFound'));
     }
+    tl.setSecret(credentials.access_token);
 }
 
 /**
@@ -71,12 +72,12 @@ export async function authorize(jwtClient: JWT): Promise<void> {
  */
 export async function getNewEdit(edits: androidpublisher_v3.Resource$Edits, globalParams: GlobalParams, packageName: string): Promise<androidpublisher_v3.Schema$AppEdit> {
     tl.debug('Creating a new edit');
-    const requestParameters: PackageParams = {
+    const requestParameters: androidpublisher_v3.Params$Resource$Edits$Insert = {
         packageName: packageName
     };
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
-    const res: GaxiosResponse<androidpublisher_v3.Schema$AppEdit> = await edits.insert(requestParameters);
+    const res: Common.GaxiosResponseWithHTTP2<androidpublisher_v3.Schema$AppEdit> = await edits.insert(requestParameters);
     return res.data;
 }
 
@@ -90,13 +91,13 @@ export async function getNewEdit(edits: androidpublisher_v3.Resource$Edits, glob
  */
 export async function getTrack(edits: androidpublisher_v3.Resource$Edits, packageName: string, track: string): Promise<androidpublisher_v3.Schema$Track> {
     tl.debug('Getting Track information');
-    const requestParameters: PackageParams = {
+    const requestParameters: androidpublisher_v3.Params$Resource$Edits$Tracks$Get = {
         packageName: packageName,
         track: track
     };
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
-    const getTrack: GaxiosResponse<androidpublisher_v3.Schema$Track> = await edits.tracks.get(requestParameters);
+    const getTrack: Common.GaxiosResponseWithHTTP2<androidpublisher_v3.Schema$Track> = await edits.tracks.get(requestParameters);
     return getTrack.data;
 }
 
@@ -128,17 +129,17 @@ export async function updateTrack(edits: androidpublisher_v3.Resource$Edits, pac
     }
     release.status = status;
 
-    const requestParameters: PackageParams = {
+    const requestParameters: androidpublisher_v3.Params$Resource$Edits$Tracks$Update = {
         packageName: packageName,
         track: track,
-        resource: {
+        requestBody: {
             track: track,
             releases: [release]
         }
     };
 
     tl.debug('Additional Parameters: ' + JSON.stringify(requestParameters));
-    const updatedTrack: GaxiosResponse<androidpublisher_v3.Schema$Track> = await edits.tracks.update(requestParameters);
+    const updatedTrack: Common.GaxiosResponseWithHTTP2<androidpublisher_v3.Schema$Track> = await edits.tracks.update(requestParameters);
     return updatedTrack.data;
 }
 

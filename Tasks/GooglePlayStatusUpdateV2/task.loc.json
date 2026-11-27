@@ -13,7 +13,7 @@
   ],
   "version": {
     "Major": "2",
-    "Minor": "281",
+    "Minor": "284",
     "Patch": "0"
   },
   "minimumAgentVersion": "2.182.1",
@@ -124,6 +124,7 @@
     "JsonKeyFileNotFound": "ms-resource:loc.messages.JsonKeyFileNotFound",
     "EndpointNotFound": "ms-resource:loc.messages.EndpointNotFound",
     "Authenticating": "ms-resource:loc.messages.Authenticating",
+    "AccessTokenNotFound": "ms-resource:loc.messages.AccessTokenNotFound",
     "GetTrackInfo": "ms-resource:loc.messages.GetTrackInfo",
     "EmptyReleases": "ms-resource:loc.messages.EmptyReleases",
     "keepUserFrac": "ms-resource:loc.messages.keepUserFrac",
