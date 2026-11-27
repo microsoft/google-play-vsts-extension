@@ -114,6 +114,7 @@
         "JsonKeyFileNotFound": "The service account JSON key file could not be found.",
         "EndpointNotFound": "The service connection could not be found.",
         "Authenticating": "Authenticating with Google Play",
+        "AccessTokenNotFound": "Google Play authentication did not return an access token.",
         "GetTrackRolloutInfo": "Getting information for track rollout",
         "CurrentUserFrac": "Current user fraction: %s",
         "RolloutFracUpdate": "Rollout fraction updated!",

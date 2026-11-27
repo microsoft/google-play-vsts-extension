@@ -114,6 +114,7 @@
     "JsonKeyFileNotFound": "ms-resource:loc.messages.JsonKeyFileNotFound",
     "EndpointNotFound": "ms-resource:loc.messages.EndpointNotFound",
     "Authenticating": "ms-resource:loc.messages.Authenticating",
+    "AccessTokenNotFound": "ms-resource:loc.messages.AccessTokenNotFound",
     "GetTrackRolloutInfo": "ms-resource:loc.messages.GetTrackRolloutInfo",
     "CurrentUserFrac": "ms-resource:loc.messages.CurrentUserFrac",
     "RolloutFracUpdate": "ms-resource:loc.messages.RolloutFracUpdate",
